@@ -18,95 +18,75 @@ public interface JassListener extends ParseTreeListener {
 	 */
 	void exitRoot(JassParser.RootContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#typeName}.
+	 * Enter a parse tree produced by {@link JassParser#typename}.
 	 * @param ctx the parse tree
 	 */
-	void enterTypeName(JassParser.TypeNameContext ctx);
+	void enterTypename(JassParser.TypenameContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#typeName}.
+	 * Exit a parse tree produced by {@link JassParser#typename}.
 	 * @param ctx the parse tree
 	 */
-	void exitTypeName(JassParser.TypeNameContext ctx);
+	void exitTypename(JassParser.TypenameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#varName}.
+	 * Enter a parse tree produced by {@link JassParser#varname}.
 	 * @param ctx the parse tree
 	 */
-	void enterVarName(JassParser.VarNameContext ctx);
+	void enterVarname(JassParser.VarnameContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#varName}.
+	 * Exit a parse tree produced by {@link JassParser#varname}.
 	 * @param ctx the parse tree
 	 */
-	void exitVarName(JassParser.VarNameContext ctx);
+	void exitVarname(JassParser.VarnameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#typeDef}.
+	 * Enter a parse tree produced by {@link JassParser#funname}.
 	 * @param ctx the parse tree
 	 */
-	void enterTypeDef(JassParser.TypeDefContext ctx);
+	void enterFunname(JassParser.FunnameContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#typeDef}.
+	 * Exit a parse tree produced by {@link JassParser#funname}.
 	 * @param ctx the parse tree
 	 */
-	void exitTypeDef(JassParser.TypeDefContext ctx);
+	void exitFunname(JassParser.FunnameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#typeExt}.
+	 * Enter a parse tree produced by {@link JassParser#type}.
 	 * @param ctx the parse tree
 	 */
-	void enterTypeExt(JassParser.TypeExtContext ctx);
+	void enterType(JassParser.TypeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#typeExt}.
+	 * Exit a parse tree produced by {@link JassParser#type}.
 	 * @param ctx the parse tree
 	 */
-	void exitTypeExt(JassParser.TypeExtContext ctx);
+	void exitType(JassParser.TypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#var}.
+	 * Enter a parse tree produced by {@link JassParser#extends}.
 	 * @param ctx the parse tree
 	 */
-	void enterVar(JassParser.VarContext ctx);
+	void enterExtends(JassParser.ExtendsContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#var}.
+	 * Exit a parse tree produced by {@link JassParser#extends}.
 	 * @param ctx the parse tree
 	 */
-	void exitVar(JassParser.VarContext ctx);
+	void exitExtends(JassParser.ExtendsContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#glob}.
+	 * Enter a parse tree produced by {@link JassParser#globals}.
 	 * @param ctx the parse tree
 	 */
-	void enterGlob(JassParser.GlobContext ctx);
+	void enterGlobals(JassParser.GlobalsContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#glob}.
+	 * Exit a parse tree produced by {@link JassParser#globals}.
 	 * @param ctx the parse tree
 	 */
-	void exitGlob(JassParser.GlobContext ctx);
+	void exitGlobals(JassParser.GlobalsContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#varDefGlob}.
+	 * Enter a parse tree produced by {@link JassParser#variable}.
 	 * @param ctx the parse tree
 	 */
-	void enterVarDefGlob(JassParser.VarDefGlobContext ctx);
+	void enterVariable(JassParser.VariableContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#varDefGlob}.
+	 * Exit a parse tree produced by {@link JassParser#variable}.
 	 * @param ctx the parse tree
 	 */
-	void exitVarDefGlob(JassParser.VarDefGlobContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link JassParser#argList}.
-	 * @param ctx the parse tree
-	 */
-	void enterArgList(JassParser.ArgListContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link JassParser#argList}.
-	 * @param ctx the parse tree
-	 */
-	void exitArgList(JassParser.ArgListContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link JassParser#funCall}.
-	 * @param ctx the parse tree
-	 */
-	void enterFunCall(JassParser.FunCallContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link JassParser#funCall}.
-	 * @param ctx the parse tree
-	 */
-	void exitFunCall(JassParser.FunCallContext ctx);
+	void exitVariable(JassParser.VariableContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JassParser#param}.
 	 * @param ctx the parse tree
@@ -118,65 +98,55 @@ public interface JassListener extends ParseTreeListener {
 	 */
 	void exitParam(JassParser.ParamContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#paramList}.
+	 * Enter a parse tree produced by {@link JassParser#params}.
 	 * @param ctx the parse tree
 	 */
-	void enterParamList(JassParser.ParamListContext ctx);
+	void enterParams(JassParser.ParamsContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#paramList}.
+	 * Exit a parse tree produced by {@link JassParser#params}.
 	 * @param ctx the parse tree
 	 */
-	void exitParamList(JassParser.ParamListContext ctx);
+	void exitParams(JassParser.ParamsContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#funTake}.
+	 * Enter a parse tree produced by {@link JassParser#takes}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunTake(JassParser.FunTakeContext ctx);
+	void enterTakes(JassParser.TakesContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#funTake}.
+	 * Exit a parse tree produced by {@link JassParser#takes}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunTake(JassParser.FunTakeContext ctx);
+	void exitTakes(JassParser.TakesContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#funRet}.
+	 * Enter a parse tree produced by {@link JassParser#returns_}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunRet(JassParser.FunRetContext ctx);
+	void enterReturns_(JassParser.Returns_Context ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#funRet}.
+	 * Exit a parse tree produced by {@link JassParser#returns_}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunRet(JassParser.FunRetContext ctx);
+	void exitReturns_(JassParser.Returns_Context ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#fun}.
+	 * Enter a parse tree produced by {@link JassParser#native}.
 	 * @param ctx the parse tree
 	 */
-	void enterFun(JassParser.FunContext ctx);
+	void enterNative(JassParser.NativeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#fun}.
+	 * Exit a parse tree produced by {@link JassParser#native}.
 	 * @param ctx the parse tree
 	 */
-	void exitFun(JassParser.FunContext ctx);
+	void exitNative(JassParser.NativeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#funHead}.
+	 * Enter a parse tree produced by {@link JassParser#function}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunHead(JassParser.FunHeadContext ctx);
+	void enterFunction(JassParser.FunctionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#funHead}.
+	 * Exit a parse tree produced by {@link JassParser#function}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunHead(JassParser.FunHeadContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link JassParser#nativ}.
-	 * @param ctx the parse tree
-	 */
-	void enterNativ(JassParser.NativContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link JassParser#nativ}.
-	 * @param ctx the parse tree
-	 */
-	void exitNativ(JassParser.NativContext ctx);
+	void exitFunction(JassParser.FunctionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JassParser#stmt}.
 	 * @param ctx the parse tree
@@ -188,95 +158,85 @@ public interface JassListener extends ParseTreeListener {
 	 */
 	void exitStmt(JassParser.StmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#varDefLoc}.
+	 * Enter a parse tree produced by {@link JassParser#set}.
 	 * @param ctx the parse tree
 	 */
-	void enterVarDefLoc(JassParser.VarDefLocContext ctx);
+	void enterSet(JassParser.SetContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#varDefLoc}.
+	 * Exit a parse tree produced by {@link JassParser#set}.
 	 * @param ctx the parse tree
 	 */
-	void exitVarDefLoc(JassParser.VarDefLocContext ctx);
+	void exitSet(JassParser.SetContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#setStmt}.
+	 * Enter a parse tree produced by {@link JassParser#call}.
 	 * @param ctx the parse tree
 	 */
-	void enterSetStmt(JassParser.SetStmtContext ctx);
+	void enterCall(JassParser.CallContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#setStmt}.
+	 * Exit a parse tree produced by {@link JassParser#call}.
 	 * @param ctx the parse tree
 	 */
-	void exitSetStmt(JassParser.SetStmtContext ctx);
+	void exitCall(JassParser.CallContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#callStmt}.
+	 * Enter a parse tree produced by {@link JassParser#return}.
 	 * @param ctx the parse tree
 	 */
-	void enterCallStmt(JassParser.CallStmtContext ctx);
+	void enterReturn(JassParser.ReturnContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#callStmt}.
+	 * Exit a parse tree produced by {@link JassParser#return}.
 	 * @param ctx the parse tree
 	 */
-	void exitCallStmt(JassParser.CallStmtContext ctx);
+	void exitReturn(JassParser.ReturnContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#returnStmt}.
+	 * Enter a parse tree produced by {@link JassParser#if}.
 	 * @param ctx the parse tree
 	 */
-	void enterReturnStmt(JassParser.ReturnStmtContext ctx);
+	void enterIf(JassParser.IfContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#returnStmt}.
+	 * Exit a parse tree produced by {@link JassParser#if}.
 	 * @param ctx the parse tree
 	 */
-	void exitReturnStmt(JassParser.ReturnStmtContext ctx);
+	void exitIf(JassParser.IfContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#ifStmt}.
+	 * Enter a parse tree produced by {@link JassParser#elseif}.
 	 * @param ctx the parse tree
 	 */
-	void enterIfStmt(JassParser.IfStmtContext ctx);
+	void enterElseif(JassParser.ElseifContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#ifStmt}.
+	 * Exit a parse tree produced by {@link JassParser#elseif}.
 	 * @param ctx the parse tree
 	 */
-	void exitIfStmt(JassParser.IfStmtContext ctx);
+	void exitElseif(JassParser.ElseifContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#elseIfStmt}.
+	 * Enter a parse tree produced by {@link JassParser#else}.
 	 * @param ctx the parse tree
 	 */
-	void enterElseIfStmt(JassParser.ElseIfStmtContext ctx);
+	void enterElse(JassParser.ElseContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#elseIfStmt}.
+	 * Exit a parse tree produced by {@link JassParser#else}.
 	 * @param ctx the parse tree
 	 */
-	void exitElseIfStmt(JassParser.ElseIfStmtContext ctx);
+	void exitElse(JassParser.ElseContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#elseStmt}.
+	 * Enter a parse tree produced by {@link JassParser#loop}.
 	 * @param ctx the parse tree
 	 */
-	void enterElseStmt(JassParser.ElseStmtContext ctx);
+	void enterLoop(JassParser.LoopContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#elseStmt}.
+	 * Exit a parse tree produced by {@link JassParser#loop}.
 	 * @param ctx the parse tree
 	 */
-	void exitElseStmt(JassParser.ElseStmtContext ctx);
+	void exitLoop(JassParser.LoopContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#loopStmt}.
+	 * Enter a parse tree produced by {@link JassParser#exitwhen}.
 	 * @param ctx the parse tree
 	 */
-	void enterLoopStmt(JassParser.LoopStmtContext ctx);
+	void enterExitwhen(JassParser.ExitwhenContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#loopStmt}.
+	 * Exit a parse tree produced by {@link JassParser#exitwhen}.
 	 * @param ctx the parse tree
 	 */
-	void exitLoopStmt(JassParser.LoopStmtContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link JassParser#exitWhenStmt}.
-	 * @param ctx the parse tree
-	 */
-	void enterExitWhenStmt(JassParser.ExitWhenStmtContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link JassParser#exitWhenStmt}.
-	 * @param ctx the parse tree
-	 */
-	void exitExitWhenStmt(JassParser.ExitWhenStmtContext ctx);
+	void exitExitwhen(JassParser.ExitwhenContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JassParser#expr}.
 	 * @param ctx the parse tree
@@ -298,23 +258,33 @@ public interface JassListener extends ParseTreeListener {
 	 */
 	void exitPrim(JassParser.PrimContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#arrayAccess}.
+	 * Enter a parse tree produced by {@link JassParser#primcall}.
 	 * @param ctx the parse tree
 	 */
-	void enterArrayAccess(JassParser.ArrayAccessContext ctx);
+	void enterPrimcall(JassParser.PrimcallContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#arrayAccess}.
+	 * Exit a parse tree produced by {@link JassParser#primcall}.
 	 * @param ctx the parse tree
 	 */
-	void exitArrayAccess(JassParser.ArrayAccessContext ctx);
+	void exitPrimcall(JassParser.PrimcallContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#funRef}.
+	 * Enter a parse tree produced by {@link JassParser#primarr}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunRef(JassParser.FunRefContext ctx);
+	void enterPrimarr(JassParser.PrimarrContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#funRef}.
+	 * Exit a parse tree produced by {@link JassParser#primarr}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunRef(JassParser.FunRefContext ctx);
+	void exitPrimarr(JassParser.PrimarrContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link JassParser#primfun}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrimfun(JassParser.PrimfunContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JassParser#primfun}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrimfun(JassParser.PrimfunContext ctx);
 }

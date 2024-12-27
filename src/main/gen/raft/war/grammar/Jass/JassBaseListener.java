@@ -29,109 +29,85 @@ public class JassBaseListener implements JassListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTypeName(JassParser.TypeNameContext ctx) { }
+	@Override public void enterTypename(JassParser.TypenameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypeName(JassParser.TypeNameContext ctx) { }
+	@Override public void exitTypename(JassParser.TypenameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVarName(JassParser.VarNameContext ctx) { }
+	@Override public void enterVarname(JassParser.VarnameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVarName(JassParser.VarNameContext ctx) { }
+	@Override public void exitVarname(JassParser.VarnameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTypeDef(JassParser.TypeDefContext ctx) { }
+	@Override public void enterFunname(JassParser.FunnameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypeDef(JassParser.TypeDefContext ctx) { }
+	@Override public void exitFunname(JassParser.FunnameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTypeExt(JassParser.TypeExtContext ctx) { }
+	@Override public void enterType(JassParser.TypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypeExt(JassParser.TypeExtContext ctx) { }
+	@Override public void exitType(JassParser.TypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVar(JassParser.VarContext ctx) { }
+	@Override public void enterExtends(JassParser.ExtendsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVar(JassParser.VarContext ctx) { }
+	@Override public void exitExtends(JassParser.ExtendsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterGlob(JassParser.GlobContext ctx) { }
+	@Override public void enterGlobals(JassParser.GlobalsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitGlob(JassParser.GlobContext ctx) { }
+	@Override public void exitGlobals(JassParser.GlobalsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVarDefGlob(JassParser.VarDefGlobContext ctx) { }
+	@Override public void enterVariable(JassParser.VariableContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVarDefGlob(JassParser.VarDefGlobContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterArgList(JassParser.ArgListContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitArgList(JassParser.ArgListContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFunCall(JassParser.FunCallContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFunCall(JassParser.FunCallContext ctx) { }
+	@Override public void exitVariable(JassParser.VariableContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -149,73 +125,61 @@ public class JassBaseListener implements JassListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterParamList(JassParser.ParamListContext ctx) { }
+	@Override public void enterParams(JassParser.ParamsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitParamList(JassParser.ParamListContext ctx) { }
+	@Override public void exitParams(JassParser.ParamsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunTake(JassParser.FunTakeContext ctx) { }
+	@Override public void enterTakes(JassParser.TakesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunTake(JassParser.FunTakeContext ctx) { }
+	@Override public void exitTakes(JassParser.TakesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunRet(JassParser.FunRetContext ctx) { }
+	@Override public void enterReturns_(JassParser.Returns_Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunRet(JassParser.FunRetContext ctx) { }
+	@Override public void exitReturns_(JassParser.Returns_Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFun(JassParser.FunContext ctx) { }
+	@Override public void enterNative(JassParser.NativeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFun(JassParser.FunContext ctx) { }
+	@Override public void exitNative(JassParser.NativeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunHead(JassParser.FunHeadContext ctx) { }
+	@Override public void enterFunction(JassParser.FunctionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunHead(JassParser.FunHeadContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterNativ(JassParser.NativContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitNativ(JassParser.NativContext ctx) { }
+	@Override public void exitFunction(JassParser.FunctionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -233,109 +197,97 @@ public class JassBaseListener implements JassListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVarDefLoc(JassParser.VarDefLocContext ctx) { }
+	@Override public void enterSet(JassParser.SetContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVarDefLoc(JassParser.VarDefLocContext ctx) { }
+	@Override public void exitSet(JassParser.SetContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSetStmt(JassParser.SetStmtContext ctx) { }
+	@Override public void enterCall(JassParser.CallContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSetStmt(JassParser.SetStmtContext ctx) { }
+	@Override public void exitCall(JassParser.CallContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCallStmt(JassParser.CallStmtContext ctx) { }
+	@Override public void enterReturn(JassParser.ReturnContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCallStmt(JassParser.CallStmtContext ctx) { }
+	@Override public void exitReturn(JassParser.ReturnContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterReturnStmt(JassParser.ReturnStmtContext ctx) { }
+	@Override public void enterIf(JassParser.IfContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitReturnStmt(JassParser.ReturnStmtContext ctx) { }
+	@Override public void exitIf(JassParser.IfContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIfStmt(JassParser.IfStmtContext ctx) { }
+	@Override public void enterElseif(JassParser.ElseifContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIfStmt(JassParser.IfStmtContext ctx) { }
+	@Override public void exitElseif(JassParser.ElseifContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterElseIfStmt(JassParser.ElseIfStmtContext ctx) { }
+	@Override public void enterElse(JassParser.ElseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitElseIfStmt(JassParser.ElseIfStmtContext ctx) { }
+	@Override public void exitElse(JassParser.ElseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterElseStmt(JassParser.ElseStmtContext ctx) { }
+	@Override public void enterLoop(JassParser.LoopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitElseStmt(JassParser.ElseStmtContext ctx) { }
+	@Override public void exitLoop(JassParser.LoopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLoopStmt(JassParser.LoopStmtContext ctx) { }
+	@Override public void enterExitwhen(JassParser.ExitwhenContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLoopStmt(JassParser.LoopStmtContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterExitWhenStmt(JassParser.ExitWhenStmtContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExitWhenStmt(JassParser.ExitWhenStmtContext ctx) { }
+	@Override public void exitExitwhen(JassParser.ExitwhenContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -365,25 +317,37 @@ public class JassBaseListener implements JassListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterArrayAccess(JassParser.ArrayAccessContext ctx) { }
+	@Override public void enterPrimcall(JassParser.PrimcallContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitArrayAccess(JassParser.ArrayAccessContext ctx) { }
+	@Override public void exitPrimcall(JassParser.PrimcallContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunRef(JassParser.FunRefContext ctx) { }
+	@Override public void enterPrimarr(JassParser.PrimarrContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunRef(JassParser.FunRefContext ctx) { }
+	@Override public void exitPrimarr(JassParser.PrimarrContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPrimfun(JassParser.PrimfunContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPrimfun(JassParser.PrimfunContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

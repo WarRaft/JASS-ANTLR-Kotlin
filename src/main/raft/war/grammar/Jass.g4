@@ -6,60 +6,55 @@ grammar  Jass ;
 // https://github.com/antlr/grammars-v4
 // https://github.com/antlr/antlr4/blob/master/doc/options.md
 
-root : (typeDef | nativ | glob | fun)* EOF ;
+root : (type | native | globals | function)* EOF ;
 
-typeName : ID;
-varName : ID;
+typename : ID;
+varname : ID;
+funname : ID;
 
 // === type
-typeDef : TYPE typeName typeExt;
-typeExt : EXTENDS typeName;
+type : TYPE typename extends;
+extends : EXTENDS typename;
 
 // === globals
-var : typeName ARRAY? varName (EQ expr)?;
+globals : GLOBALS variable* ENDGLOBALS;
 
-glob : GLOBALS varDefGlob* ENDGLOBALS;
-varDefGlob : CONSTANT? var;
+// === var
+variable : CONSTANT? LOCAL? typename ARRAY? varname (EQ expr)?;
 
 // === function
-argList : expr (COMMA expr)*;
-funCall : ID LPAREN argList? RPAREN;
+param : typename varname;
+params : param (COMMA param)*  ;
 
-param : typeName ID ;
-paramList : param (COMMA param)*  ;
+takes : TAKES (NOTHING|params);
+returns_ : RETURNS (NOTHING|typename);
 
-funTake : TAKES (NOTHING|paramList);
-funRet : RETURNS (NOTHING|typeName);
-fun : CONSTANT? FUNCTION funHead stmt* ENDFUNCTION ;
-funHead : ID funTake funRet;
-
-nativ : CONSTANT? NATIVE funHead;
+native : CONSTANT? NATIVE funname takes returns_;
+function : CONSTANT? FUNCTION funname takes returns_ stmt* ENDFUNCTION ;
 
 // === STATEMENT
 stmt
-    : setStmt
-    | callStmt
-    | varDefLoc
-    | returnStmt
-    | ifStmt
-    | loopStmt
-    | exitWhenStmt
+    : variable
+    | set
+    | call
+    | return
+    | if
+    | loop
+    | exitwhen
     ;
 
-varDefLoc : LOCAL? var;
+set : SET (primarr|varname) EQ expr;
 
-setStmt : SET (arrayAccess|ID) EQ expr;
+call : DEBUG? CALL primcall;
 
-callStmt : DEBUG? CALL funCall;
+return : RETURN expr?;
 
-returnStmt : RETURN expr?;
+if : IF expr THEN? (stmt|elseif|else)* ENDIF;
+elseif : ELSEIF expr THEN? stmt*;
+else : ELSE stmt*;
 
-ifStmt : IF expr THEN? (stmt|elseIfStmt|elseStmt)* ENDIF;
-elseIfStmt : ELSEIF expr THEN? stmt*;
-elseStmt : ELSE stmt*;
-
-loopStmt : LOOP stmt* ENDLOOP  ;
-exitWhenStmt :EXITWHEN expr  ;
+loop : LOOP stmt* ENDLOOP ;
+exitwhen : EXITWHEN expr ;
 
 // === EXPRESSION
 expr
@@ -85,22 +80,30 @@ expr
     ;
 
 prim
-    : arrayAccess
-    | funCall
-    | funRef
+    : primarr
+    | primcall
+    | primfun
     | FALSE
     | NULL
     | TRUE
+    | INTVAL
     | HEXVAL
     | REALVAL
-    | INTVAL
     | RAWVAL
-    | STRVAL
+    | STRING
     | ID
     ;
 
-arrayAccess : ID LBRACK expr? RBRACK;
-funRef : FUNCTION ID;
+primcall : funname LPAREN (expr (COMMA expr)*)? RPAREN;
+primarr : varname LBRACK expr? RBRACK;
+primfun : FUNCTION ID;
+
+
+RAWVAL: '\'' (~['])* '\'';
+
+STRING : '"' (STRING_ESC | STRING_CLOSE)* '"' ;
+fragment STRING_ESC : '\\' . ;
+fragment STRING_CLOSE : ~["\\] ;
 
 AND : 'and';
 ARRAY : 'array';
@@ -129,7 +132,6 @@ OR : 'or';
 RETURNS : 'returns';
 RETURN : 'return';
 SET : 'set';
-STRING : 'string';
 TAKES : 'takes';
 THEN : 'then';
 TRUE : 'true';
@@ -153,20 +155,16 @@ LBRACK : '[';
 RBRACK : ']';
 
 ID : [A-Za-z_][_0-9A-Za-z]*;
-INTVAL: Digit+;
-fragment Digit: [0-9];
-
-STRVAL: '"'  ~('\\' | '"')* '"';
-
-RAWVAL: '\''  ~('\'' | '\\')* '\'';
 
 fragment HexDigit: [0-9a-fA-F];
 
-HEXVAL: '0' [xX] HexDigit+;
+INTVAL: ('0' .. '9')+;
+HEXVAL: (('0' [xX])| '$' )  HexDigit+;
 
-REALVAL : [0-9]+.[0-9]*|.[0-9]+;
+REALVAL : (('0' .. '9')* '.' ('0' .. '9')+)|(('0' .. '9')+ '.' ('0' .. '9')*);
+
 
 WS: [ \t]+ -> channel(HIDDEN);
-NL: [\n\r] -> channel(2);
+NL: [\r\n] -> channel(2);
 
 LINE_COMMENT: '//' ~[\r\n]* -> channel(HIDDEN);

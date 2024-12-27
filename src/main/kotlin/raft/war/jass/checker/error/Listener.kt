@@ -1,4 +1,4 @@
-package raft.war.jass.checker
+package raft.war.jass.checker.error
 
 import org.antlr.v4.runtime.BaseErrorListener
 import org.antlr.v4.runtime.Parser
@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.atn.ATNConfigSet
 import org.antlr.v4.runtime.dfa.DFA
 import java.util.BitSet
 
-class ErrorListener : BaseErrorListener() {
+class Listener : BaseErrorListener() {
     val errors = mutableListOf<Error>()
 
     override fun syntaxError(
@@ -21,7 +21,7 @@ class ErrorListener : BaseErrorListener() {
     ) {
         errors.add(
             Error(
-                id = ErrorId.SYNTAX,
+                id = Id.SYNTAX,
                 line = line,
                 char = charPositionInLine,
                 message = msg ?: "Unknown error"
@@ -38,7 +38,7 @@ class ErrorListener : BaseErrorListener() {
         ambigAlts: BitSet?,
         configs: ATNConfigSet?
     ) {
-        println("reportAmbiguity")
+        println("[$startIndex, $stopIndex] reportAmbiguity")
     }
 
     override fun reportAttemptingFullContext(
@@ -49,7 +49,7 @@ class ErrorListener : BaseErrorListener() {
         conflictingAlts: BitSet?,
         configs: ATNConfigSet?
     ) {
-        println("reportAttemptingFullContext")
+        println("[$startIndex, $stopIndex] reportAttemptingFullContext")
     }
 
     override fun reportContextSensitivity(
@@ -60,6 +60,6 @@ class ErrorListener : BaseErrorListener() {
         prediction: Int,
         configs: ATNConfigSet?
     ) {
-        println("reportContextSensitivity")
+        println("[$startIndex, $stopIndex] reportContextSensitivity")
     }
 }

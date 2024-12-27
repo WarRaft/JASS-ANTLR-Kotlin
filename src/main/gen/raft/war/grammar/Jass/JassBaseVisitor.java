@@ -25,63 +25,49 @@ public class JassBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements J
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitTypeName(JassParser.TypeNameContext ctx) { return visitChildren(ctx); }
+	@Override public T visitTypename(JassParser.TypenameContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitVarName(JassParser.VarNameContext ctx) { return visitChildren(ctx); }
+	@Override public T visitVarname(JassParser.VarnameContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitTypeDef(JassParser.TypeDefContext ctx) { return visitChildren(ctx); }
+	@Override public T visitFunname(JassParser.FunnameContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitTypeExt(JassParser.TypeExtContext ctx) { return visitChildren(ctx); }
+	@Override public T visitType(JassParser.TypeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitVar(JassParser.VarContext ctx) { return visitChildren(ctx); }
+	@Override public T visitExtends(JassParser.ExtendsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitGlob(JassParser.GlobContext ctx) { return visitChildren(ctx); }
+	@Override public T visitGlobals(JassParser.GlobalsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitVarDefGlob(JassParser.VarDefGlobContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitArgList(JassParser.ArgListContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitFunCall(JassParser.FunCallContext ctx) { return visitChildren(ctx); }
+	@Override public T visitVariable(JassParser.VariableContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -95,42 +81,35 @@ public class JassBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements J
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitParamList(JassParser.ParamListContext ctx) { return visitChildren(ctx); }
+	@Override public T visitParams(JassParser.ParamsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFunTake(JassParser.FunTakeContext ctx) { return visitChildren(ctx); }
+	@Override public T visitTakes(JassParser.TakesContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFunRet(JassParser.FunRetContext ctx) { return visitChildren(ctx); }
+	@Override public T visitReturns_(JassParser.Returns_Context ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFun(JassParser.FunContext ctx) { return visitChildren(ctx); }
+	@Override public T visitNative(JassParser.NativeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFunHead(JassParser.FunHeadContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitNativ(JassParser.NativContext ctx) { return visitChildren(ctx); }
+	@Override public T visitFunction(JassParser.FunctionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -144,63 +123,56 @@ public class JassBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements J
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitVarDefLoc(JassParser.VarDefLocContext ctx) { return visitChildren(ctx); }
+	@Override public T visitSet(JassParser.SetContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitSetStmt(JassParser.SetStmtContext ctx) { return visitChildren(ctx); }
+	@Override public T visitCall(JassParser.CallContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitCallStmt(JassParser.CallStmtContext ctx) { return visitChildren(ctx); }
+	@Override public T visitReturn(JassParser.ReturnContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitReturnStmt(JassParser.ReturnStmtContext ctx) { return visitChildren(ctx); }
+	@Override public T visitIf(JassParser.IfContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitIfStmt(JassParser.IfStmtContext ctx) { return visitChildren(ctx); }
+	@Override public T visitElseif(JassParser.ElseifContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitElseIfStmt(JassParser.ElseIfStmtContext ctx) { return visitChildren(ctx); }
+	@Override public T visitElse(JassParser.ElseContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitElseStmt(JassParser.ElseStmtContext ctx) { return visitChildren(ctx); }
+	@Override public T visitLoop(JassParser.LoopContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitLoopStmt(JassParser.LoopStmtContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitExitWhenStmt(JassParser.ExitWhenStmtContext ctx) { return visitChildren(ctx); }
+	@Override public T visitExitwhen(JassParser.ExitwhenContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -221,12 +193,19 @@ public class JassBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements J
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitArrayAccess(JassParser.ArrayAccessContext ctx) { return visitChildren(ctx); }
+	@Override public T visitPrimcall(JassParser.PrimcallContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFunRef(JassParser.FunRefContext ctx) { return visitChildren(ctx); }
+	@Override public T visitPrimarr(JassParser.PrimarrContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitPrimfun(JassParser.PrimfunContext ctx) { return visitChildren(ctx); }
 }

@@ -17,59 +17,47 @@ public interface JassVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRoot(JassParser.RootContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#typeName}.
+	 * Visit a parse tree produced by {@link JassParser#typename}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitTypeName(JassParser.TypeNameContext ctx);
+	T visitTypename(JassParser.TypenameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#varName}.
+	 * Visit a parse tree produced by {@link JassParser#varname}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVarName(JassParser.VarNameContext ctx);
+	T visitVarname(JassParser.VarnameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#typeDef}.
+	 * Visit a parse tree produced by {@link JassParser#funname}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitTypeDef(JassParser.TypeDefContext ctx);
+	T visitFunname(JassParser.FunnameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#typeExt}.
+	 * Visit a parse tree produced by {@link JassParser#type}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitTypeExt(JassParser.TypeExtContext ctx);
+	T visitType(JassParser.TypeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#var}.
+	 * Visit a parse tree produced by {@link JassParser#extends}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVar(JassParser.VarContext ctx);
+	T visitExtends(JassParser.ExtendsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#glob}.
+	 * Visit a parse tree produced by {@link JassParser#globals}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitGlob(JassParser.GlobContext ctx);
+	T visitGlobals(JassParser.GlobalsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#varDefGlob}.
+	 * Visit a parse tree produced by {@link JassParser#variable}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVarDefGlob(JassParser.VarDefGlobContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link JassParser#argList}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitArgList(JassParser.ArgListContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link JassParser#funCall}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFunCall(JassParser.FunCallContext ctx);
+	T visitVariable(JassParser.VariableContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JassParser#param}.
 	 * @param ctx the parse tree
@@ -77,41 +65,35 @@ public interface JassVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParam(JassParser.ParamContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#paramList}.
+	 * Visit a parse tree produced by {@link JassParser#params}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitParamList(JassParser.ParamListContext ctx);
+	T visitParams(JassParser.ParamsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#funTake}.
+	 * Visit a parse tree produced by {@link JassParser#takes}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunTake(JassParser.FunTakeContext ctx);
+	T visitTakes(JassParser.TakesContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#funRet}.
+	 * Visit a parse tree produced by {@link JassParser#returns_}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunRet(JassParser.FunRetContext ctx);
+	T visitReturns_(JassParser.Returns_Context ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#fun}.
+	 * Visit a parse tree produced by {@link JassParser#native}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFun(JassParser.FunContext ctx);
+	T visitNative(JassParser.NativeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#funHead}.
+	 * Visit a parse tree produced by {@link JassParser#function}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunHead(JassParser.FunHeadContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link JassParser#nativ}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNativ(JassParser.NativContext ctx);
+	T visitFunction(JassParser.FunctionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JassParser#stmt}.
 	 * @param ctx the parse tree
@@ -119,59 +101,53 @@ public interface JassVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStmt(JassParser.StmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#varDefLoc}.
+	 * Visit a parse tree produced by {@link JassParser#set}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVarDefLoc(JassParser.VarDefLocContext ctx);
+	T visitSet(JassParser.SetContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#setStmt}.
+	 * Visit a parse tree produced by {@link JassParser#call}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSetStmt(JassParser.SetStmtContext ctx);
+	T visitCall(JassParser.CallContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#callStmt}.
+	 * Visit a parse tree produced by {@link JassParser#return}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCallStmt(JassParser.CallStmtContext ctx);
+	T visitReturn(JassParser.ReturnContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#returnStmt}.
+	 * Visit a parse tree produced by {@link JassParser#if}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitReturnStmt(JassParser.ReturnStmtContext ctx);
+	T visitIf(JassParser.IfContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#ifStmt}.
+	 * Visit a parse tree produced by {@link JassParser#elseif}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIfStmt(JassParser.IfStmtContext ctx);
+	T visitElseif(JassParser.ElseifContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#elseIfStmt}.
+	 * Visit a parse tree produced by {@link JassParser#else}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitElseIfStmt(JassParser.ElseIfStmtContext ctx);
+	T visitElse(JassParser.ElseContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#elseStmt}.
+	 * Visit a parse tree produced by {@link JassParser#loop}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitElseStmt(JassParser.ElseStmtContext ctx);
+	T visitLoop(JassParser.LoopContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#loopStmt}.
+	 * Visit a parse tree produced by {@link JassParser#exitwhen}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLoopStmt(JassParser.LoopStmtContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link JassParser#exitWhenStmt}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExitWhenStmt(JassParser.ExitWhenStmtContext ctx);
+	T visitExitwhen(JassParser.ExitwhenContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JassParser#expr}.
 	 * @param ctx the parse tree
@@ -185,15 +161,21 @@ public interface JassVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrim(JassParser.PrimContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#arrayAccess}.
+	 * Visit a parse tree produced by {@link JassParser#primcall}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitArrayAccess(JassParser.ArrayAccessContext ctx);
+	T visitPrimcall(JassParser.PrimcallContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#funRef}.
+	 * Visit a parse tree produced by {@link JassParser#primarr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunRef(JassParser.FunRefContext ctx);
+	T visitPrimarr(JassParser.PrimarrContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JassParser#primfun}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrimfun(JassParser.PrimfunContext ctx);
 }

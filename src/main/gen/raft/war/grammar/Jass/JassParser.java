@@ -17,56 +17,53 @@ public class JassParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		AND=1, ARRAY=2, CALL=3, CONSTANT=4, DEBUG=5, ELSE=6, ELSEIF=7, ENDFUNCTION=8, 
-		ENDIF=9, ENDLOOP=10, ENDGLOBALS=11, EXTENDS=12, EXITWHEN=13, FALSE=14, 
-		FUNCTION=15, GLOBALS=16, IF=17, LOCAL=18, LOOP=19, NATIVE=20, NOT=21, 
-		NOTHING=22, NULL=23, OR=24, RETURNS=25, RETURN=26, SET=27, STRING=28, 
-		TAKES=29, THEN=30, TRUE=31, TYPE=32, COMMA=33, EQ_EQ=34, EQ=35, NEQ=36, 
-		LT_EQ=37, LT=38, GT_EQ=39, GT=40, PLUS=41, MINUS=42, MUL=43, DIV=44, LPAREN=45, 
-		RPAREN=46, LBRACK=47, RBRACK=48, ID=49, INTVAL=50, STRVAL=51, RAWVAL=52, 
-		HEXVAL=53, REALVAL=54, WS=55, NL=56, LINE_COMMENT=57;
+		RAWVAL=1, STRING=2, AND=3, ARRAY=4, CALL=5, CONSTANT=6, DEBUG=7, ELSE=8, 
+		ELSEIF=9, ENDFUNCTION=10, ENDIF=11, ENDLOOP=12, ENDGLOBALS=13, EXTENDS=14, 
+		EXITWHEN=15, FALSE=16, FUNCTION=17, GLOBALS=18, IF=19, LOCAL=20, LOOP=21, 
+		NATIVE=22, NOT=23, NOTHING=24, NULL=25, OR=26, RETURNS=27, RETURN=28, 
+		SET=29, TAKES=30, THEN=31, TRUE=32, TYPE=33, COMMA=34, EQ_EQ=35, EQ=36, 
+		NEQ=37, LT_EQ=38, LT=39, GT_EQ=40, GT=41, PLUS=42, MINUS=43, MUL=44, DIV=45, 
+		LPAREN=46, RPAREN=47, LBRACK=48, RBRACK=49, ID=50, INTVAL=51, HEXVAL=52, 
+		REALVAL=53, WS=54, NL=55, LINE_COMMENT=56;
 	public static final int
-		RULE_root = 0, RULE_typeName = 1, RULE_varName = 2, RULE_typeDef = 3, 
-		RULE_typeExt = 4, RULE_var = 5, RULE_glob = 6, RULE_varDefGlob = 7, RULE_argList = 8, 
-		RULE_funCall = 9, RULE_param = 10, RULE_paramList = 11, RULE_funTake = 12, 
-		RULE_funRet = 13, RULE_fun = 14, RULE_funHead = 15, RULE_nativ = 16, RULE_stmt = 17, 
-		RULE_varDefLoc = 18, RULE_setStmt = 19, RULE_callStmt = 20, RULE_returnStmt = 21, 
-		RULE_ifStmt = 22, RULE_elseIfStmt = 23, RULE_elseStmt = 24, RULE_loopStmt = 25, 
-		RULE_exitWhenStmt = 26, RULE_expr = 27, RULE_prim = 28, RULE_arrayAccess = 29, 
-		RULE_funRef = 30;
+		RULE_root = 0, RULE_typename = 1, RULE_varname = 2, RULE_funname = 3, 
+		RULE_type = 4, RULE_extends = 5, RULE_globals = 6, RULE_variable = 7, 
+		RULE_param = 8, RULE_params = 9, RULE_takes = 10, RULE_returns_ = 11, 
+		RULE_native = 12, RULE_function = 13, RULE_stmt = 14, RULE_set = 15, RULE_call = 16, 
+		RULE_return = 17, RULE_if = 18, RULE_elseif = 19, RULE_else = 20, RULE_loop = 21, 
+		RULE_exitwhen = 22, RULE_expr = 23, RULE_prim = 24, RULE_primcall = 25, 
+		RULE_primarr = 26, RULE_primfun = 27;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"root", "typeName", "varName", "typeDef", "typeExt", "var", "glob", "varDefGlob", 
-			"argList", "funCall", "param", "paramList", "funTake", "funRet", "fun", 
-			"funHead", "nativ", "stmt", "varDefLoc", "setStmt", "callStmt", "returnStmt", 
-			"ifStmt", "elseIfStmt", "elseStmt", "loopStmt", "exitWhenStmt", "expr", 
-			"prim", "arrayAccess", "funRef"
+			"root", "typename", "varname", "funname", "type", "extends", "globals", 
+			"variable", "param", "params", "takes", "returns_", "native", "function", 
+			"stmt", "set", "call", "return", "if", "elseif", "else", "loop", "exitwhen", 
+			"expr", "prim", "primcall", "primarr", "primfun"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'and'", "'array'", "'call'", "'constant'", "'debug'", "'else'", 
-			"'elseif'", "'endfunction'", "'endif'", "'endloop'", "'endglobals'", 
+			null, null, null, "'and'", "'array'", "'call'", "'constant'", "'debug'", 
+			"'else'", "'elseif'", "'endfunction'", "'endif'", "'endloop'", "'endglobals'", 
 			"'extends'", "'exitwhen'", "'false'", "'function'", "'globals'", "'if'", 
 			"'local'", "'loop'", "'native'", "'not'", "'nothing'", "'null'", "'or'", 
-			"'returns'", "'return'", "'set'", "'string'", "'takes'", "'then'", "'true'", 
-			"'type'", "','", "'=='", "'='", "'!='", "'<='", "'<'", "'>='", "'>'", 
-			"'+'", "'-'", "'*'", "'/'", "'('", "')'", "'['", "']'"
+			"'returns'", "'return'", "'set'", "'takes'", "'then'", "'true'", "'type'", 
+			"','", "'=='", "'='", "'!='", "'<='", "'<'", "'>='", "'>'", "'+'", "'-'", 
+			"'*'", "'/'", "'('", "')'", "'['", "']'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "AND", "ARRAY", "CALL", "CONSTANT", "DEBUG", "ELSE", "ELSEIF", 
-			"ENDFUNCTION", "ENDIF", "ENDLOOP", "ENDGLOBALS", "EXTENDS", "EXITWHEN", 
-			"FALSE", "FUNCTION", "GLOBALS", "IF", "LOCAL", "LOOP", "NATIVE", "NOT", 
-			"NOTHING", "NULL", "OR", "RETURNS", "RETURN", "SET", "STRING", "TAKES", 
+			null, "RAWVAL", "STRING", "AND", "ARRAY", "CALL", "CONSTANT", "DEBUG", 
+			"ELSE", "ELSEIF", "ENDFUNCTION", "ENDIF", "ENDLOOP", "ENDGLOBALS", "EXTENDS", 
+			"EXITWHEN", "FALSE", "FUNCTION", "GLOBALS", "IF", "LOCAL", "LOOP", "NATIVE", 
+			"NOT", "NOTHING", "NULL", "OR", "RETURNS", "RETURN", "SET", "TAKES", 
 			"THEN", "TRUE", "TYPE", "COMMA", "EQ_EQ", "EQ", "NEQ", "LT_EQ", "LT", 
 			"GT_EQ", "GT", "PLUS", "MINUS", "MUL", "DIV", "LPAREN", "RPAREN", "LBRACK", 
-			"RBRACK", "ID", "INTVAL", "STRVAL", "RAWVAL", "HEXVAL", "REALVAL", "WS", 
-			"NL", "LINE_COMMENT"
+			"RBRACK", "ID", "INTVAL", "HEXVAL", "REALVAL", "WS", "NL", "LINE_COMMENT"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -123,29 +120,29 @@ public class JassParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class RootContext extends ParserRuleContext {
 		public TerminalNode EOF() { return getToken(JassParser.EOF, 0); }
-		public List<TypeDefContext> typeDef() {
-			return getRuleContexts(TypeDefContext.class);
+		public List<TypeContext> type() {
+			return getRuleContexts(TypeContext.class);
 		}
-		public TypeDefContext typeDef(int i) {
-			return getRuleContext(TypeDefContext.class,i);
+		public TypeContext type(int i) {
+			return getRuleContext(TypeContext.class,i);
 		}
-		public List<NativContext> nativ() {
-			return getRuleContexts(NativContext.class);
+		public List<NativeContext> native_() {
+			return getRuleContexts(NativeContext.class);
 		}
-		public NativContext nativ(int i) {
-			return getRuleContext(NativContext.class,i);
+		public NativeContext native_(int i) {
+			return getRuleContext(NativeContext.class,i);
 		}
-		public List<GlobContext> glob() {
-			return getRuleContexts(GlobContext.class);
+		public List<GlobalsContext> globals() {
+			return getRuleContexts(GlobalsContext.class);
 		}
-		public GlobContext glob(int i) {
-			return getRuleContext(GlobContext.class,i);
+		public GlobalsContext globals(int i) {
+			return getRuleContext(GlobalsContext.class,i);
 		}
-		public List<FunContext> fun() {
-			return getRuleContexts(FunContext.class);
+		public List<FunctionContext> function() {
+			return getRuleContexts(FunctionContext.class);
 		}
-		public FunContext fun(int i) {
-			return getRuleContext(FunContext.class,i);
+		public FunctionContext function(int i) {
+			return getRuleContext(FunctionContext.class,i);
 		}
 		public RootContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -173,45 +170,45 @@ public class JassParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(68);
+			setState(62);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 4296114192L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 8594522176L) != 0)) {
 				{
-				setState(66);
+				setState(60);
 				_errHandler.sync(this);
 				switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
 				case 1:
 					{
-					setState(62);
-					typeDef();
+					setState(56);
+					type();
 					}
 					break;
 				case 2:
 					{
-					setState(63);
-					nativ();
+					setState(57);
+					native_();
 					}
 					break;
 				case 3:
 					{
-					setState(64);
-					glob();
+					setState(58);
+					globals();
 					}
 					break;
 				case 4:
 					{
-					setState(65);
-					fun();
+					setState(59);
+					function();
 					}
 					break;
 				}
 				}
-				setState(70);
+				setState(64);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(71);
+			setState(65);
 			match(EOF);
 			}
 		}
@@ -227,78 +224,174 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class TypeNameContext extends ParserRuleContext {
+	public static class TypenameContext extends ParserRuleContext {
 		public TerminalNode ID() { return getToken(JassParser.ID, 0); }
-		public TypeNameContext(ParserRuleContext parent, int invokingState) {
+		public TypenameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_typeName; }
+		@Override public int getRuleIndex() { return RULE_typename; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterTypeName(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterTypename(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitTypeName(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitTypename(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitTypeName(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitTypename(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final TypeNameContext typeName() throws RecognitionException {
-		TypeNameContext _localctx = new TypeNameContext(_ctx, getState());
-		enterRule(_localctx, 2, RULE_typeName);
+	public final TypenameContext typename() throws RecognitionException {
+		TypenameContext _localctx = new TypenameContext(_ctx, getState());
+		enterRule(_localctx, 2, RULE_typename);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(67);
+			match(ID);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	@SuppressWarnings("CheckReturnValue")
+	public static class VarnameContext extends ParserRuleContext {
+		public TerminalNode ID() { return getToken(JassParser.ID, 0); }
+		public VarnameContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_varname; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterVarname(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitVarname(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitVarname(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final VarnameContext varname() throws RecognitionException {
+		VarnameContext _localctx = new VarnameContext(_ctx, getState());
+		enterRule(_localctx, 4, RULE_varname);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(69);
+			match(ID);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	@SuppressWarnings("CheckReturnValue")
+	public static class FunnameContext extends ParserRuleContext {
+		public TerminalNode ID() { return getToken(JassParser.ID, 0); }
+		public FunnameContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_funname; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterFunname(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitFunname(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitFunname(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final FunnameContext funname() throws RecognitionException {
+		FunnameContext _localctx = new FunnameContext(_ctx, getState());
+		enterRule(_localctx, 6, RULE_funname);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(71);
+			match(ID);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	@SuppressWarnings("CheckReturnValue")
+	public static class TypeContext extends ParserRuleContext {
+		public TerminalNode TYPE() { return getToken(JassParser.TYPE, 0); }
+		public TypenameContext typename() {
+			return getRuleContext(TypenameContext.class,0);
+		}
+		public ExtendsContext extends_() {
+			return getRuleContext(ExtendsContext.class,0);
+		}
+		public TypeContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_type; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitType(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final TypeContext type() throws RecognitionException {
+		TypeContext _localctx = new TypeContext(_ctx, getState());
+		enterRule(_localctx, 8, RULE_type);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(73);
-			match(ID);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	@SuppressWarnings("CheckReturnValue")
-	public static class VarNameContext extends ParserRuleContext {
-		public TerminalNode ID() { return getToken(JassParser.ID, 0); }
-		public VarNameContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_varName; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterVarName(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitVarName(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitVarName(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final VarNameContext varName() throws RecognitionException {
-		VarNameContext _localctx = new VarNameContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_varName);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
+			match(TYPE);
+			setState(74);
+			typename();
 			setState(75);
-			match(ID);
+			extends_();
 			}
 		}
 		catch (RecognitionException re) {
@@ -313,93 +406,40 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class TypeDefContext extends ParserRuleContext {
-		public TerminalNode TYPE() { return getToken(JassParser.TYPE, 0); }
-		public TypeNameContext typeName() {
-			return getRuleContext(TypeNameContext.class,0);
+	public static class ExtendsContext extends ParserRuleContext {
+		public TerminalNode EXTENDS() { return getToken(JassParser.EXTENDS, 0); }
+		public TypenameContext typename() {
+			return getRuleContext(TypenameContext.class,0);
 		}
-		public TypeExtContext typeExt() {
-			return getRuleContext(TypeExtContext.class,0);
-		}
-		public TypeDefContext(ParserRuleContext parent, int invokingState) {
+		public ExtendsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_typeDef; }
+		@Override public int getRuleIndex() { return RULE_extends; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterTypeDef(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterExtends(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitTypeDef(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitExtends(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitTypeDef(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExtends(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final TypeDefContext typeDef() throws RecognitionException {
-		TypeDefContext _localctx = new TypeDefContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_typeDef);
+	public final ExtendsContext extends_() throws RecognitionException {
+		ExtendsContext _localctx = new ExtendsContext(_ctx, getState());
+		enterRule(_localctx, 10, RULE_extends);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(77);
-			match(TYPE);
-			setState(78);
-			typeName();
-			setState(79);
-			typeExt();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	@SuppressWarnings("CheckReturnValue")
-	public static class TypeExtContext extends ParserRuleContext {
-		public TerminalNode EXTENDS() { return getToken(JassParser.EXTENDS, 0); }
-		public TypeNameContext typeName() {
-			return getRuleContext(TypeNameContext.class,0);
-		}
-		public TypeExtContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_typeExt; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterTypeExt(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitTypeExt(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitTypeExt(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final TypeExtContext typeExt() throws RecognitionException {
-		TypeExtContext _localctx = new TypeExtContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_typeExt);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(81);
 			match(EXTENDS);
-			setState(82);
-			typeName();
+			setState(78);
+			typename();
 			}
 		}
 		catch (RecognitionException re) {
@@ -414,136 +454,58 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class VarContext extends ParserRuleContext {
-		public TypeNameContext typeName() {
-			return getRuleContext(TypeNameContext.class,0);
-		}
-		public VarNameContext varName() {
-			return getRuleContext(VarNameContext.class,0);
-		}
-		public TerminalNode ARRAY() { return getToken(JassParser.ARRAY, 0); }
-		public TerminalNode EQ() { return getToken(JassParser.EQ, 0); }
-		public ExprContext expr() {
-			return getRuleContext(ExprContext.class,0);
-		}
-		public VarContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_var; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterVar(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitVar(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitVar(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final VarContext var() throws RecognitionException {
-		VarContext _localctx = new VarContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_var);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(84);
-			typeName();
-			setState(86);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==ARRAY) {
-				{
-				setState(85);
-				match(ARRAY);
-				}
-			}
-
-			setState(88);
-			varName();
-			setState(91);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==EQ) {
-				{
-				setState(89);
-				match(EQ);
-				setState(90);
-				expr(0);
-				}
-			}
-
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	@SuppressWarnings("CheckReturnValue")
-	public static class GlobContext extends ParserRuleContext {
+	public static class GlobalsContext extends ParserRuleContext {
 		public TerminalNode GLOBALS() { return getToken(JassParser.GLOBALS, 0); }
 		public TerminalNode ENDGLOBALS() { return getToken(JassParser.ENDGLOBALS, 0); }
-		public List<VarDefGlobContext> varDefGlob() {
-			return getRuleContexts(VarDefGlobContext.class);
+		public List<VariableContext> variable() {
+			return getRuleContexts(VariableContext.class);
 		}
-		public VarDefGlobContext varDefGlob(int i) {
-			return getRuleContext(VarDefGlobContext.class,i);
+		public VariableContext variable(int i) {
+			return getRuleContext(VariableContext.class,i);
 		}
-		public GlobContext(ParserRuleContext parent, int invokingState) {
+		public GlobalsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_glob; }
+		@Override public int getRuleIndex() { return RULE_globals; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterGlob(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterGlobals(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitGlob(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitGlobals(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitGlob(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitGlobals(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final GlobContext glob() throws RecognitionException {
-		GlobContext _localctx = new GlobContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_glob);
+	public final GlobalsContext globals() throws RecognitionException {
+		GlobalsContext _localctx = new GlobalsContext(_ctx, getState());
+		enterRule(_localctx, 12, RULE_globals);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(93);
+			setState(80);
 			match(GLOBALS);
-			setState(97);
+			setState(84);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==CONSTANT || _la==ID) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 1125899907891264L) != 0)) {
 				{
 				{
-				setState(94);
-				varDefGlob();
+				setState(81);
+				variable();
 				}
 				}
-				setState(99);
+				setState(86);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(100);
+			setState(87);
 			match(ENDGLOBALS);
 			}
 		}
@@ -559,181 +521,92 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class VarDefGlobContext extends ParserRuleContext {
-		public VarContext var() {
-			return getRuleContext(VarContext.class,0);
+	public static class VariableContext extends ParserRuleContext {
+		public TypenameContext typename() {
+			return getRuleContext(TypenameContext.class,0);
+		}
+		public VarnameContext varname() {
+			return getRuleContext(VarnameContext.class,0);
 		}
 		public TerminalNode CONSTANT() { return getToken(JassParser.CONSTANT, 0); }
-		public VarDefGlobContext(ParserRuleContext parent, int invokingState) {
+		public TerminalNode LOCAL() { return getToken(JassParser.LOCAL, 0); }
+		public TerminalNode ARRAY() { return getToken(JassParser.ARRAY, 0); }
+		public TerminalNode EQ() { return getToken(JassParser.EQ, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public VariableContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_varDefGlob; }
+		@Override public int getRuleIndex() { return RULE_variable; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterVarDefGlob(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterVariable(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitVarDefGlob(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitVariable(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitVarDefGlob(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitVariable(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final VarDefGlobContext varDefGlob() throws RecognitionException {
-		VarDefGlobContext _localctx = new VarDefGlobContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_varDefGlob);
+	public final VariableContext variable() throws RecognitionException {
+		VariableContext _localctx = new VariableContext(_ctx, getState());
+		enterRule(_localctx, 14, RULE_variable);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(103);
+			setState(90);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==CONSTANT) {
 				{
-				setState(102);
+				setState(89);
 				match(CONSTANT);
 				}
 			}
 
-			setState(105);
-			var();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	@SuppressWarnings("CheckReturnValue")
-	public static class ArgListContext extends ParserRuleContext {
-		public List<ExprContext> expr() {
-			return getRuleContexts(ExprContext.class);
-		}
-		public ExprContext expr(int i) {
-			return getRuleContext(ExprContext.class,i);
-		}
-		public List<TerminalNode> COMMA() { return getTokens(JassParser.COMMA); }
-		public TerminalNode COMMA(int i) {
-			return getToken(JassParser.COMMA, i);
-		}
-		public ArgListContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_argList; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterArgList(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitArgList(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitArgList(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final ArgListContext argList() throws RecognitionException {
-		ArgListContext _localctx = new ArgListContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_argList);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(107);
-			expr(0);
-			setState(112);
+			setState(93);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==COMMA) {
+			if (_la==LOCAL) {
 				{
+				setState(92);
+				match(LOCAL);
+				}
+			}
+
+			setState(95);
+			typename();
+			setState(97);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==ARRAY) {
 				{
-				setState(108);
-				match(COMMA);
-				setState(109);
+				setState(96);
+				match(ARRAY);
+				}
+			}
+
+			setState(99);
+			varname();
+			setState(102);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==EQ) {
+				{
+				setState(100);
+				match(EQ);
+				setState(101);
 				expr(0);
 				}
-				}
-				setState(114);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	@SuppressWarnings("CheckReturnValue")
-	public static class FunCallContext extends ParserRuleContext {
-		public TerminalNode ID() { return getToken(JassParser.ID, 0); }
-		public TerminalNode LPAREN() { return getToken(JassParser.LPAREN, 0); }
-		public TerminalNode RPAREN() { return getToken(JassParser.RPAREN, 0); }
-		public ArgListContext argList() {
-			return getRuleContext(ArgListContext.class,0);
-		}
-		public FunCallContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_funCall; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterFunCall(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitFunCall(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitFunCall(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final FunCallContext funCall() throws RecognitionException {
-		FunCallContext _localctx = new FunCallContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_funCall);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(115);
-			match(ID);
-			setState(116);
-			match(LPAREN);
-			setState(118);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 35534018944483328L) != 0)) {
-				{
-				setState(117);
-				argList();
-				}
 			}
 
-			setState(120);
-			match(RPAREN);
 			}
 		}
 		catch (RecognitionException re) {
@@ -749,10 +622,12 @@ public class JassParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class ParamContext extends ParserRuleContext {
-		public TypeNameContext typeName() {
-			return getRuleContext(TypeNameContext.class,0);
+		public TypenameContext typename() {
+			return getRuleContext(TypenameContext.class,0);
 		}
-		public TerminalNode ID() { return getToken(JassParser.ID, 0); }
+		public VarnameContext varname() {
+			return getRuleContext(VarnameContext.class,0);
+		}
 		public ParamContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -774,14 +649,14 @@ public class JassParser extends Parser {
 
 	public final ParamContext param() throws RecognitionException {
 		ParamContext _localctx = new ParamContext(_ctx, getState());
-		enterRule(_localctx, 20, RULE_param);
+		enterRule(_localctx, 16, RULE_param);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(122);
-			typeName();
-			setState(123);
-			match(ID);
+			setState(104);
+			typename();
+			setState(105);
+			varname();
 			}
 		}
 		catch (RecognitionException re) {
@@ -796,7 +671,7 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class ParamListContext extends ParserRuleContext {
+	public static class ParamsContext extends ParserRuleContext {
 		public List<ParamContext> param() {
 			return getRuleContexts(ParamContext.class);
 		}
@@ -807,47 +682,47 @@ public class JassParser extends Parser {
 		public TerminalNode COMMA(int i) {
 			return getToken(JassParser.COMMA, i);
 		}
-		public ParamListContext(ParserRuleContext parent, int invokingState) {
+		public ParamsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_paramList; }
+		@Override public int getRuleIndex() { return RULE_params; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterParamList(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterParams(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitParamList(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitParams(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitParamList(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitParams(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final ParamListContext paramList() throws RecognitionException {
-		ParamListContext _localctx = new ParamListContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_paramList);
+	public final ParamsContext params() throws RecognitionException {
+		ParamsContext _localctx = new ParamsContext(_ctx, getState());
+		enterRule(_localctx, 18, RULE_params);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(125);
+			setState(107);
 			param();
-			setState(130);
+			setState(112);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==COMMA) {
 				{
 				{
-				setState(126);
+				setState(108);
 				match(COMMA);
-				setState(127);
+				setState(109);
 				param();
 				}
 				}
-				setState(132);
+				setState(114);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -865,52 +740,52 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class FunTakeContext extends ParserRuleContext {
+	public static class TakesContext extends ParserRuleContext {
 		public TerminalNode TAKES() { return getToken(JassParser.TAKES, 0); }
 		public TerminalNode NOTHING() { return getToken(JassParser.NOTHING, 0); }
-		public ParamListContext paramList() {
-			return getRuleContext(ParamListContext.class,0);
+		public ParamsContext params() {
+			return getRuleContext(ParamsContext.class,0);
 		}
-		public FunTakeContext(ParserRuleContext parent, int invokingState) {
+		public TakesContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_funTake; }
+		@Override public int getRuleIndex() { return RULE_takes; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterFunTake(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterTakes(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitFunTake(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitTakes(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitFunTake(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitTakes(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final FunTakeContext funTake() throws RecognitionException {
-		FunTakeContext _localctx = new FunTakeContext(_ctx, getState());
-		enterRule(_localctx, 24, RULE_funTake);
+	public final TakesContext takes() throws RecognitionException {
+		TakesContext _localctx = new TakesContext(_ctx, getState());
+		enterRule(_localctx, 20, RULE_takes);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(133);
+			setState(115);
 			match(TAKES);
-			setState(136);
+			setState(118);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case NOTHING:
 				{
-				setState(134);
+				setState(116);
 				match(NOTHING);
 				}
 				break;
 			case ID:
 				{
-				setState(135);
-				paramList();
+				setState(117);
+				params();
 				}
 				break;
 			default:
@@ -930,52 +805,52 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class FunRetContext extends ParserRuleContext {
+	public static class Returns_Context extends ParserRuleContext {
 		public TerminalNode RETURNS() { return getToken(JassParser.RETURNS, 0); }
 		public TerminalNode NOTHING() { return getToken(JassParser.NOTHING, 0); }
-		public TypeNameContext typeName() {
-			return getRuleContext(TypeNameContext.class,0);
+		public TypenameContext typename() {
+			return getRuleContext(TypenameContext.class,0);
 		}
-		public FunRetContext(ParserRuleContext parent, int invokingState) {
+		public Returns_Context(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_funRet; }
+		@Override public int getRuleIndex() { return RULE_returns_; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterFunRet(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterReturns_(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitFunRet(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitReturns_(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitFunRet(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitReturns_(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final FunRetContext funRet() throws RecognitionException {
-		FunRetContext _localctx = new FunRetContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_funRet);
+	public final Returns_Context returns_() throws RecognitionException {
+		Returns_Context _localctx = new Returns_Context(_ctx, getState());
+		enterRule(_localctx, 22, RULE_returns_);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(138);
+			setState(120);
 			match(RETURNS);
-			setState(141);
+			setState(123);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case NOTHING:
 				{
-				setState(139);
+				setState(121);
 				match(NOTHING);
 				}
 				break;
 			case ID:
 				{
-				setState(140);
-				typeName();
+				setState(122);
+				typename();
 				}
 				break;
 			default:
@@ -995,10 +870,86 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class FunContext extends ParserRuleContext {
+	public static class NativeContext extends ParserRuleContext {
+		public TerminalNode NATIVE() { return getToken(JassParser.NATIVE, 0); }
+		public FunnameContext funname() {
+			return getRuleContext(FunnameContext.class,0);
+		}
+		public TakesContext takes() {
+			return getRuleContext(TakesContext.class,0);
+		}
+		public Returns_Context returns_() {
+			return getRuleContext(Returns_Context.class,0);
+		}
+		public TerminalNode CONSTANT() { return getToken(JassParser.CONSTANT, 0); }
+		public NativeContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_native; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterNative(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitNative(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitNative(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final NativeContext native_() throws RecognitionException {
+		NativeContext _localctx = new NativeContext(_ctx, getState());
+		enterRule(_localctx, 24, RULE_native);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(126);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==CONSTANT) {
+				{
+				setState(125);
+				match(CONSTANT);
+				}
+			}
+
+			setState(128);
+			match(NATIVE);
+			setState(129);
+			funname();
+			setState(130);
+			takes();
+			setState(131);
+			returns_();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	@SuppressWarnings("CheckReturnValue")
+	public static class FunctionContext extends ParserRuleContext {
 		public TerminalNode FUNCTION() { return getToken(JassParser.FUNCTION, 0); }
-		public FunHeadContext funHead() {
-			return getRuleContext(FunHeadContext.class,0);
+		public FunnameContext funname() {
+			return getRuleContext(FunnameContext.class,0);
+		}
+		public TakesContext takes() {
+			return getRuleContext(TakesContext.class,0);
+		}
+		public Returns_Context returns_() {
+			return getRuleContext(Returns_Context.class,0);
 		}
 		public TerminalNode ENDFUNCTION() { return getToken(JassParser.ENDFUNCTION, 0); }
 		public TerminalNode CONSTANT() { return getToken(JassParser.CONSTANT, 0); }
@@ -1008,61 +959,65 @@ public class JassParser extends Parser {
 		public StmtContext stmt(int i) {
 			return getRuleContext(StmtContext.class,i);
 		}
-		public FunContext(ParserRuleContext parent, int invokingState) {
+		public FunctionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_fun; }
+		@Override public int getRuleIndex() { return RULE_function; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterFun(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterFunction(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitFun(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitFunction(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitFun(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitFunction(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final FunContext fun() throws RecognitionException {
-		FunContext _localctx = new FunContext(_ctx, getState());
-		enterRule(_localctx, 28, RULE_fun);
+	public final FunctionContext function() throws RecognitionException {
+		FunctionContext _localctx = new FunctionContext(_ctx, getState());
+		enterRule(_localctx, 26, RULE_function);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(144);
+			setState(134);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==CONSTANT) {
 				{
-				setState(143);
+				setState(133);
 				match(CONSTANT);
 				}
 			}
 
-			setState(146);
+			setState(136);
 			match(FUNCTION);
-			setState(147);
-			funHead();
-			setState(151);
+			setState(137);
+			funname();
+			setState(138);
+			takes();
+			setState(139);
+			returns_();
+			setState(143);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 562950155673640L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 1125900715852000L) != 0)) {
 				{
 				{
-				setState(148);
+				setState(140);
 				stmt();
 				}
 				}
-				setState(153);
+				setState(145);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(154);
+			setState(146);
 			match(ENDFUNCTION);
 			}
 		}
@@ -1078,140 +1033,27 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class FunHeadContext extends ParserRuleContext {
-		public TerminalNode ID() { return getToken(JassParser.ID, 0); }
-		public FunTakeContext funTake() {
-			return getRuleContext(FunTakeContext.class,0);
-		}
-		public FunRetContext funRet() {
-			return getRuleContext(FunRetContext.class,0);
-		}
-		public FunHeadContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_funHead; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterFunHead(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitFunHead(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitFunHead(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final FunHeadContext funHead() throws RecognitionException {
-		FunHeadContext _localctx = new FunHeadContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_funHead);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(156);
-			match(ID);
-			setState(157);
-			funTake();
-			setState(158);
-			funRet();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	@SuppressWarnings("CheckReturnValue")
-	public static class NativContext extends ParserRuleContext {
-		public TerminalNode NATIVE() { return getToken(JassParser.NATIVE, 0); }
-		public FunHeadContext funHead() {
-			return getRuleContext(FunHeadContext.class,0);
-		}
-		public TerminalNode CONSTANT() { return getToken(JassParser.CONSTANT, 0); }
-		public NativContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_nativ; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterNativ(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitNativ(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitNativ(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final NativContext nativ() throws RecognitionException {
-		NativContext _localctx = new NativContext(_ctx, getState());
-		enterRule(_localctx, 32, RULE_nativ);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(161);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==CONSTANT) {
-				{
-				setState(160);
-				match(CONSTANT);
-				}
-			}
-
-			setState(163);
-			match(NATIVE);
-			setState(164);
-			funHead();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	@SuppressWarnings("CheckReturnValue")
 	public static class StmtContext extends ParserRuleContext {
-		public SetStmtContext setStmt() {
-			return getRuleContext(SetStmtContext.class,0);
+		public VariableContext variable() {
+			return getRuleContext(VariableContext.class,0);
 		}
-		public CallStmtContext callStmt() {
-			return getRuleContext(CallStmtContext.class,0);
+		public SetContext set() {
+			return getRuleContext(SetContext.class,0);
 		}
-		public VarDefLocContext varDefLoc() {
-			return getRuleContext(VarDefLocContext.class,0);
+		public CallContext call() {
+			return getRuleContext(CallContext.class,0);
 		}
-		public ReturnStmtContext returnStmt() {
-			return getRuleContext(ReturnStmtContext.class,0);
+		public ReturnContext return_() {
+			return getRuleContext(ReturnContext.class,0);
 		}
-		public IfStmtContext ifStmt() {
-			return getRuleContext(IfStmtContext.class,0);
+		public IfContext if_() {
+			return getRuleContext(IfContext.class,0);
 		}
-		public LoopStmtContext loopStmt() {
-			return getRuleContext(LoopStmtContext.class,0);
+		public LoopContext loop() {
+			return getRuleContext(LoopContext.class,0);
 		}
-		public ExitWhenStmtContext exitWhenStmt() {
-			return getRuleContext(ExitWhenStmtContext.class,0);
+		public ExitwhenContext exitwhen() {
+			return getRuleContext(ExitwhenContext.class,0);
 		}
 		public StmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1234,60 +1076,61 @@ public class JassParser extends Parser {
 
 	public final StmtContext stmt() throws RecognitionException {
 		StmtContext _localctx = new StmtContext(_ctx, getState());
-		enterRule(_localctx, 34, RULE_stmt);
+		enterRule(_localctx, 28, RULE_stmt);
 		try {
-			setState(173);
+			setState(155);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-			case SET:
+			case CONSTANT:
+			case LOCAL:
+			case ID:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(166);
-				setStmt();
+				setState(148);
+				variable();
+				}
+				break;
+			case SET:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(149);
+				set();
 				}
 				break;
 			case CALL:
 			case DEBUG:
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(167);
-				callStmt();
-				}
-				break;
-			case LOCAL:
-			case ID:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(168);
-				varDefLoc();
+				setState(150);
+				call();
 				}
 				break;
 			case RETURN:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(169);
-				returnStmt();
+				setState(151);
+				return_();
 				}
 				break;
 			case IF:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(170);
-				ifStmt();
+				setState(152);
+				if_();
 				}
 				break;
 			case LOOP:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(171);
-				loopStmt();
+				setState(153);
+				loop();
 				}
 				break;
 			case EXITWHEN:
 				enterOuterAlt(_localctx, 7);
 				{
-				setState(172);
-				exitWhenStmt();
+				setState(154);
+				exitwhen();
 				}
 				break;
 			default:
@@ -1306,119 +1149,64 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class VarDefLocContext extends ParserRuleContext {
-		public VarContext var() {
-			return getRuleContext(VarContext.class,0);
-		}
-		public TerminalNode LOCAL() { return getToken(JassParser.LOCAL, 0); }
-		public VarDefLocContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_varDefLoc; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterVarDefLoc(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitVarDefLoc(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitVarDefLoc(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final VarDefLocContext varDefLoc() throws RecognitionException {
-		VarDefLocContext _localctx = new VarDefLocContext(_ctx, getState());
-		enterRule(_localctx, 36, RULE_varDefLoc);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(176);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==LOCAL) {
-				{
-				setState(175);
-				match(LOCAL);
-				}
-			}
-
-			setState(178);
-			var();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	@SuppressWarnings("CheckReturnValue")
-	public static class SetStmtContext extends ParserRuleContext {
+	public static class SetContext extends ParserRuleContext {
 		public TerminalNode SET() { return getToken(JassParser.SET, 0); }
 		public TerminalNode EQ() { return getToken(JassParser.EQ, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public ArrayAccessContext arrayAccess() {
-			return getRuleContext(ArrayAccessContext.class,0);
+		public PrimarrContext primarr() {
+			return getRuleContext(PrimarrContext.class,0);
 		}
-		public TerminalNode ID() { return getToken(JassParser.ID, 0); }
-		public SetStmtContext(ParserRuleContext parent, int invokingState) {
+		public VarnameContext varname() {
+			return getRuleContext(VarnameContext.class,0);
+		}
+		public SetContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_setStmt; }
+		@Override public int getRuleIndex() { return RULE_set; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterSetStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterSet(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitSetStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitSet(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitSetStmt(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitSet(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final SetStmtContext setStmt() throws RecognitionException {
-		SetStmtContext _localctx = new SetStmtContext(_ctx, getState());
-		enterRule(_localctx, 38, RULE_setStmt);
+	public final SetContext set() throws RecognitionException {
+		SetContext _localctx = new SetContext(_ctx, getState());
+		enterRule(_localctx, 30, RULE_set);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(180);
+			setState(157);
 			match(SET);
-			setState(183);
+			setState(160);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,16,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
 			case 1:
 				{
-				setState(181);
-				arrayAccess();
+				setState(158);
+				primarr();
 				}
 				break;
 			case 2:
 				{
-				setState(182);
-				match(ID);
+				setState(159);
+				varname();
 				}
 				break;
 			}
-			setState(185);
+			setState(162);
 			match(EQ);
-			setState(186);
+			setState(163);
 			expr(0);
 			}
 		}
@@ -1434,52 +1222,52 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class CallStmtContext extends ParserRuleContext {
+	public static class CallContext extends ParserRuleContext {
 		public TerminalNode CALL() { return getToken(JassParser.CALL, 0); }
-		public FunCallContext funCall() {
-			return getRuleContext(FunCallContext.class,0);
+		public PrimcallContext primcall() {
+			return getRuleContext(PrimcallContext.class,0);
 		}
 		public TerminalNode DEBUG() { return getToken(JassParser.DEBUG, 0); }
-		public CallStmtContext(ParserRuleContext parent, int invokingState) {
+		public CallContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_callStmt; }
+		@Override public int getRuleIndex() { return RULE_call; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterCallStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterCall(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitCallStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitCall(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitCallStmt(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitCall(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final CallStmtContext callStmt() throws RecognitionException {
-		CallStmtContext _localctx = new CallStmtContext(_ctx, getState());
-		enterRule(_localctx, 40, RULE_callStmt);
+	public final CallContext call() throws RecognitionException {
+		CallContext _localctx = new CallContext(_ctx, getState());
+		enterRule(_localctx, 32, RULE_call);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(189);
+			setState(166);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==DEBUG) {
 				{
-				setState(188);
+				setState(165);
 				match(DEBUG);
 				}
 			}
 
-			setState(191);
+			setState(168);
 			match(CALL);
-			setState(192);
-			funCall();
+			setState(169);
+			primcall();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1494,44 +1282,44 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class ReturnStmtContext extends ParserRuleContext {
+	public static class ReturnContext extends ParserRuleContext {
 		public TerminalNode RETURN() { return getToken(JassParser.RETURN, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public ReturnStmtContext(ParserRuleContext parent, int invokingState) {
+		public ReturnContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_returnStmt; }
+		@Override public int getRuleIndex() { return RULE_return; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterReturnStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterReturn(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitReturnStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitReturn(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitReturnStmt(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitReturn(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final ReturnStmtContext returnStmt() throws RecognitionException {
-		ReturnStmtContext _localctx = new ReturnStmtContext(_ctx, getState());
-		enterRule(_localctx, 42, RULE_returnStmt);
+	public final ReturnContext return_() throws RecognitionException {
+		ReturnContext _localctx = new ReturnContext(_ctx, getState());
+		enterRule(_localctx, 34, RULE_return);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(194);
+			setState(171);
 			match(RETURN);
-			setState(196);
+			setState(173);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,18,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,16,_ctx) ) {
 			case 1:
 				{
-				setState(195);
+				setState(172);
 				expr(0);
 				}
 				break;
@@ -1550,7 +1338,7 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class IfStmtContext extends ParserRuleContext {
+	public static class IfContext extends ParserRuleContext {
 		public TerminalNode IF() { return getToken(JassParser.IF, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
@@ -1563,67 +1351,68 @@ public class JassParser extends Parser {
 		public StmtContext stmt(int i) {
 			return getRuleContext(StmtContext.class,i);
 		}
-		public List<ElseIfStmtContext> elseIfStmt() {
-			return getRuleContexts(ElseIfStmtContext.class);
+		public List<ElseifContext> elseif() {
+			return getRuleContexts(ElseifContext.class);
 		}
-		public ElseIfStmtContext elseIfStmt(int i) {
-			return getRuleContext(ElseIfStmtContext.class,i);
+		public ElseifContext elseif(int i) {
+			return getRuleContext(ElseifContext.class,i);
 		}
-		public List<ElseStmtContext> elseStmt() {
-			return getRuleContexts(ElseStmtContext.class);
+		public List<ElseContext> else_() {
+			return getRuleContexts(ElseContext.class);
 		}
-		public ElseStmtContext elseStmt(int i) {
-			return getRuleContext(ElseStmtContext.class,i);
+		public ElseContext else_(int i) {
+			return getRuleContext(ElseContext.class,i);
 		}
-		public IfStmtContext(ParserRuleContext parent, int invokingState) {
+		public IfContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_ifStmt; }
+		@Override public int getRuleIndex() { return RULE_if; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterIfStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterIf(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitIfStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitIf(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitIfStmt(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitIf(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final IfStmtContext ifStmt() throws RecognitionException {
-		IfStmtContext _localctx = new IfStmtContext(_ctx, getState());
-		enterRule(_localctx, 44, RULE_ifStmt);
+	public final IfContext if_() throws RecognitionException {
+		IfContext _localctx = new IfContext(_ctx, getState());
+		enterRule(_localctx, 36, RULE_if);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(198);
+			setState(175);
 			match(IF);
-			setState(199);
+			setState(176);
 			expr(0);
-			setState(201);
+			setState(178);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==THEN) {
 				{
-				setState(200);
+				setState(177);
 				match(THEN);
 				}
 			}
 
-			setState(208);
+			setState(185);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 562950155673832L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 1125900715852768L) != 0)) {
 				{
-				setState(206);
+				setState(183);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case CALL:
+				case CONSTANT:
 				case DEBUG:
 				case EXITWHEN:
 				case IF:
@@ -1633,31 +1422,31 @@ public class JassParser extends Parser {
 				case SET:
 				case ID:
 					{
-					setState(203);
+					setState(180);
 					stmt();
 					}
 					break;
 				case ELSEIF:
 					{
-					setState(204);
-					elseIfStmt();
+					setState(181);
+					elseif();
 					}
 					break;
 				case ELSE:
 					{
-					setState(205);
-					elseStmt();
+					setState(182);
+					else_();
 					}
 					break;
 				default:
 					throw new NoViableAltException(this);
 				}
 				}
-				setState(210);
+				setState(187);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(211);
+			setState(188);
 			match(ENDIF);
 			}
 		}
@@ -1673,7 +1462,7 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class ElseIfStmtContext extends ParserRuleContext {
+	public static class ElseifContext extends ParserRuleContext {
 		public TerminalNode ELSEIF() { return getToken(JassParser.ELSEIF, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
@@ -1685,62 +1474,62 @@ public class JassParser extends Parser {
 		public StmtContext stmt(int i) {
 			return getRuleContext(StmtContext.class,i);
 		}
-		public ElseIfStmtContext(ParserRuleContext parent, int invokingState) {
+		public ElseifContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_elseIfStmt; }
+		@Override public int getRuleIndex() { return RULE_elseif; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterElseIfStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterElseif(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitElseIfStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitElseif(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitElseIfStmt(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitElseif(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final ElseIfStmtContext elseIfStmt() throws RecognitionException {
-		ElseIfStmtContext _localctx = new ElseIfStmtContext(_ctx, getState());
-		enterRule(_localctx, 46, RULE_elseIfStmt);
+	public final ElseifContext elseif() throws RecognitionException {
+		ElseifContext _localctx = new ElseifContext(_ctx, getState());
+		enterRule(_localctx, 38, RULE_elseif);
 		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(213);
+			setState(190);
 			match(ELSEIF);
-			setState(214);
+			setState(191);
 			expr(0);
-			setState(216);
+			setState(193);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==THEN) {
 				{
-				setState(215);
+				setState(192);
 				match(THEN);
 				}
 			}
 
-			setState(221);
+			setState(198);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,23,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,21,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(218);
+					setState(195);
 					stmt();
 					}
 					} 
 				}
-				setState(223);
+				setState(200);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,23,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,21,_ctx);
 			}
 			}
 		}
@@ -1756,7 +1545,7 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class ElseStmtContext extends ParserRuleContext {
+	public static class ElseContext extends ParserRuleContext {
 		public TerminalNode ELSE() { return getToken(JassParser.ELSE, 0); }
 		public List<StmtContext> stmt() {
 			return getRuleContexts(StmtContext.class);
@@ -1764,49 +1553,49 @@ public class JassParser extends Parser {
 		public StmtContext stmt(int i) {
 			return getRuleContext(StmtContext.class,i);
 		}
-		public ElseStmtContext(ParserRuleContext parent, int invokingState) {
+		public ElseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_elseStmt; }
+		@Override public int getRuleIndex() { return RULE_else; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterElseStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterElse(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitElseStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitElse(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitElseStmt(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitElse(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final ElseStmtContext elseStmt() throws RecognitionException {
-		ElseStmtContext _localctx = new ElseStmtContext(_ctx, getState());
-		enterRule(_localctx, 48, RULE_elseStmt);
+	public final ElseContext else_() throws RecognitionException {
+		ElseContext _localctx = new ElseContext(_ctx, getState());
+		enterRule(_localctx, 40, RULE_else);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(224);
+			setState(201);
 			match(ELSE);
-			setState(228);
+			setState(205);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,24,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,22,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(225);
+					setState(202);
 					stmt();
 					}
 					} 
 				}
-				setState(230);
+				setState(207);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,24,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,22,_ctx);
 			}
 			}
 		}
@@ -1822,7 +1611,7 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class LoopStmtContext extends ParserRuleContext {
+	public static class LoopContext extends ParserRuleContext {
 		public TerminalNode LOOP() { return getToken(JassParser.LOOP, 0); }
 		public TerminalNode ENDLOOP() { return getToken(JassParser.ENDLOOP, 0); }
 		public List<StmtContext> stmt() {
@@ -1831,49 +1620,49 @@ public class JassParser extends Parser {
 		public StmtContext stmt(int i) {
 			return getRuleContext(StmtContext.class,i);
 		}
-		public LoopStmtContext(ParserRuleContext parent, int invokingState) {
+		public LoopContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_loopStmt; }
+		@Override public int getRuleIndex() { return RULE_loop; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterLoopStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterLoop(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitLoopStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitLoop(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitLoopStmt(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitLoop(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final LoopStmtContext loopStmt() throws RecognitionException {
-		LoopStmtContext _localctx = new LoopStmtContext(_ctx, getState());
-		enterRule(_localctx, 50, RULE_loopStmt);
+	public final LoopContext loop() throws RecognitionException {
+		LoopContext _localctx = new LoopContext(_ctx, getState());
+		enterRule(_localctx, 42, RULE_loop);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(231);
+			setState(208);
 			match(LOOP);
-			setState(235);
+			setState(212);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 562950155673640L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 1125900715852000L) != 0)) {
 				{
 				{
-				setState(232);
+				setState(209);
 				stmt();
 				}
 				}
-				setState(237);
+				setState(214);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(238);
+			setState(215);
 			match(ENDLOOP);
 			}
 		}
@@ -1889,39 +1678,39 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class ExitWhenStmtContext extends ParserRuleContext {
+	public static class ExitwhenContext extends ParserRuleContext {
 		public TerminalNode EXITWHEN() { return getToken(JassParser.EXITWHEN, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public ExitWhenStmtContext(ParserRuleContext parent, int invokingState) {
+		public ExitwhenContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_exitWhenStmt; }
+		@Override public int getRuleIndex() { return RULE_exitwhen; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExitWhenStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterExitwhen(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExitWhenStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitExitwhen(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExitWhenStmt(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExitwhen(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final ExitWhenStmtContext exitWhenStmt() throws RecognitionException {
-		ExitWhenStmtContext _localctx = new ExitWhenStmtContext(_ctx, getState());
-		enterRule(_localctx, 52, RULE_exitWhenStmt);
+	public final ExitwhenContext exitwhen() throws RecognitionException {
+		ExitwhenContext _localctx = new ExitwhenContext(_ctx, getState());
+		enterRule(_localctx, 44, RULE_exitwhen);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(240);
+			setState(217);
 			match(EXITWHEN);
-			setState(241);
+			setState(218);
 			expr(0);
 			}
 		}
@@ -1990,77 +1779,77 @@ public class JassParser extends Parser {
 		int _parentState = getState();
 		ExprContext _localctx = new ExprContext(_ctx, _parentState);
 		ExprContext _prevctx = _localctx;
-		int _startState = 54;
-		enterRecursionRule(_localctx, 54, RULE_expr, _p);
+		int _startState = 46;
+		enterRecursionRule(_localctx, 46, RULE_expr, _p);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(259);
+			setState(236);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case MUL:
 				{
-				setState(244);
+				setState(221);
 				match(MUL);
-				setState(245);
+				setState(222);
 				expr(15);
 				}
 				break;
 			case DIV:
 				{
-				setState(246);
+				setState(223);
 				match(DIV);
-				setState(247);
+				setState(224);
 				expr(14);
 				}
 				break;
 			case PLUS:
 				{
-				setState(248);
+				setState(225);
 				match(PLUS);
-				setState(249);
+				setState(226);
 				expr(13);
 				}
 				break;
 			case MINUS:
 				{
-				setState(250);
+				setState(227);
 				match(MINUS);
-				setState(251);
+				setState(228);
 				expr(12);
 				}
 				break;
 			case NOT:
 				{
-				setState(252);
+				setState(229);
 				match(NOT);
-				setState(253);
+				setState(230);
 				expr(11);
 				}
 				break;
 			case LPAREN:
 				{
-				setState(254);
+				setState(231);
 				match(LPAREN);
-				setState(255);
+				setState(232);
 				expr(0);
-				setState(256);
+				setState(233);
 				match(RPAREN);
 				}
 				break;
+			case RAWVAL:
+			case STRING:
 			case FALSE:
 			case FUNCTION:
 			case NULL:
 			case TRUE:
 			case ID:
 			case INTVAL:
-			case STRVAL:
-			case RAWVAL:
 			case HEXVAL:
 			case REALVAL:
 				{
-				setState(258);
+				setState(235);
 				prim();
 				}
 				break;
@@ -2068,26 +1857,26 @@ public class JassParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(299);
+			setState(276);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,28,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,26,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(297);
+					setState(274);
 					_errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,27,_ctx) ) {
+					switch ( getInterpreter().adaptivePredict(_input,25,_ctx) ) {
 					case 1:
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(261);
+						setState(238);
 						if (!(precpred(_ctx, 19))) throw new FailedPredicateException(this, "precpred(_ctx, 19)");
-						setState(262);
+						setState(239);
 						match(PLUS);
-						setState(263);
+						setState(240);
 						expr(20);
 						}
 						break;
@@ -2095,11 +1884,11 @@ public class JassParser extends Parser {
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(264);
+						setState(241);
 						if (!(precpred(_ctx, 18))) throw new FailedPredicateException(this, "precpred(_ctx, 18)");
-						setState(265);
+						setState(242);
 						match(MINUS);
-						setState(266);
+						setState(243);
 						expr(19);
 						}
 						break;
@@ -2107,11 +1896,11 @@ public class JassParser extends Parser {
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(267);
+						setState(244);
 						if (!(precpred(_ctx, 17))) throw new FailedPredicateException(this, "precpred(_ctx, 17)");
-						setState(268);
+						setState(245);
 						match(MUL);
-						setState(269);
+						setState(246);
 						expr(18);
 						}
 						break;
@@ -2119,11 +1908,11 @@ public class JassParser extends Parser {
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(270);
+						setState(247);
 						if (!(precpred(_ctx, 16))) throw new FailedPredicateException(this, "precpred(_ctx, 16)");
-						setState(271);
+						setState(248);
 						match(DIV);
-						setState(272);
+						setState(249);
 						expr(17);
 						}
 						break;
@@ -2131,11 +1920,11 @@ public class JassParser extends Parser {
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(273);
+						setState(250);
 						if (!(precpred(_ctx, 10))) throw new FailedPredicateException(this, "precpred(_ctx, 10)");
-						setState(274);
+						setState(251);
 						match(EQ_EQ);
-						setState(275);
+						setState(252);
 						expr(11);
 						}
 						break;
@@ -2143,11 +1932,11 @@ public class JassParser extends Parser {
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(276);
+						setState(253);
 						if (!(precpred(_ctx, 9))) throw new FailedPredicateException(this, "precpred(_ctx, 9)");
-						setState(277);
+						setState(254);
 						match(NEQ);
-						setState(278);
+						setState(255);
 						expr(10);
 						}
 						break;
@@ -2155,11 +1944,11 @@ public class JassParser extends Parser {
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(279);
+						setState(256);
 						if (!(precpred(_ctx, 8))) throw new FailedPredicateException(this, "precpred(_ctx, 8)");
-						setState(280);
+						setState(257);
 						match(LT);
-						setState(281);
+						setState(258);
 						expr(9);
 						}
 						break;
@@ -2167,11 +1956,11 @@ public class JassParser extends Parser {
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(282);
+						setState(259);
 						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
-						setState(283);
+						setState(260);
 						match(LT_EQ);
-						setState(284);
+						setState(261);
 						expr(8);
 						}
 						break;
@@ -2179,11 +1968,11 @@ public class JassParser extends Parser {
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(285);
+						setState(262);
 						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
-						setState(286);
+						setState(263);
 						match(GT);
-						setState(287);
+						setState(264);
 						expr(7);
 						}
 						break;
@@ -2191,11 +1980,11 @@ public class JassParser extends Parser {
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(288);
+						setState(265);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
-						setState(289);
+						setState(266);
 						match(GT_EQ);
-						setState(290);
+						setState(267);
 						expr(6);
 						}
 						break;
@@ -2203,11 +1992,11 @@ public class JassParser extends Parser {
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(291);
+						setState(268);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(292);
+						setState(269);
 						match(OR);
-						setState(293);
+						setState(270);
 						expr(5);
 						}
 						break;
@@ -2215,20 +2004,20 @@ public class JassParser extends Parser {
 						{
 						_localctx = new ExprContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(294);
+						setState(271);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(295);
+						setState(272);
 						match(AND);
-						setState(296);
+						setState(273);
 						expr(4);
 						}
 						break;
 					}
 					} 
 				}
-				setState(301);
+				setState(278);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,28,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,26,_ctx);
 			}
 			}
 		}
@@ -2245,23 +2034,23 @@ public class JassParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class PrimContext extends ParserRuleContext {
-		public ArrayAccessContext arrayAccess() {
-			return getRuleContext(ArrayAccessContext.class,0);
+		public PrimarrContext primarr() {
+			return getRuleContext(PrimarrContext.class,0);
 		}
-		public FunCallContext funCall() {
-			return getRuleContext(FunCallContext.class,0);
+		public PrimcallContext primcall() {
+			return getRuleContext(PrimcallContext.class,0);
 		}
-		public FunRefContext funRef() {
-			return getRuleContext(FunRefContext.class,0);
+		public PrimfunContext primfun() {
+			return getRuleContext(PrimfunContext.class,0);
 		}
 		public TerminalNode FALSE() { return getToken(JassParser.FALSE, 0); }
 		public TerminalNode NULL() { return getToken(JassParser.NULL, 0); }
 		public TerminalNode TRUE() { return getToken(JassParser.TRUE, 0); }
+		public TerminalNode INTVAL() { return getToken(JassParser.INTVAL, 0); }
 		public TerminalNode HEXVAL() { return getToken(JassParser.HEXVAL, 0); }
 		public TerminalNode REALVAL() { return getToken(JassParser.REALVAL, 0); }
-		public TerminalNode INTVAL() { return getToken(JassParser.INTVAL, 0); }
 		public TerminalNode RAWVAL() { return getToken(JassParser.RAWVAL, 0); }
-		public TerminalNode STRVAL() { return getToken(JassParser.STRVAL, 0); }
+		public TerminalNode STRING() { return getToken(JassParser.STRING, 0); }
 		public TerminalNode ID() { return getToken(JassParser.ID, 0); }
 		public PrimContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2284,92 +2073,92 @@ public class JassParser extends Parser {
 
 	public final PrimContext prim() throws RecognitionException {
 		PrimContext _localctx = new PrimContext(_ctx, getState());
-		enterRule(_localctx, 56, RULE_prim);
+		enterRule(_localctx, 48, RULE_prim);
 		try {
-			setState(314);
+			setState(291);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,29,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,27,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(302);
-				arrayAccess();
+				setState(279);
+				primarr();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(303);
-				funCall();
+				setState(280);
+				primcall();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(304);
-				funRef();
+				setState(281);
+				primfun();
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(305);
+				setState(282);
 				match(FALSE);
 				}
 				break;
 			case 5:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(306);
+				setState(283);
 				match(NULL);
 				}
 				break;
 			case 6:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(307);
+				setState(284);
 				match(TRUE);
 				}
 				break;
 			case 7:
 				enterOuterAlt(_localctx, 7);
 				{
-				setState(308);
-				match(HEXVAL);
+				setState(285);
+				match(INTVAL);
 				}
 				break;
 			case 8:
 				enterOuterAlt(_localctx, 8);
 				{
-				setState(309);
-				match(REALVAL);
+				setState(286);
+				match(HEXVAL);
 				}
 				break;
 			case 9:
 				enterOuterAlt(_localctx, 9);
 				{
-				setState(310);
-				match(INTVAL);
+				setState(287);
+				match(REALVAL);
 				}
 				break;
 			case 10:
 				enterOuterAlt(_localctx, 10);
 				{
-				setState(311);
+				setState(288);
 				match(RAWVAL);
 				}
 				break;
 			case 11:
 				enterOuterAlt(_localctx, 11);
 				{
-				setState(312);
-				match(STRVAL);
+				setState(289);
+				match(STRING);
 				}
 				break;
 			case 12:
 				enterOuterAlt(_localctx, 12);
 				{
-				setState(313);
+				setState(290);
 				match(ID);
 				}
 				break;
@@ -2387,54 +2176,144 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class ArrayAccessContext extends ParserRuleContext {
-		public TerminalNode ID() { return getToken(JassParser.ID, 0); }
+	public static class PrimcallContext extends ParserRuleContext {
+		public FunnameContext funname() {
+			return getRuleContext(FunnameContext.class,0);
+		}
+		public TerminalNode LPAREN() { return getToken(JassParser.LPAREN, 0); }
+		public TerminalNode RPAREN() { return getToken(JassParser.RPAREN, 0); }
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
+		}
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
+		public List<TerminalNode> COMMA() { return getTokens(JassParser.COMMA); }
+		public TerminalNode COMMA(int i) {
+			return getToken(JassParser.COMMA, i);
+		}
+		public PrimcallContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_primcall; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterPrimcall(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitPrimcall(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitPrimcall(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final PrimcallContext primcall() throws RecognitionException {
+		PrimcallContext _localctx = new PrimcallContext(_ctx, getState());
+		enterRule(_localctx, 50, RULE_primcall);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(293);
+			funname();
+			setState(294);
+			match(LPAREN);
+			setState(303);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 17024842381590534L) != 0)) {
+				{
+				setState(295);
+				expr(0);
+				setState(300);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				while (_la==COMMA) {
+					{
+					{
+					setState(296);
+					match(COMMA);
+					setState(297);
+					expr(0);
+					}
+					}
+					setState(302);
+					_errHandler.sync(this);
+					_la = _input.LA(1);
+				}
+				}
+			}
+
+			setState(305);
+			match(RPAREN);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	@SuppressWarnings("CheckReturnValue")
+	public static class PrimarrContext extends ParserRuleContext {
+		public VarnameContext varname() {
+			return getRuleContext(VarnameContext.class,0);
+		}
 		public TerminalNode LBRACK() { return getToken(JassParser.LBRACK, 0); }
 		public TerminalNode RBRACK() { return getToken(JassParser.RBRACK, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public ArrayAccessContext(ParserRuleContext parent, int invokingState) {
+		public PrimarrContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_arrayAccess; }
+		@Override public int getRuleIndex() { return RULE_primarr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterArrayAccess(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterPrimarr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitArrayAccess(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitPrimarr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitArrayAccess(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitPrimarr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final ArrayAccessContext arrayAccess() throws RecognitionException {
-		ArrayAccessContext _localctx = new ArrayAccessContext(_ctx, getState());
-		enterRule(_localctx, 58, RULE_arrayAccess);
+	public final PrimarrContext primarr() throws RecognitionException {
+		PrimarrContext _localctx = new PrimarrContext(_ctx, getState());
+		enterRule(_localctx, 52, RULE_primarr);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(316);
-			match(ID);
-			setState(317);
+			setState(307);
+			varname();
+			setState(308);
 			match(LBRACK);
-			setState(319);
+			setState(310);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 35534018944483328L) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 17024842381590534L) != 0)) {
 				{
-				setState(318);
+				setState(309);
 				expr(0);
 				}
 			}
 
-			setState(321);
+			setState(312);
 			match(RBRACK);
 			}
 		}
@@ -2450,37 +2329,37 @@ public class JassParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class FunRefContext extends ParserRuleContext {
+	public static class PrimfunContext extends ParserRuleContext {
 		public TerminalNode FUNCTION() { return getToken(JassParser.FUNCTION, 0); }
 		public TerminalNode ID() { return getToken(JassParser.ID, 0); }
-		public FunRefContext(ParserRuleContext parent, int invokingState) {
+		public PrimfunContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_funRef; }
+		@Override public int getRuleIndex() { return RULE_primfun; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterFunRef(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterPrimfun(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitFunRef(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitPrimfun(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitFunRef(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitPrimfun(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final FunRefContext funRef() throws RecognitionException {
-		FunRefContext _localctx = new FunRefContext(_ctx, getState());
-		enterRule(_localctx, 60, RULE_funRef);
+	public final PrimfunContext primfun() throws RecognitionException {
+		PrimfunContext _localctx = new PrimfunContext(_ctx, getState());
+		enterRule(_localctx, 54, RULE_primfun);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(323);
+			setState(314);
 			match(FUNCTION);
-			setState(324);
+			setState(315);
 			match(ID);
 			}
 		}
@@ -2497,7 +2376,7 @@ public class JassParser extends Parser {
 
 	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
-		case 27:
+		case 23:
 			return expr_sempred((ExprContext)_localctx, predIndex);
 		}
 		return true;
@@ -2533,7 +2412,7 @@ public class JassParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u00019\u0147\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u00018\u013e\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b\u0002"+
@@ -2542,212 +2421,207 @@ public class JassParser extends Parser {
 		"\u0002\u0013\u0007\u0013\u0002\u0014\u0007\u0014\u0002\u0015\u0007\u0015"+
 		"\u0002\u0016\u0007\u0016\u0002\u0017\u0007\u0017\u0002\u0018\u0007\u0018"+
 		"\u0002\u0019\u0007\u0019\u0002\u001a\u0007\u001a\u0002\u001b\u0007\u001b"+
-		"\u0002\u001c\u0007\u001c\u0002\u001d\u0007\u001d\u0002\u001e\u0007\u001e"+
-		"\u0001\u0000\u0001\u0000\u0001\u0000\u0001\u0000\u0005\u0000C\b\u0000"+
-		"\n\u0000\f\u0000F\t\u0000\u0001\u0000\u0001\u0000\u0001\u0001\u0001\u0001"+
-		"\u0001\u0002\u0001\u0002\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003"+
-		"\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0005\u0001\u0005\u0003\u0005"+
-		"W\b\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0003\u0005\\\b\u0005\u0001"+
-		"\u0006\u0001\u0006\u0005\u0006`\b\u0006\n\u0006\f\u0006c\t\u0006\u0001"+
-		"\u0006\u0001\u0006\u0001\u0007\u0003\u0007h\b\u0007\u0001\u0007\u0001"+
-		"\u0007\u0001\b\u0001\b\u0001\b\u0005\bo\b\b\n\b\f\br\t\b\u0001\t\u0001"+
-		"\t\u0001\t\u0003\tw\b\t\u0001\t\u0001\t\u0001\n\u0001\n\u0001\n\u0001"+
-		"\u000b\u0001\u000b\u0001\u000b\u0005\u000b\u0081\b\u000b\n\u000b\f\u000b"+
-		"\u0084\t\u000b\u0001\f\u0001\f\u0001\f\u0003\f\u0089\b\f\u0001\r\u0001"+
-		"\r\u0001\r\u0003\r\u008e\b\r\u0001\u000e\u0003\u000e\u0091\b\u000e\u0001"+
-		"\u000e\u0001\u000e\u0001\u000e\u0005\u000e\u0096\b\u000e\n\u000e\f\u000e"+
-		"\u0099\t\u000e\u0001\u000e\u0001\u000e\u0001\u000f\u0001\u000f\u0001\u000f"+
-		"\u0001\u000f\u0001\u0010\u0003\u0010\u00a2\b\u0010\u0001\u0010\u0001\u0010"+
-		"\u0001\u0010\u0001\u0011\u0001\u0011\u0001\u0011\u0001\u0011\u0001\u0011"+
-		"\u0001\u0011\u0001\u0011\u0003\u0011\u00ae\b\u0011\u0001\u0012\u0003\u0012"+
-		"\u00b1\b\u0012\u0001\u0012\u0001\u0012\u0001\u0013\u0001\u0013\u0001\u0013"+
-		"\u0003\u0013\u00b8\b\u0013\u0001\u0013\u0001\u0013\u0001\u0013\u0001\u0014"+
-		"\u0003\u0014\u00be\b\u0014\u0001\u0014\u0001\u0014\u0001\u0014\u0001\u0015"+
-		"\u0001\u0015\u0003\u0015\u00c5\b\u0015\u0001\u0016\u0001\u0016\u0001\u0016"+
-		"\u0003\u0016\u00ca\b\u0016\u0001\u0016\u0001\u0016\u0001\u0016\u0005\u0016"+
-		"\u00cf\b\u0016\n\u0016\f\u0016\u00d2\t\u0016\u0001\u0016\u0001\u0016\u0001"+
-		"\u0017\u0001\u0017\u0001\u0017\u0003\u0017\u00d9\b\u0017\u0001\u0017\u0005"+
-		"\u0017\u00dc\b\u0017\n\u0017\f\u0017\u00df\t\u0017\u0001\u0018\u0001\u0018"+
-		"\u0005\u0018\u00e3\b\u0018\n\u0018\f\u0018\u00e6\t\u0018\u0001\u0019\u0001"+
-		"\u0019\u0005\u0019\u00ea\b\u0019\n\u0019\f\u0019\u00ed\t\u0019\u0001\u0019"+
-		"\u0001\u0019\u0001\u001a\u0001\u001a\u0001\u001a\u0001\u001b\u0001\u001b"+
-		"\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b"+
-		"\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b"+
-		"\u0001\u001b\u0001\u001b\u0003\u001b\u0104\b\u001b\u0001\u001b\u0001\u001b"+
-		"\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b"+
-		"\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b"+
-		"\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b"+
-		"\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b"+
-		"\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b"+
-		"\u0001\u001b\u0001\u001b\u0001\u001b\u0001\u001b\u0005\u001b\u012a\b\u001b"+
-		"\n\u001b\f\u001b\u012d\t\u001b\u0001\u001c\u0001\u001c\u0001\u001c\u0001"+
-		"\u001c\u0001\u001c\u0001\u001c\u0001\u001c\u0001\u001c\u0001\u001c\u0001"+
-		"\u001c\u0001\u001c\u0001\u001c\u0003\u001c\u013b\b\u001c\u0001\u001d\u0001"+
-		"\u001d\u0001\u001d\u0003\u001d\u0140\b\u001d\u0001\u001d\u0001\u001d\u0001"+
-		"\u001e\u0001\u001e\u0001\u001e\u0001\u001e\u0000\u00016\u001f\u0000\u0002"+
-		"\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018\u001a\u001c\u001e"+
-		" \"$&(*,.02468:<\u0000\u0000\u0167\u0000D\u0001\u0000\u0000\u0000\u0002"+
-		"I\u0001\u0000\u0000\u0000\u0004K\u0001\u0000\u0000\u0000\u0006M\u0001"+
-		"\u0000\u0000\u0000\bQ\u0001\u0000\u0000\u0000\nT\u0001\u0000\u0000\u0000"+
-		"\f]\u0001\u0000\u0000\u0000\u000eg\u0001\u0000\u0000\u0000\u0010k\u0001"+
-		"\u0000\u0000\u0000\u0012s\u0001\u0000\u0000\u0000\u0014z\u0001\u0000\u0000"+
-		"\u0000\u0016}\u0001\u0000\u0000\u0000\u0018\u0085\u0001\u0000\u0000\u0000"+
-		"\u001a\u008a\u0001\u0000\u0000\u0000\u001c\u0090\u0001\u0000\u0000\u0000"+
-		"\u001e\u009c\u0001\u0000\u0000\u0000 \u00a1\u0001\u0000\u0000\u0000\""+
-		"\u00ad\u0001\u0000\u0000\u0000$\u00b0\u0001\u0000\u0000\u0000&\u00b4\u0001"+
-		"\u0000\u0000\u0000(\u00bd\u0001\u0000\u0000\u0000*\u00c2\u0001\u0000\u0000"+
-		"\u0000,\u00c6\u0001\u0000\u0000\u0000.\u00d5\u0001\u0000\u0000\u00000"+
-		"\u00e0\u0001\u0000\u0000\u00002\u00e7\u0001\u0000\u0000\u00004\u00f0\u0001"+
-		"\u0000\u0000\u00006\u0103\u0001\u0000\u0000\u00008\u013a\u0001\u0000\u0000"+
-		"\u0000:\u013c\u0001\u0000\u0000\u0000<\u0143\u0001\u0000\u0000\u0000>"+
-		"C\u0003\u0006\u0003\u0000?C\u0003 \u0010\u0000@C\u0003\f\u0006\u0000A"+
-		"C\u0003\u001c\u000e\u0000B>\u0001\u0000\u0000\u0000B?\u0001\u0000\u0000"+
-		"\u0000B@\u0001\u0000\u0000\u0000BA\u0001\u0000\u0000\u0000CF\u0001\u0000"+
-		"\u0000\u0000DB\u0001\u0000\u0000\u0000DE\u0001\u0000\u0000\u0000EG\u0001"+
-		"\u0000\u0000\u0000FD\u0001\u0000\u0000\u0000GH\u0005\u0000\u0000\u0001"+
-		"H\u0001\u0001\u0000\u0000\u0000IJ\u00051\u0000\u0000J\u0003\u0001\u0000"+
-		"\u0000\u0000KL\u00051\u0000\u0000L\u0005\u0001\u0000\u0000\u0000MN\u0005"+
-		" \u0000\u0000NO\u0003\u0002\u0001\u0000OP\u0003\b\u0004\u0000P\u0007\u0001"+
-		"\u0000\u0000\u0000QR\u0005\f\u0000\u0000RS\u0003\u0002\u0001\u0000S\t"+
-		"\u0001\u0000\u0000\u0000TV\u0003\u0002\u0001\u0000UW\u0005\u0002\u0000"+
-		"\u0000VU\u0001\u0000\u0000\u0000VW\u0001\u0000\u0000\u0000WX\u0001\u0000"+
-		"\u0000\u0000X[\u0003\u0004\u0002\u0000YZ\u0005#\u0000\u0000Z\\\u00036"+
-		"\u001b\u0000[Y\u0001\u0000\u0000\u0000[\\\u0001\u0000\u0000\u0000\\\u000b"+
-		"\u0001\u0000\u0000\u0000]a\u0005\u0010\u0000\u0000^`\u0003\u000e\u0007"+
-		"\u0000_^\u0001\u0000\u0000\u0000`c\u0001\u0000\u0000\u0000a_\u0001\u0000"+
-		"\u0000\u0000ab\u0001\u0000\u0000\u0000bd\u0001\u0000\u0000\u0000ca\u0001"+
-		"\u0000\u0000\u0000de\u0005\u000b\u0000\u0000e\r\u0001\u0000\u0000\u0000"+
-		"fh\u0005\u0004\u0000\u0000gf\u0001\u0000\u0000\u0000gh\u0001\u0000\u0000"+
-		"\u0000hi\u0001\u0000\u0000\u0000ij\u0003\n\u0005\u0000j\u000f\u0001\u0000"+
-		"\u0000\u0000kp\u00036\u001b\u0000lm\u0005!\u0000\u0000mo\u00036\u001b"+
-		"\u0000nl\u0001\u0000\u0000\u0000or\u0001\u0000\u0000\u0000pn\u0001\u0000"+
-		"\u0000\u0000pq\u0001\u0000\u0000\u0000q\u0011\u0001\u0000\u0000\u0000"+
-		"rp\u0001\u0000\u0000\u0000st\u00051\u0000\u0000tv\u0005-\u0000\u0000u"+
-		"w\u0003\u0010\b\u0000vu\u0001\u0000\u0000\u0000vw\u0001\u0000\u0000\u0000"+
-		"wx\u0001\u0000\u0000\u0000xy\u0005.\u0000\u0000y\u0013\u0001\u0000\u0000"+
-		"\u0000z{\u0003\u0002\u0001\u0000{|\u00051\u0000\u0000|\u0015\u0001\u0000"+
-		"\u0000\u0000}\u0082\u0003\u0014\n\u0000~\u007f\u0005!\u0000\u0000\u007f"+
-		"\u0081\u0003\u0014\n\u0000\u0080~\u0001\u0000\u0000\u0000\u0081\u0084"+
-		"\u0001\u0000\u0000\u0000\u0082\u0080\u0001\u0000\u0000\u0000\u0082\u0083"+
-		"\u0001\u0000\u0000\u0000\u0083\u0017\u0001\u0000\u0000\u0000\u0084\u0082"+
-		"\u0001\u0000\u0000\u0000\u0085\u0088\u0005\u001d\u0000\u0000\u0086\u0089"+
-		"\u0005\u0016\u0000\u0000\u0087\u0089\u0003\u0016\u000b\u0000\u0088\u0086"+
-		"\u0001\u0000\u0000\u0000\u0088\u0087\u0001\u0000\u0000\u0000\u0089\u0019"+
-		"\u0001\u0000\u0000\u0000\u008a\u008d\u0005\u0019\u0000\u0000\u008b\u008e"+
-		"\u0005\u0016\u0000\u0000\u008c\u008e\u0003\u0002\u0001\u0000\u008d\u008b"+
-		"\u0001\u0000\u0000\u0000\u008d\u008c\u0001\u0000\u0000\u0000\u008e\u001b"+
-		"\u0001\u0000\u0000\u0000\u008f\u0091\u0005\u0004\u0000\u0000\u0090\u008f"+
-		"\u0001\u0000\u0000\u0000\u0090\u0091\u0001\u0000\u0000\u0000\u0091\u0092"+
-		"\u0001\u0000\u0000\u0000\u0092\u0093\u0005\u000f\u0000\u0000\u0093\u0097"+
-		"\u0003\u001e\u000f\u0000\u0094\u0096\u0003\"\u0011\u0000\u0095\u0094\u0001"+
-		"\u0000\u0000\u0000\u0096\u0099\u0001\u0000\u0000\u0000\u0097\u0095\u0001"+
-		"\u0000\u0000\u0000\u0097\u0098\u0001\u0000\u0000\u0000\u0098\u009a\u0001"+
-		"\u0000\u0000\u0000\u0099\u0097\u0001\u0000\u0000\u0000\u009a\u009b\u0005"+
-		"\b\u0000\u0000\u009b\u001d\u0001\u0000\u0000\u0000\u009c\u009d\u00051"+
-		"\u0000\u0000\u009d\u009e\u0003\u0018\f\u0000\u009e\u009f\u0003\u001a\r"+
-		"\u0000\u009f\u001f\u0001\u0000\u0000\u0000\u00a0\u00a2\u0005\u0004\u0000"+
-		"\u0000\u00a1\u00a0\u0001\u0000\u0000\u0000\u00a1\u00a2\u0001\u0000\u0000"+
-		"\u0000\u00a2\u00a3\u0001\u0000\u0000\u0000\u00a3\u00a4\u0005\u0014\u0000"+
-		"\u0000\u00a4\u00a5\u0003\u001e\u000f\u0000\u00a5!\u0001\u0000\u0000\u0000"+
-		"\u00a6\u00ae\u0003&\u0013\u0000\u00a7\u00ae\u0003(\u0014\u0000\u00a8\u00ae"+
-		"\u0003$\u0012\u0000\u00a9\u00ae\u0003*\u0015\u0000\u00aa\u00ae\u0003,"+
-		"\u0016\u0000\u00ab\u00ae\u00032\u0019\u0000\u00ac\u00ae\u00034\u001a\u0000"+
-		"\u00ad\u00a6\u0001\u0000\u0000\u0000\u00ad\u00a7\u0001\u0000\u0000\u0000"+
-		"\u00ad\u00a8\u0001\u0000\u0000\u0000\u00ad\u00a9\u0001\u0000\u0000\u0000"+
-		"\u00ad\u00aa\u0001\u0000\u0000\u0000\u00ad\u00ab\u0001\u0000\u0000\u0000"+
-		"\u00ad\u00ac\u0001\u0000\u0000\u0000\u00ae#\u0001\u0000\u0000\u0000\u00af"+
-		"\u00b1\u0005\u0012\u0000\u0000\u00b0\u00af\u0001\u0000\u0000\u0000\u00b0"+
-		"\u00b1\u0001\u0000\u0000\u0000\u00b1\u00b2\u0001\u0000\u0000\u0000\u00b2"+
-		"\u00b3\u0003\n\u0005\u0000\u00b3%\u0001\u0000\u0000\u0000\u00b4\u00b7"+
-		"\u0005\u001b\u0000\u0000\u00b5\u00b8\u0003:\u001d\u0000\u00b6\u00b8\u0005"+
-		"1\u0000\u0000\u00b7\u00b5\u0001\u0000\u0000\u0000\u00b7\u00b6\u0001\u0000"+
-		"\u0000\u0000\u00b8\u00b9\u0001\u0000\u0000\u0000\u00b9\u00ba\u0005#\u0000"+
-		"\u0000\u00ba\u00bb\u00036\u001b\u0000\u00bb\'\u0001\u0000\u0000\u0000"+
-		"\u00bc\u00be\u0005\u0005\u0000\u0000\u00bd\u00bc\u0001\u0000\u0000\u0000"+
-		"\u00bd\u00be\u0001\u0000\u0000\u0000\u00be\u00bf\u0001\u0000\u0000\u0000"+
-		"\u00bf\u00c0\u0005\u0003\u0000\u0000\u00c0\u00c1\u0003\u0012\t\u0000\u00c1"+
-		")\u0001\u0000\u0000\u0000\u00c2\u00c4\u0005\u001a\u0000\u0000\u00c3\u00c5"+
-		"\u00036\u001b\u0000\u00c4\u00c3\u0001\u0000\u0000\u0000\u00c4\u00c5\u0001"+
-		"\u0000\u0000\u0000\u00c5+\u0001\u0000\u0000\u0000\u00c6\u00c7\u0005\u0011"+
-		"\u0000\u0000\u00c7\u00c9\u00036\u001b\u0000\u00c8\u00ca\u0005\u001e\u0000"+
-		"\u0000\u00c9\u00c8\u0001\u0000\u0000\u0000\u00c9\u00ca\u0001\u0000\u0000"+
-		"\u0000\u00ca\u00d0\u0001\u0000\u0000\u0000\u00cb\u00cf\u0003\"\u0011\u0000"+
-		"\u00cc\u00cf\u0003.\u0017\u0000\u00cd\u00cf\u00030\u0018\u0000\u00ce\u00cb"+
-		"\u0001\u0000\u0000\u0000\u00ce\u00cc\u0001\u0000\u0000\u0000\u00ce\u00cd"+
-		"\u0001\u0000\u0000\u0000\u00cf\u00d2\u0001\u0000\u0000\u0000\u00d0\u00ce"+
-		"\u0001\u0000\u0000\u0000\u00d0\u00d1\u0001\u0000\u0000\u0000\u00d1\u00d3"+
-		"\u0001\u0000\u0000\u0000\u00d2\u00d0\u0001\u0000\u0000\u0000\u00d3\u00d4"+
-		"\u0005\t\u0000\u0000\u00d4-\u0001\u0000\u0000\u0000\u00d5\u00d6\u0005"+
-		"\u0007\u0000\u0000\u00d6\u00d8\u00036\u001b\u0000\u00d7\u00d9\u0005\u001e"+
-		"\u0000\u0000\u00d8\u00d7\u0001\u0000\u0000\u0000\u00d8\u00d9\u0001\u0000"+
-		"\u0000\u0000\u00d9\u00dd\u0001\u0000\u0000\u0000\u00da\u00dc\u0003\"\u0011"+
-		"\u0000\u00db\u00da\u0001\u0000\u0000\u0000\u00dc\u00df\u0001\u0000\u0000"+
-		"\u0000\u00dd\u00db\u0001\u0000\u0000\u0000\u00dd\u00de\u0001\u0000\u0000"+
-		"\u0000\u00de/\u0001\u0000\u0000\u0000\u00df\u00dd\u0001\u0000\u0000\u0000"+
-		"\u00e0\u00e4\u0005\u0006\u0000\u0000\u00e1\u00e3\u0003\"\u0011\u0000\u00e2"+
-		"\u00e1\u0001\u0000\u0000\u0000\u00e3\u00e6\u0001\u0000\u0000\u0000\u00e4"+
-		"\u00e2\u0001\u0000\u0000\u0000\u00e4\u00e5\u0001\u0000\u0000\u0000\u00e5"+
-		"1\u0001\u0000\u0000\u0000\u00e6\u00e4\u0001\u0000\u0000\u0000\u00e7\u00eb"+
-		"\u0005\u0013\u0000\u0000\u00e8\u00ea\u0003\"\u0011\u0000\u00e9\u00e8\u0001"+
-		"\u0000\u0000\u0000\u00ea\u00ed\u0001\u0000\u0000\u0000\u00eb\u00e9\u0001"+
-		"\u0000\u0000\u0000\u00eb\u00ec\u0001\u0000\u0000\u0000\u00ec\u00ee\u0001"+
-		"\u0000\u0000\u0000\u00ed\u00eb\u0001\u0000\u0000\u0000\u00ee\u00ef\u0005"+
-		"\n\u0000\u0000\u00ef3\u0001\u0000\u0000\u0000\u00f0\u00f1\u0005\r\u0000"+
-		"\u0000\u00f1\u00f2\u00036\u001b\u0000\u00f25\u0001\u0000\u0000\u0000\u00f3"+
-		"\u00f4\u0006\u001b\uffff\uffff\u0000\u00f4\u00f5\u0005+\u0000\u0000\u00f5"+
-		"\u0104\u00036\u001b\u000f\u00f6\u00f7\u0005,\u0000\u0000\u00f7\u0104\u0003"+
-		"6\u001b\u000e\u00f8\u00f9\u0005)\u0000\u0000\u00f9\u0104\u00036\u001b"+
-		"\r\u00fa\u00fb\u0005*\u0000\u0000\u00fb\u0104\u00036\u001b\f\u00fc\u00fd"+
-		"\u0005\u0015\u0000\u0000\u00fd\u0104\u00036\u001b\u000b\u00fe\u00ff\u0005"+
-		"-\u0000\u0000\u00ff\u0100\u00036\u001b\u0000\u0100\u0101\u0005.\u0000"+
-		"\u0000\u0101\u0104\u0001\u0000\u0000\u0000\u0102\u0104\u00038\u001c\u0000"+
-		"\u0103\u00f3\u0001\u0000\u0000\u0000\u0103\u00f6\u0001\u0000\u0000\u0000"+
-		"\u0103\u00f8\u0001\u0000\u0000\u0000\u0103\u00fa\u0001\u0000\u0000\u0000"+
-		"\u0103\u00fc\u0001\u0000\u0000\u0000\u0103\u00fe\u0001\u0000\u0000\u0000"+
-		"\u0103\u0102\u0001\u0000\u0000\u0000\u0104\u012b\u0001\u0000\u0000\u0000"+
-		"\u0105\u0106\n\u0013\u0000\u0000\u0106\u0107\u0005)\u0000\u0000\u0107"+
-		"\u012a\u00036\u001b\u0014\u0108\u0109\n\u0012\u0000\u0000\u0109\u010a"+
-		"\u0005*\u0000\u0000\u010a\u012a\u00036\u001b\u0013\u010b\u010c\n\u0011"+
-		"\u0000\u0000\u010c\u010d\u0005+\u0000\u0000\u010d\u012a\u00036\u001b\u0012"+
-		"\u010e\u010f\n\u0010\u0000\u0000\u010f\u0110\u0005,\u0000\u0000\u0110"+
-		"\u012a\u00036\u001b\u0011\u0111\u0112\n\n\u0000\u0000\u0112\u0113\u0005"+
-		"\"\u0000\u0000\u0113\u012a\u00036\u001b\u000b\u0114\u0115\n\t\u0000\u0000"+
-		"\u0115\u0116\u0005$\u0000\u0000\u0116\u012a\u00036\u001b\n\u0117\u0118"+
-		"\n\b\u0000\u0000\u0118\u0119\u0005&\u0000\u0000\u0119\u012a\u00036\u001b"+
-		"\t\u011a\u011b\n\u0007\u0000\u0000\u011b\u011c\u0005%\u0000\u0000\u011c"+
-		"\u012a\u00036\u001b\b\u011d\u011e\n\u0006\u0000\u0000\u011e\u011f\u0005"+
-		"(\u0000\u0000\u011f\u012a\u00036\u001b\u0007\u0120\u0121\n\u0005\u0000"+
-		"\u0000\u0121\u0122\u0005\'\u0000\u0000\u0122\u012a\u00036\u001b\u0006"+
-		"\u0123\u0124\n\u0004\u0000\u0000\u0124\u0125\u0005\u0018\u0000\u0000\u0125"+
-		"\u012a\u00036\u001b\u0005\u0126\u0127\n\u0003\u0000\u0000\u0127\u0128"+
-		"\u0005\u0001\u0000\u0000\u0128\u012a\u00036\u001b\u0004\u0129\u0105\u0001"+
-		"\u0000\u0000\u0000\u0129\u0108\u0001\u0000\u0000\u0000\u0129\u010b\u0001"+
-		"\u0000\u0000\u0000\u0129\u010e\u0001\u0000\u0000\u0000\u0129\u0111\u0001"+
-		"\u0000\u0000\u0000\u0129\u0114\u0001\u0000\u0000\u0000\u0129\u0117\u0001"+
-		"\u0000\u0000\u0000\u0129\u011a\u0001\u0000\u0000\u0000\u0129\u011d\u0001"+
-		"\u0000\u0000\u0000\u0129\u0120\u0001\u0000\u0000\u0000\u0129\u0123\u0001"+
-		"\u0000\u0000\u0000\u0129\u0126\u0001\u0000\u0000\u0000\u012a\u012d\u0001"+
-		"\u0000\u0000\u0000\u012b\u0129\u0001\u0000\u0000\u0000\u012b\u012c\u0001"+
-		"\u0000\u0000\u0000\u012c7\u0001\u0000\u0000\u0000\u012d\u012b\u0001\u0000"+
-		"\u0000\u0000\u012e\u013b\u0003:\u001d\u0000\u012f\u013b\u0003\u0012\t"+
-		"\u0000\u0130\u013b\u0003<\u001e\u0000\u0131\u013b\u0005\u000e\u0000\u0000"+
-		"\u0132\u013b\u0005\u0017\u0000\u0000\u0133\u013b\u0005\u001f\u0000\u0000"+
-		"\u0134\u013b\u00055\u0000\u0000\u0135\u013b\u00056\u0000\u0000\u0136\u013b"+
-		"\u00052\u0000\u0000\u0137\u013b\u00054\u0000\u0000\u0138\u013b\u00053"+
-		"\u0000\u0000\u0139\u013b\u00051\u0000\u0000\u013a\u012e\u0001\u0000\u0000"+
-		"\u0000\u013a\u012f\u0001\u0000\u0000\u0000\u013a\u0130\u0001\u0000\u0000"+
-		"\u0000\u013a\u0131\u0001\u0000\u0000\u0000\u013a\u0132\u0001\u0000\u0000"+
-		"\u0000\u013a\u0133\u0001\u0000\u0000\u0000\u013a\u0134\u0001\u0000\u0000"+
-		"\u0000\u013a\u0135\u0001\u0000\u0000\u0000\u013a\u0136\u0001\u0000\u0000"+
-		"\u0000\u013a\u0137\u0001\u0000\u0000\u0000\u013a\u0138\u0001\u0000\u0000"+
-		"\u0000\u013a\u0139\u0001\u0000\u0000\u0000\u013b9\u0001\u0000\u0000\u0000"+
-		"\u013c\u013d\u00051\u0000\u0000\u013d\u013f\u0005/\u0000\u0000\u013e\u0140"+
-		"\u00036\u001b\u0000\u013f\u013e\u0001\u0000\u0000\u0000\u013f\u0140\u0001"+
-		"\u0000\u0000\u0000\u0140\u0141\u0001\u0000\u0000\u0000\u0141\u0142\u0005"+
-		"0\u0000\u0000\u0142;\u0001\u0000\u0000\u0000\u0143\u0144\u0005\u000f\u0000"+
-		"\u0000\u0144\u0145\u00051\u0000\u0000\u0145=\u0001\u0000\u0000\u0000\u001f"+
-		"BDV[agpv\u0082\u0088\u008d\u0090\u0097\u00a1\u00ad\u00b0\u00b7\u00bd\u00c4"+
-		"\u00c9\u00ce\u00d0\u00d8\u00dd\u00e4\u00eb\u0103\u0129\u012b\u013a\u013f";
+		"\u0001\u0000\u0001\u0000\u0001\u0000\u0001\u0000\u0005\u0000=\b\u0000"+
+		"\n\u0000\f\u0000@\t\u0000\u0001\u0000\u0001\u0000\u0001\u0001\u0001\u0001"+
+		"\u0001\u0002\u0001\u0002\u0001\u0003\u0001\u0003\u0001\u0004\u0001\u0004"+
+		"\u0001\u0004\u0001\u0004\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0006"+
+		"\u0001\u0006\u0005\u0006S\b\u0006\n\u0006\f\u0006V\t\u0006\u0001\u0006"+
+		"\u0001\u0006\u0001\u0007\u0003\u0007[\b\u0007\u0001\u0007\u0003\u0007"+
+		"^\b\u0007\u0001\u0007\u0001\u0007\u0003\u0007b\b\u0007\u0001\u0007\u0001"+
+		"\u0007\u0001\u0007\u0003\u0007g\b\u0007\u0001\b\u0001\b\u0001\b\u0001"+
+		"\t\u0001\t\u0001\t\u0005\to\b\t\n\t\f\tr\t\t\u0001\n\u0001\n\u0001\n\u0003"+
+		"\nw\b\n\u0001\u000b\u0001\u000b\u0001\u000b\u0003\u000b|\b\u000b\u0001"+
+		"\f\u0003\f\u007f\b\f\u0001\f\u0001\f\u0001\f\u0001\f\u0001\f\u0001\r\u0003"+
+		"\r\u0087\b\r\u0001\r\u0001\r\u0001\r\u0001\r\u0001\r\u0005\r\u008e\b\r"+
+		"\n\r\f\r\u0091\t\r\u0001\r\u0001\r\u0001\u000e\u0001\u000e\u0001\u000e"+
+		"\u0001\u000e\u0001\u000e\u0001\u000e\u0001\u000e\u0003\u000e\u009c\b\u000e"+
+		"\u0001\u000f\u0001\u000f\u0001\u000f\u0003\u000f\u00a1\b\u000f\u0001\u000f"+
+		"\u0001\u000f\u0001\u000f\u0001\u0010\u0003\u0010\u00a7\b\u0010\u0001\u0010"+
+		"\u0001\u0010\u0001\u0010\u0001\u0011\u0001\u0011\u0003\u0011\u00ae\b\u0011"+
+		"\u0001\u0012\u0001\u0012\u0001\u0012\u0003\u0012\u00b3\b\u0012\u0001\u0012"+
+		"\u0001\u0012\u0001\u0012\u0005\u0012\u00b8\b\u0012\n\u0012\f\u0012\u00bb"+
+		"\t\u0012\u0001\u0012\u0001\u0012\u0001\u0013\u0001\u0013\u0001\u0013\u0003"+
+		"\u0013\u00c2\b\u0013\u0001\u0013\u0005\u0013\u00c5\b\u0013\n\u0013\f\u0013"+
+		"\u00c8\t\u0013\u0001\u0014\u0001\u0014\u0005\u0014\u00cc\b\u0014\n\u0014"+
+		"\f\u0014\u00cf\t\u0014\u0001\u0015\u0001\u0015\u0005\u0015\u00d3\b\u0015"+
+		"\n\u0015\f\u0015\u00d6\t\u0015\u0001\u0015\u0001\u0015\u0001\u0016\u0001"+
+		"\u0016\u0001\u0016\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001"+
+		"\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001"+
+		"\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0003"+
+		"\u0017\u00ed\b\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001"+
+		"\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001"+
+		"\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001"+
+		"\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001"+
+		"\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001"+
+		"\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001\u0017\u0001"+
+		"\u0017\u0001\u0017\u0005\u0017\u0113\b\u0017\n\u0017\f\u0017\u0116\t\u0017"+
+		"\u0001\u0018\u0001\u0018\u0001\u0018\u0001\u0018\u0001\u0018\u0001\u0018"+
+		"\u0001\u0018\u0001\u0018\u0001\u0018\u0001\u0018\u0001\u0018\u0001\u0018"+
+		"\u0003\u0018\u0124\b\u0018\u0001\u0019\u0001\u0019\u0001\u0019\u0001\u0019"+
+		"\u0001\u0019\u0005\u0019\u012b\b\u0019\n\u0019\f\u0019\u012e\t\u0019\u0003"+
+		"\u0019\u0130\b\u0019\u0001\u0019\u0001\u0019\u0001\u001a\u0001\u001a\u0001"+
+		"\u001a\u0003\u001a\u0137\b\u001a\u0001\u001a\u0001\u001a\u0001\u001b\u0001"+
+		"\u001b\u0001\u001b\u0001\u001b\u0000\u0001.\u001c\u0000\u0002\u0004\u0006"+
+		"\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018\u001a\u001c\u001e \"$&(*,."+
+		"0246\u0000\u0000\u0161\u0000>\u0001\u0000\u0000\u0000\u0002C\u0001\u0000"+
+		"\u0000\u0000\u0004E\u0001\u0000\u0000\u0000\u0006G\u0001\u0000\u0000\u0000"+
+		"\bI\u0001\u0000\u0000\u0000\nM\u0001\u0000\u0000\u0000\fP\u0001\u0000"+
+		"\u0000\u0000\u000eZ\u0001\u0000\u0000\u0000\u0010h\u0001\u0000\u0000\u0000"+
+		"\u0012k\u0001\u0000\u0000\u0000\u0014s\u0001\u0000\u0000\u0000\u0016x"+
+		"\u0001\u0000\u0000\u0000\u0018~\u0001\u0000\u0000\u0000\u001a\u0086\u0001"+
+		"\u0000\u0000\u0000\u001c\u009b\u0001\u0000\u0000\u0000\u001e\u009d\u0001"+
+		"\u0000\u0000\u0000 \u00a6\u0001\u0000\u0000\u0000\"\u00ab\u0001\u0000"+
+		"\u0000\u0000$\u00af\u0001\u0000\u0000\u0000&\u00be\u0001\u0000\u0000\u0000"+
+		"(\u00c9\u0001\u0000\u0000\u0000*\u00d0\u0001\u0000\u0000\u0000,\u00d9"+
+		"\u0001\u0000\u0000\u0000.\u00ec\u0001\u0000\u0000\u00000\u0123\u0001\u0000"+
+		"\u0000\u00002\u0125\u0001\u0000\u0000\u00004\u0133\u0001\u0000\u0000\u0000"+
+		"6\u013a\u0001\u0000\u0000\u00008=\u0003\b\u0004\u00009=\u0003\u0018\f"+
+		"\u0000:=\u0003\f\u0006\u0000;=\u0003\u001a\r\u0000<8\u0001\u0000\u0000"+
+		"\u0000<9\u0001\u0000\u0000\u0000<:\u0001\u0000\u0000\u0000<;\u0001\u0000"+
+		"\u0000\u0000=@\u0001\u0000\u0000\u0000><\u0001\u0000\u0000\u0000>?\u0001"+
+		"\u0000\u0000\u0000?A\u0001\u0000\u0000\u0000@>\u0001\u0000\u0000\u0000"+
+		"AB\u0005\u0000\u0000\u0001B\u0001\u0001\u0000\u0000\u0000CD\u00052\u0000"+
+		"\u0000D\u0003\u0001\u0000\u0000\u0000EF\u00052\u0000\u0000F\u0005\u0001"+
+		"\u0000\u0000\u0000GH\u00052\u0000\u0000H\u0007\u0001\u0000\u0000\u0000"+
+		"IJ\u0005!\u0000\u0000JK\u0003\u0002\u0001\u0000KL\u0003\n\u0005\u0000"+
+		"L\t\u0001\u0000\u0000\u0000MN\u0005\u000e\u0000\u0000NO\u0003\u0002\u0001"+
+		"\u0000O\u000b\u0001\u0000\u0000\u0000PT\u0005\u0012\u0000\u0000QS\u0003"+
+		"\u000e\u0007\u0000RQ\u0001\u0000\u0000\u0000SV\u0001\u0000\u0000\u0000"+
+		"TR\u0001\u0000\u0000\u0000TU\u0001\u0000\u0000\u0000UW\u0001\u0000\u0000"+
+		"\u0000VT\u0001\u0000\u0000\u0000WX\u0005\r\u0000\u0000X\r\u0001\u0000"+
+		"\u0000\u0000Y[\u0005\u0006\u0000\u0000ZY\u0001\u0000\u0000\u0000Z[\u0001"+
+		"\u0000\u0000\u0000[]\u0001\u0000\u0000\u0000\\^\u0005\u0014\u0000\u0000"+
+		"]\\\u0001\u0000\u0000\u0000]^\u0001\u0000\u0000\u0000^_\u0001\u0000\u0000"+
+		"\u0000_a\u0003\u0002\u0001\u0000`b\u0005\u0004\u0000\u0000a`\u0001\u0000"+
+		"\u0000\u0000ab\u0001\u0000\u0000\u0000bc\u0001\u0000\u0000\u0000cf\u0003"+
+		"\u0004\u0002\u0000de\u0005$\u0000\u0000eg\u0003.\u0017\u0000fd\u0001\u0000"+
+		"\u0000\u0000fg\u0001\u0000\u0000\u0000g\u000f\u0001\u0000\u0000\u0000"+
+		"hi\u0003\u0002\u0001\u0000ij\u0003\u0004\u0002\u0000j\u0011\u0001\u0000"+
+		"\u0000\u0000kp\u0003\u0010\b\u0000lm\u0005\"\u0000\u0000mo\u0003\u0010"+
+		"\b\u0000nl\u0001\u0000\u0000\u0000or\u0001\u0000\u0000\u0000pn\u0001\u0000"+
+		"\u0000\u0000pq\u0001\u0000\u0000\u0000q\u0013\u0001\u0000\u0000\u0000"+
+		"rp\u0001\u0000\u0000\u0000sv\u0005\u001e\u0000\u0000tw\u0005\u0018\u0000"+
+		"\u0000uw\u0003\u0012\t\u0000vt\u0001\u0000\u0000\u0000vu\u0001\u0000\u0000"+
+		"\u0000w\u0015\u0001\u0000\u0000\u0000x{\u0005\u001b\u0000\u0000y|\u0005"+
+		"\u0018\u0000\u0000z|\u0003\u0002\u0001\u0000{y\u0001\u0000\u0000\u0000"+
+		"{z\u0001\u0000\u0000\u0000|\u0017\u0001\u0000\u0000\u0000}\u007f\u0005"+
+		"\u0006\u0000\u0000~}\u0001\u0000\u0000\u0000~\u007f\u0001\u0000\u0000"+
+		"\u0000\u007f\u0080\u0001\u0000\u0000\u0000\u0080\u0081\u0005\u0016\u0000"+
+		"\u0000\u0081\u0082\u0003\u0006\u0003\u0000\u0082\u0083\u0003\u0014\n\u0000"+
+		"\u0083\u0084\u0003\u0016\u000b\u0000\u0084\u0019\u0001\u0000\u0000\u0000"+
+		"\u0085\u0087\u0005\u0006\u0000\u0000\u0086\u0085\u0001\u0000\u0000\u0000"+
+		"\u0086\u0087\u0001\u0000\u0000\u0000\u0087\u0088\u0001\u0000\u0000\u0000"+
+		"\u0088\u0089\u0005\u0011\u0000\u0000\u0089\u008a\u0003\u0006\u0003\u0000"+
+		"\u008a\u008b\u0003\u0014\n\u0000\u008b\u008f\u0003\u0016\u000b\u0000\u008c"+
+		"\u008e\u0003\u001c\u000e\u0000\u008d\u008c\u0001\u0000\u0000\u0000\u008e"+
+		"\u0091\u0001\u0000\u0000\u0000\u008f\u008d\u0001\u0000\u0000\u0000\u008f"+
+		"\u0090\u0001\u0000\u0000\u0000\u0090\u0092\u0001\u0000\u0000\u0000\u0091"+
+		"\u008f\u0001\u0000\u0000\u0000\u0092\u0093\u0005\n\u0000\u0000\u0093\u001b"+
+		"\u0001\u0000\u0000\u0000\u0094\u009c\u0003\u000e\u0007\u0000\u0095\u009c"+
+		"\u0003\u001e\u000f\u0000\u0096\u009c\u0003 \u0010\u0000\u0097\u009c\u0003"+
+		"\"\u0011\u0000\u0098\u009c\u0003$\u0012\u0000\u0099\u009c\u0003*\u0015"+
+		"\u0000\u009a\u009c\u0003,\u0016\u0000\u009b\u0094\u0001\u0000\u0000\u0000"+
+		"\u009b\u0095\u0001\u0000\u0000\u0000\u009b\u0096\u0001\u0000\u0000\u0000"+
+		"\u009b\u0097\u0001\u0000\u0000\u0000\u009b\u0098\u0001\u0000\u0000\u0000"+
+		"\u009b\u0099\u0001\u0000\u0000\u0000\u009b\u009a\u0001\u0000\u0000\u0000"+
+		"\u009c\u001d\u0001\u0000\u0000\u0000\u009d\u00a0\u0005\u001d\u0000\u0000"+
+		"\u009e\u00a1\u00034\u001a\u0000\u009f\u00a1\u0003\u0004\u0002\u0000\u00a0"+
+		"\u009e\u0001\u0000\u0000\u0000\u00a0\u009f\u0001\u0000\u0000\u0000\u00a1"+
+		"\u00a2\u0001\u0000\u0000\u0000\u00a2\u00a3\u0005$\u0000\u0000\u00a3\u00a4"+
+		"\u0003.\u0017\u0000\u00a4\u001f\u0001\u0000\u0000\u0000\u00a5\u00a7\u0005"+
+		"\u0007\u0000\u0000\u00a6\u00a5\u0001\u0000\u0000\u0000\u00a6\u00a7\u0001"+
+		"\u0000\u0000\u0000\u00a7\u00a8\u0001\u0000\u0000\u0000\u00a8\u00a9\u0005"+
+		"\u0005\u0000\u0000\u00a9\u00aa\u00032\u0019\u0000\u00aa!\u0001\u0000\u0000"+
+		"\u0000\u00ab\u00ad\u0005\u001c\u0000\u0000\u00ac\u00ae\u0003.\u0017\u0000"+
+		"\u00ad\u00ac\u0001\u0000\u0000\u0000\u00ad\u00ae\u0001\u0000\u0000\u0000"+
+		"\u00ae#\u0001\u0000\u0000\u0000\u00af\u00b0\u0005\u0013\u0000\u0000\u00b0"+
+		"\u00b2\u0003.\u0017\u0000\u00b1\u00b3\u0005\u001f\u0000\u0000\u00b2\u00b1"+
+		"\u0001\u0000\u0000\u0000\u00b2\u00b3\u0001\u0000\u0000\u0000\u00b3\u00b9"+
+		"\u0001\u0000\u0000\u0000\u00b4\u00b8\u0003\u001c\u000e\u0000\u00b5\u00b8"+
+		"\u0003&\u0013\u0000\u00b6\u00b8\u0003(\u0014\u0000\u00b7\u00b4\u0001\u0000"+
+		"\u0000\u0000\u00b7\u00b5\u0001\u0000\u0000\u0000\u00b7\u00b6\u0001\u0000"+
+		"\u0000\u0000\u00b8\u00bb\u0001\u0000\u0000\u0000\u00b9\u00b7\u0001\u0000"+
+		"\u0000\u0000\u00b9\u00ba\u0001\u0000\u0000\u0000\u00ba\u00bc\u0001\u0000"+
+		"\u0000\u0000\u00bb\u00b9\u0001\u0000\u0000\u0000\u00bc\u00bd\u0005\u000b"+
+		"\u0000\u0000\u00bd%\u0001\u0000\u0000\u0000\u00be\u00bf\u0005\t\u0000"+
+		"\u0000\u00bf\u00c1\u0003.\u0017\u0000\u00c0\u00c2\u0005\u001f\u0000\u0000"+
+		"\u00c1\u00c0\u0001\u0000\u0000\u0000\u00c1\u00c2\u0001\u0000\u0000\u0000"+
+		"\u00c2\u00c6\u0001\u0000\u0000\u0000\u00c3\u00c5\u0003\u001c\u000e\u0000"+
+		"\u00c4\u00c3\u0001\u0000\u0000\u0000\u00c5\u00c8\u0001\u0000\u0000\u0000"+
+		"\u00c6\u00c4\u0001\u0000\u0000\u0000\u00c6\u00c7\u0001\u0000\u0000\u0000"+
+		"\u00c7\'\u0001\u0000\u0000\u0000\u00c8\u00c6\u0001\u0000\u0000\u0000\u00c9"+
+		"\u00cd\u0005\b\u0000\u0000\u00ca\u00cc\u0003\u001c\u000e\u0000\u00cb\u00ca"+
+		"\u0001\u0000\u0000\u0000\u00cc\u00cf\u0001\u0000\u0000\u0000\u00cd\u00cb"+
+		"\u0001\u0000\u0000\u0000\u00cd\u00ce\u0001\u0000\u0000\u0000\u00ce)\u0001"+
+		"\u0000\u0000\u0000\u00cf\u00cd\u0001\u0000\u0000\u0000\u00d0\u00d4\u0005"+
+		"\u0015\u0000\u0000\u00d1\u00d3\u0003\u001c\u000e\u0000\u00d2\u00d1\u0001"+
+		"\u0000\u0000\u0000\u00d3\u00d6\u0001\u0000\u0000\u0000\u00d4\u00d2\u0001"+
+		"\u0000\u0000\u0000\u00d4\u00d5\u0001\u0000\u0000\u0000\u00d5\u00d7\u0001"+
+		"\u0000\u0000\u0000\u00d6\u00d4\u0001\u0000\u0000\u0000\u00d7\u00d8\u0005"+
+		"\f\u0000\u0000\u00d8+\u0001\u0000\u0000\u0000\u00d9\u00da\u0005\u000f"+
+		"\u0000\u0000\u00da\u00db\u0003.\u0017\u0000\u00db-\u0001\u0000\u0000\u0000"+
+		"\u00dc\u00dd\u0006\u0017\uffff\uffff\u0000\u00dd\u00de\u0005,\u0000\u0000"+
+		"\u00de\u00ed\u0003.\u0017\u000f\u00df\u00e0\u0005-\u0000\u0000\u00e0\u00ed"+
+		"\u0003.\u0017\u000e\u00e1\u00e2\u0005*\u0000\u0000\u00e2\u00ed\u0003."+
+		"\u0017\r\u00e3\u00e4\u0005+\u0000\u0000\u00e4\u00ed\u0003.\u0017\f\u00e5"+
+		"\u00e6\u0005\u0017\u0000\u0000\u00e6\u00ed\u0003.\u0017\u000b\u00e7\u00e8"+
+		"\u0005.\u0000\u0000\u00e8\u00e9\u0003.\u0017\u0000\u00e9\u00ea\u0005/"+
+		"\u0000\u0000\u00ea\u00ed\u0001\u0000\u0000\u0000\u00eb\u00ed\u00030\u0018"+
+		"\u0000\u00ec\u00dc\u0001\u0000\u0000\u0000\u00ec\u00df\u0001\u0000\u0000"+
+		"\u0000\u00ec\u00e1\u0001\u0000\u0000\u0000\u00ec\u00e3\u0001\u0000\u0000"+
+		"\u0000\u00ec\u00e5\u0001\u0000\u0000\u0000\u00ec\u00e7\u0001\u0000\u0000"+
+		"\u0000\u00ec\u00eb\u0001\u0000\u0000\u0000\u00ed\u0114\u0001\u0000\u0000"+
+		"\u0000\u00ee\u00ef\n\u0013\u0000\u0000\u00ef\u00f0\u0005*\u0000\u0000"+
+		"\u00f0\u0113\u0003.\u0017\u0014\u00f1\u00f2\n\u0012\u0000\u0000\u00f2"+
+		"\u00f3\u0005+\u0000\u0000\u00f3\u0113\u0003.\u0017\u0013\u00f4\u00f5\n"+
+		"\u0011\u0000\u0000\u00f5\u00f6\u0005,\u0000\u0000\u00f6\u0113\u0003.\u0017"+
+		"\u0012\u00f7\u00f8\n\u0010\u0000\u0000\u00f8\u00f9\u0005-\u0000\u0000"+
+		"\u00f9\u0113\u0003.\u0017\u0011\u00fa\u00fb\n\n\u0000\u0000\u00fb\u00fc"+
+		"\u0005#\u0000\u0000\u00fc\u0113\u0003.\u0017\u000b\u00fd\u00fe\n\t\u0000"+
+		"\u0000\u00fe\u00ff\u0005%\u0000\u0000\u00ff\u0113\u0003.\u0017\n\u0100"+
+		"\u0101\n\b\u0000\u0000\u0101\u0102\u0005\'\u0000\u0000\u0102\u0113\u0003"+
+		".\u0017\t\u0103\u0104\n\u0007\u0000\u0000\u0104\u0105\u0005&\u0000\u0000"+
+		"\u0105\u0113\u0003.\u0017\b\u0106\u0107\n\u0006\u0000\u0000\u0107\u0108"+
+		"\u0005)\u0000\u0000\u0108\u0113\u0003.\u0017\u0007\u0109\u010a\n\u0005"+
+		"\u0000\u0000\u010a\u010b\u0005(\u0000\u0000\u010b\u0113\u0003.\u0017\u0006"+
+		"\u010c\u010d\n\u0004\u0000\u0000\u010d\u010e\u0005\u001a\u0000\u0000\u010e"+
+		"\u0113\u0003.\u0017\u0005\u010f\u0110\n\u0003\u0000\u0000\u0110\u0111"+
+		"\u0005\u0003\u0000\u0000\u0111\u0113\u0003.\u0017\u0004\u0112\u00ee\u0001"+
+		"\u0000\u0000\u0000\u0112\u00f1\u0001\u0000\u0000\u0000\u0112\u00f4\u0001"+
+		"\u0000\u0000\u0000\u0112\u00f7\u0001\u0000\u0000\u0000\u0112\u00fa\u0001"+
+		"\u0000\u0000\u0000\u0112\u00fd\u0001\u0000\u0000\u0000\u0112\u0100\u0001"+
+		"\u0000\u0000\u0000\u0112\u0103\u0001\u0000\u0000\u0000\u0112\u0106\u0001"+
+		"\u0000\u0000\u0000\u0112\u0109\u0001\u0000\u0000\u0000\u0112\u010c\u0001"+
+		"\u0000\u0000\u0000\u0112\u010f\u0001\u0000\u0000\u0000\u0113\u0116\u0001"+
+		"\u0000\u0000\u0000\u0114\u0112\u0001\u0000\u0000\u0000\u0114\u0115\u0001"+
+		"\u0000\u0000\u0000\u0115/\u0001\u0000\u0000\u0000\u0116\u0114\u0001\u0000"+
+		"\u0000\u0000\u0117\u0124\u00034\u001a\u0000\u0118\u0124\u00032\u0019\u0000"+
+		"\u0119\u0124\u00036\u001b\u0000\u011a\u0124\u0005\u0010\u0000\u0000\u011b"+
+		"\u0124\u0005\u0019\u0000\u0000\u011c\u0124\u0005 \u0000\u0000\u011d\u0124"+
+		"\u00053\u0000\u0000\u011e\u0124\u00054\u0000\u0000\u011f\u0124\u00055"+
+		"\u0000\u0000\u0120\u0124\u0005\u0001\u0000\u0000\u0121\u0124\u0005\u0002"+
+		"\u0000\u0000\u0122\u0124\u00052\u0000\u0000\u0123\u0117\u0001\u0000\u0000"+
+		"\u0000\u0123\u0118\u0001\u0000\u0000\u0000\u0123\u0119\u0001\u0000\u0000"+
+		"\u0000\u0123\u011a\u0001\u0000\u0000\u0000\u0123\u011b\u0001\u0000\u0000"+
+		"\u0000\u0123\u011c\u0001\u0000\u0000\u0000\u0123\u011d\u0001\u0000\u0000"+
+		"\u0000\u0123\u011e\u0001\u0000\u0000\u0000\u0123\u011f\u0001\u0000\u0000"+
+		"\u0000\u0123\u0120\u0001\u0000\u0000\u0000\u0123\u0121\u0001\u0000\u0000"+
+		"\u0000\u0123\u0122\u0001\u0000\u0000\u0000\u01241\u0001\u0000\u0000\u0000"+
+		"\u0125\u0126\u0003\u0006\u0003\u0000\u0126\u012f\u0005.\u0000\u0000\u0127"+
+		"\u012c\u0003.\u0017\u0000\u0128\u0129\u0005\"\u0000\u0000\u0129\u012b"+
+		"\u0003.\u0017\u0000\u012a\u0128\u0001\u0000\u0000\u0000\u012b\u012e\u0001"+
+		"\u0000\u0000\u0000\u012c\u012a\u0001\u0000\u0000\u0000\u012c\u012d\u0001"+
+		"\u0000\u0000\u0000\u012d\u0130\u0001\u0000\u0000\u0000\u012e\u012c\u0001"+
+		"\u0000\u0000\u0000\u012f\u0127\u0001\u0000\u0000\u0000\u012f\u0130\u0001"+
+		"\u0000\u0000\u0000\u0130\u0131\u0001\u0000\u0000\u0000\u0131\u0132\u0005"+
+		"/\u0000\u0000\u01323\u0001\u0000\u0000\u0000\u0133\u0134\u0003\u0004\u0002"+
+		"\u0000\u0134\u0136\u00050\u0000\u0000\u0135\u0137\u0003.\u0017\u0000\u0136"+
+		"\u0135\u0001\u0000\u0000\u0000\u0136\u0137\u0001\u0000\u0000\u0000\u0137"+
+		"\u0138\u0001\u0000\u0000\u0000\u0138\u0139\u00051\u0000\u0000\u01395\u0001"+
+		"\u0000\u0000\u0000\u013a\u013b\u0005\u0011\u0000\u0000\u013b\u013c\u0005"+
+		"2\u0000\u0000\u013c7\u0001\u0000\u0000\u0000\u001f<>TZ]afpv{~\u0086\u008f"+
+		"\u009b\u00a0\u00a6\u00ad\u00b2\u00b7\u00b9\u00c1\u00c6\u00cd\u00d4\u00ec"+
+		"\u0112\u0114\u0123\u012c\u012f\u0136";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
