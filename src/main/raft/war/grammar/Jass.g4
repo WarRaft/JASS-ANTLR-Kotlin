@@ -30,12 +30,11 @@ takes : TAKES (NOTHING|params);
 returns_ : RETURNS (NOTHING|typename);
 
 native : CONSTANT? NATIVE funname takes returns_;
-function : CONSTANT? FUNCTION funname takes returns_ stmt* ENDFUNCTION ;
+function : CONSTANT? FUNCTION funname takes returns_ variable* stmt* ENDFUNCTION ;
 
 // === STATEMENT
 stmt
-    : variable
-    | set
+    : set
     | call
     | return
     | if
@@ -58,25 +57,22 @@ exitwhen : EXITWHEN expr ;
 
 // === EXPRESSION
 expr
-    : expr PLUS expr
-    | expr MINUS expr
-    | expr MUL expr
-    | expr DIV expr
-    | MUL expr
-    | DIV expr
-    | PLUS expr
-    | MINUS expr
-    | NOT expr
-    | expr EQ_EQ expr
-    | expr NEQ expr
-    | expr LT expr
-    | expr LT_EQ expr
-    | expr GT expr
-    | expr GT_EQ expr
-    | expr OR expr
-    | expr AND expr
-    | LPAREN expr RPAREN
-    | prim
+    : LPAREN expr RPAREN # exprParen // 1
+    | (MINUS|NOT) expr # exprUn // 2
+    | expr (MUL|DIV) expr # exprMul  // 3
+    | expr (MINUS|PLUS) expr # exprAdd // 4
+    | expr EQ_EQ expr # exprEq
+    | expr NEQ expr # exprNeq
+    | expr LT expr # exprLt
+    | expr LT_EQ expr # exprLtEq
+    | expr GT expr # exprGt
+    | expr GT_EQ expr # exprGtEq
+    | expr OR expr # exprOr
+    | expr AND expr # exprAnd
+    | (INTVAL|HEXVAL|RAWVAL) # exprInt
+    | REALVAL # exprReal
+    | STRING # exprStr
+    | prim # exprPrim
     ;
 
 prim
@@ -86,11 +82,6 @@ prim
     | FALSE
     | NULL
     | TRUE
-    | INTVAL
-    | HEXVAL
-    | REALVAL
-    | RAWVAL
-    | STRING
     | ID
     ;
 

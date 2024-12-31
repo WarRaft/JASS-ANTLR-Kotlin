@@ -238,15 +238,197 @@ public interface JassListener extends ParseTreeListener {
 	 */
 	void exitExitwhen(JassParser.ExitwhenContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#expr}.
+	 * Enter a parse tree produced by the {@code exprInt}
+	 * labeled alternative in {@link JassParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpr(JassParser.ExprContext ctx);
+	void enterExprInt(JassParser.ExprIntContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#expr}.
+	 * Exit a parse tree produced by the {@code exprInt}
+	 * labeled alternative in {@link JassParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpr(JassParser.ExprContext ctx);
+	void exitExprInt(JassParser.ExprIntContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprLtEq}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprLtEq(JassParser.ExprLtEqContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprLtEq}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprLtEq(JassParser.ExprLtEqContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprStr}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprStr(JassParser.ExprStrContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprStr}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprStr(JassParser.ExprStrContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprUn}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprUn(JassParser.ExprUnContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprUn}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprUn(JassParser.ExprUnContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprGtEq}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprGtEq(JassParser.ExprGtEqContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprGtEq}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprGtEq(JassParser.ExprGtEqContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprEq}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprEq(JassParser.ExprEqContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprEq}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprEq(JassParser.ExprEqContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprGt}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprGt(JassParser.ExprGtContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprGt}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprGt(JassParser.ExprGtContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprParen}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprParen(JassParser.ExprParenContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprParen}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprParen(JassParser.ExprParenContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprOr}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprOr(JassParser.ExprOrContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprOr}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprOr(JassParser.ExprOrContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprLt}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprLt(JassParser.ExprLtContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprLt}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprLt(JassParser.ExprLtContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprMul}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprMul(JassParser.ExprMulContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprMul}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprMul(JassParser.ExprMulContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprPrim}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprPrim(JassParser.ExprPrimContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprPrim}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprPrim(JassParser.ExprPrimContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprAdd}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprAdd(JassParser.ExprAddContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprAdd}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprAdd(JassParser.ExprAddContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprAnd}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprAnd(JassParser.ExprAndContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprAnd}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprAnd(JassParser.ExprAndContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprReal}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprReal(JassParser.ExprRealContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprReal}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprReal(JassParser.ExprRealContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code exprNeq}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprNeq(JassParser.ExprNeqContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code exprNeq}
+	 * labeled alternative in {@link JassParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprNeq(JassParser.ExprNeqContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JassParser#prim}.
 	 * @param ctx the parse tree
