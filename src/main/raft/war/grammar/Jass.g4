@@ -42,9 +42,9 @@ stmt
     | exitwhen
     ;
 
-set : SET (primarr|varname) EQ expr;
+set : SET varname (LBRACK expr? RBRACK)? EQ expr;
 
-call : DEBUG? CALL primcall;
+call : DEBUG? CALL funname LPAREN (expr (COMMA expr)*)? RPAREN;
 
 return : RETURN expr?;
 
@@ -69,26 +69,16 @@ expr
     | expr GT_EQ expr # exprGtEq
     | expr OR expr # exprOr
     | expr AND expr # exprAnd
+    | NULL # exprNull
+    | (TRUE|FALSE) # exprBool
     | (INTVAL|HEXVAL|RAWVAL) # exprInt
     | REALVAL # exprReal
     | STRING # exprStr
-    | prim # exprPrim
+    | ID LBRACK expr? RBRACK # exprArr
+    | ID LPAREN (expr (COMMA expr)*)? RPAREN # exprCall
+    | FUNCTION ID # exprFun
+    | ID # exprVar
     ;
-
-prim
-    : primarr
-    | primcall
-    | primfun
-    | FALSE
-    | NULL
-    | TRUE
-    | ID
-    ;
-
-primcall : funname LPAREN (expr (COMMA expr)*)? RPAREN;
-primarr : varname LBRACK expr? RBRACK;
-primfun : FUNCTION ID;
-
 
 RAWVAL: '\'' (~['])* '\'';
 
@@ -153,7 +143,6 @@ INTVAL: ('0' .. '9')+;
 HEXVAL: (('0' [xX])| '$' )  HexDigit+;
 
 REALVAL : (('0' .. '9')* '.' ('0' .. '9')+)|(('0' .. '9')+ '.' ('0' .. '9')*);
-
 
 WS: [ \t]+ -> channel(HIDDEN);
 NL: [\r\n] -> channel(2);

@@ -1,4 +1,4 @@
-package raft.war.jass.checker.error
+package raft.war.jass.error
 
 import org.antlr.v4.runtime.BaseErrorListener
 import org.antlr.v4.runtime.Parser
@@ -8,8 +8,8 @@ import org.antlr.v4.runtime.atn.ATNConfigSet
 import org.antlr.v4.runtime.dfa.DFA
 import java.util.BitSet
 
-class Listener : BaseErrorListener() {
-    val errors = mutableListOf<Error>()
+class JassErrorListener : BaseErrorListener() {
+    val jassErrors = mutableListOf<JassError>()
 
     override fun syntaxError(
         recognizer: Recognizer<*, *>?,
@@ -19,9 +19,9 @@ class Listener : BaseErrorListener() {
         msg: String?,
         e: RecognitionException?
     ) {
-        errors.add(
-            Error(
-                id = Id.SYNTAX,
+        jassErrors.add(
+            JassError(
+                jassErrorId = JassErrorId.SYNTAX,
                 line = line,
                 char = charPositionInLine,
                 message = msg ?: "Unknown error"

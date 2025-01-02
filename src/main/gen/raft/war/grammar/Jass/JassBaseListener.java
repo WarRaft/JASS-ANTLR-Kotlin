@@ -353,6 +353,18 @@ public class JassBaseListener implements JassListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterExprVar(JassParser.ExprVarContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExprVar(JassParser.ExprVarContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExprEq(JassParser.ExprEqContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -372,6 +384,30 @@ public class JassBaseListener implements JassListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExprGt(JassParser.ExprGtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExprNull(JassParser.ExprNullContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExprNull(JassParser.ExprNullContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExprFun(JassParser.ExprFunContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExprFun(JassParser.ExprFunContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -401,6 +437,18 @@ public class JassBaseListener implements JassListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterExprCall(JassParser.ExprCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExprCall(JassParser.ExprCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExprLt(JassParser.ExprLtContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -425,13 +473,13 @@ public class JassBaseListener implements JassListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExprPrim(JassParser.ExprPrimContext ctx) { }
+	@Override public void enterExprArr(JassParser.ExprArrContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExprPrim(JassParser.ExprPrimContext ctx) { }
+	@Override public void exitExprArr(JassParser.ExprArrContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -444,6 +492,18 @@ public class JassBaseListener implements JassListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExprAdd(JassParser.ExprAddContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExprBool(JassParser.ExprBoolContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExprBool(JassParser.ExprBoolContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -480,54 +540,6 @@ public class JassBaseListener implements JassListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExprNeq(JassParser.ExprNeqContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPrim(JassParser.PrimContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPrim(JassParser.PrimContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPrimcall(JassParser.PrimcallContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPrimcall(JassParser.PrimcallContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPrimarr(JassParser.PrimarrContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPrimarr(JassParser.PrimarrContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPrimfun(JassParser.PrimfunContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPrimfun(JassParser.PrimfunContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
