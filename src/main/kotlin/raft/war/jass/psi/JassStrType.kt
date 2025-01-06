@@ -3,8 +3,8 @@ package raft.war.jass.psi
 class JassStrType : IJassType {
     override val name: String = "string"
 
-    override fun op(jassExprOp: JassExprOp, b: IJassType): IJassType {
-        return when (jassExprOp) {
+    override fun op(op: JassExprOp, b: IJassType): IJassType {
+        return when (op) {
             JassExprOp.Set -> when (b) {
                 is JassStrType -> JassStrType()
                 else -> JassUndefinedType()

@@ -2,8 +2,8 @@ package raft.war.jass.psi
 
 class JassIntType() : IJassType {
     override val name: String = "integer"
-    override fun op(jassExprOp: JassExprOp, b: IJassType): IJassType {
-        return when (jassExprOp) {
+    override fun op(op: JassExprOp, b: IJassType): IJassType {
+        return when (op) {
             JassExprOp.Add -> when (b) {
                 is JassIntType -> JassIntType()
                 is JassRealType -> JassRealType()

@@ -29,12 +29,6 @@ public interface JassVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVarname(JassParser.VarnameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#funname}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFunname(JassParser.FunnameContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link JassParser#type}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

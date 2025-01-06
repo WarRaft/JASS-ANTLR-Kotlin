@@ -10,7 +10,6 @@ root : (type | native | globals | function)* EOF ;
 
 typename : ID;
 varname : ID;
-funname : ID;
 
 // === type
 type : TYPE typename extends;
@@ -23,14 +22,14 @@ globals : GLOBALS variable* ENDGLOBALS;
 variable : CONSTANT? LOCAL? typename ARRAY? varname (EQ expr)?;
 
 // === function
-param : typename varname;
-params : param (COMMA param)*  ;
+param : typename varname ;
+params : param (COMMA param)* ;
 
 takes : TAKES (NOTHING|params);
-returns_ : RETURNS (NOTHING|typename);
+returns_ : RETURNS (NOTHING|ID);
 
-native : CONSTANT? NATIVE funname takes returns_;
-function : CONSTANT? FUNCTION funname takes returns_ variable* stmt* ENDFUNCTION ;
+native : CONSTANT? NATIVE ID takes returns_;
+function : CONSTANT? FUNCTION ID takes returns_ variable* stmt* ENDFUNCTION ;
 
 // === STATEMENT
 stmt
@@ -44,7 +43,7 @@ stmt
 
 set : SET varname (LBRACK expr? RBRACK)? EQ expr;
 
-call : DEBUG? CALL funname LPAREN (expr (COMMA expr)*)? RPAREN;
+call : DEBUG? CALL ID LPAREN (expr (COMMA expr)*)? RPAREN;
 
 return : RETURN expr?;
 

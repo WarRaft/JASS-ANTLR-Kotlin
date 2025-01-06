@@ -4,11 +4,22 @@ class JassHandleType(override val name: String) : IJassType {
     var parent: JassHandleType? = null
 
     override fun op(
-        jassExprOp: JassExprOp,
+        op: JassExprOp,
         b: IJassType,
     ): IJassType {
-        return JassUndefinedType()
+        return when (op) {
+            JassExprOp.Set -> when (b) {
+                is JassHandleType -> {
+                    if (name == b.name) this
+                    else JassUndefinedType()
+                }
+
+                else -> JassUndefinedType()
+            }
+
+            else -> JassUndefinedType()
+        }
     }
 
-    override fun toString(): String = name
+    override fun toString(): String = "<handle>$name"
 }

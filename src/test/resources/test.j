@@ -96,6 +96,7 @@ type image              extends     handle
 type ubersplat          extends     handle
 type hashtable          extends     agent
 
+constant native ConvertRace1                 takes integer i returns nothing
 constant native ConvertRace                 takes integer i returns race
 constant native ConvertAllianceType         takes integer i returns alliancetype
 constant native ConvertRacePref             takes integer i returns racepreference
@@ -154,6 +155,21 @@ constant native AbilityId2String            takes integer abilityId         retu
 constant native GetObjectName               takes integer objectId          returns string
 
 globals
+
+    constant playercolor        PLAYER_COLOR_AQUA               = ConvertPlayerColor(10,1,12,33)
+    constant playercolor        PLAYER_COLOR_BROWN              = ConvertPlayerColor(11)
+
+    constant race               RACE_HUMAN                      = ConvertRace(1)
+    constant race               RACE_ORC                        = ConvertRace(2)
+    constant race               RACE_UNDEAD                     = ConvertRace(3)
+    constant race               RACE_NIGHTELF                   = ConvertRace(4)
+    constant race               RACE_DEMON                      = ConvertRace(5)
+    constant race               RACE_OTHER                      = ConvertRace(7)
+
+    constant playergameresult   PLAYER_GAME_RESULT_VICTORY      = ConvertPlayerGameResult(0)
+    constant playergameresult   PLAYER_GAME_RESULT_DEFEAT       = ConvertPlayerGameResult(1)
+    constant playergameresult   PLAYER_GAME_RESULT_TIE          = ConvertPlayerGameResult(2)
+
 
 string s = 1 + 2 + ""
 

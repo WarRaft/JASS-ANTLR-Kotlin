@@ -7,6 +7,7 @@ import raft.war.jass.psi.JassBool
 import raft.war.jass.psi.JassBoolType
 import raft.war.jass.psi.JassExpr
 import raft.war.jass.psi.JassExprOp
+import raft.war.jass.psi.JassFun
 import raft.war.jass.psi.JassHandleType
 import raft.war.jass.psi.JassInt
 import raft.war.jass.psi.JassIntType
@@ -14,6 +15,7 @@ import raft.war.jass.psi.JassReal
 import raft.war.jass.psi.JassRealType
 import raft.war.jass.psi.JassStr
 import raft.war.jass.psi.JassStrType
+import raft.war.jass.psi.JassUndefinedType
 import raft.war.jass.psi.JassVar
 import java.io.File
 import java.nio.file.Path
@@ -21,23 +23,6 @@ import kotlin.io.path.absolute
 
 class JassLua(val jass: JassState, val output: Path) {
     val builder = StringBuilder()
-
-    fun annotateType(t: IJassType, array: Boolean) {
-        val a = if (array) "[]" else ""
-
-        builder
-            .append("---@type ")
-            .append(
-                when (t) {
-                    is JassBoolType -> "boolean$a"
-                    is JassIntType -> "number$a integer"
-                    is JassRealType -> "number$a real"
-                    else -> t.name
-                }
-            )
-            .append("\n")
-    }
-
 
     fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
         val s = when (op) {
@@ -72,22 +57,71 @@ class JassLua(val jass: JassState, val output: Path) {
             is JassInt -> builder.append(e.raw)
             is JassReal -> builder.append(e.raw)
             is JassStr -> builder.append(e.raw)
-            //is JassExpr -> builder.append(e.a)
+            is JassFun -> {
+                builder.append("${e.name}(")
+                e.args.forEachIndexed { index, arg ->
+                    if (index > 0) builder.append(", ")
+                    expr(arg)
+                }
+                builder.append(")")
+            }
+
             else -> null
         }
     }
 
+    fun typeName(type: IJassType, array: Boolean = false): String {
+        val a = if (array) "[]" else ""
+        return when (type) {
+            is JassBoolType -> "boolean$a"
+            is JassIntType -> "number$a integer"
+            is JassRealType -> "number$a real"
+            else -> type.name
+        }
+    }
+
     fun variable(v: JassVar) {
+        builder.append("\n")
         if (v.constant) builder.append("--- constant\n")
 
-        annotateType(v.type, v.array)
+        builder
+            .append("---@type ")
+            .append(typeName(v.type, v.array))
+            .append("\n")
 
         if (v.local) builder.append("local ")
         builder.append(v.name).append(" = ")
         if (v.expr == null) builder.append(if (v.array) "{}" else "nil")
         else expr(v.expr!!)
 
-        builder.append("\n\n")
+        builder.append("\n")
+    }
+
+    fun function(f: JassFun) {
+        builder.append("\n")
+        if (f.native) builder.append("--- native\n")
+        f.params.forEach {
+            if (!it.param) return
+            builder.append("---@param ${it.name} ${typeName(it.type)}\n")
+        }
+
+        if (f.type !is JassUndefinedType) {
+            builder.append("---@return ${typeName(f.type)}\n")
+        }
+
+        builder.append("function ${f.name} (")
+        val list: MutableList<String> = mutableListOf()
+        f.params.forEach {
+            if (!it.param) return
+            list.add(it.name)
+        }
+
+        builder.append(list.joinToString(", "))
+        builder.append(")")
+
+        builder.append(" end")
+
+        builder.append("\n")
     }
 
     fun type(t: JassHandleType) {
@@ -103,8 +137,11 @@ class JassLua(val jass: JassState, val output: Path) {
         builder.clear()
 
         jass.types.forEach(::type)
-        builder.append("\n")
+
+        jass.natives.forEach(::function)
+
         jass.globals.forEach(::variable)
+        builder.append("\n")
 
         File(output.absolute().toString()).writeText(builder.toString())
     }

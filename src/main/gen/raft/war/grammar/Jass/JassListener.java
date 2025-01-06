@@ -38,16 +38,6 @@ public interface JassListener extends ParseTreeListener {
 	 */
 	void exitVarname(JassParser.VarnameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#funname}.
-	 * @param ctx the parse tree
-	 */
-	void enterFunname(JassParser.FunnameContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link JassParser#funname}.
-	 * @param ctx the parse tree
-	 */
-	void exitFunname(JassParser.FunnameContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link JassParser#type}.
 	 * @param ctx the parse tree
 	 */

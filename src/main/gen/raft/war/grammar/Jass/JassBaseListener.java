@@ -53,18 +53,6 @@ public class JassBaseListener implements JassListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunname(JassParser.FunnameContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFunname(JassParser.FunnameContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterType(JassParser.TypeContext ctx) { }
 	/**
 	 * {@inheritDoc}

@@ -5,8 +5,8 @@ class JassRealType : IJassType {
 
     override fun toString(): String = name
 
-    override fun op(jassExprOp: JassExprOp, b: IJassType): IJassType {
-        return when (jassExprOp) {
+    override fun op(op: JassExprOp, b: IJassType): IJassType {
+        return when (op) {
             JassExprOp.Add -> when (b) {
                 is JassIntType, is JassRealType -> JassRealType()
                 is JassStrType -> JassStrType()

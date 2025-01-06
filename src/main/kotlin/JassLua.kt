@@ -6,7 +6,7 @@ import kotlin.io.path.absolute
 fun main() {
     val jass = JassState()
 
-    val jassPath = Paths.get("src", "test", "resources", "test.j")
+    val jassPath = Paths.get("src", "test", "resources", "blizzard.j")
     val luaPath = jassPath.resolveSibling(jassPath.fileName.toString().replaceAfterLast('.', "lua"))
 
     jass.parse(jassPath.absolute().toString())
