@@ -17,24 +17,53 @@ import raft.war.jass.psi.IJassType
 import raft.war.jass.psi.JassUndefinedType
 
 class JassState : JassBaseVisitor<IJassNode>() {
-    val mapId: MutableMap<String, IJassNode> = mutableMapOf()
+    var states: List<JassState> = listOf()
 
     val natives: MutableList<JassFun> = mutableListOf()
     val globals: MutableList<JassVar> = mutableListOf()
 
+    val mapNode: MutableMap<String, IJassNode> = mutableMapOf()
+    fun getNode(key: String): IJassNode? {
+        var node: IJassNode? = null
+        states.forEach {
+            if (it.mapNode.containsKey(key)) {
+                node = it.mapNode[key]
+            }
+        }
+        if (mapNode.containsKey(key)) {
+            node = mapNode[key]
+        }
+        return node
+    }
+
     val mapType: MutableMap<String, JassHandleType> = mutableMapOf()
     val types: MutableList<JassHandleType> = mutableListOf()
+
+    fun getType(key: String): IJassType? {
+        var type: IJassType? = null
+        states.forEach {
+            if (it.mapType.containsKey(key)) {
+                type = it.mapType[key]
+            }
+        }
+        if (mapType.containsKey(key)) {
+            type = mapType[key]
+        }
+        return type
+
+    }
 
     fun typeFromString(str: String): IJassType = when (str) {
         "integer" -> JassIntType()
         "real" -> JassRealType()
         "string" -> JassStrType()
         "boolean" -> JassBoolType()
+        "code" -> JassCodeType()
         "handle" -> JassHandleType(str)
-        else -> mapType[str] ?: JassUndefinedType()
+        else -> getType(str) ?: JassUndefinedType()
     }
 
-    private fun handle(ctx: TypeContext) {
+    private fun typedef(ctx: TypeContext) {
         val parent = ctx.extends_().typename().text
 
         val type = JassHandleType(ctx.typename().text)
@@ -77,8 +106,10 @@ class JassState : JassBaseVisitor<IJassNode>() {
 
         val expr = ctx.expr()
         if (expr != null) {
-            v.expr = visit(expr) as JassExpr?
-            if (v.expr == null) return printctx(ctx)
+            if (ctx.EQ() != null) {
+                v.expr = visit(expr) as JassExpr?
+                if (v.expr == null) return printctx(ctx)
+            }
 
             val ta: IJassType = v.type
             val tb: IJassType = v.expr!!.type
@@ -88,12 +119,12 @@ class JassState : JassBaseVisitor<IJassNode>() {
             }
         }
 
-        if (mapId.containsKey(v.name)) {
+        if (getNode(v.name) != null) {
             errors.add(JassError(JassErrorId.REDECLARED, ctx.start.line, 0, v.name))
             return
         }
 
-        mapId[v.name] = v
+        mapNode[v.name] = v
         globals.add(v)
     }
 
@@ -132,7 +163,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
             native = true
         )
 
-        if (mapId.containsKey(f.name)) {
+        if (getNode(f.name) != null) {
             errors.add(JassError(JassErrorId.REDECLARED, ctx.start.line, 0, "${f.name} redeclared"))
             return
         }
@@ -140,13 +171,15 @@ class JassState : JassBaseVisitor<IJassNode>() {
         takes(f, ctx.takes())
         returns(f, ctx.returns_())
 
-        mapId[f.name] = f
+        mapNode[f.name] = f
         natives.add(f)
     }
 
     val errors = mutableListOf<JassError>()
 
-    fun parse(path: String) {
+    fun parse(path: String, states: List<JassState> = listOf()) {
+        this.states = states
+
         val cs = CharStreams.fromFileName(path)
 
         val errorJassErrorListener = JassErrorListener()
@@ -172,8 +205,8 @@ class JassState : JassBaseVisitor<IJassNode>() {
             when (it) {
                 is GlobalsContext -> it.variable().forEach(::global)
                 is NativeContext -> native(it)
-                is TypeContext -> handle(it)
-                is TerminalNode -> println("\n✅\n")
+                is TypeContext -> typedef(it)
+                is TerminalNode -> null
                 else -> {
                     printctx(it as ParserRuleContext)
                     //println("noparse: $it")
@@ -187,10 +220,10 @@ class JassState : JassBaseVisitor<IJassNode>() {
 
     override fun visitExprVar(ctx: ExprVarContext): JassExpr {
         val name = ctx.text
-        var node: IJassNode? = null
+        var node: IJassNode? = getNode(name)
 
-        if (mapId.containsKey(name)) {
-            node = mapId[name]
+        if (node !is JassVar) {
+            println("$name undefined")
         }
         return JassExpr(op = JassExprOp.Get, a = node ?: JassUndefined(name))
     }
@@ -212,10 +245,10 @@ class JassState : JassBaseVisitor<IJassNode>() {
         val f = JassFun(
             name = name,
         )
-        if (mapId.containsKey(name)) {
-            if (mapId[name] is JassFun) {
-                f.type = (mapId[name] as JassFun).type
-            }
+
+        val node = getNode(name)
+        if (node is JassFun) {
+            f.type = node.type
         }
 
         ctx.expr().forEach {

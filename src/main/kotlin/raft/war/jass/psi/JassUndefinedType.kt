@@ -1,9 +1,9 @@
 package raft.war.jass.psi
 
 class JassUndefinedType : IJassType {
-    override val name: String = "0undefined"
+    override val name: String = "undefined"
 
     override fun op(op: JassExprOp, b: IJassType): IJassType = JassUndefinedType()
 
-    override fun toString(): String = "undefined"
+    override fun toString(): String = name
 }

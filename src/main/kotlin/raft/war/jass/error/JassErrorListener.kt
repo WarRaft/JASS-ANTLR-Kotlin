@@ -17,7 +17,7 @@ class JassErrorListener : BaseErrorListener() {
         line: Int,
         charPositionInLine: Int,
         msg: String?,
-        e: RecognitionException?
+        e: RecognitionException?,
     ) {
         jassErrors.add(
             JassError(
@@ -36,9 +36,9 @@ class JassErrorListener : BaseErrorListener() {
         stopIndex: Int,
         exact: Boolean,
         ambigAlts: BitSet?,
-        configs: ATNConfigSet?
+        configs: ATNConfigSet?,
     ) {
-        println("[$startIndex, $stopIndex] reportAmbiguity")
+        if (false) println("[$startIndex, $stopIndex] reportAmbiguity")
     }
 
     override fun reportAttemptingFullContext(
@@ -47,9 +47,9 @@ class JassErrorListener : BaseErrorListener() {
         startIndex: Int,
         stopIndex: Int,
         conflictingAlts: BitSet?,
-        configs: ATNConfigSet?
+        configs: ATNConfigSet?,
     ) {
-        println("[$startIndex, $stopIndex] reportAttemptingFullContext")
+        if (false) println("[$startIndex, $stopIndex] reportAttemptingFullContext")
     }
 
     override fun reportContextSensitivity(
@@ -58,8 +58,8 @@ class JassErrorListener : BaseErrorListener() {
         startIndex: Int,
         stopIndex: Int,
         prediction: Int,
-        configs: ATNConfigSet?
+        configs: ATNConfigSet?,
     ) {
-        println("[$startIndex, $stopIndex] reportContextSensitivity")
+        if (false) println("[$startIndex, $stopIndex] reportContextSensitivity")
     }
 }

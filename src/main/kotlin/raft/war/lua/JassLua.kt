@@ -5,6 +5,7 @@ import raft.war.jass.psi.IJassNode
 import raft.war.jass.psi.IJassType
 import raft.war.jass.psi.JassBool
 import raft.war.jass.psi.JassBoolType
+import raft.war.jass.psi.JassCodeType
 import raft.war.jass.psi.JassExpr
 import raft.war.jass.psi.JassExprOp
 import raft.war.jass.psi.JassFun
@@ -23,6 +24,11 @@ import kotlin.io.path.absolute
 
 class JassLua(val jass: JassState, val output: Path) {
     val builder = StringBuilder()
+
+    fun reserved(name: String): Boolean = when (name) {
+        "break", "end", "for", "in", "nil", "repeat", "until", "while", "do" -> true
+        else -> false
+    }
 
     fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
         val s = when (op) {
@@ -57,6 +63,7 @@ class JassLua(val jass: JassState, val output: Path) {
             is JassInt -> builder.append(e.raw)
             is JassReal -> builder.append(e.raw)
             is JassStr -> builder.append(e.raw)
+            is JassVar -> builder.append(e.name)
             is JassFun -> {
                 builder.append("${e.name}(")
                 e.args.forEachIndexed { index, arg ->
@@ -76,23 +83,22 @@ class JassLua(val jass: JassState, val output: Path) {
             is JassBoolType -> "boolean$a"
             is JassIntType -> "number$a integer"
             is JassRealType -> "number$a real"
+            is JassCodeType -> "function"
             else -> type.name
         }
     }
 
     fun variable(v: JassVar) {
-        builder.append("\n")
-        if (v.constant) builder.append("--- constant\n")
-
-        builder
-            .append("---@type ")
-            .append(typeName(v.type, v.array))
-            .append("\n")
-
         if (v.local) builder.append("local ")
         builder.append(v.name).append(" = ")
         if (v.expr == null) builder.append(if (v.array) "{}" else "nil")
         else expr(v.expr!!)
+
+        builder
+            .append(" ---@type ")
+            .append(typeName(v.type, v.array))
+
+        if (v.constant) builder.append(" constant")
 
         builder.append("\n")
     }
@@ -101,8 +107,12 @@ class JassLua(val jass: JassState, val output: Path) {
         builder.append("\n")
         if (f.native) builder.append("--- native\n")
         f.params.forEach {
-            if (!it.param) return
-            builder.append("---@param ${it.name} ${typeName(it.type)}\n")
+            if (reserved(it.name)) {
+                it.name += "_"
+            }
+            if (it.param) {
+                builder.append("---@param ${it.name} ${typeName(it.type)}\n")
+            }
         }
 
         if (f.type !is JassUndefinedType) {
@@ -140,7 +150,10 @@ class JassLua(val jass: JassState, val output: Path) {
 
         jass.natives.forEach(::function)
 
+        builder.append("\n")
+
         jass.globals.forEach(::variable)
+
         builder.append("\n")
 
         File(output.absolute().toString()).writeText(builder.toString())

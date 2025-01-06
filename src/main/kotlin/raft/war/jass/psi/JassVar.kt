@@ -1,7 +1,7 @@
 package raft.war.jass.psi
 
 class JassVar(
-    val name: String,
+    var name: String,
     val constant: Boolean = false,
     val global: Boolean = false,
     val array: Boolean = false,
