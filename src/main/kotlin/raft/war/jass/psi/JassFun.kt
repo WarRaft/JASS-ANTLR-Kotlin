@@ -6,8 +6,8 @@ class JassFun(
 ) : IJassNode {
     override var type: IJassType = JassUndefinedType()
 
-    val params: MutableList<JassVar> = mutableListOf()
-    val args: MutableList<JassExpr> = mutableListOf()
+    val param: MutableList<JassVar> = mutableListOf()
+    val arg: MutableList<JassExpr> = mutableListOf()
 
     override fun toString(): String = "JassFun(name='$name'):$type"
 }

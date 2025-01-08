@@ -7023,4 +7023,3 @@ EFFECT_TYPE_MISSILE = ConvertEffectType(5) ---@type effecttype constant
 EFFECT_TYPE_LIGHTNING = ConvertEffectType(6) ---@type effecttype constant
 SOUND_TYPE_EFFECT = ConvertSoundType(0) ---@type soundtype constant
 SOUND_TYPE_EFFECT_LOOPED = ConvertSoundType(1) ---@type soundtype constant
-

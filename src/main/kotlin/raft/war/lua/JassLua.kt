@@ -66,7 +66,7 @@ class JassLua(val jass: JassState, val output: Path) {
             is JassVar -> builder.append(e.name)
             is JassFun -> {
                 builder.append("${e.name}(")
-                e.args.forEachIndexed { index, arg ->
+                e.arg.forEachIndexed { index, arg ->
                     if (index > 0) builder.append(", ")
                     expr(arg)
                 }
@@ -106,7 +106,7 @@ class JassLua(val jass: JassState, val output: Path) {
     fun function(f: JassFun) {
         builder.append("\n")
         if (f.native) builder.append("--- native\n")
-        f.params.forEach {
+        f.param.forEach {
             if (reserved(it.name)) {
                 it.name += "_"
             }
@@ -121,15 +121,34 @@ class JassLua(val jass: JassState, val output: Path) {
 
         builder.append("function ${f.name} (")
         val list: MutableList<String> = mutableListOf()
-        f.params.forEach {
-            if (!it.param) return
+        for (it in f.param) {
+            if (!it.param) break
             list.add(it.name)
         }
 
         builder.append(list.joinToString(", "))
-        builder.append(")")
+        builder.append(")\n")
 
-        builder.append(" end")
+        for (it in f.param) {
+            if (it.param) continue
+            if (reserved(it.name)) {
+                it.name += "_"
+            }
+
+            builder.append("\tlocal ${it.name}")
+
+            if (it.expr != null) {
+                builder.append(" = ")
+                expr(it.expr!!)
+            }
+
+            builder
+                .append(" ---@type ")
+                .append(typeName(it.type))
+                .append("\n")
+        }
+
+        builder.append("end")
 
         builder.append("\n")
     }
@@ -156,6 +175,8 @@ class JassLua(val jass: JassState, val output: Path) {
 
         builder.append("\n")
 
-        File(output.absolute().toString()).writeText(builder.toString())
+        jass.functions.forEach(::function)
+
+        File(output.absolute().toString()).writeText(builder.toString().trim())
     }
 }

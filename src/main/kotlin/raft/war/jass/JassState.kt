@@ -3,7 +3,6 @@ package raft.war.jass
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
-import org.antlr.v4.runtime.tree.TerminalNode
 import raft.war.grammar.Jass.JassBaseVisitor
 import raft.war.grammar.Jass.JassLexer
 import raft.war.grammar.Jass.JassParser
@@ -12,15 +11,13 @@ import raft.war.jass.error.JassError
 import raft.war.jass.error.JassErrorId
 import raft.war.jass.error.JassErrorListener
 import raft.war.jass.psi.*
-import raft.war.jass.psi.IJassNode
-import raft.war.jass.psi.IJassType
-import raft.war.jass.psi.JassUndefinedType
 
 class JassState : JassBaseVisitor<IJassNode>() {
     var states: List<JassState> = listOf()
 
     val natives: MutableList<JassFun> = mutableListOf()
     val globals: MutableList<JassVar> = mutableListOf()
+    val functions: MutableList<JassFun> = mutableListOf()
 
     val mapNode: MutableMap<String, IJassNode> = mutableMapOf()
     fun getNode(key: String): IJassNode? {
@@ -104,12 +101,9 @@ class JassState : JassBaseVisitor<IJassNode>() {
             type = typeFromString(ctx.typename().text)
         )
 
-        val expr = ctx.expr()
-        if (expr != null) {
-            if (ctx.EQ() != null) {
-                v.expr = visit(expr) as JassExpr?
-                if (v.expr == null) return printctx(ctx)
-            }
+        if (ctx.EQ() != null) {
+            v.expr = visit(ctx.expr()) as JassExpr?
+            if (v.expr == null) return printctx(ctx)
 
             val ta: IJassType = v.type
             val tb: IJassType = v.expr!!.type
@@ -132,7 +126,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
         if (ctx.NOTHING() != null) return
 
         ctx.params().param().forEach {
-            f.params.add(
+            f.param.add(
                 JassVar(
                     name = it.varname().text,
                     type = typeFromString(it.typename().text),
@@ -175,6 +169,47 @@ class JassState : JassBaseVisitor<IJassNode>() {
         natives.add(f)
     }
 
+    fun function(ctx: FunctionContext) {
+        val f = JassFun(
+            name = ctx.ID().text,
+        )
+
+        if (getNode(f.name) != null) {
+            errors.add(JassError(JassErrorId.REDECLARED, ctx.start.line, 0, "${f.name} redeclared function"))
+            return
+        }
+
+        takes(f, ctx.takes())
+        returns(f, ctx.returns_())
+
+        for (vctx: VariableContext in ctx.variable()) {
+            val v = JassVar(
+                name = vctx.varname().text,
+                array = vctx.ARRAY() != null,
+                type = typeFromString(vctx.typename().text),
+                local = true
+            )
+
+            if (vctx.EQ() != null) {
+                v.expr = visit(vctx.expr()) as JassExpr?
+                if (v.expr == null) return printctx(ctx)
+            }
+
+            f.param.add(v)
+        }
+
+        for (stmt: StmtContext in ctx.stmt()) {
+
+
+            val loop = stmt.loop()
+
+            println("${stmt.javaClass}")
+        }
+
+        mapNode[f.name] = f
+        functions.add(f)
+    }
+
     val errors = mutableListOf<JassError>()
 
     fun parse(path: String, states: List<JassState> = listOf()) {
@@ -206,17 +241,11 @@ class JassState : JassBaseVisitor<IJassNode>() {
                 is GlobalsContext -> it.variable().forEach(::global)
                 is NativeContext -> native(it)
                 is TypeContext -> typedef(it)
-                is TerminalNode -> null
-                else -> {
-                    printctx(it as ParserRuleContext)
-                    //println("noparse: $it")
-                }
+                is FunctionContext -> function(it)
             }
         }
-
         return null
     }
-
 
     override fun visitExprVar(ctx: ExprVarContext): JassExpr {
         val name = ctx.text
@@ -252,7 +281,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
         }
 
         ctx.expr().forEach {
-            f.args.add(visit(it) as JassExpr)
+            f.arg.add(visit(it) as JassExpr)
         }
 
         return JassExpr(
