@@ -1,5 +1,5 @@
-import raft.war.jass.JassState
-import raft.war.lua.JassLua
+import raft.war.antlr.jass.JassState
+import raft.war.antlr.lua.JassLua
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.absolute

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ANTLRGenerationPreferences">
     <option name="perGrammarGenerationSettings">
@@ -59,6 +60,16 @@
           <option name="libDir" value="" />
           <option name="encoding" value="" />
           <option name="pkg" value="raft.war.grammar.Jass" />
+          <option name="language" value="Java" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/src/main/raft/war/antlr/grammar/Jass.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="raft.war.antlr.grammar.Jass" />
           <option name="language" value="Java" />
           <option name="generateVisitor" value="true" />
         </PerGrammarGenerationSettings>

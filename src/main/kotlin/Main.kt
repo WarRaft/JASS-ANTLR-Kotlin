@@ -1,4 +1,4 @@
-import raft.war.jass.JassState
+import raft.war.antlr.jass.JassState
 import java.nio.file.Paths
 import kotlin.io.path.absolute
 
