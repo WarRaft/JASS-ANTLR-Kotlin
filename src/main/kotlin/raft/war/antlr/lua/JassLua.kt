@@ -1,29 +1,18 @@
 package raft.war.antlr.lua
 
 import raft.war.antlr.jass.JassState
-import raft.war.antlr.jass.psi.IJassNode
-import raft.war.antlr.jass.psi.IJassType
-import raft.war.antlr.jass.psi.JassBool
-import raft.war.antlr.jass.psi.JassBoolType
-import raft.war.antlr.jass.psi.JassCodeType
-import raft.war.antlr.jass.psi.JassExpr
-import raft.war.antlr.jass.psi.JassExprOp
-import raft.war.antlr.jass.psi.JassFun
-import raft.war.antlr.jass.psi.JassHandleType
-import raft.war.antlr.jass.psi.JassInt
-import raft.war.antlr.jass.psi.JassIntType
-import raft.war.antlr.jass.psi.JassReal
-import raft.war.antlr.jass.psi.JassRealType
-import raft.war.antlr.jass.psi.JassStr
-import raft.war.antlr.jass.psi.JassStrType
-import raft.war.antlr.jass.psi.JassUndefinedType
-import raft.war.antlr.jass.psi.JassVar
+import raft.war.antlr.jass.psi.*
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.absolute
 
 class JassLua(val jass: JassState, val output: Path) {
     val builder = StringBuilder()
+
+    fun tab(c: Int): StringBuilder {
+        (0..c).forEach { builder.append("\t") }
+        return builder
+    }
 
     fun reserved(name: String): Boolean = when (name) {
         "break", "end", "for", "in", "nil", "repeat", "until", "while", "do" -> true
@@ -103,6 +92,43 @@ class JassLua(val jass: JassState, val output: Path) {
         builder.append("\n")
     }
 
+    fun stmt(nodes: List<IJassNode>, level: Int) {
+        for (node in nodes) {
+            if (node is JassSet) {
+                tab(level)
+                    .append(node.variable.name)
+                    .append(" = ")
+
+                expr(node.expr)
+            }
+
+            if (node is JassLoop) {
+                tab(level).append("while(true) do\n")
+
+                stmt(node.stmt, level + 1)
+
+                tab(level).append("end")
+            }
+
+            if (node is JassExitWhen) {
+                tab(level).append("if (")
+                expr(node.expr)
+                builder.append(") then break end\n")
+            }
+
+            if (node is JassReturn) {
+                tab(level).append("return")
+                if (node.expr != null) {
+                    builder.append(" ")
+                    expr(node.expr)
+                }
+                builder.append("\n")
+            }
+
+            builder.append("\n")
+        }
+    }
+
     fun function(f: JassFun) {
         builder.append("\n")
         if (f.native) builder.append("--- native\n")
@@ -147,6 +173,8 @@ class JassLua(val jass: JassState, val output: Path) {
                 .append(typeName(it.type))
                 .append("\n")
         }
+
+        stmt(f.stmt, 0)
 
         builder.append("end")
 

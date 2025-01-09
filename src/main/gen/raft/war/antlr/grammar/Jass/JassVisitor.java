@@ -95,6 +95,12 @@ public interface JassVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStmt(JassParser.StmtContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link JassParser#setBrack}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSetBrack(JassParser.SetBrackContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link JassParser#set}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

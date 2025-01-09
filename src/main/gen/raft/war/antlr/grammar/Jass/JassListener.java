@@ -148,6 +148,16 @@ public interface JassListener extends ParseTreeListener {
 	 */
 	void exitStmt(JassParser.StmtContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link JassParser#setBrack}.
+	 * @param ctx the parse tree
+	 */
+	void enterSetBrack(JassParser.SetBrackContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JassParser#setBrack}.
+	 * @param ctx the parse tree
+	 */
+	void exitSetBrack(JassParser.SetBrackContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link JassParser#set}.
 	 * @param ctx the parse tree
 	 */

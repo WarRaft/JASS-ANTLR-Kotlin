@@ -41,7 +41,8 @@ stmt
     | exitwhen
     ;
 
-set : SET varname (LBRACK expr? RBRACK)? EQ expr;
+setBrack : LBRACK expr? RBRACK ;
+set : SET ID setBrack? EQ expr;
 
 call : DEBUG? CALL ID LPAREN (expr (COMMA expr)*)? RPAREN;
 

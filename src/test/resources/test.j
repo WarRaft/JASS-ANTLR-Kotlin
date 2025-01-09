@@ -9,9 +9,15 @@ function main takes real end returns nothing
     local real b = 44
     local integer end
 
-    set end = 22
+    set end = "a1"
 
     loop
+
+    exitwhen true
+
+    exitwhen 1 > 2 and true or false
+
+        set end = "a2"
 
             loop
             set end = 23
@@ -29,7 +35,6 @@ function main takes real end returns nothing
         if 2 + 3 > 0 then
 
             set w = 33
-
 
         endif
 

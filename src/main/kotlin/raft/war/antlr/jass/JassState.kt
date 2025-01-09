@@ -10,24 +10,7 @@ import raft.war.antlr.grammar.Jass.JassParser.*
 import raft.war.antlr.jass.error.JassError
 import raft.war.antlr.jass.error.JassErrorId
 import raft.war.antlr.jass.error.JassErrorListener
-import raft.war.antlr.jass.psi.IJassNode
-import raft.war.antlr.jass.psi.IJassType
-import raft.war.antlr.jass.psi.JassBool
-import raft.war.antlr.jass.psi.JassBoolType
-import raft.war.antlr.jass.psi.JassCodeType
-import raft.war.antlr.jass.psi.JassExpr
-import raft.war.antlr.jass.psi.JassExprOp
-import raft.war.antlr.jass.psi.JassFun
-import raft.war.antlr.jass.psi.JassHandleType
-import raft.war.antlr.jass.psi.JassInt
-import raft.war.antlr.jass.psi.JassIntType
-import raft.war.antlr.jass.psi.JassReal
-import raft.war.antlr.jass.psi.JassRealType
-import raft.war.antlr.jass.psi.JassStr
-import raft.war.antlr.jass.psi.JassStrType
-import raft.war.antlr.jass.psi.JassUndefined
-import raft.war.antlr.jass.psi.JassUndefinedType
-import raft.war.antlr.jass.psi.JassVar
+import raft.war.antlr.jass.psi.*
 
 class JassState : JassBaseVisitor<IJassNode>() {
     var states: List<JassState> = listOf()
@@ -186,6 +169,69 @@ class JassState : JassBaseVisitor<IJassNode>() {
         natives.add(f)
     }
 
+    fun stmt(ctxs: List<StmtContext>, scopes: MutableList<IJassStmtBlock>) {
+        val f = scopes.first() as JassFun
+
+        val scope = scopes.last()
+
+        for (item: StmtContext in ctxs) {
+
+            val set: SetContext? = item.set()
+            if (set != null) {
+                val name = set.ID().text
+                var v: JassVar? = null
+
+                for (item in f.param.asReversed()) {
+                    if (name == item.name) {
+                        v = item
+                        break
+                    }
+                    println(item)
+                }
+                if (v == null) {
+                    errors.add(JassError(JassErrorId.ERROR, set.start.line, 0, "$name not exists"))
+                    continue
+                }
+
+                scope.stmt.add(
+                    JassSet(
+                        variable = v,
+                        expr = visit(set.expr()) as JassExpr,
+                    )
+                )
+            }
+
+            val loop: LoopContext? = item.loop()
+            if (loop != null) {
+                val l = JassLoop()
+                scope.stmt.add(l)
+                val ss = scopes.toMutableList()
+                ss.add(l)
+                stmt(loop.stmt(), ss)
+            }
+
+            val exitWhen: ExitwhenContext? = item.exitwhen()
+            if (exitWhen != null) {
+                scope.stmt.add(
+                    JassExitWhen(
+                        expr = visit(exitWhen.expr()) as JassExpr,
+                    )
+                )
+            }
+
+            val ctxr: ReturnContext? = item.return_()
+            if (ctxr != null) {
+                val ctxe = ctxr.expr()
+                scope.stmt.add(
+                    JassReturn(
+                        expr = if (ctxe == null) null else visit(ctxe) as JassExpr?,
+                    )
+                )
+            }
+
+        }
+    }
+
     fun function(ctx: FunctionContext) {
         val f = JassFun(
             name = ctx.ID().text,
@@ -215,13 +261,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
             f.param.add(v)
         }
 
-        for (stmt: StmtContext in ctx.stmt()) {
-
-
-            val loop = stmt.loop()
-
-            println("${stmt.javaClass}")
-        }
+        stmt(ctx.stmt(), mutableListOf(f))
 
         mapNode[f.name] = f
         functions.add(f)
@@ -269,7 +309,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
         var node: IJassNode? = getNode(name)
 
         if (node !is JassVar) {
-            println("$name undefined")
+            println("⚠️visitExprVar: $name undefined")
         }
         return JassExpr(op = JassExprOp.Get, a = node ?: JassUndefined(name))
     }
