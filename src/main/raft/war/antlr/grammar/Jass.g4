@@ -61,14 +61,9 @@ expr
     | (MINUS|NOT) expr # exprUn // 2
     | expr (MUL|DIV) expr # exprMul  // 3
     | expr (MINUS|PLUS) expr # exprAdd // 4
-    | expr EQ_EQ expr # exprEq
-    | expr NEQ expr # exprNeq
-    | expr LT expr # exprLt
-    | expr LT_EQ expr # exprLtEq
-    | expr GT expr # exprGt
-    | expr GT_EQ expr # exprGtEq
-    | expr OR expr # exprOr
-    | expr AND expr # exprAnd
+    | expr (LT|LT_EQ|GT|GT_EQ) expr # exprLt
+    | expr (EQ_EQ|NEQ) expr # exprEq
+    | expr (AND|OR) expr # exprAnd
     | NULL # exprNull
     | (TRUE|FALSE) # exprBool
     | (INTVAL|HEXVAL|RAWVAL) # exprInt

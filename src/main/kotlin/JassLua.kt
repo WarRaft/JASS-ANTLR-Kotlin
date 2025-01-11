@@ -1,3 +1,5 @@
+@file:Suppress("DuplicatedCode")
+
 import raft.war.antlr.jass.JassState
 import raft.war.antlr.lua.JassLua
 import java.nio.file.Path

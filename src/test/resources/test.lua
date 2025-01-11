@@ -1,5 +1,15 @@
-b = nil ---@type number integer
+b = 1 + 2 - 3. ---@type number integer
 
+
+---@param msg string
+function BJDebugMsg (msg)
+	local i = 0 ---@type number integer
+	while(true) do
+		i =  + 1
+		if (i == ) then break end
+
+	end
+end
 
 ---@param end_ number real
 function main (end_)
@@ -10,7 +20,7 @@ function main (end_)
 	while(true) do
 		if (true) then break end
 
-		if (false) then break end
+		if (1 > 2 == 3 ~= 4 and true or false) then break end
 
 		end_ = "a2"
 		while(true) do
@@ -22,7 +32,7 @@ function main (end_)
 	end
 	return 22
 
-	return 
+	return a
 
 	return b
 

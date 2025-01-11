@@ -2,6 +2,7 @@ package raft.war.antlr.lua
 
 import raft.war.antlr.jass.JassState
 import raft.war.antlr.jass.psi.*
+import raft.war.antlr.jass.psi.JassExprOp.*
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.absolute
@@ -21,31 +22,48 @@ class JassLua(val jass: JassState, val output: Path) {
 
     fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
         val s = when (op) {
-            JassExprOp.Mul -> "*"
-            JassExprOp.Div -> "/"
-            JassExprOp.Add -> {
+            Mul -> "*"
+            Div -> "/"
+            Add -> {
                 if (a.type is JassStrType || b.type is JassStrType) ".."
                 else "+"
             }
 
-            JassExprOp.Sub -> "-"
-            else -> "$op"
+            Sub -> "-"
+            Lt -> "<"
+            LtEq -> "<="
+            Gt -> ">"
+            GtEq -> ">="
+
+            Eq -> "=="
+            Neq -> "~="
+
+            And -> "and"
+            Or -> "or"
+
+            else -> {
+                println("⚠️Lua: Missing $op")
+                "$op"
+            }
         }
         expr(a)
         builder.append(" $s ")
         expr(b)
     }
 
-    fun expr(e: IJassNode) {
+    fun expr(e: IJassNode?) {
+        if (e == null) return
         when (e) {
             is JassExpr -> when (e.op) {
-                JassExprOp.Get -> expr(e.a)
-                JassExprOp.Set -> builder.append("!!!")
-                JassExprOp.Add,
-                JassExprOp.Sub,
-                JassExprOp.Mul,
-                JassExprOp.Div,
-                    -> expr(e.op, e.a, e.b!!)
+                Get -> expr(e.a)
+                Set -> builder.append("!!!")
+                Add, Sub,
+                Mul, Div,
+                Lt, LtEq, Gt, GtEq,
+                Eq, Neq,
+                And, Or,
+                    -> if (e.a != null && e.b != null)
+                    expr(e.op, e.a, e.b)
             }
 
             is JassBool -> builder.append(e.raw)

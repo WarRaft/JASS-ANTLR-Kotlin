@@ -305,18 +305,6 @@ public class JassBaseListener implements JassListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExprLtEq(JassParser.ExprLtEqContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExprLtEq(JassParser.ExprLtEqContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterExprStr(JassParser.ExprStrContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -341,18 +329,6 @@ public class JassBaseListener implements JassListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExprGtEq(JassParser.ExprGtEqContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExprGtEq(JassParser.ExprGtEqContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterExprVar(JassParser.ExprVarContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -372,18 +348,6 @@ public class JassBaseListener implements JassListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExprEq(JassParser.ExprEqContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterExprGt(JassParser.ExprGtContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExprGt(JassParser.ExprGtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -420,18 +384,6 @@ public class JassBaseListener implements JassListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExprParen(JassParser.ExprParenContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterExprOr(JassParser.ExprOrContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExprOr(JassParser.ExprOrContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -528,18 +480,6 @@ public class JassBaseListener implements JassListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExprReal(JassParser.ExprRealContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterExprNeq(JassParser.ExprNeqContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExprNeq(JassParser.ExprNeqContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

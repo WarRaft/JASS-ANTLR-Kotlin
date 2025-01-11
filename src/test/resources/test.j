@@ -1,8 +1,19 @@
 globals
-    integer b
+    integer b = 1 + 2 - 3.
+constant integer bj_MAX_PLAYERS = 12
 
 endglobals
 
+native DisplayTimedTextToPlayer     takes player toPlayer, real x, real y, real duration, string message returns nothing
+
+function BJDebugMsg takes string msg returns nothing
+    local integer i = 0
+    loop
+        call DisplayTimedTextToPlayer(Player(i), 0, 0, 60, msg)
+        set i = i + 1
+        exitwhen i == bj_MAX_PLAYERS
+    endloop
+endfunction
 
 function main takes real end returns nothing
     local real a = 22
@@ -15,7 +26,7 @@ function main takes real end returns nothing
 
     exitwhen true
 
-    exitwhen 1 > 2 and true or false
+    exitwhen 1 > 2 == 3 != 4 and true or false
 
         set end = "a2"
 
@@ -48,3 +59,5 @@ function main takes real end returns nothing
 
 
 endfunction
+
+

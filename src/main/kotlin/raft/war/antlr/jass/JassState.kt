@@ -20,8 +20,14 @@ class JassState : JassBaseVisitor<IJassNode>() {
     val functions: MutableList<JassFun> = mutableListOf()
 
     val mapNode: MutableMap<String, IJassNode> = mutableMapOf()
-    fun getNode(key: String): IJassNode? {
+    fun getNode(key: String, f: JassFun?): IJassNode? {
         var node: IJassNode? = null
+        if (f != null) {
+            for (p in f.param.asReversed()) {
+                if (p.name == key) return p
+            }
+        }
+
         states.forEach {
             if (it.mapNode.containsKey(key)) {
                 node = it.mapNode[key]
@@ -102,7 +108,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
         )
 
         if (ctx.EQ() != null) {
-            v.expr = visit(ctx.expr()) as JassExpr?
+            v.expr = expr(ctx.expr(), null)
             if (v.expr == null) return printctx(ctx)
 
             val ta: IJassType = v.type
@@ -113,7 +119,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
             }
         }
 
-        if (getNode(v.name) != null) {
+        if (getNode(v.name, null) != null) {
             errors.add(JassError(JassErrorId.REDECLARED, ctx.start.line, 0, v.name))
             return
         }
@@ -157,7 +163,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
             native = true
         )
 
-        if (getNode(f.name) != null) {
+        if (getNode(f.name, null) != null) {
             errors.add(JassError(JassErrorId.REDECLARED, ctx.start.line, 0, "${f.name} redeclared"))
             return
         }
@@ -167,6 +173,113 @@ class JassState : JassBaseVisitor<IJassNode>() {
 
         mapNode[f.name] = f
         natives.add(f)
+    }
+
+    fun expr(ctx: ExprContext?, f: JassFun?): JassExpr? {
+        if (ctx == null) return null
+
+        when (ctx) {
+            is ExprCallContext -> {
+                val name = ctx.ID().text
+                val f = JassFun(
+                    name = name,
+                )
+
+                val node = getNode(name, null)
+                if (node is JassFun) {
+                    f.type = node.type
+                }
+
+                ctx.expr().forEach {
+                    val e = expr(it, f)
+                    if (e != null) {
+                        f.arg.add(e)
+                    }
+                }
+
+                return JassExpr(
+                    op = JassExprOp.Get,
+                    a = f
+                )
+            }
+
+            is ExprVarContext -> {
+                val name = ctx.text
+                var node: IJassNode? = getNode(name, f)
+
+                if (node !is JassVar) {
+                    println("⚠️visitExprVar: $name undefined")
+                }
+                return JassExpr(op = JassExprOp.Get, a = node)
+            }
+
+            is ExprIntContext -> return JassExpr(op = JassExprOp.Get, a = JassInt(ctx.text))
+            is ExprStrContext -> return JassExpr(op = JassExprOp.Get, a = JassStr(ctx.text))
+            is ExprBoolContext -> return JassExpr(op = JassExprOp.Get, a = JassBool(ctx.text))
+            is ExprRealContext -> return JassExpr(op = JassExprOp.Get, a = JassReal(ctx.text))
+
+            // 3
+            is ExprMulContext -> return JassExpr(
+                op = when (true) {
+                    (ctx.MUL() != null) -> JassExprOp.Mul
+                    (ctx.DIV() != null) -> JassExprOp.Div
+                    else -> return null
+                },
+                a = expr(ctx.expr(0), f),
+                b = expr(ctx.expr(1), f)
+            )
+
+            // 4
+            is ExprAddContext -> return JassExpr(
+                op = when (true) {
+                    (ctx.PLUS() != null) -> JassExprOp.Add
+                    (ctx.MINUS() != null) -> JassExprOp.Sub
+                    else -> return null
+                },
+                a = expr(ctx.expr(0), f),
+                b = expr(ctx.expr(1), f)
+            )
+
+            // 5
+            is ExprLtContext -> return JassExpr(
+                op = when (true) {
+                    (ctx.LT() != null) -> JassExprOp.Lt
+                    (ctx.LT_EQ() != null) -> JassExprOp.LtEq
+                    (ctx.GT() != null) -> JassExprOp.Gt
+                    (ctx.GT_EQ() != null) -> JassExprOp.GtEq
+                    else -> return null
+                },
+                a = expr(ctx.expr(0), f),
+                b = expr(ctx.expr(1), f)
+            )
+
+            // 6
+            is ExprEqContext -> return JassExpr(
+                op = when (true) {
+                    (ctx.EQ_EQ() != null) -> JassExprOp.Eq
+                    (ctx.NEQ() != null) -> JassExprOp.Neq
+                    else -> return null
+                },
+                a = expr(ctx.expr(0), f),
+                b = expr(ctx.expr(1), f)
+            )
+
+            // 7
+            is ExprAndContext -> return JassExpr(
+                op = when (true) {
+                    (ctx.AND() != null) -> JassExprOp.And
+                    (ctx.OR() != null) -> JassExprOp.Or
+                    else -> return null
+                },
+                a = expr(ctx.expr(0), f),
+                b = expr(ctx.expr(1), f)
+            )
+
+
+        }
+
+        println("🔥Expr: ${ctx.javaClass.name} | ${ctx.text}")
+        return null
     }
 
     fun stmt(ctxs: List<StmtContext>, scopes: MutableList<IJassStmtBlock>) {
@@ -193,12 +306,12 @@ class JassState : JassBaseVisitor<IJassNode>() {
                     continue
                 }
 
-                scope.stmt.add(
-                    JassSet(
-                        variable = v,
-                        expr = visit(set.expr()) as JassExpr,
-                    )
-                )
+                val expr = this.expr(set.expr(), null)
+                if (expr == null) {
+                    println("🔥Set: no expression | ${set.text}")
+                } else {
+                    scope.stmt.add(JassSet(variable = v, expr = expr))
+                }
             }
 
             val loop: LoopContext? = item.loop()
@@ -212,19 +325,19 @@ class JassState : JassBaseVisitor<IJassNode>() {
 
             val exitWhen: ExitwhenContext? = item.exitwhen()
             if (exitWhen != null) {
-                scope.stmt.add(
-                    JassExitWhen(
-                        expr = visit(exitWhen.expr()) as JassExpr,
-                    )
-                )
+                val exp = expr(exitWhen.expr(), f)
+                if (exp == null) {
+                    println("🔥exitwhen no expr")
+                } else {
+                    scope.stmt.add(JassExitWhen(expr = exp))
+                }
             }
 
             val ctxr: ReturnContext? = item.return_()
             if (ctxr != null) {
-                val ctxe = ctxr.expr()
                 scope.stmt.add(
                     JassReturn(
-                        expr = if (ctxe == null) null else visit(ctxe) as JassExpr?,
+                        expr = expr(ctxr.expr(), f),
                     )
                 )
             }
@@ -237,7 +350,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
             name = ctx.ID().text,
         )
 
-        if (getNode(f.name) != null) {
+        if (getNode(f.name, f) != null) {
             errors.add(JassError(JassErrorId.REDECLARED, ctx.start.line, 0, "${f.name} redeclared function"))
             return
         }
@@ -254,8 +367,10 @@ class JassState : JassBaseVisitor<IJassNode>() {
             )
 
             if (vctx.EQ() != null) {
-                v.expr = visit(vctx.expr()) as JassExpr?
-                if (v.expr == null) return printctx(ctx)
+                v.expr = expr(vctx.expr(), f)
+                if (v.expr == null) {
+                    errors.add(JassError(JassErrorId.ERROR, ctx.start.line, 0, "${f.name} variable without expression"))
+                }
             }
 
             f.param.add(v)
@@ -303,52 +418,4 @@ class JassState : JassBaseVisitor<IJassNode>() {
         }
         return null
     }
-
-    override fun visitExprVar(ctx: ExprVarContext): JassExpr {
-        val name = ctx.text
-        var node: IJassNode? = getNode(name)
-
-        if (node !is JassVar) {
-            println("⚠️visitExprVar: $name undefined")
-        }
-        return JassExpr(op = JassExprOp.Get, a = node ?: JassUndefined(name))
-    }
-
-    override fun visitExprAdd(ctx: ExprAddContext): IJassNode = JassExpr(
-        op = if (ctx.PLUS() != null) JassExprOp.Add else JassExprOp.Sub,
-        a = visit(ctx.expr(0)) as JassExpr,
-        b = visit(ctx.expr(1)) as JassExpr
-    )
-
-    override fun visitExprMul(ctx: ExprMulContext): IJassNode = JassExpr(
-        op = if (ctx.MUL() != null) JassExprOp.Mul else JassExprOp.Div,
-        a = visit(ctx.expr(0)) as JassExpr,
-        b = visit(ctx.expr(1)) as JassExpr
-    )
-
-    override fun visitExprCall(ctx: ExprCallContext): IJassNode {
-        val name = ctx.ID().text
-        val f = JassFun(
-            name = name,
-        )
-
-        val node = getNode(name)
-        if (node is JassFun) {
-            f.type = node.type
-        }
-
-        ctx.expr().forEach {
-            f.arg.add(visit(it) as JassExpr)
-        }
-
-        return JassExpr(
-            op = JassExprOp.Get,
-            a = f
-        )
-    }
-
-    override fun visitExprInt(ctx: ExprIntContext): IJassNode = JassExpr(op = JassExprOp.Get, a = JassInt(ctx.text))
-    override fun visitExprReal(ctx: ExprRealContext): IJassNode = JassExpr(op = JassExprOp.Get, a = JassReal(ctx.text))
-    override fun visitExprStr(ctx: ExprStrContext): IJassNode = JassExpr(op = JassExprOp.Get, a = JassStr(ctx.text))
-    override fun visitExprBool(ctx: ExprBoolContext): IJassNode = JassExpr(op = JassExprOp.Get, a = JassBool(ctx.text))
 }

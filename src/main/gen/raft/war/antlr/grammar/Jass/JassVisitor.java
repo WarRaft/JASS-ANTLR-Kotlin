@@ -156,13 +156,6 @@ public interface JassVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExprInt(JassParser.ExprIntContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code exprLtEq}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExprLtEq(JassParser.ExprLtEqContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code exprStr}
 	 * labeled alternative in {@link JassParser#expr}.
 	 * @param ctx the parse tree
@@ -177,13 +170,6 @@ public interface JassVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExprUn(JassParser.ExprUnContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code exprGtEq}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExprGtEq(JassParser.ExprGtEqContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code exprVar}
 	 * labeled alternative in {@link JassParser#expr}.
 	 * @param ctx the parse tree
@@ -197,13 +183,6 @@ public interface JassVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitExprEq(JassParser.ExprEqContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code exprGt}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExprGt(JassParser.ExprGtContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code exprNull}
 	 * labeled alternative in {@link JassParser#expr}.
@@ -225,13 +204,6 @@ public interface JassVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitExprParen(JassParser.ExprParenContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code exprOr}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExprOr(JassParser.ExprOrContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code exprCall}
 	 * labeled alternative in {@link JassParser#expr}.
@@ -288,11 +260,4 @@ public interface JassVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitExprReal(JassParser.ExprRealContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code exprNeq}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExprNeq(JassParser.ExprNeqContext ctx);
 }

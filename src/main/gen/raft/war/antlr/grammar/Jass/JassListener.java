@@ -250,18 +250,6 @@ public interface JassListener extends ParseTreeListener {
 	 */
 	void exitExprInt(JassParser.ExprIntContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code exprLtEq}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterExprLtEq(JassParser.ExprLtEqContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code exprLtEq}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitExprLtEq(JassParser.ExprLtEqContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code exprStr}
 	 * labeled alternative in {@link JassParser#expr}.
 	 * @param ctx the parse tree
@@ -286,18 +274,6 @@ public interface JassListener extends ParseTreeListener {
 	 */
 	void exitExprUn(JassParser.ExprUnContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code exprGtEq}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterExprGtEq(JassParser.ExprGtEqContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code exprGtEq}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitExprGtEq(JassParser.ExprGtEqContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code exprVar}
 	 * labeled alternative in {@link JassParser#expr}.
 	 * @param ctx the parse tree
@@ -321,18 +297,6 @@ public interface JassListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExprEq(JassParser.ExprEqContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code exprGt}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterExprGt(JassParser.ExprGtContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code exprGt}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitExprGt(JassParser.ExprGtContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code exprNull}
 	 * labeled alternative in {@link JassParser#expr}.
@@ -369,18 +333,6 @@ public interface JassListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExprParen(JassParser.ExprParenContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code exprOr}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterExprOr(JassParser.ExprOrContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code exprOr}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitExprOr(JassParser.ExprOrContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code exprCall}
 	 * labeled alternative in {@link JassParser#expr}.
@@ -477,16 +429,4 @@ public interface JassListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExprReal(JassParser.ExprRealContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code exprNeq}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterExprNeq(JassParser.ExprNeqContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code exprNeq}
-	 * labeled alternative in {@link JassParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitExprNeq(JassParser.ExprNeqContext ctx);
 }

@@ -2,13 +2,19 @@ package raft.war.antlr.jass.psi
 
 class JassExpr(
     val op: JassExprOp,
-    val a: IJassNode,
+    val a: IJassNode?,
     val b: IJassNode? = null,
 ) : IJassNode {
-    override var type: IJassType = if (b == null) {
-        a.type ?: JassUndefinedType()
-    } else {
-        a.type?.op(op, b.type ?: JassUndefinedType()) ?: JassUndefinedType()
+    override var type: IJassType
+
+    init {
+        type = JassUndefinedType()
+        if (a != null) {
+            type = a.type!!
+        }
+        if (a != null && b != null) {
+            a.type?.op(op, b.type!!) ?: JassUndefinedType()
+        }
     }
 
     override fun toString(): String {
