@@ -14,6 +14,8 @@ class JassHandleType(override val name: String) : IJassType {
                     else JassUndefinedType()
                 }
 
+                is JassNullType -> this
+
                 else -> JassUndefinedType()
             }
 

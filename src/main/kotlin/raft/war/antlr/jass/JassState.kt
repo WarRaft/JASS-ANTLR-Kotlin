@@ -2,7 +2,6 @@ package raft.war.antlr.jass
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.ParserRuleContext
 import raft.war.antlr.grammar.Jass.JassBaseVisitor
 import raft.war.antlr.grammar.Jass.JassLexer
 import raft.war.antlr.grammar.Jass.JassParser
@@ -88,16 +87,6 @@ class JassState : JassBaseVisitor<IJassNode>() {
         types.add(type)
     }
 
-    private fun printctx(ctx: ParserRuleContext) {
-        return
-        print("💋")
-        for (i in 0..ctx.childCount - 1) {
-            print(ctx.getChild(i).text)
-            print(" ")
-        }
-        print("\n")
-    }
-
     private fun global(ctx: VariableContext) {
         val v = JassVar(
             name = ctx.varname().text,
@@ -109,13 +98,15 @@ class JassState : JassBaseVisitor<IJassNode>() {
 
         if (ctx.EQ() != null) {
             v.expr = expr(ctx.expr(), null)
-            if (v.expr == null) return printctx(ctx)
-
-            val ta: IJassType = v.type
-            val tb: IJassType = v.expr!!.type
-            val t = ta.op(JassExprOp.Set, tb)
-            if (t is JassUndefinedType) {
-                errors.add(JassError(JassErrorId.TYPE_CAST, ctx.start.line, 0, "$ta ${JassExprOp.Set} $tb is $t"))
+            if (v.expr == null) {
+                errors.add(JassError(JassErrorId.ERROR, ctx.start.line, 0, "⚠️ ${v.name} global set missing"))
+            } else {
+                val ta: IJassType = v.type
+                val tb: IJassType = v.expr!!.type
+                val t = ta.op(JassExprOp.Set, tb)
+                if (t is JassUndefinedType) {
+                    errors.add(JassError(JassErrorId.TYPE_CAST, ctx.start.line, 0, "$ta ${JassExprOp.Set} $tb is $t"))
+                }
             }
         }
 
@@ -181,25 +172,25 @@ class JassState : JassBaseVisitor<IJassNode>() {
         when (ctx) {
             is ExprCallContext -> {
                 val name = ctx.ID().text
-                val f = JassFun(
+                val cf = JassFun(
                     name = name,
                 )
 
                 val node = getNode(name, null)
                 if (node is JassFun) {
-                    f.type = node.type
+                    cf.type = node.type
                 }
 
                 ctx.expr().forEach {
                     val e = expr(it, f)
                     if (e != null) {
-                        f.arg.add(e)
+                        cf.arg.add(e)
                     }
                 }
 
                 return JassExpr(
                     op = JassExprOp.Get,
-                    a = f
+                    a = cf
                 )
             }
 
@@ -208,15 +199,39 @@ class JassState : JassBaseVisitor<IJassNode>() {
                 var node: IJassNode? = getNode(name, f)
 
                 if (node !is JassVar) {
-                    println("⚠️visitExprVar: $name undefined")
+                    errors.add(JassError(JassErrorId.ERROR, ctx.start.line, 0, "$name is not declared"))
                 }
                 return JassExpr(op = JassExprOp.Get, a = node)
             }
+
+            is ExprArrContext -> {
+                val name = ctx.ID().text
+                var node: IJassNode? = getNode(name, f)
+                if (node is JassVar) {
+                    val v = node.clone()
+                    v.expr = expr(ctx.expr(), f)
+                    return JassExpr(op = JassExprOp.Get, a = v)
+                }
+                errors.add(JassError(JassErrorId.ERROR, ctx.start.line, 0, "$name array is not declared"))
+                return null
+            }
+
+            is ExprUnContext -> return JassExpr(
+                op = when (true) {
+                    (ctx.MINUS() != null) -> JassExprOp.UnSub
+                    (ctx.NOT() != null) -> JassExprOp.UnNot
+                    else -> return null
+                },
+                a = expr(ctx.expr(), f),
+            )
 
             is ExprIntContext -> return JassExpr(op = JassExprOp.Get, a = JassInt(ctx.text))
             is ExprStrContext -> return JassExpr(op = JassExprOp.Get, a = JassStr(ctx.text))
             is ExprBoolContext -> return JassExpr(op = JassExprOp.Get, a = JassBool(ctx.text))
             is ExprRealContext -> return JassExpr(op = JassExprOp.Get, a = JassReal(ctx.text))
+            is ExprNullContext -> return JassExpr(op = JassExprOp.Get, a = JassNull())
+
+            is ExprParenContext -> return JassExpr(op = JassExprOp.Paren, a = expr(ctx.expr(), f))
 
             // 3
             is ExprMulContext -> return JassExpr(
@@ -292,25 +307,18 @@ class JassState : JassBaseVisitor<IJassNode>() {
             val set: SetContext? = item.set()
             if (set != null) {
                 val name = set.ID().text
-                var v: JassVar? = null
+                var node = getNode(name, f)
 
-                for (item in f.param.asReversed()) {
-                    if (name == item.name) {
-                        v = item
-                        break
-                    }
-                    println(item)
-                }
-                if (v == null) {
-                    errors.add(JassError(JassErrorId.ERROR, set.start.line, 0, "$name not exists"))
+                if (node !is JassVar) {
+                    errors.add(JassError(JassErrorId.ERROR, set.start.line, 0, "[set] $name not exists"))
                     continue
                 }
 
-                val expr = this.expr(set.expr(), null)
+                val expr = this.expr(set.expr(), f)
                 if (expr == null) {
                     println("🔥Set: no expression | ${set.text}")
                 } else {
-                    scope.stmt.add(JassSet(variable = v, expr = expr))
+                    scope.stmt.add(JassSet(variable = node, expr = expr))
                 }
             }
 

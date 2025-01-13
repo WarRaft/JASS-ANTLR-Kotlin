@@ -1,15 +1,12 @@
-b = 1 + 2 - 3. ---@type number integer
+---@class handle
+---@class rect:handle
+---@class player:handle
 
+b = 1 + 2 - -(3) ---@type number integer
+h = nil ---@type handle
+a = {} ---@type number[] integer
+t = a[12] ---@type number integer
 
----@param msg string
-function BJDebugMsg (msg)
-	local i = 0 ---@type number integer
-	while(true) do
-		i =  + 1
-		if (i == ) then break end
-
-	end
-end
 
 ---@param end_ number real
 function main (end_)

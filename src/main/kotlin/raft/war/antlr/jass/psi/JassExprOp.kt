@@ -1,6 +1,8 @@
 package raft.war.antlr.jass.psi
 
 enum class JassExprOp {
+    UnSub,
+    UnNot,
     Mul, Div,
     Add, Sub,
     Lt, LtEq, Gt, GtEq,
@@ -8,4 +10,5 @@ enum class JassExprOp {
     And, Or,
     Get,
     Set,
+    Paren,
 }

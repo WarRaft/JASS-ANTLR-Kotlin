@@ -12,6 +12,16 @@ class JassVar(
 
     var expr: JassExpr? = null
 
+    fun clone(): JassVar = JassVar(
+        name = name,
+        constant = constant,
+        global = global,
+        array = array,
+        local = local,
+        param = param,
+        type = type
+    )
+
     override fun toString(): String {
         val list: MutableList<String> = mutableListOf()
 

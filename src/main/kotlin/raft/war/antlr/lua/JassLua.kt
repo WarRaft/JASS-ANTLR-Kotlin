@@ -54,9 +54,26 @@ class JassLua(val jass: JassState, val output: Path) {
     fun expr(e: IJassNode?) {
         if (e == null) return
         when (e) {
+            is JassNull -> builder.append("nil")
+            is JassBool -> builder.append(e.raw)
+            is JassInt -> builder.append(e.raw)
+            is JassReal -> builder.append(e.raw)
+            is JassStr -> builder.append(e.raw)
+            is JassVar -> {
+                builder.append(e.name)
+                if (e.array) {
+                    builder.append("[")
+                    expr(e.expr)
+                    builder.append("]")
+                }
+            }
+
             is JassExpr -> when (e.op) {
                 Get -> expr(e.a)
-                Set -> builder.append("!!!")
+                Set -> {
+                    println("🍒Lua: expr Set!!!")
+                }
+
                 Add, Sub,
                 Mul, Div,
                 Lt, LtEq, Gt, GtEq,
@@ -64,13 +81,25 @@ class JassLua(val jass: JassState, val output: Path) {
                 And, Or,
                     -> if (e.a != null && e.b != null)
                     expr(e.op, e.a, e.b)
+
+                Paren -> {
+                    builder.append("(")
+                    expr(e.a)
+                    builder.append(")")
+                }
+
+                UnSub -> {
+                    builder.append("-")
+                    expr(e.a)
+                }
+
+                UnNot -> {
+                    builder.append("not ")
+                    expr(e.a)
+                }
+
             }
 
-            is JassBool -> builder.append(e.raw)
-            is JassInt -> builder.append(e.raw)
-            is JassReal -> builder.append(e.raw)
-            is JassStr -> builder.append(e.raw)
-            is JassVar -> builder.append(e.name)
             is JassFun -> {
                 builder.append("${e.name}(")
                 e.arg.forEachIndexed { index, arg ->
