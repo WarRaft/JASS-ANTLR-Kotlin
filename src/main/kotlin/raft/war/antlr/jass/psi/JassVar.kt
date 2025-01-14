@@ -12,6 +12,11 @@ class JassVar(
 
     var expr: JassExpr? = null
 
+    var base: JassVar? = null
+
+    val basename: String
+        get() = base?.basename ?: name
+
     fun clone(): JassVar = JassVar(
         name = name,
         constant = constant,

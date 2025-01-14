@@ -6,7 +6,7 @@ class JassStrType : IJassType {
     override fun op(op: JassExprOp, b: IJassType): IJassType {
         return when (op) {
             JassExprOp.Set -> when (b) {
-                is JassStrType -> JassStrType()
+                is JassStrType, is JassNullType -> JassStrType()
                 else -> JassUndefinedType()
             }
 

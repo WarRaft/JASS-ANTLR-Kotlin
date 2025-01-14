@@ -4,6 +4,7 @@ plugins {
 
     // https://kotlinlang.org/docs/gradle-configure-project.html
     kotlin("jvm") version "2.1.0"
+    application
 }
 
 repositories {
@@ -31,4 +32,14 @@ sourceSets {
 
 kotlin {
     jvmToolchain(21)
+}
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "Main"
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+    archiveBaseName.set("Anal")
+    archiveVersion.set("Cunt")
 }

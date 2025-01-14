@@ -477,7 +477,6 @@ function BJDebugMsg (msg)
 	while(true) do
 		i = i + 1
 		if (i == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -529,42 +528,36 @@ end
 ---@return number real
 function SinBJ (degrees)
 	return Sin(degrees * bj_DEGTORAD)
-
 end
 
 ---@param degrees number real
 ---@return number real
 function CosBJ (degrees)
 	return Cos(degrees * bj_DEGTORAD)
-
 end
 
 ---@param degrees number real
 ---@return number real
 function TanBJ (degrees)
 	return Tan(degrees * bj_DEGTORAD)
-
 end
 
 ---@param degrees number real
 ---@return number real
 function AsinBJ (degrees)
 	return Asin(degrees) * bj_RADTODEG
-
 end
 
 ---@param degrees number real
 ---@return number real
 function AcosBJ (degrees)
 	return Acos(degrees) * bj_RADTODEG
-
 end
 
 ---@param degrees number real
 ---@return number real
 function AtanBJ (degrees)
 	return Atan(degrees) * bj_RADTODEG
-
 end
 
 ---@param y number real
@@ -572,7 +565,6 @@ end
 ---@return number real
 function Atan2BJ (y, x)
 	return Atan2(y, x) * bj_RADTODEG
-
 end
 
 ---@param locA location
@@ -580,7 +572,6 @@ end
 ---@return number real
 function AngleBetweenPoints (locA, locB)
 	return bj_RADTODEG * Atan2(GetLocationY(locB) - GetLocationY(locA), GetLocationX(locB) - GetLocationX(locA))
-
 end
 
 ---@param locA location
@@ -590,7 +581,6 @@ function DistanceBetweenPoints (locA, locB)
 	local dx = GetLocationX(locB) - GetLocationX(locA) ---@type number real
 	local dy = GetLocationY(locB) - GetLocationY(locA) ---@type number real
 	return SquareRoot(dx * dx + dy * dy)
-
 end
 
 ---@param source location
@@ -601,26 +591,22 @@ function PolarProjectionBJ (source, dist, angle)
 	local x = GetLocationX(source) + dist * Cos(angle * bj_DEGTORAD) ---@type number real
 	local y = GetLocationY(source) + dist * Sin(angle * bj_DEGTORAD) ---@type number real
 	return Location(x, y)
-
 end
 
 ---@return number real
 function GetRandomDirectionDeg ()
 	return GetRandomReal(0, 360)
-
 end
 
 ---@return number real
 function GetRandomPercentageBJ ()
 	return GetRandomReal(0, 100)
-
 end
 
 ---@param whichRect rect
 ---@return location
 function GetRandomLocInRect (whichRect)
 	return Location(GetRandomReal(GetRectMinX(whichRect), GetRectMaxX(whichRect)), GetRandomReal(GetRectMinY(whichRect), GetRectMaxY(whichRect)))
-
 end
 
 ---@param dividend number integer
@@ -629,7 +615,6 @@ end
 function ModuloInteger (dividend, divisor)
 	local modulus = dividend - (dividend / divisor) * divisor ---@type number integer
 	return modulus
-
 end
 
 ---@param dividend number real
@@ -638,7 +623,6 @@ end
 function ModuloReal (dividend, divisor)
 	local modulus = dividend - I2R(R2I(dividend / divisor)) * divisor ---@type number real
 	return modulus
-
 end
 
 ---@param loc location
@@ -647,7 +631,6 @@ end
 ---@return location
 function OffsetLocation (loc, dx, dy)
 	return Location(GetLocationX(loc) + dx, GetLocationY(loc) + dy)
-
 end
 
 ---@param r rect
@@ -656,7 +639,6 @@ end
 ---@return rect
 function OffsetRectBJ (r, dx, dy)
 	return Rect(GetRectMinX(r) + dx, GetRectMinY(r) + dy, GetRectMaxX(r) + dx, GetRectMaxY(r) + dy)
-
 end
 
 ---@param center location
@@ -667,7 +649,6 @@ function RectFromCenterSizeBJ (center, width, height)
 	local x = GetLocationX(center) ---@type number real
 	local y = GetLocationY(center) ---@type number real
 	return Rect(x - width * 0.5, y - height * 0.5, x + width * 0.5, y + height * 0.5)
-
 end
 
 ---@param r rect
@@ -676,7 +657,6 @@ end
 ---@return boolean
 function RectContainsCoords (r, x, y)
 	return (GetRectMinX(r) <= x) and (x <= GetRectMaxX(r)) and (GetRectMinY(r) <= y) and (y <= GetRectMaxY(r))
-
 end
 
 ---@param r rect
@@ -684,7 +664,6 @@ end
 ---@return boolean
 function RectContainsLoc (r, loc)
 	return RectContainsCoords(r, GetLocationX(loc), GetLocationY(loc))
-
 end
 
 ---@param r rect
@@ -692,7 +671,6 @@ end
 ---@return boolean
 function RectContainsUnit (r, whichUnit)
 	return RectContainsCoords(r, GetUnitX(whichUnit), GetUnitY(whichUnit))
-
 end
 
 ---@param whichItem item
@@ -700,7 +678,6 @@ end
 ---@return boolean
 function RectContainsItem (whichItem, r)
 	return RectContainsCoords(r, GetItemX(whichItem), GetItemY(whichItem))
-
 end
 
 ---@param trig trigger
@@ -712,7 +689,6 @@ end
 ---@return boolean
 function TriggerExecuteBJ (trig, checkConditions)
 	return true
-
 end
 
 ---@param trig trigger
@@ -720,7 +696,6 @@ end
 ---@return boolean
 function PostTriggerExecuteBJ (trig, checkConditions)
 	return true
-
 end
 
 function QueuedTriggerCheck ()
@@ -729,7 +704,6 @@ function QueuedTriggerCheck ()
 	i = 0
 	while(true) do
 		if (i >= bj_queuedExecTotal) then break end
-
 		s = s .. "q[" .. I2S(i) .. "]="
 		i = i + 1
 	end
@@ -742,11 +716,9 @@ function QueuedTriggerGetIndex (trig)
 	local index = 0 ---@type number integer
 	while(true) do
 		if (index >= bj_queuedExecTotal) then break end
-
 		index = index + 1
 	end
 	return -1
-
 end
 
 ---@param trigIndex number integer
@@ -757,23 +729,19 @@ function QueuedTriggerRemoveByIndex (trigIndex)
 	index = trigIndex
 	while(true) do
 		if (index >= bj_queuedExecTotal) then break end
-
 		bj_queuedExecTriggers = bj_queuedExecTriggers[index + 1]
 		bj_queuedExecUseConds = bj_queuedExecUseConds[index + 1]
 		index = index + 1
 	end
 	return true
-
 end
 
 ---@return boolean
 function QueuedTriggerAttemptExec ()
 	while(true) do
 		if (bj_queuedExecTotal == 0) then break end
-
 	end
 	return false
-
 end
 
 ---@param trig trigger
@@ -784,7 +752,6 @@ function QueuedTriggerAddBJ (trig, checkConditions)
 	bj_queuedExecUseConds = checkConditions
 	bj_queuedExecTotal = bj_queuedExecTotal + 1
 	return true
-
 end
 
 ---@param trig trigger
@@ -810,26 +777,22 @@ end
 ---@return number integer
 function QueuedTriggerCountBJ ()
 	return bj_queuedExecTotal
-
 end
 
 ---@return boolean
 function IsTriggerQueueEmptyBJ ()
 	return bj_queuedExecTotal <= 0
-
 end
 
 ---@param trig trigger
 ---@return boolean
 function IsTriggerQueuedBJ (trig)
 	return QueuedTriggerGetIndex(trig) ~= -1
-
 end
 
 ---@return number integer
 function GetForLoopIndexA ()
 	return bj_forLoopAIndex
-
 end
 
 ---@param newIndex number integer
@@ -840,7 +803,6 @@ end
 ---@return number integer
 function GetForLoopIndexB ()
 	return bj_forLoopBIndex
-
 end
 
 ---@param newIndex number integer
@@ -872,7 +834,6 @@ end
 ---@return string
 function StringIdentity (theString)
 	return GetLocalizedString(theString)
-
 end
 
 ---@param valueA boolean
@@ -880,7 +841,6 @@ end
 ---@return boolean
 function GetBooleanAnd (valueA, valueB)
 	return valueA and valueB
-
 end
 
 ---@param valueA boolean
@@ -888,7 +848,6 @@ end
 ---@return boolean
 function GetBooleanOr (valueA, valueB)
 	return valueA or valueB
-
 end
 
 ---@param percentage number real
@@ -897,20 +856,17 @@ end
 function PercentToInt (percentage, max)
 	local result = R2I(percentage * I2R(max) * 0.01) ---@type number integer
 	return result
-
 end
 
 ---@param percentage number real
 ---@return number integer
 function PercentTo255 (percentage)
 	return PercentToInt(percentage, 255)
-
 end
 
 ---@return number real
 function GetTimeOfDay ()
 	return GetFloatGameState(GAME_STATE_TIME_OF_DAY)
-
 end
 
 ---@param whatTime number real
@@ -924,7 +880,6 @@ end
 ---@return number real
 function GetTimeOfDayScalePercentBJ ()
 	return GetTimeOfDayScale() * 100
-
 end
 
 ---@param soundName string
@@ -937,7 +892,6 @@ end
 ---@return boolean
 function CompareLocationsBJ (A, B)
 	return GetLocationX(A) == GetLocationX(B) and GetLocationY(A) == GetLocationY(B)
-
 end
 
 ---@param A rect
@@ -945,7 +899,6 @@ end
 ---@return boolean
 function CompareRectsBJ (A, B)
 	return GetRectMinX(A) == GetRectMinX(B) and GetRectMinY(A) == GetRectMinY(B) and GetRectMaxX(A) == GetRectMaxX(B) and GetRectMaxY(A) == GetRectMaxY(B)
-
 end
 
 ---@param center location
@@ -955,7 +908,6 @@ function GetRectFromCircleBJ (center, radius)
 	local centerX = GetLocationX(center) ---@type number real
 	local centerY = GetLocationY(center) ---@type number real
 	return Rect(centerX - radius, centerY - radius, centerX + radius, centerY + radius)
-
 end
 
 ---@return camerasetup
@@ -963,7 +915,6 @@ function GetCurrentCameraSetup ()
 	local theCam = CreateCameraSetup() ---@type camerasetup
 	local duration = 0 ---@type number real
 	return theCam
-
 end
 
 ---@param doPan boolean
@@ -978,7 +929,6 @@ end
 ---@return number real
 function CameraSetupGetFieldSwap (whichField, whichSetup)
 	return CameraSetupGetField(whichSetup, whichField)
-
 end
 
 ---@param whichPlayer player
@@ -1087,25 +1037,21 @@ end
 ---@return rect
 function GetCurrentCameraBoundsMapRectBJ ()
 	return Rect(GetCameraBoundMinX(), GetCameraBoundMinY(), GetCameraBoundMaxX(), GetCameraBoundMaxY())
-
 end
 
 ---@return rect
 function GetCameraBoundsMapRect ()
 	return bj_mapInitialCameraBounds
-
 end
 
 ---@return rect
 function GetPlayableMapRect ()
 	return bj_mapInitialPlayableArea
-
 end
 
 ---@return rect
 function GetEntireMapRect ()
 	return GetWorldBounds()
-
 end
 
 ---@param r rect
@@ -1201,21 +1147,18 @@ end
 ---@return string
 function SubStringBJ (source, start, end_)
 	return SubString(source, start - 1, end_)
-
 end
 
 ---@param h handle
 ---@return number integer
 function GetHandleIdBJ (h)
 	return GetHandleId(h)
-
 end
 
 ---@param s string
 ---@return number integer
 function StringHashBJ (s)
 	return StringHash(s)
-
 end
 
 ---@param trig trigger
@@ -1223,7 +1166,6 @@ end
 ---@return event
 function TriggerRegisterTimerEventPeriodic (trig, timeout)
 	return TriggerRegisterTimerEvent(trig, timeout, true)
-
 end
 
 ---@param trig trigger
@@ -1231,7 +1173,6 @@ end
 ---@return event
 function TriggerRegisterTimerEventSingle (trig, timeout)
 	return TriggerRegisterTimerEvent(trig, timeout, false)
-
 end
 
 ---@param trig trigger
@@ -1239,7 +1180,6 @@ end
 ---@return event
 function TriggerRegisterTimerExpireEventBJ (trig, t)
 	return TriggerRegisterTimerExpireEvent(trig, t)
-
 end
 
 ---@param trig trigger
@@ -1248,7 +1188,6 @@ end
 ---@return event
 function TriggerRegisterPlayerUnitEventSimple (trig, whichPlayer, whichEvent)
 	return TriggerRegisterPlayerUnitEvent(trig, whichPlayer, whichEvent, nil)
-
 end
 
 ---@param trig trigger
@@ -1259,7 +1198,6 @@ function TriggerRegisterAnyUnitEventBJ (trig, whichEvent)
 	while(true) do
 		index = index + 1
 		if (index == bj_MAX_PLAYER_SLOTS) then break end
-
 	end
 end
 
@@ -1283,7 +1221,6 @@ end
 ---@return event
 function TriggerRegisterPlayerEventVictory (trig, whichPlayer)
 	return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_VICTORY)
-
 end
 
 ---@param trig trigger
@@ -1291,7 +1228,6 @@ end
 ---@return event
 function TriggerRegisterPlayerEventDefeat (trig, whichPlayer)
 	return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_DEFEAT)
-
 end
 
 ---@param trig trigger
@@ -1299,7 +1235,6 @@ end
 ---@return event
 function TriggerRegisterPlayerEventLeave (trig, whichPlayer)
 	return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_LEAVE)
-
 end
 
 ---@param trig trigger
@@ -1307,7 +1242,6 @@ end
 ---@return event
 function TriggerRegisterPlayerEventAllianceChanged (trig, whichPlayer)
 	return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ALLIANCE_CHANGED)
-
 end
 
 ---@param trig trigger
@@ -1315,7 +1249,6 @@ end
 ---@return event
 function TriggerRegisterPlayerEventEndCinematic (trig, whichPlayer)
 	return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_END_CINEMATIC)
-
 end
 
 ---@param trig trigger
@@ -1324,7 +1257,6 @@ end
 ---@return event
 function TriggerRegisterGameStateEventTimeOfDay (trig, opcode, limitval)
 	return TriggerRegisterGameStateEvent(trig, GAME_STATE_TIME_OF_DAY, opcode, limitval)
-
 end
 
 ---@param trig trigger
@@ -1332,7 +1264,6 @@ end
 ---@return event
 function TriggerRegisterEnterRegionSimple (trig, whichRegion)
 	return TriggerRegisterEnterRegion(trig, whichRegion, nil)
-
 end
 
 ---@param trig trigger
@@ -1340,7 +1271,6 @@ end
 ---@return event
 function TriggerRegisterLeaveRegionSimple (trig, whichRegion)
 	return TriggerRegisterLeaveRegion(trig, whichRegion, nil)
-
 end
 
 ---@param trig trigger
@@ -1349,7 +1279,6 @@ end
 function TriggerRegisterEnterRectSimple (trig, r)
 	local rectRegion = CreateRegion() ---@type region
 	return TriggerRegisterEnterRegion(trig, rectRegion, nil)
-
 end
 
 ---@param trig trigger
@@ -1358,7 +1287,6 @@ end
 function TriggerRegisterLeaveRectSimple (trig, r)
 	local rectRegion = CreateRegion() ---@type region
 	return TriggerRegisterLeaveRegion(trig, rectRegion, nil)
-
 end
 
 ---@param trig trigger
@@ -1368,7 +1296,6 @@ end
 ---@return event
 function TriggerRegisterDistanceBetweenUnits (trig, whichUnit, condition, range)
 	return TriggerRegisterUnitInRange(trig, whichUnit, range, condition)
-
 end
 
 ---@param trig trigger
@@ -1377,7 +1304,6 @@ end
 ---@return event
 function TriggerRegisterUnitInRangeSimple (trig, range, whichUnit)
 	return TriggerRegisterUnitInRange(trig, whichUnit, range, nil)
-
 end
 
 ---@param trig trigger
@@ -1387,7 +1313,6 @@ end
 ---@return event
 function TriggerRegisterUnitLifeEvent (trig, whichUnit, opcode, limitval)
 	return TriggerRegisterUnitStateEvent(trig, whichUnit, UNIT_STATE_LIFE, opcode, limitval)
-
 end
 
 ---@param trig trigger
@@ -1397,7 +1322,6 @@ end
 ---@return event
 function TriggerRegisterUnitManaEvent (trig, whichUnit, opcode, limitval)
 	return TriggerRegisterUnitStateEvent(trig, whichUnit, UNIT_STATE_MANA, opcode, limitval)
-
 end
 
 ---@param trig trigger
@@ -1405,35 +1329,30 @@ end
 ---@return event
 function TriggerRegisterDialogEventBJ (trig, whichDialog)
 	return TriggerRegisterDialogEvent(trig, whichDialog)
-
 end
 
 ---@param trig trigger
 ---@return event
 function TriggerRegisterShowSkillEventBJ (trig)
 	return TriggerRegisterGameEvent(trig, EVENT_GAME_SHOW_SKILL)
-
 end
 
 ---@param trig trigger
 ---@return event
 function TriggerRegisterBuildSubmenuEventBJ (trig)
 	return TriggerRegisterGameEvent(trig, EVENT_GAME_BUILD_SUBMENU)
-
 end
 
 ---@param trig trigger
 ---@return event
 function TriggerRegisterGameLoadedEventBJ (trig)
 	return TriggerRegisterGameEvent(trig, EVENT_GAME_LOADED)
-
 end
 
 ---@param trig trigger
 ---@return event
 function TriggerRegisterGameSavedEventBJ (trig)
 	return TriggerRegisterGameEvent(trig, EVENT_GAME_SAVE)
-
 end
 
 function RegisterDestDeathInRegionEnum ()
@@ -1453,13 +1372,11 @@ end
 function AddWeatherEffectSaveLast (where, effectID)
 	bj_lastCreatedWeatherEffect = AddWeatherEffect(where, effectID)
 	return bj_lastCreatedWeatherEffect
-
 end
 
 ---@return weathereffect
 function GetLastCreatedWeatherEffect ()
 	return bj_lastCreatedWeatherEffect
-
 end
 
 ---@param whichWeatherEffect weathereffect
@@ -1475,7 +1392,6 @@ end
 function TerrainDeformationCraterBJ (duration, permanent, where, radius, depth)
 	bj_lastCreatedTerrainDeformation = TerrainDeformCrater(GetLocationX(where), GetLocationY(where), radius, depth, R2I(duration * 1000), permanent)
 	return bj_lastCreatedTerrainDeformation
-
 end
 
 ---@param duration number real
@@ -1496,7 +1412,6 @@ function TerrainDeformationRippleBJ (duration, limitNeg, where, startRadius, end
 	radiusRatio = startRadius / endRadius
 	bj_lastCreatedTerrainDeformation = TerrainDeformRipple(GetLocationX(where), GetLocationY(where), endRadius, depth, R2I(duration * 1000), 1, spaceWave, timeWave, radiusRatio, limitNeg)
 	return bj_lastCreatedTerrainDeformation
-
 end
 
 ---@param duration number real
@@ -1517,7 +1432,6 @@ function TerrainDeformationWaveBJ (duration, source, target, radius, depth, trai
 	speed = distance / duration
 	bj_lastCreatedTerrainDeformation = TerrainDeformWave(GetLocationX(source), GetLocationY(source), dirX, dirY, distance, speed, radius, depth, R2I(trailDelay * 1000), 1)
 	return bj_lastCreatedTerrainDeformation
-
 end
 
 ---@param duration number real
@@ -1530,7 +1444,6 @@ end
 function TerrainDeformationRandomBJ (duration, where, radius, minDelta, maxDelta, updateInterval)
 	bj_lastCreatedTerrainDeformation = TerrainDeformRandom(GetLocationX(where), GetLocationY(where), radius, minDelta, maxDelta, R2I(duration * 1000), R2I(updateInterval * 1000))
 	return bj_lastCreatedTerrainDeformation
-
 end
 
 ---@param deformation terraindeformation
@@ -1541,7 +1454,6 @@ end
 ---@return terraindeformation
 function GetLastCreatedTerrainDeformation ()
 	return bj_lastCreatedTerrainDeformation
-
 end
 
 ---@param codeName string
@@ -1551,14 +1463,12 @@ end
 function AddLightningLoc (codeName, where1, where2)
 	bj_lastCreatedLightning = AddLightningEx(codeName, true, GetLocationX(where1), GetLocationY(where1), GetLocationZ(where1), GetLocationX(where2), GetLocationY(where2), GetLocationZ(where2))
 	return bj_lastCreatedLightning
-
 end
 
 ---@param whichBolt lightning
 ---@return boolean
 function DestroyLightningBJ (whichBolt)
 	return DestroyLightning(whichBolt)
-
 end
 
 ---@param whichBolt lightning
@@ -1567,35 +1477,30 @@ end
 ---@return boolean
 function MoveLightningLoc (whichBolt, where1, where2)
 	return MoveLightningEx(whichBolt, true, GetLocationX(where1), GetLocationY(where1), GetLocationZ(where1), GetLocationX(where2), GetLocationY(where2), GetLocationZ(where2))
-
 end
 
 ---@param whichBolt lightning
 ---@return number real
 function GetLightningColorABJ (whichBolt)
 	return GetLightningColorA(whichBolt)
-
 end
 
 ---@param whichBolt lightning
 ---@return number real
 function GetLightningColorRBJ (whichBolt)
 	return GetLightningColorR(whichBolt)
-
 end
 
 ---@param whichBolt lightning
 ---@return number real
 function GetLightningColorGBJ (whichBolt)
 	return GetLightningColorG(whichBolt)
-
 end
 
 ---@param whichBolt lightning
 ---@return number real
 function GetLightningColorBBJ (whichBolt)
 	return GetLightningColorB(whichBolt)
-
 end
 
 ---@param whichBolt lightning
@@ -1606,13 +1511,11 @@ end
 ---@return boolean
 function SetLightningColorBJ (whichBolt, r, g, b, a)
 	return SetLightningColor(whichBolt, r, g, b, a)
-
 end
 
 ---@return lightning
 function GetLastCreatedLightningBJ ()
 	return bj_lastCreatedLightning
-
 end
 
 ---@param abilcode number integer
@@ -1621,7 +1524,6 @@ end
 ---@return string
 function GetAbilityEffectBJ (abilcode, t, index)
 	return GetAbilityEffectById(abilcode, t, index)
-
 end
 
 ---@param abilcode number integer
@@ -1629,28 +1531,24 @@ end
 ---@return string
 function GetAbilitySoundBJ (abilcode, t)
 	return GetAbilitySoundById(abilcode, t)
-
 end
 
 ---@param where location
 ---@return number integer
 function GetTerrainCliffLevelBJ (where)
 	return GetTerrainCliffLevel(GetLocationX(where), GetLocationY(where))
-
 end
 
 ---@param where location
 ---@return number integer
 function GetTerrainTypeBJ (where)
 	return GetTerrainType(GetLocationX(where), GetLocationY(where))
-
 end
 
 ---@param where location
 ---@return number integer
 function GetTerrainVarianceBJ (where)
 	return GetTerrainVariance(GetLocationX(where), GetLocationY(where))
-
 end
 
 ---@param where location
@@ -1666,7 +1564,6 @@ end
 ---@return boolean
 function IsTerrainPathableBJ (where, t)
 	return IsTerrainPathable(GetLocationX(where), GetLocationY(where), t)
-
 end
 
 ---@param where location
@@ -1690,7 +1587,6 @@ end
 function CreateFogModifierRectSimple (whichPlayer, whichFogState, r, afterUnits)
 	bj_lastCreatedFogModifier = CreateFogModifierRect(whichPlayer, whichFogState, r, true, afterUnits)
 	return bj_lastCreatedFogModifier
-
 end
 
 ---@param whichPlayer player
@@ -1702,7 +1598,6 @@ end
 function CreateFogModifierRadiusLocSimple (whichPlayer, whichFogState, center, radius, afterUnits)
 	bj_lastCreatedFogModifier = CreateFogModifierRadiusLoc(whichPlayer, whichFogState, center, radius, true, afterUnits)
 	return bj_lastCreatedFogModifier
-
 end
 
 ---@param enabled boolean
@@ -1713,7 +1608,6 @@ end
 function CreateFogModifierRectBJ (enabled, whichPlayer, whichFogState, r)
 	bj_lastCreatedFogModifier = CreateFogModifierRect(whichPlayer, whichFogState, r, true, false)
 	return bj_lastCreatedFogModifier
-
 end
 
 ---@param enabled boolean
@@ -1725,13 +1619,11 @@ end
 function CreateFogModifierRadiusLocBJ (enabled, whichPlayer, whichFogState, center, radius)
 	bj_lastCreatedFogModifier = CreateFogModifierRadiusLoc(whichPlayer, whichFogState, center, radius, true, false)
 	return bj_lastCreatedFogModifier
-
 end
 
 ---@return fogmodifier
 function GetLastCreatedFogModifier ()
 	return bj_lastCreatedFogModifier
-
 end
 
 function FogEnableOn ()
@@ -1791,7 +1683,6 @@ end
 function CreateImageBJ (file, size, where, zOffset, imageType)
 	bj_lastCreatedImage = CreateImage(file, size, size, size, GetLocationX(where), GetLocationY(where), zOffset, 0, 0, 0, imageType)
 	return bj_lastCreatedImage
-
 end
 
 ---@param flag boolean
@@ -1816,7 +1707,6 @@ end
 ---@return image
 function GetLastCreatedImage ()
 	return bj_lastCreatedImage
-
 end
 
 ---@param where location
@@ -1831,7 +1721,6 @@ end
 function CreateUbersplatBJ (where, name, red, green, blue, alpha, forcePaused, noBirthTime)
 	bj_lastCreatedUbersplat = CreateUbersplat(GetLocationX(where), GetLocationY(where), name, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - alpha), forcePaused, noBirthTime)
 	return bj_lastCreatedUbersplat
-
 end
 
 ---@param flag boolean
@@ -1842,7 +1731,6 @@ end
 ---@return ubersplat
 function GetLastCreatedUbersplat ()
 	return bj_lastCreatedUbersplat
-
 end
 
 ---@param soundHandle sound
@@ -1968,19 +1856,16 @@ end
 ---@return number real
 function GetSoundFileDurationBJ (musicFileName)
 	return I2R(GetSoundFileDuration(musicFileName)) * 0.001
-
 end
 
 ---@return sound
 function GetLastPlayedSound ()
 	return bj_lastPlayedSound
-
 end
 
 ---@return string
 function GetLastPlayedMusic ()
 	return bj_lastPlayedMusic
-
 end
 
 ---@param vgroup volumegroup
@@ -2010,7 +1895,6 @@ end
 ---@return boolean
 function GetSoundIsPlayingBJ (soundHandle)
 	return GetSoundIsLoading(soundHandle) or GetSoundIsPlaying(soundHandle)
-
 end
 
 ---@param soundHandle sound
@@ -2057,7 +1941,6 @@ end
 ---@return boolean
 function IsDawnDuskEnabled ()
 	return bj_useDawnDuskSounds
-
 end
 
 ---@param inLabel string
@@ -2080,7 +1963,6 @@ end
 function AddSpecialEffectLocBJ (where, modelName)
 	bj_lastCreatedEffect = AddSpecialEffectLoc(modelName, where)
 	return bj_lastCreatedEffect
-
 end
 
 ---@param attachPointName string
@@ -2090,7 +1972,6 @@ end
 function AddSpecialEffectTargetUnitBJ (attachPointName, targetWidget, modelName)
 	bj_lastCreatedEffect = AddSpecialEffectTarget(modelName, targetWidget, attachPointName)
 	return bj_lastCreatedEffect
-
 end
 
 ---@param whichEffect effect
@@ -2100,21 +1981,18 @@ end
 ---@return effect
 function GetLastCreatedEffectBJ ()
 	return bj_lastCreatedEffect
-
 end
 
 ---@param whichItem item
 ---@return location
 function GetItemLoc (whichItem)
 	return Location(GetItemX(whichItem), GetItemY(whichItem))
-
 end
 
 ---@param whichWidget widget
 ---@return number real
 function GetItemLifeBJ (whichWidget)
 	return GetWidgetLife(whichWidget)
-
 end
 
 ---@param whichWidget widget
@@ -2140,7 +2018,6 @@ end
 ---@return number integer
 function DecUnitAbilityLevelSwapped (abilcode, whichUnit)
 	return DecUnitAbilityLevel(whichUnit, abilcode)
-
 end
 
 ---@param abilcode number integer
@@ -2148,7 +2025,6 @@ end
 ---@return number integer
 function IncUnitAbilityLevelSwapped (abilcode, whichUnit)
 	return IncUnitAbilityLevel(whichUnit, abilcode)
-
 end
 
 ---@param abilcode number integer
@@ -2157,7 +2033,6 @@ end
 ---@return number integer
 function SetUnitAbilityLevelSwapped (abilcode, whichUnit, level)
 	return SetUnitAbilityLevel(whichUnit, abilcode, level)
-
 end
 
 ---@param abilcode number integer
@@ -2165,7 +2040,6 @@ end
 ---@return number integer
 function GetUnitAbilityLevelSwapped (abilcode, whichUnit)
 	return GetUnitAbilityLevel(whichUnit, abilcode)
-
 end
 
 ---@param whichUnit unit
@@ -2173,7 +2047,6 @@ end
 ---@return boolean
 function UnitHasBuffBJ (whichUnit, buffcode)
 	return (GetUnitAbilityLevel(whichUnit, buffcode) > 0)
-
 end
 
 ---@param buffcode number integer
@@ -2181,7 +2054,6 @@ end
 ---@return boolean
 function UnitRemoveBuffBJ (buffcode, whichUnit)
 	return UnitRemoveAbility(whichUnit, buffcode)
-
 end
 
 ---@param whichItem item
@@ -2189,7 +2061,6 @@ end
 ---@return boolean
 function UnitAddItemSwapped (whichItem, whichHero)
 	return UnitAddItem(whichHero, whichItem)
-
 end
 
 ---@param itemId number integer
@@ -2198,7 +2069,6 @@ end
 function UnitAddItemByIdSwapped (itemId, whichHero)
 	bj_lastCreatedItem = CreateItem(itemId, GetUnitX(whichHero), GetUnitY(whichHero))
 	return bj_lastCreatedItem
-
 end
 
 ---@param whichItem item
@@ -2213,7 +2083,6 @@ end
 function UnitRemoveItemFromSlotSwapped (itemSlot, whichHero)
 	bj_lastRemovedItem = UnitRemoveItemFromSlot(whichHero, itemSlot - 1)
 	return bj_lastRemovedItem
-
 end
 
 ---@param itemId number integer
@@ -2222,19 +2091,16 @@ end
 function CreateItemLoc (itemId, loc)
 	bj_lastCreatedItem = CreateItem(itemId, GetLocationX(loc), GetLocationY(loc))
 	return bj_lastCreatedItem
-
 end
 
 ---@return item
 function GetLastCreatedItem ()
 	return bj_lastCreatedItem
-
 end
 
 ---@return item
 function GetLastRemovedItem ()
 	return bj_lastRemovedItem
-
 end
 
 ---@param whichItem item
@@ -2245,7 +2111,6 @@ end
 ---@return number integer
 function GetLearnedSkillBJ ()
 	return GetLearnedSkill()
-
 end
 
 ---@param flag boolean
@@ -2262,7 +2127,6 @@ end
 ---@return number real
 function GetPlayerHandicapXPBJ (whichPlayer)
 	return GetPlayerHandicapXP(whichPlayer) * 100
-
 end
 
 ---@param whichPlayer player
@@ -2274,7 +2138,6 @@ end
 ---@return number real
 function GetPlayerHandicapBJ (whichPlayer)
 	return GetPlayerHandicap(whichPlayer) * 100
-
 end
 
 ---@param whichStat number integer
@@ -2311,7 +2174,6 @@ end
 ---@return boolean
 function UnitDropItemPointBJ (whichUnit, whichItem, x, y)
 	return UnitDropItemPoint(whichUnit, whichItem, x, y)
-
 end
 
 ---@param whichUnit unit
@@ -2320,7 +2182,6 @@ end
 ---@return boolean
 function UnitDropItemPointLoc (whichUnit, whichItem, loc)
 	return UnitDropItemPoint(whichUnit, whichItem, GetLocationX(loc), GetLocationY(loc))
-
 end
 
 ---@param whichUnit unit
@@ -2329,7 +2190,6 @@ end
 ---@return boolean
 function UnitDropItemSlotBJ (whichUnit, whichItem, slot)
 	return UnitDropItemSlot(whichUnit, whichItem, slot - 1)
-
 end
 
 ---@param whichUnit unit
@@ -2338,7 +2198,6 @@ end
 ---@return boolean
 function UnitDropItemTargetBJ (whichUnit, whichItem, target)
 	return UnitDropItemTarget(whichUnit, whichItem, target)
-
 end
 
 ---@param whichUnit unit
@@ -2347,7 +2206,6 @@ end
 ---@return boolean
 function UnitUseItemDestructable (whichUnit, whichItem, target)
 	return UnitUseItemTarget(whichUnit, whichItem, target)
-
 end
 
 ---@param whichUnit unit
@@ -2356,7 +2214,6 @@ end
 ---@return boolean
 function UnitUseItemPointLoc (whichUnit, whichItem, loc)
 	return UnitUseItemPoint(whichUnit, whichItem, GetLocationX(loc), GetLocationY(loc))
-
 end
 
 ---@param whichUnit unit
@@ -2364,7 +2221,6 @@ end
 ---@return item
 function UnitItemInSlotBJ (whichUnit, itemSlot)
 	return UnitItemInSlot(whichUnit, itemSlot - 1)
-
 end
 
 ---@param whichUnit unit
@@ -2378,10 +2234,8 @@ function GetInventoryIndexOfItemTypeBJ (whichUnit, itemId)
 		indexItem = UnitItemInSlot(whichUnit, index)
 		index = index + 1
 		if (index >= bj_MAX_INVENTORY) then break end
-
 	end
 	return 0
-
 end
 
 ---@param whichUnit unit
@@ -2396,7 +2250,6 @@ end
 ---@return boolean
 function UnitHasItemOfTypeBJ (whichUnit, itemId)
 	return GetInventoryIndexOfItemTypeBJ(whichUnit, itemId) > 0
-
 end
 
 ---@param whichUnit unit
@@ -2407,17 +2260,14 @@ function UnitInventoryCount (whichUnit)
 	while(true) do
 		index = index + 1
 		if (index >= bj_MAX_INVENTORY) then break end
-
 	end
 	return count
-
 end
 
 ---@param whichUnit unit
 ---@return number integer
 function UnitInventorySizeBJ (whichUnit)
 	return UnitInventorySize(whichUnit)
-
 end
 
 ---@param whichItem item
@@ -2450,14 +2300,12 @@ end
 ---@return boolean
 function IsItemHiddenBJ (whichItem)
 	return not IsItemVisible(whichItem)
-
 end
 
 ---@param level number integer
 ---@return number integer
 function ChooseRandomItemBJ (level)
 	return ChooseRandomItem(level)
-
 end
 
 ---@param level number integer
@@ -2465,20 +2313,17 @@ end
 ---@return number integer
 function ChooseRandomItemExBJ (level, whichType)
 	return ChooseRandomItemEx(whichType, level)
-
 end
 
 ---@return number integer
 function ChooseRandomNPBuildingBJ ()
 	return ChooseRandomNPBuilding()
-
 end
 
 ---@param level number integer
 ---@return number integer
 function ChooseRandomCreepBJ (level)
 	return ChooseRandomCreep(level)
-
 end
 
 ---@param r rect
@@ -2497,14 +2342,12 @@ function RandomItemInRectBJ (r, filter)
 	bj_itemRandomConsidered = 0
 	bj_itemRandomCurrentPick = nil
 	return bj_itemRandomCurrentPick
-
 end
 
 ---@param r rect
 ---@return item
 function RandomItemInRectSimpleBJ (r)
 	return RandomItemInRectBJ(r, nil)
-
 end
 
 ---@param whichItem item
@@ -2523,14 +2366,12 @@ end
 ---@return number integer
 function UnitId2OrderIdBJ (unitId)
 	return unitId
-
 end
 
 ---@param unitIdString string
 ---@return number integer
 function String2UnitIdBJ (unitIdString)
 	return UnitId(unitIdString)
-
 end
 
 ---@param unitId number integer
@@ -2538,7 +2379,6 @@ end
 function UnitId2StringBJ (unitId)
 	local unitString = UnitId2String(unitId) ---@type string
 	return ""
-
 end
 
 ---@param orderIdString string
@@ -2548,7 +2388,6 @@ function String2OrderIdBJ (orderIdString)
 	orderId = OrderId(orderIdString)
 	orderId = UnitId(orderIdString)
 	return 0
-
 end
 
 ---@param orderId number integer
@@ -2558,19 +2397,16 @@ function OrderId2StringBJ (orderId)
 	orderString = OrderId2String(orderId)
 	orderString = UnitId2String(orderId)
 	return ""
-
 end
 
 ---@return number integer
 function GetIssuedOrderIdBJ ()
 	return GetIssuedOrderId()
-
 end
 
 ---@return unit
 function GetKillingUnitBJ ()
 	return GetKillingUnit()
-
 end
 
 ---@param id player
@@ -2580,13 +2416,11 @@ end
 ---@return unit
 function CreateUnitAtLocSaveLast (id, unitid, loc, face)
 	return bj_lastCreatedUnit
-
 end
 
 ---@return unit
 function GetLastCreatedUnit ()
 	return bj_lastCreatedUnit
-
 end
 
 ---@param count number integer
@@ -2599,10 +2433,8 @@ function CreateNUnitsAtLoc (count, unitId, whichPlayer, loc, face)
 	while(true) do
 		count = count - 1
 		if (count < 0) then break end
-
 	end
 	return bj_lastCreatedGroup
-
 end
 
 ---@param count number integer
@@ -2613,7 +2445,6 @@ end
 ---@return group
 function CreateNUnitsAtLocFacingLocBJ (count, unitId, whichPlayer, loc, lookAt)
 	return CreateNUnitsAtLoc(count, unitId, whichPlayer, loc, AngleBetweenPoints(loc, lookAt))
-
 end
 
 function GetLastCreatedGroupEnum ()
@@ -2623,7 +2454,6 @@ end
 function GetLastCreatedGroup ()
 	bj_groupLastCreatedDest = CreateGroup()
 	return bj_groupLastCreatedDest
-
 end
 
 ---@param unitid number integer
@@ -2633,7 +2463,6 @@ end
 function CreateCorpseLocBJ (unitid, whichPlayer, loc)
 	bj_lastCreatedUnit = CreateCorpse(whichPlayer, unitid, GetLocationX(loc), GetLocationY(loc), GetRandomReal(0, 360))
 	return bj_lastCreatedUnit
-
 end
 
 ---@param suspend boolean
@@ -2675,7 +2504,6 @@ end
 function CreatePermanentCorpseLocBJ (style, unitid, whichPlayer, loc, facing)
 	bj_lastCreatedUnit = CreateCorpse(whichPlayer, unitid, GetLocationX(loc), GetLocationY(loc), facing)
 	return bj_lastCreatedUnit
-
 end
 
 ---@param whichState unitstate
@@ -2683,7 +2511,6 @@ end
 ---@return number real
 function GetUnitStateSwap (whichState, whichUnit)
 	return GetUnitState(whichUnit, whichState)
-
 end
 
 ---@param whichUnit unit
@@ -2694,21 +2521,18 @@ function GetUnitStatePercent (whichUnit, whichState, whichMaxState)
 	local value = GetUnitState(whichUnit, whichState) ---@type number real
 	local maxValue = GetUnitState(whichUnit, whichMaxState) ---@type number real
 	return value / maxValue * 100.0
-
 end
 
 ---@param whichUnit unit
 ---@return number real
 function GetUnitLifePercent (whichUnit)
 	return GetUnitStatePercent(whichUnit, UNIT_STATE_LIFE, UNIT_STATE_MAX_LIFE)
-
 end
 
 ---@param whichUnit unit
 ---@return number real
 function GetUnitManaPercent (whichUnit)
 	return GetUnitStatePercent(whichUnit, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA)
-
 end
 
 ---@param whichUnit unit
@@ -2778,14 +2602,12 @@ end
 ---@return boolean
 function IsUnitDeadBJ (whichUnit)
 	return GetUnitState(whichUnit, UNIT_STATE_LIFE) <= 0
-
 end
 
 ---@param whichUnit unit
 ---@return boolean
 function IsUnitAliveBJ (whichUnit)
 	return not IsUnitDeadBJ(whichUnit)
-
 end
 
 function IsUnitGroupDeadBJEnum ()
@@ -2798,7 +2620,6 @@ function IsUnitGroupDeadBJ (g)
 	bj_wantDestroyGroup = false
 	bj_isUnitGroupDeadResult = true
 	return bj_isUnitGroupDeadResult
-
 end
 
 function IsUnitGroupEmptyBJEnum ()
@@ -2812,7 +2633,6 @@ function IsUnitGroupEmptyBJ (g)
 	bj_wantDestroyGroup = false
 	bj_isUnitGroupEmptyResult = true
 	return bj_isUnitGroupEmptyResult
-
 end
 
 function IsUnitGroupInRectBJEnum ()
@@ -2825,14 +2645,12 @@ function IsUnitGroupInRectBJ (g, r)
 	bj_isUnitGroupInRectResult = true
 	bj_isUnitGroupInRectRect = r
 	return bj_isUnitGroupInRectResult
-
 end
 
 ---@param whichUnit unit
 ---@return boolean
 function IsUnitHiddenBJ (whichUnit)
 	return IsUnitHidden(whichUnit)
-
 end
 
 ---@param whichUnit unit
@@ -2846,7 +2664,6 @@ end
 ---@return boolean
 function IssueHauntOrderAtLocBJFilter ()
 	return GetUnitTypeId(GetFilterUnit()) == 'ngol'
-
 end
 
 ---@param whichPeon unit
@@ -2858,7 +2675,6 @@ function IssueHauntOrderAtLocBJ (whichPeon, loc)
 	g = CreateGroup()
 	goldMine = FirstOfGroup(g)
 	return IssueTargetOrderById(whichPeon, 'ugol', goldMine)
-
 end
 
 ---@param whichPeon unit
@@ -2873,7 +2689,6 @@ end
 ---@return boolean
 function IssueTrainOrderByIdBJ (whichUnit, unitId)
 	return IssueImmediateOrderById(whichUnit, unitId)
-
 end
 
 ---@param g group
@@ -2881,7 +2696,6 @@ end
 ---@return boolean
 function GroupTrainOrderByIdBJ (g, unitId)
 	return GroupImmediateOrderById(g, unitId)
-
 end
 
 ---@param whichUnit unit
@@ -2889,13 +2703,11 @@ end
 ---@return boolean
 function IssueUpgradeOrderByIdBJ (whichUnit, techId)
 	return IssueImmediateOrderById(whichUnit, techId)
-
 end
 
 ---@return unit
 function GetAttackedUnitBJ ()
 	return GetTriggerUnit()
-
 end
 
 ---@param whichUnit unit
@@ -2920,14 +2732,12 @@ end
 ---@return number real
 function GetUnitPropWindowBJ (whichUnit)
 	return GetUnitPropWindow(whichUnit) * bj_RADTODEG
-
 end
 
 ---@param whichUnit unit
 ---@return number real
 function GetUnitDefaultPropWindowBJ (whichUnit)
 	return GetUnitDefaultPropWindow(whichUnit)
-
 end
 
 ---@param whichUnit unit
@@ -2949,7 +2759,6 @@ end
 ---@return boolean
 function UnitCanSleepBJ (whichUnit)
 	return UnitCanSleep(whichUnit)
-
 end
 
 ---@param whichUnit unit
@@ -2960,7 +2769,6 @@ end
 ---@return boolean
 function UnitIsSleepingBJ (whichUnit)
 	return UnitIsSleeping(whichUnit)
-
 end
 
 function WakePlayerUnitsEnum ()
@@ -2980,14 +2788,12 @@ end
 ---@return boolean
 function UnitGenerateAlarms (whichUnit, generate)
 	return UnitIgnoreAlarm(whichUnit, not generate)
-
 end
 
 ---@param whichUnit unit
 ---@return boolean
 function DoesUnitGenerateAlarms (whichUnit)
 	return not UnitIgnoreAlarmToggled(whichUnit)
-
 end
 
 function PauseAllUnitsBJEnum ()
@@ -3005,7 +2811,6 @@ function PauseAllUnitsBJ (pause)
 		indexPlayer = Player(index)
 		index = index + 1
 		if (index == bj_MAX_PLAYER_SLOTS) then break end
-
 	end
 end
 
@@ -3018,7 +2823,6 @@ end
 ---@return boolean
 function IsUnitPausedBJ (whichUnit)
 	return IsUnitPaused(whichUnit)
-
 end
 
 ---@param flag boolean
@@ -3067,7 +2871,6 @@ function UnitCountBuffsExBJ (polarity, resist, whichUnit, bTLife, bAura)
 	local bMagic = (resist == bj_BUFF_RESIST_BOTH) or (resist == bj_BUFF_RESIST_MAGIC) ---@type boolean
 	local bPhys = (resist == bj_BUFF_RESIST_BOTH) or (resist == bj_BUFF_RESIST_PHYSICAL) ---@type boolean
 	return UnitCountBuffsEx(whichUnit, bPos, bNeg, bMagic, bPhys, bTLife, bAura, false)
-
 end
 
 ---@param abilityId number integer
@@ -3075,7 +2878,6 @@ end
 ---@return boolean
 function UnitRemoveAbilityBJ (abilityId, whichUnit)
 	return UnitRemoveAbility(whichUnit, abilityId)
-
 end
 
 ---@param abilityId number integer
@@ -3083,7 +2885,6 @@ end
 ---@return boolean
 function UnitAddAbilityBJ (abilityId, whichUnit)
 	return UnitAddAbility(whichUnit, abilityId)
-
 end
 
 ---@param whichType unittype
@@ -3091,7 +2892,6 @@ end
 ---@return boolean
 function UnitRemoveTypeBJ (whichType, whichUnit)
 	return UnitRemoveType(whichUnit, whichType)
-
 end
 
 ---@param whichType unittype
@@ -3099,7 +2899,6 @@ end
 ---@return boolean
 function UnitAddTypeBJ (whichType, whichUnit)
 	return UnitAddType(whichUnit, whichType)
-
 end
 
 ---@param permanent boolean
@@ -3108,7 +2907,6 @@ end
 ---@return boolean
 function UnitMakeAbilityPermanentBJ (permanent, abilityId, whichUnit)
 	return UnitMakeAbilityPermanent(whichUnit, permanent, abilityId)
-
 end
 
 ---@param whichUnit unit
@@ -3123,13 +2921,11 @@ end
 ---@return unit
 function GetTransportUnitBJ ()
 	return GetTransportUnit()
-
 end
 
 ---@return unit
 function GetLoadedUnitBJ ()
 	return GetLoadedUnit()
-
 end
 
 ---@param whichUnit unit
@@ -3137,21 +2933,18 @@ end
 ---@return boolean
 function IsUnitInTransportBJ (whichUnit, whichTransport)
 	return IsUnitInTransport(whichUnit, whichTransport)
-
 end
 
 ---@param whichUnit unit
 ---@return boolean
 function IsUnitLoadedBJ (whichUnit)
 	return IsUnitLoaded(whichUnit)
-
 end
 
 ---@param whichUnit unit
 ---@return boolean
 function IsUnitIllusionBJ (whichUnit)
 	return IsUnitIllusion(whichUnit)
-
 end
 
 ---@param whichUnit unit
@@ -3168,13 +2961,11 @@ function ReplaceUnitBJ (whichUnit, newUnitId, unitStateMethod)
 	wasHidden = IsUnitHidden(oldUnit)
 	bj_lastReplacedUnit = newUnit
 	return newUnit
-
 end
 
 ---@return unit
 function GetLastReplacedUnitBJ ()
 	return bj_lastReplacedUnit
-
 end
 
 ---@param whichUnit unit
@@ -3228,7 +3019,6 @@ end
 ---@return boolean
 function UnitDamagePointLoc (whichUnit, delay, radius, loc, amount, whichAttack, whichDamage)
 	return UnitDamagePoint(whichUnit, delay, radius, GetLocationX(loc), GetLocationY(loc), amount, true, false, whichAttack, whichDamage, WEAPON_TYPE_WHOKNOWS)
-
 end
 
 ---@param whichUnit unit
@@ -3239,7 +3029,6 @@ end
 ---@return boolean
 function UnitDamageTargetBJ (whichUnit, target, amount, whichAttack, whichDamage)
 	return UnitDamageTarget(whichUnit, target, amount, true, false, whichAttack, whichDamage, WEAPON_TYPE_WHOKNOWS)
-
 end
 
 ---@param objectid number integer
@@ -3251,7 +3040,6 @@ end
 function CreateDestructableLoc (objectid, loc, facing, scale, variation)
 	bj_lastCreatedDestructable = CreateDestructable(objectid, GetLocationX(loc), GetLocationY(loc), facing, scale, variation)
 	return bj_lastCreatedDestructable
-
 end
 
 ---@param objectid number integer
@@ -3263,13 +3051,11 @@ end
 function CreateDeadDestructableLocBJ (objectid, loc, facing, scale, variation)
 	bj_lastCreatedDestructable = CreateDeadDestructable(objectid, GetLocationX(loc), GetLocationY(loc), facing, scale, variation)
 	return bj_lastCreatedDestructable
-
 end
 
 ---@return destructable
 function GetLastCreatedDestructable ()
 	return bj_lastCreatedDestructable
-
 end
 
 ---@param flag boolean
@@ -3286,14 +3072,12 @@ end
 ---@return boolean
 function IsDestructableInvulnerableBJ (d)
 	return IsDestructableInvulnerable(d)
-
 end
 
 ---@param whichDestructable destructable
 ---@return location
 function GetDestructableLoc (whichDestructable)
 	return Location(GetDestructableX(whichDestructable), GetDestructableY(whichDestructable))
-
 end
 
 ---@param r rect
@@ -3307,21 +3091,18 @@ function EnumDestructablesInCircleBJFilter ()
 	local result ---@type boolean
 	result = DistanceBetweenPoints(destLoc, bj_enumDestructableCenter) <= bj_enumDestructableRadius
 	return result
-
 end
 
 ---@param d destructable
 ---@return boolean
 function IsDestructableDeadBJ (d)
 	return GetDestructableLife(d) <= 0
-
 end
 
 ---@param d destructable
 ---@return boolean
 function IsDestructableAliveBJ (d)
 	return not IsDestructableDeadBJ(d)
-
 end
 
 function RandomDestructableInRectBJEnum ()
@@ -3335,14 +3116,12 @@ function RandomDestructableInRectBJ (r, filter)
 	bj_destRandomConsidered = 0
 	bj_destRandomCurrentPick = nil
 	return bj_destRandomCurrentPick
-
 end
 
 ---@param r rect
 ---@return destructable
 function RandomDestructableInRectSimpleBJ (r)
 	return RandomDestructableInRectBJ(r, nil)
-
 end
 
 ---@param radius number real
@@ -3373,7 +3152,6 @@ function GetElevatorHeight (d)
 	local height ---@type number integer
 	height = 1 + R2I(GetDestructableOccluderHeight(d) / bj_CLIFFHEIGHT)
 	return height
-
 end
 
 ---@param d destructable
@@ -3413,7 +3191,6 @@ function NearbyElevatorExists (x, y)
 	r = Rect(x - findThreshold, y - findThreshold, x + findThreshold, y + findThreshold)
 	bj_elevatorNeighbor = nil
 	return bj_elevatorNeighbor ~= nil
-
 end
 
 function FindElevatorWallBlockerEnum ()
@@ -3454,7 +3231,6 @@ end
 ---@return boolean
 function WaygateIsActiveBJ (waygate)
 	return WaygateIsActive(waygate)
-
 end
 
 ---@param waygate unit
@@ -3466,7 +3242,6 @@ end
 ---@return location
 function WaygateGetDestinationLocBJ (waygate)
 	return Location(WaygateGetDestinationX(waygate), WaygateGetDestinationY(waygate))
-
 end
 
 ---@param flag boolean
@@ -3544,7 +3319,6 @@ function GroupPickRandomUnit (whichGroup)
 	bj_groupRandomConsidered = 0
 	bj_groupRandomCurrentPick = nil
 	return bj_groupRandomCurrentPick
-
 end
 
 function ForcePickRandomPlayerEnum ()
@@ -3557,7 +3331,6 @@ function ForcePickRandomPlayer (whichForce)
 	bj_forceRandomConsidered = 0
 	bj_forceRandomCurrentPick = nil
 	return bj_forceRandomCurrentPick
-
 end
 
 ---@param whichPlayer player
@@ -3573,20 +3346,17 @@ end
 function GetUnitsInRectMatching (r, filter)
 	local g = CreateGroup() ---@type group
 	return g
-
 end
 
 ---@param r rect
 ---@return group
 function GetUnitsInRectAll (r)
 	return GetUnitsInRectMatching(r, nil)
-
 end
 
 ---@return boolean
 function GetUnitsInRectOfPlayerFilter ()
 	return GetOwningPlayer(GetFilterUnit()) == bj_groupEnumOwningPlayer
-
 end
 
 ---@param r rect
@@ -3596,7 +3366,6 @@ function GetUnitsInRectOfPlayer (r, whichPlayer)
 	local g = CreateGroup() ---@type group
 	bj_groupEnumOwningPlayer = whichPlayer
 	return g
-
 end
 
 ---@param radius number real
@@ -3606,7 +3375,6 @@ end
 function GetUnitsInRangeOfLocMatching (radius, whichLocation, filter)
 	local g = CreateGroup() ---@type group
 	return g
-
 end
 
 ---@param radius number real
@@ -3614,13 +3382,11 @@ end
 ---@return group
 function GetUnitsInRangeOfLocAll (radius, whichLocation)
 	return GetUnitsInRangeOfLocMatching(radius, whichLocation, nil)
-
 end
 
 ---@return boolean
 function GetUnitsOfTypeIdAllFilter ()
 	return GetUnitTypeId(GetFilterUnit()) == bj_groupEnumTypeId
-
 end
 
 ---@param unitid number integer
@@ -3634,10 +3400,8 @@ function GetUnitsOfTypeIdAll (unitid)
 		bj_groupEnumTypeId = unitid
 		index = index + 1
 		if (index == bj_MAX_PLAYER_SLOTS) then break end
-
 	end
 	return result
-
 end
 
 ---@param whichPlayer player
@@ -3646,20 +3410,17 @@ end
 function GetUnitsOfPlayerMatching (whichPlayer, filter)
 	local g = CreateGroup() ---@type group
 	return g
-
 end
 
 ---@param whichPlayer player
 ---@return group
 function GetUnitsOfPlayerAll (whichPlayer)
 	return GetUnitsOfPlayerMatching(whichPlayer, nil)
-
 end
 
 ---@return boolean
 function GetUnitsOfPlayerAndTypeIdFilter ()
 	return GetUnitTypeId(GetFilterUnit()) == bj_groupEnumTypeId
-
 end
 
 ---@param whichPlayer player
@@ -3669,7 +3430,6 @@ function GetUnitsOfPlayerAndTypeId (whichPlayer, unitid)
 	local g = CreateGroup() ---@type group
 	bj_groupEnumTypeId = unitid
 	return g
-
 end
 
 ---@param whichPlayer player
@@ -3677,7 +3437,6 @@ end
 function GetUnitsSelectedAll (whichPlayer)
 	local g = CreateGroup() ---@type group
 	return g
-
 end
 
 ---@param whichPlayer player
@@ -3685,13 +3444,11 @@ end
 function GetForceOfPlayer (whichPlayer)
 	local f = CreateForce() ---@type force
 	return f
-
 end
 
 ---@return force
 function GetPlayersAll ()
 	return bj_FORCE_ALL_PLAYERS
-
 end
 
 ---@param whichControl mapcontrol
@@ -3705,10 +3462,8 @@ function GetPlayersByMapControl (whichControl)
 		indexPlayer = Player(playerIndex)
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYER_SLOTS) then break end
-
 	end
 	return f
-
 end
 
 ---@param whichPlayer player
@@ -3716,7 +3471,6 @@ end
 function GetPlayersAllies (whichPlayer)
 	local f = CreateForce() ---@type force
 	return f
-
 end
 
 ---@param whichPlayer player
@@ -3724,7 +3478,6 @@ end
 function GetPlayersEnemies (whichPlayer)
 	local f = CreateForce() ---@type force
 	return f
-
 end
 
 ---@param filter boolexpr
@@ -3732,7 +3485,6 @@ end
 function GetPlayersMatching (filter)
 	local f = CreateForce() ---@type force
 	return f
-
 end
 
 function CountUnitsInGroupEnum ()
@@ -3746,7 +3498,6 @@ function CountUnitsInGroup (g)
 	bj_wantDestroyGroup = false
 	bj_groupCountUnits = 0
 	return bj_groupCountUnits
-
 end
 
 function CountPlayersInForceEnum ()
@@ -3758,7 +3509,6 @@ end
 function CountPlayersInForceBJ (f)
 	bj_forceCountPlayers = 0
 	return bj_forceCountPlayers
-
 end
 
 function GetRandomSubGroupEnum ()
@@ -3775,14 +3525,12 @@ function GetRandomSubGroup (count, sourceGroup)
 	bj_randomSubGroupTotal = CountUnitsInGroup(sourceGroup)
 	bj_randomSubGroupChance = I2R(bj_randomSubGroupWant) / I2R(bj_randomSubGroupTotal)
 	return g
-
 end
 
 ---@return boolean
 function LivingPlayerUnitsOfTypeIdFilter ()
 	local filterUnit = GetFilterUnit() ---@type unit
 	return IsUnitAliveBJ(filterUnit) and GetUnitTypeId(filterUnit) == bj_livingPlayerUnitsTypeId
-
 end
 
 ---@param unitId number integer
@@ -3795,7 +3543,6 @@ function CountLivingPlayerUnitsOfTypeId (unitId, whichPlayer)
 	bj_livingPlayerUnitsTypeId = unitId
 	matchedCount = CountUnitsInGroup(g)
 	return matchedCount
-
 end
 
 ---@param whichUnit unit
@@ -3897,7 +3644,6 @@ end
 function DialogAddButtonBJ (whichDialog, buttonText)
 	bj_lastCreatedButton = DialogAddButton(whichDialog, buttonText, 0)
 	return bj_lastCreatedButton
-
 end
 
 ---@param whichDialog dialog
@@ -3907,7 +3653,6 @@ end
 function DialogAddButtonWithHotkeyBJ (whichDialog, buttonText, hotkey)
 	bj_lastCreatedButton = DialogAddButton(whichDialog, buttonText, hotkey)
 	return bj_lastCreatedButton
-
 end
 
 ---@param whichDialog dialog
@@ -3917,19 +3662,16 @@ end
 ---@return button
 function GetLastCreatedButtonBJ ()
 	return bj_lastCreatedButton
-
 end
 
 ---@return button
 function GetClickedButtonBJ ()
 	return GetClickedButton()
-
 end
 
 ---@return dialog
 function GetClickedDialogBJ ()
 	return GetClickedDialog()
-
 end
 
 ---@param sourcePlayer player
@@ -3979,7 +3721,6 @@ function SetForceAllianceStateBJ (sourceForce, targetForce, allianceState)
 	while(true) do
 		sourceIndex = sourceIndex + 1
 		if (sourceIndex == bj_MAX_PLAYER_SLOTS) then break end
-
 	end
 end
 
@@ -3988,7 +3729,6 @@ end
 ---@return boolean
 function PlayersAreCoAllied (playerA, playerB)
 	return false
-
 end
 
 ---@param whichPlayer player
@@ -4000,7 +3740,6 @@ function ShareEverythingWithTeamAI (whichPlayer)
 		indexPlayer = Player(playerIndex)
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -4013,7 +3752,6 @@ function ShareEverythingWithTeam (whichPlayer)
 		indexPlayer = Player(playerIndex)
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -4026,7 +3764,6 @@ function ConfigureNeutralVictim ()
 		indexPlayer = Player(index)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 	indexPlayer = Player(PLAYER_NEUTRAL_AGGRESSIVE)
 end
@@ -4048,7 +3785,6 @@ function MakeUnitsPassiveForTeam (whichPlayer)
 		indexPlayer = Player(playerIndex)
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -4056,7 +3792,6 @@ end
 ---@return boolean
 function AllowVictoryDefeat (gameResult)
 	return true
-
 end
 
 function EndGameBJ ()
@@ -4164,7 +3899,6 @@ function CreateQuestBJ (questType, title, description, iconPath)
 	local discovered = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or (questType == bj_QUESTTYPE_OPT_DISCOVERED) ---@type boolean
 	bj_lastCreatedQuest = CreateQuest()
 	return bj_lastCreatedQuest
-
 end
 
 ---@param whichQuest quest
@@ -4204,7 +3938,6 @@ end
 ---@return quest
 function GetLastCreatedQuestBJ ()
 	return bj_lastCreatedQuest
-
 end
 
 ---@param whichQuest quest
@@ -4213,7 +3946,6 @@ end
 function CreateQuestItemBJ (whichQuest, description)
 	bj_lastCreatedQuestItem = QuestCreateItem(whichQuest)
 	return bj_lastCreatedQuestItem
-
 end
 
 ---@param whichQuestItem questitem
@@ -4229,7 +3961,6 @@ end
 ---@return questitem
 function GetLastCreatedQuestItemBJ ()
 	return bj_lastCreatedQuestItem
-
 end
 
 ---@param description string
@@ -4237,7 +3968,6 @@ end
 function CreateDefeatConditionBJ (description)
 	bj_lastCreatedDefeatCondition = CreateDefeatCondition()
 	return bj_lastCreatedDefeatCondition
-
 end
 
 ---@param whichCondition defeatcondition
@@ -4252,7 +3982,6 @@ end
 ---@return defeatcondition
 function GetLastCreatedDefeatConditionBJ ()
 	return bj_lastCreatedDefeatCondition
-
 end
 
 function FlashQuestDialogButtonBJ ()
@@ -4271,7 +4000,6 @@ end
 function StartTimerBJ (t, periodic, timeout)
 	bj_lastStartedTimer = t
 	return bj_lastStartedTimer
-
 end
 
 ---@param periodic boolean
@@ -4280,7 +4008,6 @@ end
 function CreateTimerBJ (periodic, timeout)
 	bj_lastStartedTimer = CreateTimer()
 	return bj_lastStartedTimer
-
 end
 
 ---@param whichTimer timer
@@ -4295,7 +4022,6 @@ end
 ---@return timer
 function GetLastCreatedTimerBJ ()
 	return bj_lastStartedTimer
-
 end
 
 ---@param t timer
@@ -4304,7 +4030,6 @@ end
 function CreateTimerDialogBJ (t, title)
 	bj_lastCreatedTimerDialog = CreateTimerDialog(t)
 	return bj_lastCreatedTimerDialog
-
 end
 
 ---@param td timerdialog
@@ -4351,7 +4076,6 @@ end
 ---@return timerdialog
 function GetLastCreatedTimerDialogBJ ()
 	return bj_lastCreatedTimerDialog
-
 end
 
 ---@param lb leaderboard
@@ -4430,7 +4154,6 @@ end
 ---@return number integer
 function LeaderboardGetItemCountBJ (lb)
 	return LeaderboardGetItemCount(lb)
-
 end
 
 ---@param lb leaderboard
@@ -4438,7 +4161,6 @@ end
 ---@return boolean
 function LeaderboardHasPlayerItemBJ (lb, whichPlayer)
 	return LeaderboardHasPlayerItem(lb, whichPlayer)
-
 end
 
 ---@param lb leaderboard
@@ -4451,7 +4173,6 @@ function ForceSetLeaderboardBJ (lb, toForce)
 		indexPlayer = Player(index)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -4461,7 +4182,6 @@ end
 function CreateLeaderboardBJ (toForce, label)
 	bj_lastCreatedLeaderboard = CreateLeaderboard()
 	return bj_lastCreatedLeaderboard
-
 end
 
 ---@param lb leaderboard
@@ -4506,7 +4226,6 @@ end
 ---@return number integer
 function LeaderboardGetPlayerIndexBJ (whichPlayer, lb)
 	return LeaderboardGetPlayerIndex(lb, whichPlayer) + 1
-
 end
 
 ---@param position number integer
@@ -4520,23 +4239,19 @@ function LeaderboardGetIndexedPlayerBJ (position, lb)
 		indexPlayer = Player(index)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 	return Player(PLAYER_NEUTRAL_PASSIVE)
-
 end
 
 ---@param whichPlayer player
 ---@return leaderboard
 function PlayerGetLeaderboardBJ (whichPlayer)
 	return PlayerGetLeaderboard(whichPlayer)
-
 end
 
 ---@return leaderboard
 function GetLastCreatedLeaderboard ()
 	return bj_lastCreatedLeaderboard
-
 end
 
 ---@param cols number integer
@@ -4546,7 +4261,6 @@ end
 function CreateMultiboardBJ (cols, rows, title)
 	bj_lastCreatedMultiboard = CreateMultiboard()
 	return bj_lastCreatedMultiboard
-
 end
 
 ---@param mb multiboard
@@ -4556,7 +4270,6 @@ end
 ---@return multiboard
 function GetLastCreatedMultiboard ()
 	return bj_lastCreatedMultiboard
-
 end
 
 ---@param show boolean
@@ -4595,7 +4308,6 @@ function MultiboardSetItemStyleBJ (mb, col, row, showValue, showIcon)
 	while(true) do
 		curRow = curRow + 1
 		if (curRow > numRows) then break end
-
 	end
 end
 
@@ -4612,7 +4324,6 @@ function MultiboardSetItemValueBJ (mb, col, row, val)
 	while(true) do
 		curRow = curRow + 1
 		if (curRow > numRows) then break end
-
 	end
 end
 
@@ -4632,7 +4343,6 @@ function MultiboardSetItemColorBJ (mb, col, row, red, green, blue, transparency)
 	while(true) do
 		curRow = curRow + 1
 		if (curRow > numRows) then break end
-
 	end
 end
 
@@ -4649,7 +4359,6 @@ function MultiboardSetItemWidthBJ (mb, col, row, width)
 	while(true) do
 		curRow = curRow + 1
 		if (curRow > numRows) then break end
-
 	end
 end
 
@@ -4666,7 +4375,6 @@ function MultiboardSetItemIconBJ (mb, col, row, iconFileName)
 	while(true) do
 		curRow = curRow + 1
 		if (curRow > numRows) then break end
-
 	end
 end
 
@@ -4674,14 +4382,12 @@ end
 ---@return number real
 function TextTagSize2Height (size)
 	return size * 0.023 / 10
-
 end
 
 ---@param speed number real
 ---@return number real
 function TextTagSpeed2Velocity (speed)
 	return speed * 0.071 / 128
-
 end
 
 ---@param tt texttag
@@ -4757,7 +4463,6 @@ end
 function CreateTextTagLocBJ (s, loc, zOffset, size, red, green, blue, transparency)
 	bj_lastCreatedTextTag = CreateTextTag()
 	return bj_lastCreatedTextTag
-
 end
 
 ---@param s string
@@ -4772,7 +4477,6 @@ end
 function CreateTextTagUnitBJ (s, whichUnit, zOffset, size, red, green, blue, transparency)
 	bj_lastCreatedTextTag = CreateTextTag()
 	return bj_lastCreatedTextTag
-
 end
 
 ---@param tt texttag
@@ -4788,7 +4492,6 @@ end
 ---@return texttag
 function GetLastCreatedTextTag ()
 	return bj_lastCreatedTextTag
-
 end
 
 function PauseGameOn ()
@@ -4900,7 +4603,6 @@ end
 function GetTransmissionDuration (soundHandle, timeType, timeVal)
 	local duration ---@type number real
 	return duration
-
 end
 
 ---@param soundHandle sound
@@ -4953,7 +4655,6 @@ end
 ---@return number real
 function GetLastTransmissionDurationBJ ()
 	return bj_lastTransmissionDuration
-
 end
 
 ---@param flag boolean
@@ -5082,7 +4783,6 @@ function InitRescuableBehaviorBJ ()
 	while(true) do
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -5108,7 +4808,6 @@ end
 ---@return number integer
 function GetPlayerTechCountSimple (techid, whichPlayer)
 	return GetPlayerTechCount(whichPlayer, techid, true)
-
 end
 
 ---@param techid number integer
@@ -5116,7 +4815,6 @@ end
 ---@return number integer
 function GetPlayerTechMaxAllowedSwap (techid, whichPlayer)
 	return GetPlayerTechMaxAllowed(whichPlayer, techid)
-
 end
 
 ---@param avail boolean
@@ -5152,33 +4850,28 @@ end
 function InitGameCacheBJ (campaignFile)
 	bj_lastCreatedGameCache = InitGameCache(campaignFile)
 	return bj_lastCreatedGameCache
-
 end
 
 ---@param cache gamecache
 ---@return boolean
 function SaveGameCacheBJ (cache)
 	return SaveGameCache(cache)
-
 end
 
 ---@return gamecache
 function GetLastCreatedGameCacheBJ ()
 	return bj_lastCreatedGameCache
-
 end
 
 ---@return hashtable
 function InitHashtableBJ ()
 	bj_lastCreatedHashtable = InitHashtable()
 	return bj_lastCreatedHashtable
-
 end
 
 ---@return hashtable
 function GetLastCreatedHashtableBJ ()
 	return bj_lastCreatedHashtable
-
 end
 
 ---@param value number real
@@ -5209,7 +4902,6 @@ end
 ---@return boolean
 function StoreStringBJ (value, key, missionKey, cache)
 	return StoreString(cache, missionKey, key, value)
-
 end
 
 ---@param whichUnit unit
@@ -5219,7 +4911,6 @@ end
 ---@return boolean
 function StoreUnitBJ (whichUnit, key, missionKey, cache)
 	return StoreUnit(cache, missionKey, key, whichUnit)
-
 end
 
 ---@param value number real
@@ -5250,7 +4941,6 @@ end
 ---@return boolean
 function SaveStringBJ (value, key, missionKey, table)
 	return SaveStr(table, missionKey, key, value)
-
 end
 
 ---@param whichPlayer player
@@ -5260,7 +4950,6 @@ end
 ---@return boolean
 function SavePlayerHandleBJ (whichPlayer, key, missionKey, table)
 	return SavePlayerHandle(table, missionKey, key, whichPlayer)
-
 end
 
 ---@param whichWidget widget
@@ -5270,7 +4959,6 @@ end
 ---@return boolean
 function SaveWidgetHandleBJ (whichWidget, key, missionKey, table)
 	return SaveWidgetHandle(table, missionKey, key, whichWidget)
-
 end
 
 ---@param whichDestructable destructable
@@ -5280,7 +4968,6 @@ end
 ---@return boolean
 function SaveDestructableHandleBJ (whichDestructable, key, missionKey, table)
 	return SaveDestructableHandle(table, missionKey, key, whichDestructable)
-
 end
 
 ---@param whichItem item
@@ -5290,7 +4977,6 @@ end
 ---@return boolean
 function SaveItemHandleBJ (whichItem, key, missionKey, table)
 	return SaveItemHandle(table, missionKey, key, whichItem)
-
 end
 
 ---@param whichUnit unit
@@ -5300,7 +4986,6 @@ end
 ---@return boolean
 function SaveUnitHandleBJ (whichUnit, key, missionKey, table)
 	return SaveUnitHandle(table, missionKey, key, whichUnit)
-
 end
 
 ---@param whichAbility ability
@@ -5310,7 +4995,6 @@ end
 ---@return boolean
 function SaveAbilityHandleBJ (whichAbility, key, missionKey, table)
 	return SaveAbilityHandle(table, missionKey, key, whichAbility)
-
 end
 
 ---@param whichTimer timer
@@ -5320,7 +5004,6 @@ end
 ---@return boolean
 function SaveTimerHandleBJ (whichTimer, key, missionKey, table)
 	return SaveTimerHandle(table, missionKey, key, whichTimer)
-
 end
 
 ---@param whichTrigger trigger
@@ -5330,7 +5013,6 @@ end
 ---@return boolean
 function SaveTriggerHandleBJ (whichTrigger, key, missionKey, table)
 	return SaveTriggerHandle(table, missionKey, key, whichTrigger)
-
 end
 
 ---@param whichTriggercondition triggercondition
@@ -5340,7 +5022,6 @@ end
 ---@return boolean
 function SaveTriggerConditionHandleBJ (whichTriggercondition, key, missionKey, table)
 	return SaveTriggerConditionHandle(table, missionKey, key, whichTriggercondition)
-
 end
 
 ---@param whichTriggeraction triggeraction
@@ -5350,7 +5031,6 @@ end
 ---@return boolean
 function SaveTriggerActionHandleBJ (whichTriggeraction, key, missionKey, table)
 	return SaveTriggerActionHandle(table, missionKey, key, whichTriggeraction)
-
 end
 
 ---@param whichEvent event
@@ -5360,7 +5040,6 @@ end
 ---@return boolean
 function SaveTriggerEventHandleBJ (whichEvent, key, missionKey, table)
 	return SaveTriggerEventHandle(table, missionKey, key, whichEvent)
-
 end
 
 ---@param whichForce force
@@ -5370,7 +5049,6 @@ end
 ---@return boolean
 function SaveForceHandleBJ (whichForce, key, missionKey, table)
 	return SaveForceHandle(table, missionKey, key, whichForce)
-
 end
 
 ---@param whichGroup group
@@ -5380,7 +5058,6 @@ end
 ---@return boolean
 function SaveGroupHandleBJ (whichGroup, key, missionKey, table)
 	return SaveGroupHandle(table, missionKey, key, whichGroup)
-
 end
 
 ---@param whichLocation location
@@ -5390,7 +5067,6 @@ end
 ---@return boolean
 function SaveLocationHandleBJ (whichLocation, key, missionKey, table)
 	return SaveLocationHandle(table, missionKey, key, whichLocation)
-
 end
 
 ---@param whichRect rect
@@ -5400,7 +5076,6 @@ end
 ---@return boolean
 function SaveRectHandleBJ (whichRect, key, missionKey, table)
 	return SaveRectHandle(table, missionKey, key, whichRect)
-
 end
 
 ---@param whichBoolexpr boolexpr
@@ -5410,7 +5085,6 @@ end
 ---@return boolean
 function SaveBooleanExprHandleBJ (whichBoolexpr, key, missionKey, table)
 	return SaveBooleanExprHandle(table, missionKey, key, whichBoolexpr)
-
 end
 
 ---@param whichSound sound
@@ -5420,7 +5094,6 @@ end
 ---@return boolean
 function SaveSoundHandleBJ (whichSound, key, missionKey, table)
 	return SaveSoundHandle(table, missionKey, key, whichSound)
-
 end
 
 ---@param whichEffect effect
@@ -5430,7 +5103,6 @@ end
 ---@return boolean
 function SaveEffectHandleBJ (whichEffect, key, missionKey, table)
 	return SaveEffectHandle(table, missionKey, key, whichEffect)
-
 end
 
 ---@param whichUnitpool unitpool
@@ -5440,7 +5112,6 @@ end
 ---@return boolean
 function SaveUnitPoolHandleBJ (whichUnitpool, key, missionKey, table)
 	return SaveUnitPoolHandle(table, missionKey, key, whichUnitpool)
-
 end
 
 ---@param whichItempool itempool
@@ -5450,7 +5121,6 @@ end
 ---@return boolean
 function SaveItemPoolHandleBJ (whichItempool, key, missionKey, table)
 	return SaveItemPoolHandle(table, missionKey, key, whichItempool)
-
 end
 
 ---@param whichQuest quest
@@ -5460,7 +5130,6 @@ end
 ---@return boolean
 function SaveQuestHandleBJ (whichQuest, key, missionKey, table)
 	return SaveQuestHandle(table, missionKey, key, whichQuest)
-
 end
 
 ---@param whichQuestitem questitem
@@ -5470,7 +5139,6 @@ end
 ---@return boolean
 function SaveQuestItemHandleBJ (whichQuestitem, key, missionKey, table)
 	return SaveQuestItemHandle(table, missionKey, key, whichQuestitem)
-
 end
 
 ---@param whichDefeatcondition defeatcondition
@@ -5480,7 +5148,6 @@ end
 ---@return boolean
 function SaveDefeatConditionHandleBJ (whichDefeatcondition, key, missionKey, table)
 	return SaveDefeatConditionHandle(table, missionKey, key, whichDefeatcondition)
-
 end
 
 ---@param whichTimerdialog timerdialog
@@ -5490,7 +5157,6 @@ end
 ---@return boolean
 function SaveTimerDialogHandleBJ (whichTimerdialog, key, missionKey, table)
 	return SaveTimerDialogHandle(table, missionKey, key, whichTimerdialog)
-
 end
 
 ---@param whichLeaderboard leaderboard
@@ -5500,7 +5166,6 @@ end
 ---@return boolean
 function SaveLeaderboardHandleBJ (whichLeaderboard, key, missionKey, table)
 	return SaveLeaderboardHandle(table, missionKey, key, whichLeaderboard)
-
 end
 
 ---@param whichMultiboard multiboard
@@ -5510,7 +5175,6 @@ end
 ---@return boolean
 function SaveMultiboardHandleBJ (whichMultiboard, key, missionKey, table)
 	return SaveMultiboardHandle(table, missionKey, key, whichMultiboard)
-
 end
 
 ---@param whichMultiboarditem multiboarditem
@@ -5520,7 +5184,6 @@ end
 ---@return boolean
 function SaveMultiboardItemHandleBJ (whichMultiboarditem, key, missionKey, table)
 	return SaveMultiboardItemHandle(table, missionKey, key, whichMultiboarditem)
-
 end
 
 ---@param whichTrackable trackable
@@ -5530,7 +5193,6 @@ end
 ---@return boolean
 function SaveTrackableHandleBJ (whichTrackable, key, missionKey, table)
 	return SaveTrackableHandle(table, missionKey, key, whichTrackable)
-
 end
 
 ---@param whichDialog dialog
@@ -5540,7 +5202,6 @@ end
 ---@return boolean
 function SaveDialogHandleBJ (whichDialog, key, missionKey, table)
 	return SaveDialogHandle(table, missionKey, key, whichDialog)
-
 end
 
 ---@param whichButton button
@@ -5550,7 +5211,6 @@ end
 ---@return boolean
 function SaveButtonHandleBJ (whichButton, key, missionKey, table)
 	return SaveButtonHandle(table, missionKey, key, whichButton)
-
 end
 
 ---@param whichTexttag texttag
@@ -5560,7 +5220,6 @@ end
 ---@return boolean
 function SaveTextTagHandleBJ (whichTexttag, key, missionKey, table)
 	return SaveTextTagHandle(table, missionKey, key, whichTexttag)
-
 end
 
 ---@param whichLightning lightning
@@ -5570,7 +5229,6 @@ end
 ---@return boolean
 function SaveLightningHandleBJ (whichLightning, key, missionKey, table)
 	return SaveLightningHandle(table, missionKey, key, whichLightning)
-
 end
 
 ---@param whichImage image
@@ -5580,7 +5238,6 @@ end
 ---@return boolean
 function SaveImageHandleBJ (whichImage, key, missionKey, table)
 	return SaveImageHandle(table, missionKey, key, whichImage)
-
 end
 
 ---@param whichUbersplat ubersplat
@@ -5590,7 +5247,6 @@ end
 ---@return boolean
 function SaveUbersplatHandleBJ (whichUbersplat, key, missionKey, table)
 	return SaveUbersplatHandle(table, missionKey, key, whichUbersplat)
-
 end
 
 ---@param whichRegion region
@@ -5600,7 +5256,6 @@ end
 ---@return boolean
 function SaveRegionHandleBJ (whichRegion, key, missionKey, table)
 	return SaveRegionHandle(table, missionKey, key, whichRegion)
-
 end
 
 ---@param whichFogState fogstate
@@ -5610,7 +5265,6 @@ end
 ---@return boolean
 function SaveFogStateHandleBJ (whichFogState, key, missionKey, table)
 	return SaveFogStateHandle(table, missionKey, key, whichFogState)
-
 end
 
 ---@param whichFogModifier fogmodifier
@@ -5620,7 +5274,6 @@ end
 ---@return boolean
 function SaveFogModifierHandleBJ (whichFogModifier, key, missionKey, table)
 	return SaveFogModifierHandle(table, missionKey, key, whichFogModifier)
-
 end
 
 ---@param whichAgent agent
@@ -5630,7 +5283,6 @@ end
 ---@return boolean
 function SaveAgentHandleBJ (whichAgent, key, missionKey, table)
 	return SaveAgentHandle(table, missionKey, key, whichAgent)
-
 end
 
 ---@param whichHashtable hashtable
@@ -5640,7 +5292,6 @@ end
 ---@return boolean
 function SaveHashtableHandleBJ (whichHashtable, key, missionKey, table)
 	return SaveHashtableHandle(table, missionKey, key, whichHashtable)
-
 end
 
 ---@param key string
@@ -5649,7 +5300,6 @@ end
 ---@return number real
 function GetStoredRealBJ (key, missionKey, cache)
 	return GetStoredReal(cache, missionKey, key)
-
 end
 
 ---@param key string
@@ -5658,7 +5308,6 @@ end
 ---@return number integer
 function GetStoredIntegerBJ (key, missionKey, cache)
 	return GetStoredInteger(cache, missionKey, key)
-
 end
 
 ---@param key string
@@ -5667,7 +5316,6 @@ end
 ---@return boolean
 function GetStoredBooleanBJ (key, missionKey, cache)
 	return GetStoredBoolean(cache, missionKey, key)
-
 end
 
 ---@param key string
@@ -5685,7 +5333,6 @@ end
 ---@return number real
 function LoadRealBJ (key, missionKey, table)
 	return LoadReal(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5694,7 +5341,6 @@ end
 ---@return number integer
 function LoadIntegerBJ (key, missionKey, table)
 	return LoadInteger(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5703,7 +5349,6 @@ end
 ---@return boolean
 function LoadBooleanBJ (key, missionKey, table)
 	return LoadBoolean(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5721,7 +5366,6 @@ end
 ---@return player
 function LoadPlayerHandleBJ (key, missionKey, table)
 	return LoadPlayerHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5730,7 +5374,6 @@ end
 ---@return widget
 function LoadWidgetHandleBJ (key, missionKey, table)
 	return LoadWidgetHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5739,7 +5382,6 @@ end
 ---@return destructable
 function LoadDestructableHandleBJ (key, missionKey, table)
 	return LoadDestructableHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5748,7 +5390,6 @@ end
 ---@return item
 function LoadItemHandleBJ (key, missionKey, table)
 	return LoadItemHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5757,7 +5398,6 @@ end
 ---@return unit
 function LoadUnitHandleBJ (key, missionKey, table)
 	return LoadUnitHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5766,7 +5406,6 @@ end
 ---@return ability
 function LoadAbilityHandleBJ (key, missionKey, table)
 	return LoadAbilityHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5775,7 +5414,6 @@ end
 ---@return timer
 function LoadTimerHandleBJ (key, missionKey, table)
 	return LoadTimerHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5784,7 +5422,6 @@ end
 ---@return trigger
 function LoadTriggerHandleBJ (key, missionKey, table)
 	return LoadTriggerHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5793,7 +5430,6 @@ end
 ---@return triggercondition
 function LoadTriggerConditionHandleBJ (key, missionKey, table)
 	return LoadTriggerConditionHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5802,7 +5438,6 @@ end
 ---@return triggeraction
 function LoadTriggerActionHandleBJ (key, missionKey, table)
 	return LoadTriggerActionHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5811,7 +5446,6 @@ end
 ---@return event
 function LoadTriggerEventHandleBJ (key, missionKey, table)
 	return LoadTriggerEventHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5820,7 +5454,6 @@ end
 ---@return force
 function LoadForceHandleBJ (key, missionKey, table)
 	return LoadForceHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5829,7 +5462,6 @@ end
 ---@return group
 function LoadGroupHandleBJ (key, missionKey, table)
 	return LoadGroupHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5838,7 +5470,6 @@ end
 ---@return location
 function LoadLocationHandleBJ (key, missionKey, table)
 	return LoadLocationHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5847,7 +5478,6 @@ end
 ---@return rect
 function LoadRectHandleBJ (key, missionKey, table)
 	return LoadRectHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5856,7 +5486,6 @@ end
 ---@return boolexpr
 function LoadBooleanExprHandleBJ (key, missionKey, table)
 	return LoadBooleanExprHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5865,7 +5494,6 @@ end
 ---@return sound
 function LoadSoundHandleBJ (key, missionKey, table)
 	return LoadSoundHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5874,7 +5502,6 @@ end
 ---@return effect
 function LoadEffectHandleBJ (key, missionKey, table)
 	return LoadEffectHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5883,7 +5510,6 @@ end
 ---@return unitpool
 function LoadUnitPoolHandleBJ (key, missionKey, table)
 	return LoadUnitPoolHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5892,7 +5518,6 @@ end
 ---@return itempool
 function LoadItemPoolHandleBJ (key, missionKey, table)
 	return LoadItemPoolHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5901,7 +5526,6 @@ end
 ---@return quest
 function LoadQuestHandleBJ (key, missionKey, table)
 	return LoadQuestHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5910,7 +5534,6 @@ end
 ---@return questitem
 function LoadQuestItemHandleBJ (key, missionKey, table)
 	return LoadQuestItemHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5919,7 +5542,6 @@ end
 ---@return defeatcondition
 function LoadDefeatConditionHandleBJ (key, missionKey, table)
 	return LoadDefeatConditionHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5928,7 +5550,6 @@ end
 ---@return timerdialog
 function LoadTimerDialogHandleBJ (key, missionKey, table)
 	return LoadTimerDialogHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5937,7 +5558,6 @@ end
 ---@return leaderboard
 function LoadLeaderboardHandleBJ (key, missionKey, table)
 	return LoadLeaderboardHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5946,7 +5566,6 @@ end
 ---@return multiboard
 function LoadMultiboardHandleBJ (key, missionKey, table)
 	return LoadMultiboardHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5955,7 +5574,6 @@ end
 ---@return multiboarditem
 function LoadMultiboardItemHandleBJ (key, missionKey, table)
 	return LoadMultiboardItemHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5964,7 +5582,6 @@ end
 ---@return trackable
 function LoadTrackableHandleBJ (key, missionKey, table)
 	return LoadTrackableHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5973,7 +5590,6 @@ end
 ---@return dialog
 function LoadDialogHandleBJ (key, missionKey, table)
 	return LoadDialogHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5982,7 +5598,6 @@ end
 ---@return button
 function LoadButtonHandleBJ (key, missionKey, table)
 	return LoadButtonHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -5991,7 +5606,6 @@ end
 ---@return texttag
 function LoadTextTagHandleBJ (key, missionKey, table)
 	return LoadTextTagHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -6000,7 +5614,6 @@ end
 ---@return lightning
 function LoadLightningHandleBJ (key, missionKey, table)
 	return LoadLightningHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -6009,7 +5622,6 @@ end
 ---@return image
 function LoadImageHandleBJ (key, missionKey, table)
 	return LoadImageHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -6018,7 +5630,6 @@ end
 ---@return ubersplat
 function LoadUbersplatHandleBJ (key, missionKey, table)
 	return LoadUbersplatHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -6027,7 +5638,6 @@ end
 ---@return region
 function LoadRegionHandleBJ (key, missionKey, table)
 	return LoadRegionHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -6036,7 +5646,6 @@ end
 ---@return fogstate
 function LoadFogStateHandleBJ (key, missionKey, table)
 	return LoadFogStateHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -6045,7 +5654,6 @@ end
 ---@return fogmodifier
 function LoadFogModifierHandleBJ (key, missionKey, table)
 	return LoadFogModifierHandle(table, missionKey, key)
-
 end
 
 ---@param key number integer
@@ -6054,7 +5662,6 @@ end
 ---@return hashtable
 function LoadHashtableHandleBJ (key, missionKey, table)
 	return LoadHashtableHandle(table, missionKey, key)
-
 end
 
 ---@param key string
@@ -6067,7 +5674,6 @@ end
 function RestoreUnitLocFacingAngleBJ (key, missionKey, cache, forWhichPlayer, loc, facing)
 	bj_lastLoadedUnit = RestoreUnit(cache, missionKey, key, forWhichPlayer, GetLocationX(loc), GetLocationY(loc), facing)
 	return bj_lastLoadedUnit
-
 end
 
 ---@param key string
@@ -6079,13 +5685,11 @@ end
 ---@return unit
 function RestoreUnitLocFacingPointBJ (key, missionKey, cache, forWhichPlayer, loc, lookAt)
 	return RestoreUnitLocFacingAngleBJ(key, missionKey, cache, forWhichPlayer, loc, AngleBetweenPoints(loc, lookAt))
-
 end
 
 ---@return unit
 function GetLastRestoredUnitBJ ()
 	return bj_lastLoadedUnit
-
 end
 
 ---@param cache gamecache
@@ -6131,7 +5735,6 @@ end
 ---@return boolean
 function IsCustomCampaignButtonVisibile (whichButton)
 	return GetCustomCampaignButtonVisible(whichButton - 1)
-
 end
 
 ---@param loadFileName string
@@ -6156,14 +5759,12 @@ end
 ---@return boolean
 function RenameSaveDirectoryBJ (sourceDirName, destDirName)
 	return RenameSaveDirectory(sourceDirName, destDirName)
-
 end
 
 ---@param sourceDirName string
 ---@return boolean
 function RemoveSaveDirectoryBJ (sourceDirName)
 	return RemoveSaveDirectory(sourceDirName)
-
 end
 
 ---@param sourceSaveName string
@@ -6171,35 +5772,30 @@ end
 ---@return boolean
 function CopySaveGameBJ (sourceSaveName, destSaveName)
 	return CopySaveGame(sourceSaveName, destSaveName)
-
 end
 
 ---@param whichPlayer player
 ---@return number real
 function GetPlayerStartLocationX (whichPlayer)
 	return GetStartLocationX(GetPlayerStartLocation(whichPlayer))
-
 end
 
 ---@param whichPlayer player
 ---@return number real
 function GetPlayerStartLocationY (whichPlayer)
 	return GetStartLocationY(GetPlayerStartLocation(whichPlayer))
-
 end
 
 ---@param whichPlayer player
 ---@return location
 function GetPlayerStartLocationLoc (whichPlayer)
 	return GetStartLocationLoc(GetPlayerStartLocation(whichPlayer))
-
 end
 
 ---@param whichRect rect
 ---@return location
 function GetRectCenter (whichRect)
 	return Location(GetRectCenterX(whichRect), GetRectCenterY(whichRect))
-
 end
 
 ---@param whichPlayer player
@@ -6207,21 +5803,18 @@ end
 ---@return boolean
 function IsPlayerSlotState (whichPlayer, whichState)
 	return GetPlayerSlotState(whichPlayer) == whichState
-
 end
 
 ---@param seconds number real
 ---@return number integer
 function GetFadeFromSeconds (seconds)
 	return 10000
-
 end
 
 ---@param seconds number real
 ---@return number real
 function GetFadeFromSecondsAsReal (seconds)
 	return 10000.00
-
 end
 
 ---@param whichPlayer player
@@ -6262,7 +5855,6 @@ end
 ---@return number integer
 function GetPlayerTaxRateBJ (whichResource, sourcePlayer, otherPlayer)
 	return GetPlayerTaxRate(sourcePlayer, otherPlayer, whichResource)
-
 end
 
 ---@param whichPlayerFlag playerstate
@@ -6270,7 +5862,6 @@ end
 ---@return boolean
 function IsPlayerFlagSetBJ (whichPlayerFlag, whichPlayer)
 	return GetPlayerState(whichPlayer, whichPlayerFlag) == 1
-
 end
 
 ---@param delta number integer
@@ -6282,28 +5873,24 @@ end
 ---@return number integer
 function GetConvertedPlayerId (whichPlayer)
 	return GetPlayerId(whichPlayer) + 1
-
 end
 
 ---@param convertedPlayerId number integer
 ---@return player
 function ConvertedPlayer (convertedPlayerId)
 	return Player(convertedPlayerId - 1)
-
 end
 
 ---@param r rect
 ---@return number real
 function GetRectWidthBJ (r)
 	return GetRectMaxX(r) - GetRectMinX(r)
-
 end
 
 ---@param r rect
 ---@return number real
 function GetRectHeightBJ (r)
 	return GetRectMaxY(r) - GetRectMinY(r)
-
 end
 
 ---@param goldMine unit
@@ -6319,7 +5906,6 @@ function BlightGoldMineForPlayerBJ (goldMine, whichPlayer)
 	mineGold = GetResourceAmount(goldMine)
 	newMine = CreateBlightedGoldmine(whichPlayer, mineX, mineY, bj_UNIT_FACING)
 	return newMine
-
 end
 
 ---@param goldMine unit
@@ -6328,20 +5914,17 @@ end
 function BlightGoldMineForPlayer (goldMine, whichPlayer)
 	bj_lastHauntedGoldMine = BlightGoldMineForPlayerBJ(goldMine, whichPlayer)
 	return bj_lastHauntedGoldMine
-
 end
 
 ---@return unit
 function GetLastHauntedGoldMine ()
 	return bj_lastHauntedGoldMine
-
 end
 
 ---@param where location
 ---@return boolean
 function IsPointBlightedBJ (where)
 	return IsPointBlighted(GetLocationX(where), GetLocationY(where))
-
 end
 
 function SetPlayerColorBJEnum ()
@@ -6372,7 +5955,6 @@ end
 ---@return boolean
 function IssueTargetOrderBJ (whichUnit, order, targetWidget)
 	return IssueTargetOrder(whichUnit, order, targetWidget)
-
 end
 
 ---@param whichUnit unit
@@ -6381,7 +5963,6 @@ end
 ---@return boolean
 function IssuePointOrderLocBJ (whichUnit, order, whichLocation)
 	return IssuePointOrderLoc(whichUnit, order, whichLocation)
-
 end
 
 ---@param whichUnit unit
@@ -6390,7 +5971,6 @@ end
 ---@return boolean
 function IssueTargetDestructableOrder (whichUnit, order, targetWidget)
 	return IssueTargetOrder(whichUnit, order, targetWidget)
-
 end
 
 ---@param whichUnit unit
@@ -6399,7 +5979,6 @@ end
 ---@return boolean
 function IssueTargetItemOrder (whichUnit, order, targetWidget)
 	return IssueTargetOrder(whichUnit, order, targetWidget)
-
 end
 
 ---@param whichUnit unit
@@ -6407,7 +5986,6 @@ end
 ---@return boolean
 function IssueImmediateOrderBJ (whichUnit, order)
 	return IssueImmediateOrder(whichUnit, order)
-
 end
 
 ---@param whichGroup group
@@ -6416,7 +5994,6 @@ end
 ---@return boolean
 function GroupTargetOrderBJ (whichGroup, order, targetWidget)
 	return GroupTargetOrder(whichGroup, order, targetWidget)
-
 end
 
 ---@param whichGroup group
@@ -6425,7 +6002,6 @@ end
 ---@return boolean
 function GroupPointOrderLocBJ (whichGroup, order, whichLocation)
 	return GroupPointOrderLoc(whichGroup, order, whichLocation)
-
 end
 
 ---@param whichGroup group
@@ -6433,7 +6009,6 @@ end
 ---@return boolean
 function GroupImmediateOrderBJ (whichGroup, order)
 	return GroupImmediateOrder(whichGroup, order)
-
 end
 
 ---@param whichGroup group
@@ -6442,7 +6017,6 @@ end
 ---@return boolean
 function GroupTargetDestructableOrder (whichGroup, order, targetWidget)
 	return GroupTargetOrder(whichGroup, order, targetWidget)
-
 end
 
 ---@param whichGroup group
@@ -6451,13 +6025,11 @@ end
 ---@return boolean
 function GroupTargetItemOrder (whichGroup, order, targetWidget)
 	return GroupTargetOrder(whichGroup, order, targetWidget)
-
 end
 
 ---@return destructable
 function GetDyingDestructable ()
 	return GetTriggerDestructable()
-
 end
 
 ---@param whichUnit unit
@@ -6496,7 +6068,6 @@ end
 ---@return string
 function GetAbilityName (abilcode)
 	return GetObjectName(abilcode)
-
 end
 
 function MeleeStartingVisibility ()
@@ -6514,7 +6085,6 @@ function MeleeStartingResources ()
 		indexPlayer = Player(index)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -6531,14 +6101,12 @@ function MeleeStartingHeroLimit ()
 	while(true) do
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
 ---@return boolean
 function MeleeTrainedUnitIsHeroBJFilter ()
 	return IsUnitType(GetFilterUnit(), UNIT_TYPE_HERO)
-
 end
 
 ---@param whichUnit unit
@@ -6560,14 +6128,12 @@ function MeleeGrantHeroItems ()
 		bj_meleeTwinkedHeroes = 0
 		index = index + 1
 		if (index == bj_MAX_PLAYER_SLOTS) then break end
-
 	end
 	index = 0
 	while(true) do
 		trig = CreateTrigger()
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 	trig = CreateTrigger()
 	bj_meleeGrantHeroItems = true
@@ -6596,7 +6162,6 @@ function MeleeClearExcessUnits ()
 		indexPlayer = Player(index)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -6616,7 +6181,6 @@ function MeleeFindNearestMine (src, range)
 	bj_meleeNearestMineToLoc = src
 	nearbyMines = CreateGroup()
 	return bj_meleeNearestMine
-
 end
 
 ---@param p player
@@ -6634,7 +6198,6 @@ function MeleeRandomHeroLoc (p, id1, id2, id3, id4, loc)
 	v = VersionGet()
 	hero = CreateUnitAtLoc(p, pick, loc, bj_UNIT_FACING)
 	return hero
-
 end
 
 ---@param src location
@@ -6647,7 +6210,6 @@ function MeleeGetProjectedLoc (src, targ, distance, deltaAngle)
 	local srcY = GetLocationY(src) ---@type number real
 	local direction = Atan2(GetLocationY(targ) - srcY, GetLocationX(targ) - srcX) + deltaAngle ---@type number real
 	return Location(srcX + distance * Cos(direction), srcY + distance * Sin(direction))
-
 end
 
 ---@param val number real
@@ -6664,7 +6226,6 @@ function MeleeGetLocWithinRect (src, r)
 	local withinX = MeleeGetNearestValueWithin(GetLocationX(src), GetRectMinX(r), GetRectMaxX(r)) ---@type number real
 	local withinY = MeleeGetNearestValueWithin(GetLocationY(src), GetRectMinY(r), GetRectMaxY(r)) ---@type number real
 	return Location(withinX, withinY)
-
 end
 
 ---@param whichPlayer player
@@ -6750,7 +6311,6 @@ function MeleeStartingUnitsUnknownRace (whichPlayer, startLoc, doHeroes, doCamer
 	while(true) do
 		index = index + 1
 		if (index == 12) then break end
-
 	end
 end
 
@@ -6764,7 +6324,6 @@ function MeleeStartingUnits ()
 		indexPlayer = Player(index)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -6792,7 +6351,6 @@ function MeleeStartingAI ()
 		indexPlayer = Player(index)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -6807,7 +6365,6 @@ function MeleePlayerIsOpponent (playerIndex, opponentIndex)
 	local thePlayer = Player(playerIndex) ---@type player
 	local theOpponent = Player(opponentIndex) ---@type player
 	return true
-
 end
 
 ---@param whichPlayer player
@@ -6822,10 +6379,8 @@ function MeleeGetAllyStructureCount (whichPlayer)
 		indexPlayer = Player(playerIndex)
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
-
 	end
 	return buildingCount
-
 end
 
 ---@param whichPlayer player
@@ -6840,10 +6395,8 @@ function MeleeGetAllyCount (whichPlayer)
 		indexPlayer = Player(playerIndex)
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
-
 	end
 	return playerCount
-
 end
 
 ---@param whichPlayer player
@@ -6858,10 +6411,8 @@ function MeleeGetAllyKeyStructureCount (whichPlayer)
 		indexPlayer = Player(playerIndex)
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
-
 	end
 	return keyStructs
-
 end
 
 function MeleeDoDrawEnum ()
@@ -6894,7 +6445,6 @@ function MeleeRemoveObservers ()
 		indexPlayer = Player(playerIndex)
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -6908,11 +6458,9 @@ function MeleeCheckForVictors ()
 	while(true) do
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
-
 	end
 	bj_meleeGameOver = gameOver
 	return opponentlessPlayers
-
 end
 
 function MeleeCheckForLosersAndVictors ()
@@ -6926,7 +6474,6 @@ function MeleeCheckForLosersAndVictors ()
 		indexPlayer = Player(playerIndex)
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
-
 	end
 	victoriousPlayers = MeleeCheckForVictors()
 end
@@ -6947,7 +6494,6 @@ end
 ---@return string
 function MeleeGetCrippledRevealedMessage (whichPlayer)
 	return GetLocalizedString("CRIPPLE_REVEALING_PREFIX") .. GetPlayerName(whichPlayer) .. GetLocalizedString("CRIPPLE_REVEALING_POSTFIX")
-
 end
 
 ---@param whichPlayer player
@@ -6962,7 +6508,6 @@ function MeleeExposePlayer (whichPlayer, expose)
 		indexPlayer = Player(playerIndex)
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -6980,11 +6525,9 @@ function MeleeExposeAllPlayers ()
 			indexPlayer2 = Player(playerIndex2)
 			playerIndex2 = playerIndex2 + 1
 			if (playerIndex2 == bj_MAX_PLAYERS) then break end
-
 		end
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -6996,7 +6539,6 @@ function MeleeCrippledPlayerTimeout ()
 	while(true) do
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
-
 	end
 	exposedPlayer = Player(playerIndex)
 end
@@ -7007,7 +6549,6 @@ function MeleePlayerIsCrippled (whichPlayer)
 	local allyStructures = MeleeGetAllyStructureCount(whichPlayer) ---@type number integer
 	local allyKeyStructures = MeleeGetAllyKeyStructureCount(whichPlayer) ---@type number integer
 	return (allyStructures > 0) and (allyKeyStructures <= 0)
-
 end
 
 function MeleeCheckForCrippledPlayers ()
@@ -7022,7 +6563,6 @@ function MeleeCheckForCrippledPlayers ()
 		isNowCrippled = MeleePlayerIsCrippled(indexPlayer)
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -7068,7 +6608,6 @@ function MeleeWasUserPlayer (whichPlayer)
 	local slotState ---@type playerslotstate
 	slotState = GetPlayerSlotState(whichPlayer)
 	return (slotState == PLAYER_SLOT_STATE_PLAYING or slotState == PLAYER_SLOT_STATE_LEFT)
-
 end
 
 ---@param multiplier number integer
@@ -7089,14 +6628,12 @@ function MeleeTournamentFinishNowRuleA (multiplier)
 		indexPlayer = Player(index)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 	teamCount = 0
 	index = 0
 	while(true) do
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 	bj_meleeGameOver = true
 end
@@ -7117,7 +6654,6 @@ function MeleeInitVictoryDefeat ()
 		indexPlayer = Player(index)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -7143,7 +6679,6 @@ function TeamInitPlayerSlots (teamCount)
 	while(true) do
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -7197,7 +6732,6 @@ function InitBlizzardGlobals ()
 	index = 0
 	while(true) do
 		if (index == bj_MAX_PLAYER_SLOTS) then break end
-
 		bj_FORCE_PLAYER = CreateForce()
 		index = index + 1
 	end
@@ -7208,7 +6742,6 @@ function InitBlizzardGlobals ()
 	index = 0
 	while(true) do
 		if (index >= bj_MAX_QUEUED_TRIGGERS) then break end
-
 		bj_queuedExecTriggers = nil
 		bj_queuedExecUseConds = false
 		index = index + 1
@@ -7218,7 +6751,6 @@ function InitBlizzardGlobals ()
 	index = 0
 	while(true) do
 		if (index >= bj_MAX_PLAYERS) then break end
-
 		index = index + 1
 	end
 	bj_isSinglePlayer = (userControlledPlayers == 1)
@@ -7251,7 +6783,6 @@ function InitSummonableCaps ()
 	while(true) do
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
-
 	end
 end
 
@@ -7267,7 +6798,6 @@ function UpdateEachStockBuildingEnum ()
 	while(true) do
 		pickedItemId = ChooseRandomItemEx(bj_stockPickedItemType, bj_stockPickedItemLevel)
 		if (IsItemIdSellable(pickedItemId)) then break end
-
 		iteration = iteration + 1
 	end
 end
@@ -7291,7 +6821,6 @@ function PerformStockUpdates ()
 	while(true) do
 		iLevel = iLevel + 1
 		if (iLevel > bj_MAX_ITEM_LEVEL) then break end
-
 	end
 end
 
@@ -7310,7 +6839,6 @@ function InitNeutralBuildings ()
 		bj_stockAllowedArtifact = false
 		iLevel = iLevel + 1
 		if (iLevel > bj_MAX_ITEM_LEVEL) then break end
-
 	end
 	bj_stockUpdateTimer = CreateTimer()
 	bj_stockItemPurchased = CreateTrigger()
@@ -7351,7 +6879,6 @@ function RandomDistChoose ()
 		sum = sum + bj_randDistChance[index]
 		index = index + 1
 		if (index == bj_randDistCount) then break end
-
 	end
 	chance = GetRandomInt(1, sum)
 	index = 0
@@ -7361,10 +6888,8 @@ function RandomDistChoose ()
 		sum = sum + bj_randDistChance[index]
 		index = index + 1
 		if (done == true) then break end
-
 	end
 	return foundID
-
 end
 
 ---@param inUnit unit
@@ -7383,7 +6908,6 @@ function UnitDropItem (inUnit, inItemID)
 	y = GetRandomReal(unitY - radius, unitY + radius)
 	droppedItem = CreateItem(inItemID, x, y)
 	return droppedItem
-
 end
 
 ---@param inWidget widget
@@ -7400,5 +6924,4 @@ function WidgetDropItem (inWidget, inItemID)
 	x = GetRandomReal(widgetX - radius, widgetX + radius)
 	y = GetRandomReal(widgetY - radius, widgetY + radius)
 	return CreateItem(inItemID, x, y)
-
 end

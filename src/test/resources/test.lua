@@ -1,12 +1,48 @@
----@class handle
----@class rect:handle
----@class player:handle
+---@param key string
+---@param valueType number integer
+---@param missionKey string
+---@param cache gamecache
+---@return boolean
+function HaveStoredValue1 (key, valueType, missionKey, cache)
+end
 
-b = 1 + 2 - -(3) ---@type number integer
-h = nil ---@type handle
-a = {} ---@type number[] integer
-t = a[12] ---@type number integer
+---@param trigIndex number integer
+---@return boolean
+function QueuedTriggerRemoveByIndex1 (trigIndex)
+	local index ---@type number integer
+	bj_queuedExecTotal = bj_queuedExecTotal - 1
+	index = trigIndex
+	while(true) do
+		if (index >= bj_queuedExecTotal) then break end
+		bj_queuedExecTriggers = bj_queuedExecTriggers[index + 1]
+		bj_queuedExecUseConds = bj_queuedExecUseConds[index + 1]
+		index = index + 1
+	end
+	return true
+end
 
+---@param degrees number real
+---@return number real
+function SinBJ1 (degrees)
+	return Sin(degrees * bj_DEGTORAD)
+end
+
+---@param r rect
+---@param x number real
+---@param y number real
+---@return boolean
+function RectContainsCoords1 (r, x, y)
+	return (GetRectMinX(r) <= x) and (x <= GetRectMaxX(r)) and (GetRectMinY(r) <= y) and (y <= GetRectMaxY(r))
+end
+
+---@param msg string
+function BJDebugMsg1 (msg)
+	local i = 0 ---@type number integer
+	while(true) do
+		i = i + 1
+		if (i == bj_MAX_PLAYERS) then break end
+	end
+end
 
 ---@param end_ number real
 function main (end_)
@@ -16,21 +52,15 @@ function main (end_)
 	end_ = "a1"
 	while(true) do
 		if (true) then break end
-
 		if (1 > 2 == 3 ~= 4 and true or false) then break end
-
 		end_ = "a2"
 		while(true) do
 			end_ = 23
 			end_ = 25 + 12
 			return false
-
 		end
 	end
 	return 22
-
 	return a
-
 	return b
-
 end

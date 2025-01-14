@@ -1,26 +1,21 @@
-// - not unary
-// array
+function HaveStoredValue1 takes string key, integer valueType, string missionKey, gamecache cache returns boolean
+    if (valueType == bj_GAMECACHE_BOOLEAN) then
+        return HaveStoredBoolean(cache, missionKey, key)
+    elseif (valueType == bj_GAMECACHE_INTEGER) then
+        return HaveStoredInteger(cache, missionKey, key)
+    elseif (valueType == bj_GAMECACHE_REAL) then
+        return HaveStoredReal(cache, missionKey, key)
+    elseif (valueType == bj_GAMECACHE_UNIT) then
+        return HaveStoredUnit(cache, missionKey, key)
+    elseif (valueType == bj_GAMECACHE_STRING) then
+        return HaveStoredString(cache, missionKey, key)
+    else
+        // Unrecognized value type - ignore the request.
+        return false
+    endif
+endfunction
 
-type rect extends handle
-type player extends handle
-
-globals
-    integer b = 1 + 2 - - (3)
-    handle h = null
-
-    real bj_DEGTORAD = 12
-
-    integer array a
-
-    integer t = a[12]
-
-constant integer bj_MAX_PLAYERS = 12
-
-endglobals
-
-native DisplayTimedTextToPlayer     takes player toPlayer, real x, real y, real duration, string message returns nothing
-
-function QueuedTriggerRemoveByIndex takes integer trigIndex returns boolean
+function QueuedTriggerRemoveByIndex1 takes integer trigIndex returns boolean
     local integer index
 
         // If the to-be-removed index is out of range, fail.
@@ -40,15 +35,15 @@ function QueuedTriggerRemoveByIndex takes integer trigIndex returns boolean
     return true
 endfunction
 
-function SinBJ takes real degrees returns real
+function SinBJ1 takes real degrees returns real
     return Sin(degrees * bj_DEGTORAD)
 endfunction
 
-function RectContainsCoords takes rect r, real x, real y returns boolean
+function RectContainsCoords1 takes rect r, real x, real y returns boolean
     return (GetRectMinX(r) <= x) and (x <= GetRectMaxX(r)) and (GetRectMinY(r) <= y) and (y <= GetRectMaxY(r))
 endfunction
 
-function BJDebugMsg takes string msg returns nothing
+function BJDebugMsg1 takes string msg returns nothing
     local integer i = 0
     loop
         call DisplayTimedTextToPlayer(Player(i), 0, 0, 60, msg)

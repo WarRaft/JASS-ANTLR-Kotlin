@@ -179,6 +179,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
                 val node = getNode(name, null)
                 if (node is JassFun) {
                     cf.type = node.type
+
                 }
 
                 ctx.expr().forEach {

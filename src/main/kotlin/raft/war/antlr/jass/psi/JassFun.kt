@@ -5,6 +5,11 @@ class JassFun(
     val native: Boolean = false,
 ) : IJassNode, IJassStmtBlock {
 
+    var base: JassFun? = null
+
+    val basename: String
+        get() = base?.basename ?: name
+
     override var type: IJassType = JassUndefinedType()
 
     val param: MutableList<JassVar> = mutableListOf()

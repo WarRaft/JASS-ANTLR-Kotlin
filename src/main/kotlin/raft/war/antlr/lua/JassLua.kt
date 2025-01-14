@@ -60,7 +60,7 @@ class JassLua(val jass: JassState, val output: Path) {
             is JassReal -> builder.append(e.raw)
             is JassStr -> builder.append(e.raw)
             is JassVar -> {
-                builder.append(e.name)
+                builder.append(e.basename)
                 if (e.array) {
                     builder.append("[")
                     expr(e.expr)
@@ -101,7 +101,7 @@ class JassLua(val jass: JassState, val output: Path) {
             }
 
             is JassFun -> {
-                builder.append("${e.name}(")
+                builder.append("${e.basename}(")
                 e.arg.forEachIndexed { index, arg ->
                     if (index > 0) builder.append(", ")
                     expr(arg)
@@ -160,7 +160,7 @@ class JassLua(val jass: JassState, val output: Path) {
             if (node is JassExitWhen) {
                 tab(level).append("if (")
                 expr(node.expr)
-                builder.append(") then break end\n")
+                builder.append(") then break end")
             }
 
             if (node is JassReturn) {
@@ -169,7 +169,6 @@ class JassLua(val jass: JassState, val output: Path) {
                     builder.append(" ")
                     expr(node.expr)
                 }
-                builder.append("\n")
             }
 
             builder.append("\n")
