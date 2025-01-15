@@ -5,7 +5,7 @@ class JassFun(
     val native: Boolean = false,
     val ref: Boolean = false,
     override var type: IJassType = JassUndefinedType(),
-) : IJassNode, IJassStmtBlock {
+) : IJassNode {
 
     var base: JassFun? = null
 
@@ -15,7 +15,7 @@ class JassFun(
     val param: MutableList<JassVar> = mutableListOf()
     val arg: MutableList<JassExpr> = mutableListOf()
 
-    override val stmt: MutableList<IJassNode> = mutableListOf()
+    val stmt: MutableList<IJassNode> = mutableListOf()
 
     override fun toString(): String = "JassFun(name='$name'):$type"
 }

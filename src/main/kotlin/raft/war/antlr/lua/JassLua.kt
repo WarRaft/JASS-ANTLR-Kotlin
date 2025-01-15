@@ -145,48 +145,67 @@ class JassLua(val jass: JassState, val output: Path) {
 
     fun stmt(nodes: List<IJassNode>, level: Int) {
         for (node in nodes) {
-            if (node is JassIf) {
-                tab(level).append("if ")
-                expr(node.expr)
-                builder.append(" then\n")
 
-                stmt(node.stmt, level + 1)
+            when (node) {
+                is JassIf -> {
+                    tab(level).append("if ")
+                    expr(node.expr)
+                    builder.append(" then\n")
 
-                tab(level).append("end")
-            }
+                    stmt(node.stmt, level + 1)
 
-            if (node is JassVar) {
-                tab(level).append(node.basename)
-                if (node.index != null) {
-                    builder.append("[")
-                    expr(node.index)
-                    builder.append("]")
+                    for (eif in node.elseifs) {
+                        tab(level).append("elseif ")
+                        expr(eif.expr)
+                        builder.append(" then\n")
+                        stmt(eif.stmt, level + 1)
+                    }
+
+                    val elser = node.elser
+                    if (elser != null) {
+                        tab(level).append("else\n")
+                        stmt(elser.stmt, level + 1)
+                    }
+
+                    tab(level).append("end")
                 }
-                builder.append(" = ")
-                expr(node.expr)
-            }
 
-            if (node is JassLoop) {
-                tab(level).append("while(true) do\n")
-
-                stmt(node.stmt, level + 1)
-
-                tab(level).append("end")
-            }
-
-            if (node is JassExitWhen) {
-                tab(level).append("if (")
-                expr(node.expr)
-                builder.append(") then break end")
-            }
-
-            if (node is JassReturn) {
-                tab(level).append("return")
-                if (node.expr != null) {
-                    builder.append(" ")
+                is JassVar -> {
+                    tab(level).append(node.basename)
+                    if (node.index != null) {
+                        builder.append("[")
+                        expr(node.index)
+                        builder.append("]")
+                    }
+                    builder.append(" = ")
                     expr(node.expr)
                 }
+
+                is JassLoop -> {
+                    tab(level).append("while(true) do\n")
+
+                    stmt(node.stmt, level + 1)
+
+                    tab(level).append("end")
+                }
+
+                is JassExitWhen -> {
+                    tab(level).append("if (")
+                    expr(node.expr)
+                    builder.append(") then break end")
+                }
+
+                is JassReturn -> {
+                    tab(level).append("return")
+                    if (node.expr != null) {
+                        builder.append(" ")
+                        expr(node.expr)
+                    }
+                }
+
+                else -> println("🔥 Lua missing node: ${node.javaClass.simpleName}")
             }
+
 
             builder.append("\n")
         }

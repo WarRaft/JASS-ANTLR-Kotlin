@@ -2,6 +2,7 @@ package raft.war.antlr.jass
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.ParserRuleContext
 import raft.war.antlr.grammar.Jass.JassBaseVisitor
 import raft.war.antlr.grammar.Jass.JassLexer
 import raft.war.antlr.grammar.Jass.JassParser
@@ -10,7 +11,6 @@ import raft.war.antlr.jass.error.JassError
 import raft.war.antlr.jass.error.JassErrorId
 import raft.war.antlr.jass.error.JassErrorListener
 import raft.war.antlr.jass.psi.*
-import kotlin.math.exp
 
 class JassState : JassBaseVisitor<IJassNode>() {
     var states: List<JassState> = listOf()
@@ -314,30 +314,10 @@ class JassState : JassBaseVisitor<IJassNode>() {
         return null
     }
 
-    fun stmt(ctxs: List<StmtContext>, scopes: MutableList<IJassStmtBlock>) {
+    fun stmt(ctxs: List<StmtContext>, list: MutableList<IJassNode>, scopes: MutableList<IJassNode>) {
         val f = scopes.first() as JassFun
 
-        val scope = scopes.last()
-
-        for (item: StmtContext in ctxs) {
-
-            val ifctx: IfContext? = item.if_()
-            if (ifctx != null) {
-                val e = expr(ifctx.expr(), f)
-                if (e == null) {
-                    errors.add(JassError(JassErrorId.ERROR, ifctx.start.line, 0, "[if] not have expr"))
-                    continue
-                }
-                val i = JassIf(
-                    mode = JassIfMode.If,
-                    expr = e
-                )
-                scope.stmt.add(i)
-                val ss = scopes.toMutableList()
-                ss.add(i)
-                stmt(ifctx.stmt(), ss)
-            }
-
+        for (item in ctxs) {
             val set: SetContext? = item.set()
             if (set != null) {
                 val name = set.ID().text
@@ -350,25 +330,33 @@ class JassState : JassBaseVisitor<IJassNode>() {
 
                 val e = expr(set.expr(), f)
                 if (e == null) {
-                    errors.add(JassError(JassErrorId.ERROR, set.start.line, 0, "[set] $name no have expression"))
+                    errors.add(
+                        JassError(
+                            JassErrorId.ERROR,
+                            set.start.line,
+                            0,
+                            "[set] $name no have expression"
+                        )
+                    )
                     continue
                 }
 
-                scope.stmt.add(
+                list.add(
                     node.clone(
                         expr = e,
                         index = expr(set.setBrack()?.expr(), f),
                     )
                 )
+                continue
             }
 
             val loop: LoopContext? = item.loop()
             if (loop != null) {
                 val l = JassLoop()
-                scope.stmt.add(l)
+                list.add(l)
                 val ss = scopes.toMutableList()
                 ss.add(l)
-                stmt(loop.stmt(), ss)
+                stmt(loop.stmt(), l.stmt, ss)
             }
 
             val exitWhen: ExitwhenContext? = item.exitwhen()
@@ -377,17 +365,49 @@ class JassState : JassBaseVisitor<IJassNode>() {
                 if (exp == null) {
                     println("🔥exitwhen no expr")
                 } else {
-                    scope.stmt.add(JassExitWhen(expr = exp))
+                    list.add(JassExitWhen(expr = exp))
                 }
             }
 
             val ctxr: ReturnContext? = item.return_()
             if (ctxr != null) {
-                scope.stmt.add(
+                list.add(
                     JassReturn(
                         expr = expr(ctxr.expr(), f),
                     )
                 )
+            }
+
+            val ctxIf: IfContext? = item.if_()
+            if (ctxIf != null) {
+                val e = expr(ctxIf.expr(), f)
+                if (e == null) {
+                    errors.add(JassError(JassErrorId.ERROR, ctxIf.start.line, 0, "[if] not have expr"))
+                    continue
+                }
+                val nodeIf = JassIf(expr = e)
+                list.add(nodeIf)
+                val ss = scopes.toMutableList()
+                ss.add(nodeIf)
+                stmt(ctxIf.stmt(), nodeIf.stmt, ss)
+
+                for (ctxElseif in ctxIf.elseif()) {
+                    val e = expr(ctxIf.expr(), f)
+                    if (e == null) {
+                        errors.add(JassError(JassErrorId.ERROR, ctxIf.start.line, 0, "[elseif] not have expr"))
+                        continue
+                    }
+                    val nodeElseif = JassIf(expr = e)
+                    nodeIf.elseifs.add(nodeElseif)
+                    stmt(ctxElseif.stmt(), nodeElseif.stmt, ss)
+                }
+
+                val ctxElse = ctxIf.else_()
+                if (ctxElse != null) {
+                    val elser = JassIf()
+                    nodeIf.elser = elser
+                    stmt(ctxElse.stmt(), elser.stmt, ss)
+                }
             }
 
         }
@@ -424,7 +444,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
             f.param.add(v)
         }
 
-        stmt(ctx.stmt(), mutableListOf(f))
+        stmt(ctx.stmt(), f.stmt, mutableListOf(f))
 
         mapNode[f.name] = f
         functions.add(f)

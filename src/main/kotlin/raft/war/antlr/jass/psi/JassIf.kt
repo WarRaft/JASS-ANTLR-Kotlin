@@ -1,19 +1,14 @@
 package raft.war.antlr.jass.psi
 
-enum class JassIfMode {
-    If, ElseIF, Else
-}
-
 class JassIf(
-    val expr: JassExpr?,
-    val mode: JassIfMode,
-) : IJassNode, IJassStmtBlock {
+    val expr: JassExpr? = null,
+) : IJassNode {
     override var type: IJassType = JassUndefinedType()
 
-    override val stmt: MutableList<IJassNode> = mutableListOf()
+    val stmt: MutableList<IJassNode> = mutableListOf()
+
+    val elseifs: MutableList<JassIf> = mutableListOf()
+    var elser: JassIf? = null
 
     override fun toString(): String = "if"
-
-    val elseifs: MutableList<IJassNode> = mutableListOf()
-    val elses: MutableList<IJassNode> = mutableListOf()
 }

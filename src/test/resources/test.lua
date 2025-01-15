@@ -6,6 +6,16 @@
 function HaveStoredValue1 (key, valueType, missionKey, cache)
 	if (valueType == bj_GAMECACHE_BOOLEAN) then
 		return HaveStoredBoolean(cache, missionKey, key)
+	elseif (valueType == bj_GAMECACHE_BOOLEAN) then
+		return HaveStoredInteger(cache, missionKey, key)
+	elseif (valueType == bj_GAMECACHE_BOOLEAN) then
+		return HaveStoredReal(cache, missionKey, key)
+	elseif (valueType == bj_GAMECACHE_BOOLEAN) then
+		return HaveStoredUnit(cache, missionKey, key)
+	elseif (valueType == bj_GAMECACHE_BOOLEAN) then
+		return HaveStoredString(cache, missionKey, key)
+	else
+		return false
 	end
 end
 
@@ -70,6 +80,7 @@ function main (end_anal)
 		if 2 + 3 > 0 then
 			end_anal = 33
 		end
+	else
 	end
 	return 22
 	return a

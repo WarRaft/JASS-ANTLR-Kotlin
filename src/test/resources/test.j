@@ -1,4 +1,6 @@
 function HaveStoredValue1 takes string key, integer valueType, string missionKey, gamecache cache returns boolean
+    call PauseGame( false )
+
     if (valueType == bj_GAMECACHE_BOOLEAN) then
         return HaveStoredBoolean(cache, missionKey, key)
     elseif (valueType == bj_GAMECACHE_INTEGER) then

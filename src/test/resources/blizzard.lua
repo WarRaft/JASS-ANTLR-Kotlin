@@ -486,6 +486,8 @@ end
 function RMinBJ (a, b)
 	if (a < b) then
 		return a
+	else
+		return b
 	end
 end
 
@@ -495,6 +497,8 @@ end
 function RMaxBJ (a, b)
 	if (a < b) then
 		return b
+	else
+		return a
 	end
 end
 
@@ -503,6 +507,8 @@ end
 function RAbsBJ (a)
 	if (a >= 0) then
 		return a
+	else
+		return -a
 	end
 end
 
@@ -511,6 +517,8 @@ end
 function RSignBJ (a)
 	if (a >= 0.0) then
 		return 1.0
+	else
+		return -1.0
 	end
 end
 
@@ -520,6 +528,8 @@ end
 function IMinBJ (a, b)
 	if (a < b) then
 		return a
+	else
+		return b
 	end
 end
 
@@ -529,6 +539,8 @@ end
 function IMaxBJ (a, b)
 	if (a < b) then
 		return b
+	else
+		return a
 	end
 end
 
@@ -537,6 +549,8 @@ end
 function IAbsBJ (a)
 	if (a >= 0) then
 		return a
+	else
+		return -a
 	end
 end
 
@@ -545,6 +559,8 @@ end
 function ISignBJ (a)
 	if (a >= 0) then
 		return 1
+	else
+		return -1
 	end
 end
 
@@ -755,6 +771,8 @@ function QueuedTriggerCheck ()
 		s = s .. "q[" .. I2S(i) .. "]="
 		if (bj_queuedExecTriggers[i] == nil) then
 			s = s .. "null "
+		else
+			s = s .. "x "
 		end
 		i = i + 1
 	end
@@ -893,6 +911,7 @@ function PolledWait (duration)
 			timeRemaining = TimerGetRemaining(t)
 			if (timeRemaining <= 0) then break end
 			if (timeRemaining > bj_POLLED_WAIT_SKIP_THRESHOLD) then
+			else
 			end
 		end
 	end
@@ -905,6 +924,8 @@ end
 function IntegerTertiaryOp (flag, valueA, valueB)
 	if flag then
 		return valueA
+	else
+		return valueB
 	end
 end
 
@@ -942,6 +963,8 @@ function PercentToInt (percentage, max)
 	local result = R2I(percentage * I2R(max) * 0.01) ---@type number integer
 	if (result < 0) then
 		result = 0
+	elseif (result < 0) then
+		result = max
 	end
 	return result
 end
@@ -1113,6 +1136,8 @@ function SmartCameraPanBJ (whichPlayer, loc, duration)
 	if (GetLocalPlayer() == whichPlayer) then
 		dist = DistanceBetweenPoints(loc, GetCameraTargetPositionLoc())
 		if (dist >= bj_SMARTPAN_TRESHOLD_SNAP) then
+		elseif (dist >= bj_SMARTPAN_TRESHOLD_SNAP) then
+		else
 		end
 	end
 end
@@ -1215,6 +1240,10 @@ function AdjustCameraBoundsBJ (adjustMethod, dxWest, dxEast, dyNorth, dySouth)
 	local scale = 0 ---@type number real
 	if (adjustMethod == bj_CAMERABOUNDS_ADJUST_ADD) then
 		scale = 1
+	elseif (adjustMethod == bj_CAMERABOUNDS_ADJUST_ADD) then
+		scale = -1
+	else
+		return
 	end
 	minX = GetCameraBoundMinX() - scale * dxWest
 	maxX = GetCameraBoundMaxX() + scale * dxEast
@@ -1370,6 +1399,8 @@ end
 function TriggerRegisterPlayerSelectionEventBJ (trig, whichPlayer, selected)
 	if selected then
 		return TriggerRegisterPlayerUnitEvent(trig, whichPlayer, EVENT_PLAYER_UNIT_SELECTED, nil)
+	else
+		return TriggerRegisterPlayerUnitEvent(trig, whichPlayer, EVENT_PLAYER_UNIT_DESELECTED, nil)
 	end
 end
 
@@ -1382,7 +1413,29 @@ function TriggerRegisterPlayerKeyEventBJ (trig, whichPlayer, keType, keKey)
 	if (keType == bj_KEYEVENTTYPE_DEPRESS) then
 		if (keKey == bj_KEYEVENTKEY_LEFT) then
 			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_LEFT_DOWN)
+		elseif (keKey == bj_KEYEVENTKEY_LEFT) then
+			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_RIGHT_DOWN)
+		elseif (keKey == bj_KEYEVENTKEY_LEFT) then
+			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_DOWN_DOWN)
+		elseif (keKey == bj_KEYEVENTKEY_LEFT) then
+			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_UP_DOWN)
+		else
+			return nil
 		end
+	elseif (keType == bj_KEYEVENTTYPE_DEPRESS) then
+		if (keKey == bj_KEYEVENTKEY_LEFT) then
+			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_LEFT_UP)
+		elseif (keKey == bj_KEYEVENTKEY_LEFT) then
+			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_RIGHT_UP)
+		elseif (keKey == bj_KEYEVENTKEY_LEFT) then
+			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_DOWN_UP)
+		elseif (keKey == bj_KEYEVENTKEY_LEFT) then
+			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_UP_UP)
+		else
+			return nil
+		end
+	else
+		return nil
 	end
 end
 
@@ -2036,6 +2089,8 @@ end
 function GetSoundDurationBJ (soundHandle)
 	if (soundHandle == nil) then
 		return bj_NOTHING_SOUND_DURATION
+	else
+		return I2R(GetSoundDuration(soundHandle)) * 0.001
 	end
 end
 
@@ -2065,6 +2120,7 @@ end
 
 function SetCineModeVolumeGroupsBJ ()
 	if bj_gameStarted then
+	else
 	end
 end
 
@@ -2073,6 +2129,7 @@ end
 
 function SetSpeechVolumeGroupsBJ ()
 	if bj_gameStarted then
+	else
 	end
 end
 
@@ -2081,6 +2138,7 @@ end
 
 function VolumeGroupResetBJ ()
 	if bj_gameStarted then
+	else
 	end
 end
 
@@ -2114,6 +2172,7 @@ function SetStackedSoundBJ (add, soundHandle, r)
 	local width = GetRectMaxX(r) - GetRectMinX(r) ---@type number real
 	local height = GetRectMaxY(r) - GetRectMinY(r) ---@type number real
 	if add then
+	else
 	end
 end
 
@@ -2219,6 +2278,8 @@ end
 function SetHeroLevelBJ (whichHero, newLevel, showEyeCandy)
 	local oldLevel = GetHeroLevel(whichHero) ---@type number integer
 	if (newLevel > oldLevel) then
+	elseif (newLevel > oldLevel) then
+	else
 	end
 end
 
@@ -2356,6 +2417,12 @@ end
 function GetHeroStatBJ (whichStat, whichHero, includeBonuses)
 	if (whichStat == bj_HEROSTAT_STR) then
 		return GetHeroStr(whichHero, includeBonuses)
+	elseif (whichStat == bj_HEROSTAT_STR) then
+		return GetHeroAgi(whichHero, includeBonuses)
+	elseif (whichStat == bj_HEROSTAT_STR) then
+		return GetHeroInt(whichHero, includeBonuses)
+	else
+		return 0
 	end
 end
 
@@ -2367,6 +2434,9 @@ function SetHeroStat (whichHero, whichStat, value)
 		return
 	end
 	if (whichStat == bj_HEROSTAT_STR) then
+	elseif (whichStat == bj_HEROSTAT_STR) then
+	elseif (whichStat == bj_HEROSTAT_STR) then
+	else
 	end
 end
 
@@ -2376,6 +2446,9 @@ end
 ---@param value number integer
 function ModifyHeroStat (whichStat, whichHero, modifyMethod, value)
 	if (modifyMethod == bj_MODIFYMETHOD_ADD) then
+	elseif (modifyMethod == bj_MODIFYMETHOD_ADD) then
+	elseif (modifyMethod == bj_MODIFYMETHOD_ADD) then
+	else
 	end
 end
 
@@ -2386,6 +2459,12 @@ end
 function ModifyHeroSkillPoints (whichHero, modifyMethod, value)
 	if (modifyMethod == bj_MODIFYMETHOD_ADD) then
 		return UnitModifySkillPoints(whichHero, value)
+	elseif (modifyMethod == bj_MODIFYMETHOD_ADD) then
+		return UnitModifySkillPoints(whichHero, -value)
+	elseif (modifyMethod == bj_MODIFYMETHOD_ADD) then
+		return UnitModifySkillPoints(whichHero, value - GetHeroSkillPoints(whichHero))
+	else
+		return false
 	end
 end
 
@@ -2470,6 +2549,8 @@ function GetItemOfTypeFromUnitBJ (whichUnit, itemId)
 	local index = GetInventoryIndexOfItemTypeBJ(whichUnit, itemId) ---@type number integer
 	if (index == 0) then
 		return nil
+	else
+		return UnitItemInSlot(whichUnit, index - 1)
 	end
 end
 
@@ -2590,6 +2671,18 @@ end
 function CheckItemStatus (whichItem, status)
 	if (status == bj_ITEM_STATUS_HIDDEN) then
 		return not IsItemVisible(whichItem)
+	elseif (status == bj_ITEM_STATUS_HIDDEN) then
+		return IsItemOwned(whichItem)
+	elseif (status == bj_ITEM_STATUS_HIDDEN) then
+		return IsItemInvulnerable(whichItem)
+	elseif (status == bj_ITEM_STATUS_HIDDEN) then
+		return IsItemPowerup(whichItem)
+	elseif (status == bj_ITEM_STATUS_HIDDEN) then
+		return IsItemSellable(whichItem)
+	elseif (status == bj_ITEM_STATUS_HIDDEN) then
+		return IsItemPawnable(whichItem)
+	else
+		return false
 	end
 end
 
@@ -2599,6 +2692,12 @@ end
 function CheckItemcodeStatus (itemId, status)
 	if (status == bj_ITEMCODE_STATUS_POWERUP) then
 		return IsItemIdPowerup(itemId)
+	elseif (status == bj_ITEMCODE_STATUS_POWERUP) then
+		return IsItemIdSellable(itemId)
+	elseif (status == bj_ITEMCODE_STATUS_POWERUP) then
+		return IsItemIdPawnable(itemId)
+	else
+		return false
 	end
 end
 
@@ -2672,6 +2771,8 @@ end
 function CreateUnitAtLocSaveLast (id, unitid, loc, face)
 	if (unitid == 'ugol') then
 		bj_lastCreatedUnit = CreateBlightedGoldmine(id, GetLocationX(loc), GetLocationY(loc), face)
+	else
+		bj_lastCreatedUnit = CreateUnitAtLoc(id, unitid, loc, face)
 	end
 	return bj_lastCreatedUnit
 end
@@ -2768,6 +2869,8 @@ end
 function CreatePermanentCorpseLocBJ (style, unitid, whichPlayer, loc, facing)
 	bj_lastCreatedUnit = CreateCorpse(whichPlayer, unitid, GetLocationX(loc), GetLocationY(loc), facing)
 	if (style == bj_CORPSETYPE_FLESH) then
+	elseif (style == bj_CORPSETYPE_FLESH) then
+	else
 	end
 	return bj_lastCreatedUnit
 end
@@ -2979,6 +3082,8 @@ end
 function IssueBuildOrderByIdLocBJ (whichPeon, unitId, loc)
 	if (unitId == 'ugol') then
 		return IssueHauntOrderAtLocBJ(whichPeon, loc)
+	else
+		return IssueBuildOrderById(whichPeon, unitId, GetLocationX(loc), GetLocationY(loc))
 	end
 end
 
@@ -3025,6 +3130,8 @@ function SetUnitPropWindowBJ (whichUnit, propWindow)
 	local angle = propWindow ---@type number real
 	if (angle <= 0) then
 		angle = 1
+	elseif (angle <= 0) then
+		angle = 359
 	end
 	angle = angle * bj_DEGTORAD
 end
@@ -3151,6 +3258,10 @@ end
 ---@param whichUnit unit
 function UnitRemoveBuffsBJ (buffType, whichUnit)
 	if (buffType == bj_REMOVEBUFFS_POSITIVE) then
+	elseif (buffType == bj_REMOVEBUFFS_POSITIVE) then
+	elseif (buffType == bj_REMOVEBUFFS_POSITIVE) then
+	elseif (buffType == bj_REMOVEBUFFS_POSITIVE) then
+	else
 	end
 end
 
@@ -3272,6 +3383,8 @@ function ReplaceUnitBJ (whichUnit, newUnitId, unitStateMethod)
 	wasHidden = IsUnitHidden(oldUnit)
 	if (newUnitId == 'ugol') then
 		newUnit = CreateBlightedGoldmine(GetOwningPlayer(oldUnit), GetUnitX(oldUnit), GetUnitY(oldUnit), GetUnitFacing(oldUnit))
+	else
+		newUnit = CreateUnit(GetOwningPlayer(oldUnit), newUnitId, GetUnitX(oldUnit), GetUnitY(oldUnit), GetUnitFacing(oldUnit))
 	end
 	if (unitStateMethod == bj_UNIT_STATE_METHOD_RELATIVE) then
 		if (GetUnitState(oldUnit, UNIT_STATE_MAX_LIFE) > 0) then
@@ -3280,6 +3393,12 @@ function ReplaceUnitBJ (whichUnit, newUnitId, unitStateMethod)
 		if (GetUnitState(oldUnit, UNIT_STATE_MAX_MANA) > 0) and (GetUnitState(newUnit, UNIT_STATE_MAX_MANA) > 0) then
 			oldRatio = GetUnitState(oldUnit, UNIT_STATE_MANA) / GetUnitState(oldUnit, UNIT_STATE_MAX_MANA)
 		end
+	elseif (unitStateMethod == bj_UNIT_STATE_METHOD_RELATIVE) then
+		if (GetUnitState(newUnit, UNIT_STATE_MAX_MANA) > 0) then
+		end
+	elseif (unitStateMethod == bj_UNIT_STATE_METHOD_RELATIVE) then
+	elseif (unitStateMethod == bj_UNIT_STATE_METHOD_RELATIVE) then
+	else
 	end
 	if (IsUnitType(oldUnit, UNIT_TYPE_HERO) and IsUnitType(newUnit, UNIT_TYPE_HERO)) then
 		index = 0
@@ -3292,6 +3411,7 @@ function ReplaceUnitBJ (whichUnit, newUnitId, unitStateMethod)
 		end
 	end
 	if wasHidden then
+	else
 	end
 	bj_lastReplacedUnit = newUnit
 	return newUnit
@@ -3489,6 +3609,13 @@ function ModifyGateBJ (gateOperation, d)
 	if (gateOperation == bj_GATEOPERATION_CLOSE) then
 		if (GetDestructableLife(d) <= 0) then
 		end
+	elseif (gateOperation == bj_GATEOPERATION_CLOSE) then
+		if (GetDestructableLife(d) > 0) then
+		end
+	elseif (gateOperation == bj_GATEOPERATION_CLOSE) then
+		if (GetDestructableLife(d) > 0) then
+		end
+	else
 	end
 end
 
@@ -3512,7 +3639,20 @@ function ChangeElevatorHeight (d, newHeight)
 	oldHeight = GetElevatorHeight(d)
 	if (newHeight == 1) then
 		if (oldHeight == 2) then
+		elseif (oldHeight == 2) then
+		else
 		end
+	elseif (newHeight == 1) then
+		if (oldHeight == 1) then
+		elseif (oldHeight == 1) then
+		else
+		end
+	elseif (newHeight == 1) then
+		if (oldHeight == 1) then
+		elseif (oldHeight == 1) then
+		else
+		end
+	else
 	end
 end
 
@@ -3568,9 +3708,20 @@ function ChangeElevatorWallBlocker (x, y, facing, open)
 	blocker = bj_elevatorWallBlocker
 	if (blocker == nil) then
 		blocker = CreateDeadDestructable(bj_ELEVATOR_BLOCKER_CODE, x, y, facing, 1, 0)
+	elseif (blocker == nil) then
+		return
 	end
 	if (open) then
 		if (GetDestructableLife(blocker) > 0) then
+		end
+	else
+		if (GetDestructableLife(blocker) <= 0) then
+		end
+		if (facing == 0) then
+			r = Rect(x - nudgeWidth / 2, y - nudgeLength / 2, x + nudgeWidth / 2, y + nudgeLength / 2)
+		elseif (facing == 0) then
+			r = Rect(x - nudgeLength / 2, y - nudgeWidth / 2, x + nudgeLength / 2, y + nudgeWidth / 2)
+		else
 		end
 	end
 end
@@ -4125,6 +4276,14 @@ function SetPlayerAllianceStateBJ (sourcePlayer, otherPlayer, allianceState)
 		return
 	end
 	if allianceState == bj_ALLIANCE_UNALLIED then
+	elseif allianceState == bj_ALLIANCE_UNALLIED then
+	elseif allianceState == bj_ALLIANCE_UNALLIED then
+	elseif allianceState == bj_ALLIANCE_UNALLIED then
+	elseif allianceState == bj_ALLIANCE_UNALLIED then
+	elseif allianceState == bj_ALLIANCE_UNALLIED then
+	elseif allianceState == bj_ALLIANCE_UNALLIED then
+	elseif allianceState == bj_ALLIANCE_UNALLIED then
+	else
 	end
 end
 
@@ -4256,6 +4415,8 @@ function MeleeVictoryDialogBJ (whichPlayer, leftGame)
 	local formatString ---@type string
 	if (leftGame) then
 		formatString = GetLocalizedString("PLAYER_LEFT_GAME")
+	else
+		formatString = GetLocalizedString("PLAYER_VICTORIOUS")
 	end
 	t = CreateTrigger()
 end
@@ -4268,6 +4429,8 @@ function MeleeDefeatDialogBJ (whichPlayer, leftGame)
 	local formatString ---@type string
 	if (leftGame) then
 		formatString = GetLocalizedString("PLAYER_LEFT_GAME")
+	else
+		formatString = GetLocalizedString("PLAYER_DEFEATED")
 	end
 	if (not bj_meleeGameOver and IsMapFlagSet(MAP_OBSERVERS_ON_DEATH)) then
 	end
@@ -4282,6 +4445,8 @@ function GameOverDialogBJ (whichPlayer, leftGame)
 	local s ---@type string
 	if (GetIntegerGameState(GAME_STATE_DISCONNECTED) ~= 0) then
 		s = GetLocalizedString("GAMEOVER_DISCONNECTED")
+	else
+		s = GetLocalizedString("GAMEOVER_GAME_OVER")
 	end
 	t = CreateTrigger()
 end
@@ -4293,6 +4458,8 @@ function RemovePlayerPreserveUnitsBJ (whichPlayer, gameResult, leftGame)
 	if AllowVictoryDefeat(gameResult) then
 		if (gameResult == PLAYER_GAME_RESULT_VICTORY) then
 			return
+		elseif (gameResult == PLAYER_GAME_RESULT_VICTORY) then
+		else
 		end
 	end
 end
@@ -4301,6 +4468,7 @@ function CustomVictoryOkBJ ()
 	if bj_isSinglePlayer then
 	end
 	if (bj_changeLevelMapName == nil) then
+	else
 	end
 end
 
@@ -4327,6 +4495,7 @@ function CustomVictorySkipBJ (whichPlayer)
 		if bj_isSinglePlayer then
 		end
 		if (bj_changeLevelMapName == nil) then
+		else
 		end
 	end
 end
@@ -4341,6 +4510,7 @@ function CustomVictoryBJ (whichPlayer, showDialog, showScores)
 		if (GetPlayerController(whichPlayer) == MAP_CONTROL_USER) then
 			bj_changeLevelShowScores = showScores
 			if showDialog then
+			else
 			end
 		end
 	end
@@ -4352,6 +4522,9 @@ end
 function CustomDefeatReduceDifficultyBJ ()
 	local diff = GetGameDifficulty() ---@type gamedifficulty
 	if (diff == MAP_DIFFICULTY_EASY) then
+	elseif (diff == MAP_DIFFICULTY_EASY) then
+	elseif (diff == MAP_DIFFICULTY_EASY) then
+	else
 	end
 end
 
@@ -4397,6 +4570,8 @@ end
 function SetNextLevelBJ (nextLevel)
 	if (nextLevel == "") then
 		bj_changeLevelMapName = nil
+	else
+		bj_changeLevelMapName = nextLevel
 	end
 end
 
@@ -4509,6 +4684,19 @@ end
 function QuestMessageBJ (f, messageType, message)
 	if (IsPlayerInForce(GetLocalPlayer(), f)) then
 		if (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+		else
 		end
 	end
 end
@@ -4538,6 +4726,7 @@ end
 ---@param whichTimer timer
 function PauseTimerBJ (pause, whichTimer)
 	if pause then
+	else
 	end
 end
 
@@ -4741,6 +4930,9 @@ end
 ---@param ascending boolean
 function LeaderboardSortItemsBJ (lb, sortType, ascending)
 	if (sortType == bj_SORTTYPE_SORTBYVALUE) then
+	elseif (sortType == bj_SORTTYPE_SORTBYVALUE) then
+	elseif (sortType == bj_SORTTYPE_SORTBYVALUE) then
+	else
 	end
 end
 
@@ -5161,6 +5353,9 @@ function PingMinimapForForceEx (whichForce, x, y, duration, style, red, green, b
 			red255 = 254
 		end
 		if (style == bj_MINIMAPPINGSTYLE_SIMPLE) then
+		elseif (style == bj_MINIMAPPINGSTYLE_SIMPLE) then
+		elseif (style == bj_MINIMAPPINGSTYLE_SIMPLE) then
+		else
 		end
 	end
 end
@@ -5223,6 +5418,12 @@ function GetTransmissionDuration (soundHandle, timeType, timeVal)
 	local duration ---@type number real
 	if (timeType == bj_TIMETYPE_ADD) then
 		duration = GetSoundDurationBJ(soundHandle) + timeVal
+	elseif (timeType == bj_TIMETYPE_ADD) then
+		duration = timeVal
+	elseif (timeType == bj_TIMETYPE_ADD) then
+		duration = GetSoundDurationBJ(soundHandle) - timeVal
+	else
+		duration = GetSoundDurationBJ(soundHandle)
 	end
 	if (duration < 0) then
 		duration = 0
@@ -5235,6 +5436,10 @@ end
 ---@param timeVal number real
 function WaitTransmissionDuration (soundHandle, timeType, timeVal)
 	if (timeType == bj_TIMETYPE_SET) then
+	elseif (timeType == bj_TIMETYPE_SET) then
+	elseif (timeType == bj_TIMETYPE_SET) then
+	elseif (timeType == bj_TIMETYPE_SET) then
+	else
 	end
 end
 
@@ -5265,6 +5470,9 @@ function TransmissionFromUnitWithNameBJ (toForce, whichUnit, unitName, soundHand
 	bj_lastPlayedSound = soundHandle
 	if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
 		if (whichUnit == nil) then
+		else
+			if (not IsUnitHidden(whichUnit)) then
+			end
 		end
 	end
 	if wait and (bj_lastTransmissionDuration > 0) then
@@ -5316,6 +5524,10 @@ function CinematicModeExBJ (cineMode, forForce, interfaceFadeTime)
 			bj_cineModePriorDawnDusk = IsDawnDuskEnabled()
 			bj_cineModeSavedSeed = GetRandomInt(0, 1000000)
 		end
+		if (IsPlayerInForce(GetLocalPlayer(), forForce)) then
+		end
+	else
+		bj_cineModeAlreadyIn = false
 		if (IsPlayerInForce(GetLocalPlayer(), forForce)) then
 		end
 	end
@@ -5388,6 +5600,11 @@ end
 ---@param trans number real
 function CinematicFadeBJ (fadetype, duration, tex, red, green, blue, trans)
 	if (fadetype == bj_CINEFADETYPE_FADEOUT) then
+	elseif (fadetype == bj_CINEFADETYPE_FADEOUT) then
+	elseif (fadetype == bj_CINEFADETYPE_FADEOUT) then
+		if (duration > 0) then
+		end
+	else
 	end
 end
 
@@ -5417,6 +5634,7 @@ end
 function TriggerActionUnitRescuedBJ ()
 	local theUnit = GetTriggerUnit() ---@type unit
 	if IsUnitType(theUnit, UNIT_TYPE_STRUCTURE) then
+	else
 	end
 end
 
@@ -5505,6 +5723,15 @@ end
 ---@param campaignNumber number integer
 function SetCampaignMenuRaceBJ (campaignNumber)
 	if (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+	else
 	end
 end
 
@@ -5523,6 +5750,14 @@ function SetCampaignAvailableBJ (available, campaignNumber)
 	end
 	if (campaignNumber == bj_CAMPAIGN_INDEX_XN) then
 		campaignOffset = bj_CAMPAIGN_OFFSET_XN
+	elseif (campaignNumber == bj_CAMPAIGN_INDEX_XN) then
+		campaignOffset = bj_CAMPAIGN_OFFSET_XH
+	elseif (campaignNumber == bj_CAMPAIGN_INDEX_XN) then
+		campaignOffset = bj_CAMPAIGN_OFFSET_XU
+	elseif (campaignNumber == bj_CAMPAIGN_INDEX_XN) then
+		campaignOffset = bj_CAMPAIGN_OFFSET_XO
+	else
+		campaignOffset = campaignNumber
 	end
 end
 
@@ -5530,6 +5765,17 @@ end
 ---@param cinematicIndex number integer
 function SetCinematicAvailableBJ (available, cinematicIndex)
 	if (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+	else
 	end
 end
 
@@ -6015,6 +6261,8 @@ function GetStoredStringBJ (key, missionKey, cache)
 	s = GetStoredString(cache, missionKey, key)
 	if (s == nil) then
 		return ""
+	else
+		return s
 	end
 end
 
@@ -6051,6 +6299,8 @@ function LoadStringBJ (key, missionKey, table)
 	s = LoadStr(table, missionKey, key)
 	if (s == nil) then
 		return ""
+	else
+		return s
 	end
 end
 
@@ -6412,6 +6662,16 @@ end
 function HaveStoredValue (key, valueType, missionKey, cache)
 	if (valueType == bj_GAMECACHE_BOOLEAN) then
 		return HaveStoredBoolean(cache, missionKey, key)
+	elseif (valueType == bj_GAMECACHE_BOOLEAN) then
+		return HaveStoredInteger(cache, missionKey, key)
+	elseif (valueType == bj_GAMECACHE_BOOLEAN) then
+		return HaveStoredReal(cache, missionKey, key)
+	elseif (valueType == bj_GAMECACHE_BOOLEAN) then
+		return HaveStoredUnit(cache, missionKey, key)
+	elseif (valueType == bj_GAMECACHE_BOOLEAN) then
+		return HaveStoredString(cache, missionKey, key)
+	else
+		return false
 	end
 end
 
@@ -6423,6 +6683,16 @@ end
 function HaveSavedValue (key, valueType, missionKey, table)
 	if (valueType == bj_HASHTABLE_BOOLEAN) then
 		return HaveSavedBoolean(table, missionKey, key)
+	elseif (valueType == bj_HASHTABLE_BOOLEAN) then
+		return HaveSavedInteger(table, missionKey, key)
+	elseif (valueType == bj_HASHTABLE_BOOLEAN) then
+		return HaveSavedReal(table, missionKey, key)
+	elseif (valueType == bj_HASHTABLE_BOOLEAN) then
+		return HaveSavedString(table, missionKey, key)
+	elseif (valueType == bj_HASHTABLE_BOOLEAN) then
+		return HaveSavedHandle(table, missionKey, key)
+	else
+		return false
 	end
 end
 
@@ -6535,6 +6805,7 @@ end
 function AdjustPlayerStateBJ (delta, whichPlayer, whichPlayerState)
 	if (delta > 0) then
 		if (whichPlayerState == PLAYER_STATE_RESOURCE_GOLD) then
+		elseif (whichPlayerState == PLAYER_STATE_RESOURCE_GOLD) then
 		end
 	end
 end
@@ -6659,6 +6930,7 @@ end
 ---@param whichPlayer player
 function SetPlayerUnitAvailableBJ (unitId, allowed, whichPlayer)
 	if allowed then
+	else
 	end
 end
 
@@ -6802,6 +7074,9 @@ function MeleeStartingResources ()
 	if (v == VERSION_REIGN_OF_CHAOS) then
 		startingGold = bj_MELEE_STARTING_GOLD_V0
 		startingLumber = bj_MELEE_STARTING_LUMBER_V0
+	else
+		startingGold = bj_MELEE_STARTING_GOLD_V1
+		startingLumber = bj_MELEE_STARTING_LUMBER_V1
 	end
 	index = 0
 	while(true) do
@@ -6873,6 +7148,9 @@ function MeleeClearExcessUnit ()
 	local theUnit = GetEnumUnit() ---@type unit
 	local owner = GetPlayerId(GetOwningPlayer(theUnit)) ---@type number integer
 	if (owner == PLAYER_NEUTRAL_AGGRESSIVE) then
+	elseif (owner == PLAYER_NEUTRAL_AGGRESSIVE) then
+		if not IsUnitType(theUnit, UNIT_TYPE_STRUCTURE) then
+		end
 	end
 end
 
@@ -6942,8 +7220,18 @@ function MeleeRandomHeroLoc (p, id1, id2, id3, id4, loc)
 	v = VersionGet()
 	if (v == VERSION_REIGN_OF_CHAOS) then
 		roll = GetRandomInt(1, 3)
+	else
+		roll = GetRandomInt(1, 4)
 	end
 	if roll == 1 then
+		pick = id1
+	elseif roll == 1 then
+		pick = id2
+	elseif roll == 1 then
+		pick = id3
+	elseif roll == 1 then
+		pick = id4
+	else
 		pick = id1
 	end
 	hero = CreateUnitAtLoc(p, pick, loc, bj_UNIT_FACING)
@@ -6971,6 +7259,10 @@ end
 function MeleeGetNearestValueWithin (val, minVal, maxVal)
 	if (val < minVal) then
 		return minVal
+	elseif (val < minVal) then
+		return maxVal
+	else
+		return val
 	end
 end
 
@@ -7006,11 +7298,17 @@ function MeleeStartingUnitsHuman (whichPlayer, startLoc, doHeroes, doCamera, doP
 		peonX = GetLocationX(nearMineLoc)
 		peonY = GetLocationY(nearMineLoc)
 		heroLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 384, 45)
+	else
+		townHall = CreateUnitAtLoc(whichPlayer, 'htow', startLoc, bj_UNIT_FACING)
+		peonX = GetLocationX(startLoc)
+		peonY = GetLocationY(startLoc) - 224.00
+		heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
 	end
 	if (townHall ~= nil) then
 	end
 	if (doHeroes) then
 		if useRandomHero then
+		else
 		end
 	end
 	if (doCamera) then
@@ -7038,9 +7336,14 @@ function MeleeStartingUnitsOrc (whichPlayer, startLoc, doHeroes, doCamera, doPre
 		peonX = GetLocationX(nearMineLoc)
 		peonY = GetLocationY(nearMineLoc)
 		heroLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 384, 45)
+	else
+		peonX = GetLocationX(startLoc)
+		peonY = GetLocationY(startLoc) - 224.00
+		heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
 	end
 	if (doHeroes) then
 		if useRandomHero then
+		else
 		end
 	end
 	if (doCamera) then
@@ -7076,9 +7379,14 @@ function MeleeStartingUnitsUndead (whichPlayer, startLoc, doHeroes, doCamera, do
 		peonX = GetLocationX(nearMineLoc)
 		peonY = GetLocationY(nearMineLoc)
 		heroLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 384, 45)
+	else
+		peonX = GetLocationX(startLoc)
+		peonY = GetLocationY(startLoc) - 224.00
+		heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
 	end
 	if (doHeroes) then
 		if useRandomHero then
+		else
 		end
 	end
 	if (doCamera) then
@@ -7114,9 +7422,14 @@ function MeleeStartingUnitsNightElf (whichPlayer, startLoc, doHeroes, doCamera, 
 		peonX = GetLocationX(wispLoc)
 		peonY = GetLocationY(wispLoc)
 		heroLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 384, 45)
+	else
+		peonX = GetLocationX(startLoc)
+		peonY = GetLocationY(startLoc) - 224.00
+		heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
 	end
 	if (doHeroes) then
 		if useRandomHero then
+		else
 		end
 	end
 	if (doCamera) then
@@ -7155,6 +7468,10 @@ function MeleeStartingUnits ()
 			indexStartLoc = GetStartLocationLoc(GetPlayerStartLocation(indexPlayer))
 			indexRace = GetPlayerRace(indexPlayer)
 			if (indexRace == RACE_HUMAN) then
+			elseif (indexRace == RACE_HUMAN) then
+			elseif (indexRace == RACE_HUMAN) then
+			elseif (indexRace == RACE_HUMAN) then
+			else
 			end
 		end
 		index = index + 1
@@ -7168,6 +7485,10 @@ end
 ---@param doHeroes boolean
 function MeleeStartingUnitsForPlayer (whichRace, whichPlayer, loc, doHeroes)
 	if (whichRace == RACE_HUMAN) then
+	elseif (whichRace == RACE_HUMAN) then
+	elseif (whichRace == RACE_HUMAN) then
+	elseif (whichRace == RACE_HUMAN) then
+	else
 	end
 end
 
@@ -7182,8 +7503,14 @@ function PickMeleeAI (num, s1, s2, s3)
 	end
 	if s2 == nil then
 		pick = 1
+	elseif s2 == nil then
+		pick = GetRandomInt(1, 2)
+	else
+		pick = GetRandomInt(1, 3)
 	end
 	if pick == 1 then
+	elseif pick == 1 then
+	else
 	end
 end
 
@@ -7198,6 +7525,10 @@ function MeleeStartingAI ()
 			indexRace = GetPlayerRace(indexPlayer)
 			if (GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER) then
 				if (indexRace == RACE_HUMAN) then
+				elseif (indexRace == RACE_HUMAN) then
+				elseif (indexRace == RACE_HUMAN) then
+				elseif (indexRace == RACE_HUMAN) then
+				else
 				end
 			end
 		end
@@ -7321,6 +7652,8 @@ end
 ---@param whichPlayer player
 function MeleeDoLeave (whichPlayer)
 	if (GetIntegerGameState(GAME_STATE_DISCONNECTED) ~= 0) then
+	else
+		bj_meleeDefeated[GetPlayerId(whichPlayer)] = true
 	end
 end
 
@@ -7398,6 +7731,14 @@ function MeleeGetCrippledWarningMessage (whichPlayer)
 	local r = GetPlayerRace(whichPlayer) ---@type race
 	if (r == RACE_HUMAN) then
 		return GetLocalizedString("CRIPPLE_WARNING_HUMAN")
+	elseif (r == RACE_HUMAN) then
+		return GetLocalizedString("CRIPPLE_WARNING_ORC")
+	elseif (r == RACE_HUMAN) then
+		return GetLocalizedString("CRIPPLE_WARNING_NIGHTELF")
+	elseif (r == RACE_HUMAN) then
+		return GetLocalizedString("CRIPPLE_WARNING_UNDEAD")
+	else
+		return ""
 	end
 end
 
@@ -7407,6 +7748,14 @@ function MeleeGetCrippledTimerMessage (whichPlayer)
 	local r = GetPlayerRace(whichPlayer) ---@type race
 	if (r == RACE_HUMAN) then
 		return GetLocalizedString("CRIPPLE_TIMER_HUMAN")
+	elseif (r == RACE_HUMAN) then
+		return GetLocalizedString("CRIPPLE_TIMER_ORC")
+	elseif (r == RACE_HUMAN) then
+		return GetLocalizedString("CRIPPLE_TIMER_NIGHTELF")
+	elseif (r == RACE_HUMAN) then
+		return GetLocalizedString("CRIPPLE_TIMER_UNDEAD")
+	else
+		return ""
 	end
 end
 
@@ -7502,6 +7851,15 @@ function MeleeCheckForCrippledPlayers ()
 			bj_playerIsCrippled[playerIndex] = true
 			if (GetLocalPlayer() == indexPlayer) then
 			end
+		elseif (not bj_playerIsCrippled[playerIndex] and isNowCrippled) then
+			bj_playerIsCrippled[playerIndex] = false
+			if (GetLocalPlayer() == indexPlayer) then
+				if (MeleeGetAllyStructureCount(indexPlayer) > 0) then
+					if (bj_playerIsExposed[playerIndex]) then
+					else
+					end
+				end
+			end
 		end
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
@@ -7538,6 +7896,9 @@ function MeleeTriggerActionPlayerDefeated ()
 	if (MeleeGetAllyCount(thePlayer) > 0) then
 		if (not bj_meleeDefeated[GetPlayerId(thePlayer)]) then
 		end
+	else
+		if (not bj_meleeDefeated[GetPlayerId(thePlayer)]) then
+		end
 	end
 end
 
@@ -7547,6 +7908,7 @@ function MeleeTriggerActionPlayerLeft ()
 		return
 	end
 	if (MeleeGetAllyCount(thePlayer) > 0) then
+	else
 	end
 end
 
@@ -7605,6 +7967,8 @@ function MeleeTournamentFinishNowRuleA (multiplier)
 			if playerScore[index] <= 0 then
 				playerScore[index] = 1
 			end
+		else
+			playerScore[index] = 0
 		end
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
@@ -7663,6 +8027,14 @@ function MeleeTournamentFinishNowRuleA (multiplier)
 				index = index + 1
 				if (index == teamCount) then break end
 			end
+		else
+			index = 0
+			while(true) do
+				if index ~= bestTeam then
+				end
+				index = index + 1
+				if (index == teamCount) then break end
+			end
 		end
 	end
 end
@@ -7673,6 +8045,7 @@ function MeleeTriggerTournamentFinishNow ()
 		return
 	end
 	if (rule == 1) then
+	else
 	end
 end
 
@@ -7699,6 +8072,12 @@ function MeleeInitVictoryDefeat ()
 			trig = CreateTrigger()
 			trig = CreateTrigger()
 			trig = CreateTrigger()
+		else
+			bj_meleeDefeated[index] = true
+			bj_meleeVictoried[index] = false
+			if (IsPlayerObserver(indexPlayer)) then
+				trig = CreateTrigger()
+			end
 		end
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
@@ -7759,6 +8138,13 @@ end
 function InitGenericPlayerSlots ()
 	local gType = GetGameTypeSelected() ---@type gametype
 	if (gType == GAME_TYPE_MELEE) then
+	elseif (gType == GAME_TYPE_MELEE) then
+	elseif (gType == GAME_TYPE_MELEE) then
+	elseif (gType == GAME_TYPE_MELEE) then
+	elseif (gType == GAME_TYPE_MELEE) then
+	elseif (gType == GAME_TYPE_MELEE) then
+	elseif (gType == GAME_TYPE_MELEE) then
+	else
 	end
 end
 
@@ -7848,6 +8234,8 @@ function InitBlizzardGlobals ()
 	v = VersionGet()
 	if (v == VERSION_REIGN_OF_CHAOS) then
 		bj_MELEE_MAX_TWINKED_HEROES = bj_MELEE_MAX_TWINKED_HEROES_V0
+	else
+		bj_MELEE_MAX_TWINKED_HEROES = bj_MELEE_MAX_TWINKED_HEROES_V1
 	end
 end
 
@@ -7879,6 +8267,11 @@ function UpdateStockAvailability (whichItem)
 	local iLevel = GetItemLevel(whichItem) ---@type number integer
 	if (iType == ITEM_TYPE_PERMANENT) then
 		bj_stockAllowedPermanent[iLevel] = true
+	elseif (iType == ITEM_TYPE_PERMANENT) then
+		bj_stockAllowedCharged[iLevel] = true
+	elseif (iType == ITEM_TYPE_PERMANENT) then
+		bj_stockAllowedArtifact[iLevel] = true
+	else
 	end
 end
 
