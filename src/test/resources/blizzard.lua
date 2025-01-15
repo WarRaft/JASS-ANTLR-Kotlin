@@ -294,9 +294,9 @@ bj_MINIMAPPINGSTYLE_ATTACK = 2 ---@type number integer constant
 bj_CORPSE_MAX_DEATH_TIME = 8.00 ---@type number real constant
 bj_CORPSETYPE_FLESH = 0 ---@type number integer constant
 bj_CORPSETYPE_BONE = 1 ---@type number integer constant
-bj_ELEVATOR_BLOCKER_CODE = 'DTep' ---@type number integer constant
-bj_ELEVATOR_CODE01 = 'DTrf' ---@type number integer constant
-bj_ELEVATOR_CODE02 = 'DTrx' ---@type number integer constant
+bj_ELEVATOR_BLOCKER_CODE = FourCC('DTep') ---@type number integer constant
+bj_ELEVATOR_CODE01 = FourCC('DTrf') ---@type number integer constant
+bj_ELEVATOR_CODE02 = FourCC('DTrx') ---@type number integer constant
 bj_ELEVATOR_WALL_TYPE_ALL = 0 ---@type number integer constant
 bj_ELEVATOR_WALL_TYPE_EAST = 1 ---@type number integer constant
 bj_ELEVATOR_WALL_TYPE_NORTH = 2 ---@type number integer constant
@@ -2952,7 +2952,7 @@ end
 ---@param face number real
 ---@return unit
 function CreateUnitAtLocSaveLast (id, unitid, loc, face)
-	if (unitid == 'ugol') then
+	if (unitid == FourCC('ugol')) then
 		bj_lastCreatedUnit = CreateBlightedGoldmine(id, GetLocationX(loc), GetLocationY(loc), face)
 	else
 		bj_lastCreatedUnit = CreateUnitAtLoc(id, unitid, loc, face)
@@ -3297,7 +3297,7 @@ end
 
 ---@return boolean
 function IssueHauntOrderAtLocBJFilter ()
-	return GetUnitTypeId(GetFilterUnit()) == 'ngol'
+	return GetUnitTypeId(GetFilterUnit()) == FourCC('ngol')
 end
 
 ---@param whichPeon unit
@@ -3313,7 +3313,7 @@ function IssueHauntOrderAtLocBJ (whichPeon, loc)
 	if (goldMine == nil) then
 		return false
 	end
-	return IssueTargetOrderById(whichPeon, 'ugol', goldMine)
+	return IssueTargetOrderById(whichPeon, FourCC('ugol'), goldMine)
 end
 
 ---@param whichPeon unit
@@ -3321,7 +3321,7 @@ end
 ---@param loc location
 ---@return boolean
 function IssueBuildOrderByIdLocBJ (whichPeon, unitId, loc)
-	if (unitId == 'ugol') then
+	if (unitId == FourCC('ugol')) then
 		return IssueHauntOrderAtLocBJ(whichPeon, loc)
 	else
 		return IssueBuildOrderById(whichPeon, unitId, GetLocationX(loc), GetLocationY(loc))
@@ -3654,7 +3654,7 @@ function ReplaceUnitBJ (whichUnit, newUnitId, unitStateMethod)
 	end
 	wasHidden = IsUnitHidden(oldUnit)
 	ShowUnit(oldUnit, false)
-	if (newUnitId == 'ugol') then
+	if (newUnitId == FourCC('ugol')) then
 		newUnit = CreateBlightedGoldmine(GetOwningPlayer(oldUnit), GetUnitX(oldUnit), GetUnitY(oldUnit), GetUnitFacing(oldUnit))
 	else
 		newUnit = CreateUnit(GetOwningPlayer(oldUnit), newUnitId, GetUnitX(oldUnit), GetUnitY(oldUnit), GetUnitFacing(oldUnit))
@@ -6511,7 +6511,7 @@ end
 ---@param maximum number integer
 ---@param whichPlayer player
 function SetPlayerMaxHeroesAllowed (maximum, whichPlayer)
-	SetPlayerTechMaxAllowed(whichPlayer, 'HERO', maximum)
+	SetPlayerTechMaxAllowed(whichPlayer, FourCC('HERO'), maximum)
 end
 
 ---@param techid number integer
@@ -7757,7 +7757,7 @@ function BlightGoldMineForPlayerBJ (goldMine, whichPlayer)
 	local mineY ---@type number real
 	local mineGold ---@type number integer
 	local newMine ---@type unit
-	if GetUnitTypeId(goldMine) ~= 'ngol' then
+	if GetUnitTypeId(goldMine) ~= FourCC('ngol') then
 		return nil
 	end
 	mineX = GetUnitX(goldMine)
@@ -7997,30 +7997,30 @@ function MeleeStartingHeroLimit ()
 	index = 0
 	while(true) do
 		SetPlayerMaxHeroesAllowed(bj_MELEE_HERO_LIMIT, Player(index))
-		ReducePlayerTechMaxAllowed(Player(index), 'Hamg', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Hmkg', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Hpal', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Hblm', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Obla', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Ofar', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Otch', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Oshd', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Edem', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Ekee', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Emoo', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Ewar', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Udea', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Udre', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Ulic', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Ucrl', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Npbm', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Nbrn', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Nngs', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Nplh', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Nbst', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Nalc', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Ntin', bj_MELEE_HERO_TYPE_LIMIT)
-		ReducePlayerTechMaxAllowed(Player(index), 'Nfir', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Hamg'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Hmkg'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Hpal'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Hblm'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Obla'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Ofar'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Otch'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Oshd'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Edem'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Ekee'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Emoo'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Ewar'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Udea'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Udre'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Ulic'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Ucrl'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Npbm'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Nbrn'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Nngs'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Nplh'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Nbst'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Nalc'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Ntin'), bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), FourCC('Nfir'), bj_MELEE_HERO_TYPE_LIMIT)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
 	end
@@ -8035,7 +8035,7 @@ end
 function MeleeGrantItemsToHero (whichUnit)
 	local owner = GetPlayerId(GetOwningPlayer(whichUnit)) ---@type number integer
 	if (bj_meleeTwinkedHeroes[owner] < bj_MELEE_MAX_TWINKED_HEROES) then
-		UnitAddItemById(whichUnit, 'stwp')
+		UnitAddItemById(whichUnit, FourCC('stwp'))
 		bj_meleeTwinkedHeroes[owner] = bj_meleeTwinkedHeroes[owner] + 1
 	end
 end
@@ -8116,7 +8116,7 @@ function MeleeEnumFindNearestMine ()
 	local enumUnit = GetEnumUnit() ---@type unit
 	local dist ---@type number real
 	local unitLoc ---@type location
-	if (GetUnitTypeId(enumUnit) == 'ngol') then
+	if (GetUnitTypeId(enumUnit) == FourCC('ngol')) then
 		unitLoc = GetUnitLoc(enumUnit)
 		dist = DistanceBetweenPoints(unitLoc, bj_meleeNearestMineToLoc)
 		RemoveLocation(unitLoc)
@@ -8232,34 +8232,34 @@ function MeleeStartingUnitsHuman (whichPlayer, startLoc, doHeroes, doCamera, doP
 	end
 	nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
 	if (nearestMine ~= nil) then
-		townHall = CreateUnitAtLoc(whichPlayer, 'htow', startLoc, bj_UNIT_FACING)
+		townHall = CreateUnitAtLoc(whichPlayer, FourCC('htow'), startLoc, bj_UNIT_FACING)
 		nearMineLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 320, 0)
 		peonX = GetLocationX(nearMineLoc)
 		peonY = GetLocationY(nearMineLoc)
-		CreateUnit(whichPlayer, 'hpea', peonX + 0.00 * unitSpacing, peonY + 1.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'hpea', peonX + 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'hpea', peonX - 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'hpea', peonX + 0.60 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'hpea', peonX - 0.60 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('hpea'), peonX + 0.00 * unitSpacing, peonY + 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('hpea'), peonX + 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('hpea'), peonX - 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('hpea'), peonX + 0.60 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('hpea'), peonX - 0.60 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
 		heroLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 384, 45)
 	else
-		townHall = CreateUnitAtLoc(whichPlayer, 'htow', startLoc, bj_UNIT_FACING)
+		townHall = CreateUnitAtLoc(whichPlayer, FourCC('htow'), startLoc, bj_UNIT_FACING)
 		peonX = GetLocationX(startLoc)
 		peonY = GetLocationY(startLoc) - 224.00
-		CreateUnit(whichPlayer, 'hpea', peonX + 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'hpea', peonX + 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'hpea', peonX + 0.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'hpea', peonX - 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'hpea', peonX - 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('hpea'), peonX + 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('hpea'), peonX + 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('hpea'), peonX + 0.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('hpea'), peonX - 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('hpea'), peonX - 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
 		heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
 	end
 	if (townHall ~= nil) then
-		UnitAddAbilityBJ('Amic', townHall)
-		UnitMakeAbilityPermanentBJ(true, 'Amic', townHall)
+		UnitAddAbilityBJ(FourCC('Amic'), townHall)
+		UnitMakeAbilityPermanentBJ(true, FourCC('Amic'), townHall)
 	end
 	if (doHeroes) then
 		if useRandomHero then
-			MeleeRandomHeroLoc(whichPlayer, 'Hamg', 'Hmkg', 'Hpal', 'Hblm', heroLoc)
+			MeleeRandomHeroLoc(whichPlayer, FourCC('Hamg'), FourCC('Hmkg'), FourCC('Hpal'), FourCC('Hblm'), heroLoc)
 		else
 			SetPlayerState(whichPlayer, PLAYER_STATE_RESOURCE_HERO_TOKENS, bj_MELEE_STARTING_HERO_TOKENS)
 		end
@@ -8288,30 +8288,30 @@ function MeleeStartingUnitsOrc (whichPlayer, startLoc, doHeroes, doCamera, doPre
 	end
 	nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
 	if (nearestMine ~= nil) then
-		CreateUnitAtLoc(whichPlayer, 'ogre', startLoc, bj_UNIT_FACING)
+		CreateUnitAtLoc(whichPlayer, FourCC('ogre'), startLoc, bj_UNIT_FACING)
 		nearMineLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 320, 0)
 		peonX = GetLocationX(nearMineLoc)
 		peonY = GetLocationY(nearMineLoc)
-		CreateUnit(whichPlayer, 'opeo', peonX + 0.00 * unitSpacing, peonY + 1.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'opeo', peonX + 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'opeo', peonX - 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'opeo', peonX + 0.60 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'opeo', peonX - 0.60 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('opeo'), peonX + 0.00 * unitSpacing, peonY + 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('opeo'), peonX + 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('opeo'), peonX - 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('opeo'), peonX + 0.60 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('opeo'), peonX - 0.60 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
 		heroLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 384, 45)
 	else
-		CreateUnitAtLoc(whichPlayer, 'ogre', startLoc, bj_UNIT_FACING)
+		CreateUnitAtLoc(whichPlayer, FourCC('ogre'), startLoc, bj_UNIT_FACING)
 		peonX = GetLocationX(startLoc)
 		peonY = GetLocationY(startLoc) - 224.00
-		CreateUnit(whichPlayer, 'opeo', peonX + 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'opeo', peonX + 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'opeo', peonX + 0.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'opeo', peonX - 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'opeo', peonX - 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('opeo'), peonX + 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('opeo'), peonX + 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('opeo'), peonX + 0.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('opeo'), peonX - 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('opeo'), peonX - 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
 		heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
 	end
 	if (doHeroes) then
 		if useRandomHero then
-			MeleeRandomHeroLoc(whichPlayer, 'Obla', 'Ofar', 'Otch', 'Oshd', heroLoc)
+			MeleeRandomHeroLoc(whichPlayer, FourCC('Obla'), FourCC('Ofar'), FourCC('Otch'), FourCC('Oshd'), heroLoc)
 		else
 			SetPlayerState(whichPlayer, PLAYER_STATE_RESOURCE_HERO_TOKENS, bj_MELEE_STARTING_HERO_TOKENS)
 		end
@@ -8343,34 +8343,34 @@ function MeleeStartingUnitsUndead (whichPlayer, startLoc, doHeroes, doCamera, do
 	end
 	nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
 	if (nearestMine ~= nil) then
-		CreateUnitAtLoc(whichPlayer, 'unpl', startLoc, bj_UNIT_FACING)
+		CreateUnitAtLoc(whichPlayer, FourCC('unpl'), startLoc, bj_UNIT_FACING)
 		nearestMine = BlightGoldMineForPlayerBJ(nearestMine, whichPlayer)
 		nearTownLoc = MeleeGetProjectedLoc(startLoc, GetUnitLoc(nearestMine), 288, 0)
 		ghoulX = GetLocationX(nearTownLoc)
 		ghoulY = GetLocationY(nearTownLoc)
-		bj_ghoul[GetPlayerId(whichPlayer)] = CreateUnit(whichPlayer, 'ugho', ghoulX + 0.00 * unitSpacing, ghoulY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		bj_ghoul[GetPlayerId(whichPlayer)] = CreateUnit(whichPlayer, FourCC('ugho'), ghoulX + 0.00 * unitSpacing, ghoulY + 0.00 * unitSpacing, bj_UNIT_FACING)
 		nearMineLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 320, 0)
 		peonX = GetLocationX(nearMineLoc)
 		peonY = GetLocationY(nearMineLoc)
-		CreateUnit(whichPlayer, 'uaco', peonX + 0.00 * unitSpacing, peonY + 0.50 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'uaco', peonX + 0.65 * unitSpacing, peonY - 0.50 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'uaco', peonX - 0.65 * unitSpacing, peonY - 0.50 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('uaco'), peonX + 0.00 * unitSpacing, peonY + 0.50 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('uaco'), peonX + 0.65 * unitSpacing, peonY - 0.50 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('uaco'), peonX - 0.65 * unitSpacing, peonY - 0.50 * unitSpacing, bj_UNIT_FACING)
 		SetBlightLoc(whichPlayer, nearMineLoc, 768, true)
 		heroLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 384, 45)
 	else
-		CreateUnitAtLoc(whichPlayer, 'unpl', startLoc, bj_UNIT_FACING)
+		CreateUnitAtLoc(whichPlayer, FourCC('unpl'), startLoc, bj_UNIT_FACING)
 		peonX = GetLocationX(startLoc)
 		peonY = GetLocationY(startLoc) - 224.00
-		CreateUnit(whichPlayer, 'uaco', peonX - 1.50 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'uaco', peonX - 0.50 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'uaco', peonX + 0.50 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'ugho', peonX + 1.50 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('uaco'), peonX - 1.50 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('uaco'), peonX - 0.50 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('uaco'), peonX + 0.50 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('ugho'), peonX + 1.50 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
 		SetBlightLoc(whichPlayer, startLoc, 768, true)
 		heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
 	end
 	if (doHeroes) then
 		if useRandomHero then
-			MeleeRandomHeroLoc(whichPlayer, 'Udea', 'Udre', 'Ulic', 'Ucrl', heroLoc)
+			MeleeRandomHeroLoc(whichPlayer, FourCC('Udea'), FourCC('Udre'), FourCC('Ulic'), FourCC('Ucrl'), heroLoc)
 		else
 			SetPlayerState(whichPlayer, PLAYER_STATE_RESOURCE_HERO_TOKENS, bj_MELEE_STARTING_HERO_TOKENS)
 		end
@@ -8405,32 +8405,32 @@ function MeleeStartingUnitsNightElf (whichPlayer, startLoc, doHeroes, doCamera, 
 	if (nearestMine ~= nil) then
 		nearMineLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 650, 0)
 		nearMineLoc = MeleeGetLocWithinRect(nearMineLoc, GetRectFromCircleBJ(GetUnitLoc(nearestMine), minTreeDist))
-		tree = CreateUnitAtLoc(whichPlayer, 'etol', nearMineLoc, bj_UNIT_FACING)
+		tree = CreateUnitAtLoc(whichPlayer, FourCC('etol'), nearMineLoc, bj_UNIT_FACING)
 		IssueTargetOrder(tree, "entangleinstant", nearestMine)
 		wispLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 320, 0)
 		wispLoc = MeleeGetLocWithinRect(wispLoc, GetRectFromCircleBJ(GetUnitLoc(nearestMine), minWispDist))
 		peonX = GetLocationX(wispLoc)
 		peonY = GetLocationY(wispLoc)
-		CreateUnit(whichPlayer, 'ewsp', peonX + 0.00 * unitSpacing, peonY + 1.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'ewsp', peonX + 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'ewsp', peonX - 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'ewsp', peonX + 0.58 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'ewsp', peonX - 0.58 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('ewsp'), peonX + 0.00 * unitSpacing, peonY + 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('ewsp'), peonX + 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('ewsp'), peonX - 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('ewsp'), peonX + 0.58 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('ewsp'), peonX - 0.58 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
 		heroLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 384, 45)
 	else
-		CreateUnitAtLoc(whichPlayer, 'etol', startLoc, bj_UNIT_FACING)
+		CreateUnitAtLoc(whichPlayer, FourCC('etol'), startLoc, bj_UNIT_FACING)
 		peonX = GetLocationX(startLoc)
 		peonY = GetLocationY(startLoc) - 224.00
-		CreateUnit(whichPlayer, 'ewsp', peonX - 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'ewsp', peonX - 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'ewsp', peonX + 0.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'ewsp', peonX + 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
-		CreateUnit(whichPlayer, 'ewsp', peonX + 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('ewsp'), peonX - 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('ewsp'), peonX - 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('ewsp'), peonX + 0.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('ewsp'), peonX + 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, FourCC('ewsp'), peonX + 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
 		heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
 	end
 	if (doHeroes) then
 		if useRandomHero then
-			MeleeRandomHeroLoc(whichPlayer, 'Edem', 'Ekee', 'Emoo', 'Ewar', heroLoc)
+			MeleeRandomHeroLoc(whichPlayer, FourCC('Edem'), FourCC('Ekee'), FourCC('Emoo'), FourCC('Ewar'), heroLoc)
 		else
 			SetPlayerState(whichPlayer, PLAYER_STATE_RESOURCE_HERO_TOKENS, bj_MELEE_STARTING_HERO_TOKENS)
 		end
@@ -8452,7 +8452,7 @@ function MeleeStartingUnitsUnknownRace (whichPlayer, startLoc, doHeroes, doCamer
 	end
 	index = 0
 	while(true) do
-		CreateUnit(whichPlayer, 'nshe', GetLocationX(startLoc) + GetRandomReal(-256, 256), GetLocationY(startLoc) + GetRandomReal(-256, 256), GetRandomReal(0, 360))
+		CreateUnit(whichPlayer, FourCC('nshe'), GetLocationX(startLoc) + GetRandomReal(-256, 256), GetLocationY(startLoc) + GetRandomReal(-256, 256), GetRandomReal(0, 360))
 		index = index + 1
 		if (index == 12) then break end
 	end
@@ -9408,13 +9408,13 @@ function InitSummonableCaps ()
 	local index ---@type number integer
 	index = 0
 	while(true) do
-		if (not GetPlayerTechResearched(Player(index), 'Rhrt', true)) then
-			SetPlayerTechMaxAllowed(Player(index), 'hrtt', 0)
+		if (not GetPlayerTechResearched(Player(index), FourCC('Rhrt'), true)) then
+			SetPlayerTechMaxAllowed(Player(index), FourCC('hrtt'), 0)
 		end
-		if (not GetPlayerTechResearched(Player(index), 'Robk', true)) then
-			SetPlayerTechMaxAllowed(Player(index), 'otbk', 0)
+		if (not GetPlayerTechResearched(Player(index), FourCC('Robk'), true)) then
+			SetPlayerTechMaxAllowed(Player(index), FourCC('otbk'), 0)
 		end
-		SetPlayerTechMaxAllowed(Player(index), 'uske', bj_MAX_SKELETONS)
+		SetPlayerTechMaxAllowed(Player(index), FourCC('uske'), bj_MAX_SKELETONS)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
 	end

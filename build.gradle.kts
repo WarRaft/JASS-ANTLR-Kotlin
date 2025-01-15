@@ -39,6 +39,6 @@ tasks.jar {
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
-    archiveBaseName.set("Anal")
-    archiveVersion.set("Cunt")
+    archiveBaseName.set("ANTLR")
+    archiveVersion.set("0.0.1")
 }

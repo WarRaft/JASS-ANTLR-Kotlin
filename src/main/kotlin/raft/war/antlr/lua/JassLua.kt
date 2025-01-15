@@ -56,7 +56,18 @@ class JassLua(val jass: JassState, val output: Path) {
         when (e) {
             is JassNull -> builder.append("nil")
             is JassBool -> builder.append(e.raw)
-            is JassInt -> builder.append(e.raw)
+            is JassInt -> {
+                if (e.raw.startsWith("'")) {
+                    builder
+                        .append("FourCC(")
+                        .append(e.raw)
+                        .append(")")
+                } else {
+                    builder.append(e.raw)
+                }
+
+            }
+
             is JassReal -> builder.append(e.raw)
             is JassStr -> builder.append(e.raw)
             is JassVar -> {

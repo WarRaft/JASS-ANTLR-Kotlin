@@ -1,4 +1,4 @@
-i = '""""' ---@type number integer
+i = FourCC('""""') ---@type number integer
 
 
 ---@param key string

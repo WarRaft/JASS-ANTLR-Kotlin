@@ -1,5 +1,8 @@
 **/.DS_Store
-/build/
+
+!/build
+/build/*
+!/build/libs/
 /.kotlin/
 /gradlew
 /gradlew.bat
