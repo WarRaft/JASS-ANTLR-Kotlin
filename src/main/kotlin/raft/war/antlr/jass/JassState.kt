@@ -10,6 +10,7 @@ import raft.war.antlr.jass.error.JassError
 import raft.war.antlr.jass.error.JassErrorId
 import raft.war.antlr.jass.error.JassErrorListener
 import raft.war.antlr.jass.psi.*
+import kotlin.math.exp
 
 class JassState : JassBaseVisitor<IJassNode>() {
     var states: List<JassState> = listOf()
@@ -170,6 +171,20 @@ class JassState : JassBaseVisitor<IJassNode>() {
         if (ctx == null) return null
 
         when (ctx) {
+            is ExprFunContext -> {
+                val name = ctx.ID().text
+                val cf = JassFun(
+                    name = name,
+                    type = JassCodeType(),
+                    ref = true,
+                )
+
+                return JassExpr(
+                    op = JassExprOp.Get,
+                    a = cf
+                )
+            }
+
             is ExprCallContext -> {
                 val name = ctx.ID().text
                 val cf = JassFun(
@@ -305,6 +320,23 @@ class JassState : JassBaseVisitor<IJassNode>() {
         val scope = scopes.last()
 
         for (item: StmtContext in ctxs) {
+
+            val ifctx: IfContext? = item.if_()
+            if (ifctx != null) {
+                val e = expr(ifctx.expr(), f)
+                if (e == null) {
+                    errors.add(JassError(JassErrorId.ERROR, ifctx.start.line, 0, "[if] not have expr"))
+                    continue
+                }
+                val i = JassIf(
+                    mode = JassIfMode.If,
+                    expr = e
+                )
+                scope.stmt.add(i)
+                val ss = scopes.toMutableList()
+                ss.add(i)
+                stmt(ifctx.stmt(), ss)
+            }
 
             val set: SetContext? = item.set()
             if (set != null) {

@@ -48,7 +48,7 @@ call : DEBUG? CALL ID LPAREN (expr (COMMA expr)*)? RPAREN;
 
 return : RETURN expr?;
 
-if : IF expr THEN? (stmt|elseif|else)* ENDIF;
+if : IF expr THEN? stmt* elseif* else? ENDIF;
 elseif : ELSEIF expr THEN? stmt*;
 else : ELSE stmt*;
 

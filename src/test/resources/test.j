@@ -82,7 +82,7 @@ function main takes real end returns nothing
 
         if 2 + 3 > 0 then
 
-            set w = 33
+            set end = 33
 
         endif
 

@@ -4,12 +4,18 @@
 ---@param cache gamecache
 ---@return boolean
 function HaveStoredValue1 (key, valueType, missionKey, cache)
+	if (valueType == bj_GAMECACHE_BOOLEAN) then
+		return HaveStoredBoolean(cache, missionKey, key)
+	end
 end
 
 ---@param trigIndex number integer
 ---@return boolean
 function QueuedTriggerRemoveByIndex1 (trigIndex)
 	local index ---@type number integer
+	if (trigIndex >= bj_queuedExecTotal) then
+		return false
+	end
 	bj_queuedExecTotal = bj_queuedExecTotal - 1
 	index = trigIndex
 	while(true) do
@@ -58,6 +64,11 @@ function main (end_anal)
 			end_anal = 23
 			end_anal = 25 + 12
 			return false
+		end
+	end
+	if true then
+		if 2 + 3 > 0 then
+			end_anal = 33
 		end
 	end
 	return 22

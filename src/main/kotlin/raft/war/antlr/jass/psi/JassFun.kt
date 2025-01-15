@@ -3,14 +3,14 @@ package raft.war.antlr.jass.psi
 class JassFun(
     val name: String,
     val native: Boolean = false,
+    val ref: Boolean = false,
+    override var type: IJassType = JassUndefinedType(),
 ) : IJassNode, IJassStmtBlock {
 
     var base: JassFun? = null
 
     val basename: String
         get() = base?.basename ?: name
-
-    override var type: IJassType = JassUndefinedType()
 
     val param: MutableList<JassVar> = mutableListOf()
     val arg: MutableList<JassExpr> = mutableListOf()
