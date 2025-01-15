@@ -1,4 +1,4 @@
-// Generated from /Users/nazarpunk/IdeaProjects/JASS-ANTLR-Kotlin/src/main/raft/war/antlr/grammar/Jass.g4 by ANTLR 4.13.2
+// Generated from /Users/nazarpunk/IdeaProjects/JASS-ANTLR-Kotlin/src/.main/raft/war/antlr/grammar/Jass.g4 by ANTLR 4.13.2
 package raft.war.antlr.grammar.Jass;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -17,13 +17,13 @@ public class JassLexer extends Lexer {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		RAWVAL=1, STRING=2, AND=3, ARRAY=4, CALL=5, CONSTANT=6, DEBUG=7, ELSE=8, 
-		ELSEIF=9, ENDFUNCTION=10, ENDIF=11, ENDLOOP=12, ENDGLOBALS=13, EXTENDS=14, 
-		EXITWHEN=15, FALSE=16, FUNCTION=17, GLOBALS=18, IF=19, LOCAL=20, LOOP=21, 
-		NATIVE=22, NOT=23, NOTHING=24, NULL=25, OR=26, RETURNS=27, RETURN=28, 
-		SET=29, TAKES=30, THEN=31, TRUE=32, TYPE=33, COMMA=34, EQ_EQ=35, EQ=36, 
-		NEQ=37, LT_EQ=38, LT=39, GT_EQ=40, GT=41, PLUS=42, MINUS=43, MUL=44, DIV=45, 
-		LPAREN=46, RPAREN=47, LBRACK=48, RBRACK=49, ID=50, INTVAL=51, HEXVAL=52, 
+		RAWVAL=1, STRING=2, AND=3, ARRAY=4, CALL=5, CONSTANT=6, DEBUG=7, ELSE=8,
+		ELSEIF=9, ENDFUNCTION=10, ENDIF=11, ENDLOOP=12, ENDGLOBALS=13, EXTENDS=14,
+		EXITWHEN=15, FALSE=16, FUNCTION=17, GLOBALS=18, IF=19, LOCAL=20, LOOP=21,
+		NATIVE=22, NOT=23, NOTHING=24, NULL=25, OR=26, RETURNS=27, RETURN=28,
+		SET=29, TAKES=30, THEN=31, TRUE=32, TYPE=33, COMMA=34, EQ_EQ=35, EQ=36,
+		NEQ=37, LT_EQ=38, LT=39, GT_EQ=40, GT=41, PLUS=42, MINUS=43, MUL=44, DIV=45,
+		LPAREN=46, RPAREN=47, LBRACK=48, RBRACK=49, ID=50, INTVAL=51, HEXVAL=52,
 		REALVAL=53, WS=54, NL=55, LINE_COMMENT=56;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
@@ -35,13 +35,13 @@ public class JassLexer extends Lexer {
 
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"RAWVAL", "STRING", "STRING_ESC", "STRING_CLOSE", "AND", "ARRAY", "CALL", 
-			"CONSTANT", "DEBUG", "ELSE", "ELSEIF", "ENDFUNCTION", "ENDIF", "ENDLOOP", 
-			"ENDGLOBALS", "EXTENDS", "EXITWHEN", "FALSE", "FUNCTION", "GLOBALS", 
-			"IF", "LOCAL", "LOOP", "NATIVE", "NOT", "NOTHING", "NULL", "OR", "RETURNS", 
-			"RETURN", "SET", "TAKES", "THEN", "TRUE", "TYPE", "COMMA", "EQ_EQ", "EQ", 
-			"NEQ", "LT_EQ", "LT", "GT_EQ", "GT", "PLUS", "MINUS", "MUL", "DIV", "LPAREN", 
-			"RPAREN", "LBRACK", "RBRACK", "ID", "HexDigit", "INTVAL", "HEXVAL", "REALVAL", 
+			"RAWVAL", "STRING", "STRING_ESC", "STRING_CLOSE", "AND", "ARRAY", "CALL",
+			"CONSTANT", "DEBUG", "ELSE", "ELSEIF", "ENDFUNCTION", "ENDIF", "ENDLOOP",
+			"ENDGLOBALS", "EXTENDS", "EXITWHEN", "FALSE", "FUNCTION", "GLOBALS",
+			"IF", "LOCAL", "LOOP", "NATIVE", "NOT", "NOTHING", "NULL", "OR", "RETURNS",
+			"RETURN", "SET", "TAKES", "THEN", "TRUE", "TYPE", "COMMA", "EQ_EQ", "EQ",
+			"NEQ", "LT_EQ", "LT", "GT_EQ", "GT", "PLUS", "MINUS", "MUL", "DIV", "LPAREN",
+			"RPAREN", "LBRACK", "RBRACK", "ID", "HexDigit", "INTVAL", "HEXVAL", "REALVAL",
 			"WS", "NL", "LINE_COMMENT"
 		};
 	}
@@ -49,24 +49,24 @@ public class JassLexer extends Lexer {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, null, null, "'and'", "'array'", "'call'", "'constant'", "'debug'", 
-			"'else'", "'elseif'", "'endfunction'", "'endif'", "'endloop'", "'endglobals'", 
-			"'extends'", "'exitwhen'", "'false'", "'function'", "'globals'", "'if'", 
-			"'local'", "'loop'", "'native'", "'not'", "'nothing'", "'null'", "'or'", 
-			"'returns'", "'return'", "'set'", "'takes'", "'then'", "'true'", "'type'", 
-			"','", "'=='", "'='", "'!='", "'<='", "'<'", "'>='", "'>'", "'+'", "'-'", 
+			null, null, null, "'and'", "'array'", "'call'", "'constant'", "'debug'",
+			"'else'", "'elseif'", "'endfunction'", "'endif'", "'endloop'", "'endglobals'",
+			"'extends'", "'exitwhen'", "'false'", "'function'", "'globals'", "'if'",
+			"'local'", "'loop'", "'native'", "'not'", "'nothing'", "'null'", "'or'",
+			"'returns'", "'return'", "'set'", "'takes'", "'then'", "'true'", "'type'",
+			"','", "'=='", "'='", "'!='", "'<='", "'<'", "'>='", "'>'", "'+'", "'-'",
 			"'*'", "'/'", "'('", "')'", "'['", "']'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "RAWVAL", "STRING", "AND", "ARRAY", "CALL", "CONSTANT", "DEBUG", 
-			"ELSE", "ELSEIF", "ENDFUNCTION", "ENDIF", "ENDLOOP", "ENDGLOBALS", "EXTENDS", 
-			"EXITWHEN", "FALSE", "FUNCTION", "GLOBALS", "IF", "LOCAL", "LOOP", "NATIVE", 
-			"NOT", "NOTHING", "NULL", "OR", "RETURNS", "RETURN", "SET", "TAKES", 
-			"THEN", "TRUE", "TYPE", "COMMA", "EQ_EQ", "EQ", "NEQ", "LT_EQ", "LT", 
-			"GT_EQ", "GT", "PLUS", "MINUS", "MUL", "DIV", "LPAREN", "RPAREN", "LBRACK", 
+			null, "RAWVAL", "STRING", "AND", "ARRAY", "CALL", "CONSTANT", "DEBUG",
+			"ELSE", "ELSEIF", "ENDFUNCTION", "ENDIF", "ENDLOOP", "ENDGLOBALS", "EXTENDS",
+			"EXITWHEN", "FALSE", "FUNCTION", "GLOBALS", "IF", "LOCAL", "LOOP", "NATIVE",
+			"NOT", "NOTHING", "NULL", "OR", "RETURNS", "RETURN", "SET", "TAKES",
+			"THEN", "TRUE", "TYPE", "COMMA", "EQ_EQ", "EQ", "NEQ", "LT_EQ", "LT",
+			"GT_EQ", "GT", "PLUS", "MINUS", "MUL", "DIV", "LPAREN", "RPAREN", "LBRACK",
 			"RBRACK", "ID", "INTVAL", "HEXVAL", "REALVAL", "WS", "NL", "LINE_COMMENT"
 		};
 	}

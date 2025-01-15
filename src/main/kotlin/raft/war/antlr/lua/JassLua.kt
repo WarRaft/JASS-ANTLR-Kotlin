@@ -61,9 +61,9 @@ class JassLua(val jass: JassState, val output: Path) {
             is JassStr -> builder.append(e.raw)
             is JassVar -> {
                 builder.append(e.basename)
-                if (e.array) {
+                if (e.index != null) {
                     builder.append("[")
-                    expr(e.expr)
+                    expr(e.index)
                     builder.append("]")
                 }
             }
@@ -141,11 +141,14 @@ class JassLua(val jass: JassState, val output: Path) {
 
     fun stmt(nodes: List<IJassNode>, level: Int) {
         for (node in nodes) {
-            if (node is JassSet) {
-                tab(level)
-                    .append(node.variable.name)
-                    .append(" = ")
-
+            if (node is JassVar) {
+                tab(level).append(node.basename)
+                if (node.index != null) {
+                    builder.append("[")
+                    expr(node.index)
+                    builder.append("]")
+                }
+                builder.append(" = ")
                 expr(node.expr)
             }
 
@@ -180,7 +183,7 @@ class JassLua(val jass: JassState, val output: Path) {
         if (f.native) builder.append("--- native\n")
         f.param.forEach {
             if (reserved(it.name)) {
-                it.name += "_"
+                it.name += "_anal"
             }
             if (it.param) {
                 builder.append("---@param ${it.name} ${typeName(it.type)}\n")

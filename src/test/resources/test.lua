@@ -14,8 +14,8 @@ function QueuedTriggerRemoveByIndex1 (trigIndex)
 	index = trigIndex
 	while(true) do
 		if (index >= bj_queuedExecTotal) then break end
-		bj_queuedExecTriggers = bj_queuedExecTriggers[index + 1]
-		bj_queuedExecUseConds = bj_queuedExecUseConds[index + 1]
+		bj_queuedExecTriggers[index] = bj_queuedExecTriggers[index + 1]
+		bj_queuedExecUseConds[index] = bj_queuedExecUseConds[index + 1]
 		index = index + 1
 	end
 	return true
@@ -44,19 +44,19 @@ function BJDebugMsg1 (msg)
 	end
 end
 
----@param end_ number real
-function main (end_)
+---@param end_anal number real
+function main (end_anal)
 	local a = 22 ---@type number real
 	local b = 44 ---@type number real
-	local end_ ---@type number integer
-	end_ = "a1"
+	local end_anal ---@type number integer
+	end_anal = "a1"
 	while(true) do
 		if (true) then break end
 		if (1 > 2 == 3 ~= 4 and true or false) then break end
-		end_ = "a2"
+		end_anal = "a2"
 		while(true) do
-			end_ = 23
-			end_ = 25 + 12
+			end_anal = 23
+			end_anal = 25 + 12
 			return false
 		end
 	end

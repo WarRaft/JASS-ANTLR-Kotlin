@@ -729,8 +729,8 @@ function QueuedTriggerRemoveByIndex (trigIndex)
 	index = trigIndex
 	while(true) do
 		if (index >= bj_queuedExecTotal) then break end
-		bj_queuedExecTriggers = bj_queuedExecTriggers[index + 1]
-		bj_queuedExecUseConds = bj_queuedExecUseConds[index + 1]
+		bj_queuedExecTriggers[index] = bj_queuedExecTriggers[index + 1]
+		bj_queuedExecUseConds[index] = bj_queuedExecUseConds[index + 1]
 		index = index + 1
 	end
 	return true
@@ -748,8 +748,8 @@ end
 ---@param checkConditions boolean
 ---@return boolean
 function QueuedTriggerAddBJ (trig, checkConditions)
-	bj_queuedExecTriggers = trig
-	bj_queuedExecUseConds = checkConditions
+	bj_queuedExecTriggers[bj_queuedExecTotal] = trig
+	bj_queuedExecUseConds[bj_queuedExecTotal] = checkConditions
 	bj_queuedExecTotal = bj_queuedExecTotal + 1
 	return true
 end
@@ -1143,10 +1143,10 @@ end
 
 ---@param source string
 ---@param start number integer
----@param end_ number integer
+---@param end_anal number integer
 ---@return string
-function SubStringBJ (source, start, end_)
-	return SubString(source, start - 1, end_)
+function SubStringBJ (source, start, end_anal)
+	return SubString(source, start - 1, end_anal)
 end
 
 ---@param h handle
@@ -6125,7 +6125,7 @@ function MeleeGrantHeroItems ()
 	local trig ---@type trigger
 	index = 0
 	while(true) do
-		bj_meleeTwinkedHeroes = 0
+		bj_meleeTwinkedHeroes[index] = 0
 		index = index + 1
 		if (index == bj_MAX_PLAYER_SLOTS) then break end
 	end
@@ -6426,7 +6426,7 @@ end
 
 ---@param whichPlayer player
 function MeleeDoDefeat (whichPlayer)
-	bj_meleeDefeated = true
+	bj_meleeDefeated[GetPlayerId(whichPlayer)] = true
 end
 
 function MeleeDoDefeatEnum ()
@@ -6502,7 +6502,7 @@ function MeleeExposePlayer (whichPlayer, expose)
 	local playerIndex ---@type number integer
 	local indexPlayer ---@type player
 	local toExposeTo = CreateForce() ---@type force
-	bj_playerIsExposed = expose
+	bj_playerIsExposed[GetPlayerId(whichPlayer)] = expose
 	playerIndex = 0
 	while(true) do
 		indexPlayer = Player(playerIndex)
@@ -6665,8 +6665,8 @@ end
 ---@param control mapcontrol
 function SetPlayerSlotAvailable (whichPlayer, control)
 	local playerIndex = GetPlayerId(whichPlayer) ---@type number integer
-	bj_slotControlUsed = true
-	bj_slotControl = control
+	bj_slotControlUsed[playerIndex] = true
+	bj_slotControl[playerIndex] = control
 end
 
 ---@param teamCount number integer
@@ -6732,7 +6732,7 @@ function InitBlizzardGlobals ()
 	index = 0
 	while(true) do
 		if (index == bj_MAX_PLAYER_SLOTS) then break end
-		bj_FORCE_PLAYER = CreateForce()
+		bj_FORCE_PLAYER[index] = CreateForce()
 		index = index + 1
 	end
 	bj_FORCE_ALL_PLAYERS = CreateForce()
@@ -6742,8 +6742,8 @@ function InitBlizzardGlobals ()
 	index = 0
 	while(true) do
 		if (index >= bj_MAX_QUEUED_TRIGGERS) then break end
-		bj_queuedExecTriggers = nil
-		bj_queuedExecUseConds = false
+		bj_queuedExecTriggers[index] = nil
+		bj_queuedExecUseConds[index] = false
 		index = index + 1
 	end
 	bj_isSinglePlayer = false
@@ -6834,9 +6834,9 @@ function InitNeutralBuildings ()
 	local iLevel ---@type number integer
 	iLevel = 0
 	while(true) do
-		bj_stockAllowedPermanent = false
-		bj_stockAllowedCharged = false
-		bj_stockAllowedArtifact = false
+		bj_stockAllowedPermanent[iLevel] = false
+		bj_stockAllowedCharged[iLevel] = false
+		bj_stockAllowedArtifact[iLevel] = false
 		iLevel = iLevel + 1
 		if (iLevel > bj_MAX_ITEM_LEVEL) then break end
 	end
@@ -6862,8 +6862,8 @@ end
 ---@param inID number integer
 ---@param inChance number integer
 function RandomDistAddItem (inID, inChance)
-	bj_randDistID = inID
-	bj_randDistChance = inChance
+	bj_randDistID[bj_randDistCount] = inID
+	bj_randDistChance[bj_randDistCount] = inChance
 	bj_randDistCount = bj_randDistCount + 1
 end
 

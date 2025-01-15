@@ -4,7 +4,6 @@ plugins {
 
     // https://kotlinlang.org/docs/gradle-configure-project.html
     kotlin("jvm") version "2.1.0"
-    application
 }
 
 repositories {
@@ -36,7 +35,7 @@ kotlin {
 
 tasks.jar {
     manifest {
-        attributes["Main-Class"] = "Main"
+        attributes["Main-Class"] = "MainKt"
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })

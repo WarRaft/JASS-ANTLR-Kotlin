@@ -198,23 +198,26 @@ class JassState : JassBaseVisitor<IJassNode>() {
             is ExprVarContext -> {
                 val name = ctx.text
                 var node: IJassNode? = getNode(name, f)
-
-                if (node !is JassVar) {
-                    errors.add(JassError(JassErrorId.ERROR, ctx.start.line, 0, "$name is not declared"))
+                if (node is JassVar) {
+                    return JassExpr(op = JassExprOp.Get, a = node.clone())
                 }
-                return JassExpr(op = JassExprOp.Get, a = node)
+                errors.add(JassError(JassErrorId.ERROR, ctx.start.line, 0, "$name is not declared"))
+                return null
             }
 
             is ExprArrContext -> {
                 val name = ctx.ID().text
                 var node: IJassNode? = getNode(name, f)
-                if (node is JassVar) {
-                    val v = node.clone()
-                    v.expr = expr(ctx.expr(), f)
-                    return JassExpr(op = JassExprOp.Get, a = v)
+                if (node !is JassVar) {
+                    errors.add(JassError(JassErrorId.ERROR, ctx.start.line, 0, "$name array is not declared"))
+                    return null
                 }
-                errors.add(JassError(JassErrorId.ERROR, ctx.start.line, 0, "$name array is not declared"))
-                return null
+                return JassExpr(
+                    op = JassExprOp.Get,
+                    a = node.clone(
+                        index = expr(ctx.expr(), f)
+                    )
+                )
             }
 
             is ExprUnContext -> return JassExpr(
@@ -290,8 +293,6 @@ class JassState : JassBaseVisitor<IJassNode>() {
                 a = expr(ctx.expr(0), f),
                 b = expr(ctx.expr(1), f)
             )
-
-
         }
 
         println("🔥Expr: ${ctx.javaClass.name} | ${ctx.text}")
@@ -315,12 +316,18 @@ class JassState : JassBaseVisitor<IJassNode>() {
                     continue
                 }
 
-                val expr = this.expr(set.expr(), f)
-                if (expr == null) {
-                    println("🔥Set: no expression | ${set.text}")
-                } else {
-                    scope.stmt.add(JassSet(variable = node, expr = expr))
+                val e = expr(set.expr(), f)
+                if (e == null) {
+                    errors.add(JassError(JassErrorId.ERROR, set.start.line, 0, "[set] $name no have expression"))
+                    continue
                 }
+
+                scope.stmt.add(
+                    node.clone(
+                        expr = e,
+                        index = expr(set.setBrack()?.expr(), f),
+                    )
+                )
             }
 
             val loop: LoopContext? = item.loop()

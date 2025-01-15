@@ -518,9 +518,9 @@ end
 --- native
 ---@param source string
 ---@param start number integer
----@param end_ number integer
+---@param end_anal number integer
 ---@return string
-function SubString (source, start, end_)
+function SubString (source, start, end_anal)
 end
 
 --- native

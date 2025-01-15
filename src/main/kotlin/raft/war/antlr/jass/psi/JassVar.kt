@@ -7,24 +7,29 @@ class JassVar(
     val array: Boolean = false,
     val local: Boolean = false,
     val param: Boolean = false,
+    var base: JassVar? = null,
+    var index: JassExpr? = null,
+    var expr: JassExpr? = null,
     override val type: IJassType,
 ) : IJassNode {
-
-    var expr: JassExpr? = null
-
-    var base: JassVar? = null
 
     val basename: String
         get() = base?.basename ?: name
 
-    fun clone(): JassVar = JassVar(
+    fun clone(
+        index: JassExpr? = null,
+        expr: JassExpr? = null,
+    ): JassVar = JassVar(
         name = name,
         constant = constant,
         global = global,
         array = array,
         local = local,
         param = param,
-        type = type
+        type = type,
+        base = this,
+        expr = expr ?: this.expr,
+        index = index ?: this.index
     )
 
     override fun toString(): String {

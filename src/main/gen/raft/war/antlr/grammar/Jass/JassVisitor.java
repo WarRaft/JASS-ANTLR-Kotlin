@@ -1,4 +1,4 @@
-// Generated from /Users/nazarpunk/IdeaProjects/JASS-ANTLR-Kotlin/src/main/raft/war/antlr/grammar/Jass.g4 by ANTLR 4.13.2
+// Generated from /Users/nazarpunk/IdeaProjects/JASS-ANTLR-Kotlin/src/.main/raft/war/antlr/grammar/Jass.g4 by ANTLR 4.13.2
 package raft.war.antlr.grammar.Jass;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
