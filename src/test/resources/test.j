@@ -1,3 +1,9 @@
+globals
+    integer i = '""""'
+
+endglobals
+
+
 function HaveStoredValue1 takes string key, integer valueType, string missionKey, gamecache cache returns boolean
     call PauseGame( false )
 

@@ -6,7 +6,6 @@ import raft.war.antlr.jass.psi.JassExprOp.*
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.absolute
-import kotlin.math.exp
 
 class JassLua(val jass: JassState, val output: Path) {
     val builder = StringBuilder()
@@ -179,6 +178,18 @@ class JassLua(val jass: JassState, val output: Path) {
                     }
                     builder.append(" = ")
                     expr(node.expr)
+                }
+
+                is JassFun -> {
+                    tab(level).append(node.basename)
+                    if (!node.call) continue
+
+                    builder.append("(")
+                    node.arg.forEachIndexed { index, arg ->
+                        if (index > 0) builder.append(", ")
+                        expr(arg)
+                    }
+                    builder.append(")")
                 }
 
                 is JassLoop -> {

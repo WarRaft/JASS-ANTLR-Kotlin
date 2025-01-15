@@ -33,12 +33,12 @@ function : CONSTANT? FUNCTION ID takes returns_ variable* stmt* ENDFUNCTION ;
 
 // === STATEMENT
 stmt
-    : set
-    | call
-    | return
-    | if
-    | loop
-    | exitwhen
+    : set #stmtSet
+    | call #stmtCall
+    | return #stmtReturn
+    | if #stmtIf
+    | loop #stmtLoop
+    | exitwhen #stmtExitWhen
     ;
 
 setBrack : LBRACK expr? RBRACK ;

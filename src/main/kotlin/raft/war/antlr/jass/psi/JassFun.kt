@@ -3,11 +3,11 @@ package raft.war.antlr.jass.psi
 class JassFun(
     val name: String,
     val native: Boolean = false,
+    val call: Boolean = false,
     val ref: Boolean = false,
+    var base: JassFun? = null,
     override var type: IJassType = JassUndefinedType(),
 ) : IJassNode {
-
-    var base: JassFun? = null
 
     val basename: String
         get() = base?.basename ?: name

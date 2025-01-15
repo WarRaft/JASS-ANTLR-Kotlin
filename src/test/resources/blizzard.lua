@@ -475,6 +475,7 @@ bj_wantDestroyGroup = false ---@type boolean
 function BJDebugMsg (msg)
 	local i = 0 ---@type number integer
 	while(true) do
+		DisplayTimedTextToPlayer(Player(i), 0, 0, 60, msg)
 		i = i + 1
 		if (i == bj_MAX_PLAYERS) then break end
 	end
@@ -735,6 +736,7 @@ end
 ---@param trig trigger
 function ConditionalTriggerExecute (trig)
 	if TriggerEvaluate(trig) then
+		TriggerExecute(trig)
 	end
 end
 
@@ -747,6 +749,7 @@ function TriggerExecuteBJ (trig, checkConditions)
 			return false
 		end
 	end
+	TriggerExecute(trig)
 	return true
 end
 
@@ -759,6 +762,7 @@ function PostTriggerExecuteBJ (trig, checkConditions)
 			return false
 		end
 	end
+	TriggerRegisterTimerEvent(trig, 0, false)
 	return true
 end
 
@@ -777,6 +781,7 @@ function QueuedTriggerCheck ()
 		i = i + 1
 	end
 	s = s .. "(" .. I2S(bj_queuedExecTotal) .. " total)"
+	DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 600, s)
 end
 
 ---@param trig trigger
@@ -816,8 +821,10 @@ function QueuedTriggerAttemptExec ()
 	while(true) do
 		if (bj_queuedExecTotal == 0) then break end
 		if TriggerExecuteBJ(bj_queuedExecTriggers[0], bj_queuedExecUseConds[0]) then
+			TimerStart(bj_queuedExecTimeoutTimer, bj_QUEUED_TRIGGER_TIMEOUT, false, nil)
 			return true
 		end
+		QueuedTriggerRemoveByIndex(0)
 	end
 	return false
 end
@@ -833,6 +840,7 @@ function QueuedTriggerAddBJ (trig, checkConditions)
 	bj_queuedExecUseConds[bj_queuedExecTotal] = checkConditions
 	bj_queuedExecTotal = bj_queuedExecTotal + 1
 	if (bj_queuedExecTotal == 1) then
+		QueuedTriggerAttemptExec()
 	end
 	return true
 end
@@ -846,7 +854,10 @@ function QueuedTriggerRemoveBJ (trig)
 	if (trigIndex == -1) then
 		return
 	end
+	QueuedTriggerRemoveByIndex(trigIndex)
 	if (trigIndex == 0) then
+		PauseTimer(bj_queuedExecTimeoutTimer)
+		QueuedTriggerAttemptExec()
 	end
 end
 
@@ -855,9 +866,13 @@ function QueuedTriggerDoneBJ ()
 	if (bj_queuedExecTotal <= 0) then
 		return
 	end
+	QueuedTriggerRemoveByIndex(0)
+	PauseTimer(bj_queuedExecTimeoutTimer)
+	QueuedTriggerAttemptExec()
 end
 
 function QueuedTriggerClearBJ ()
+	PauseTimer(bj_queuedExecTimeoutTimer)
 	bj_queuedExecTotal = 0
 end
 
@@ -907,13 +922,17 @@ function PolledWait (duration)
 	local timeRemaining ---@type number real
 	if (duration > 0) then
 		t = CreateTimer()
+		TimerStart(t, duration, false, nil)
 		while(true) do
 			timeRemaining = TimerGetRemaining(t)
 			if (timeRemaining <= 0) then break end
 			if (timeRemaining > bj_POLLED_WAIT_SKIP_THRESHOLD) then
+				TriggerSleepAction(0.1 * timeRemaining)
 			else
+				TriggerSleepAction(bj_POLLED_WAIT_INTERVAL)
 			end
 		end
+		DestroyTimer(t)
 	end
 end
 
@@ -982,10 +1001,12 @@ end
 
 ---@param whatTime number real
 function SetTimeOfDay (whatTime)
+	SetFloatGameState(GAME_STATE_TIME_OF_DAY, whatTime)
 end
 
 ---@param scalePercent number real
 function SetTimeOfDayScalePercentBJ (scalePercent)
+	SetTimeOfDayScale(scalePercent * 0.01)
 end
 
 ---@return number real
@@ -996,6 +1017,8 @@ end
 ---@param soundName string
 function PlaySound (soundName)
 	local soundHandle = CreateSound(soundName, false, false, true, 12700, 12700, "") ---@type sound
+	StartSound(soundHandle)
+	KillSoundWhenDone(soundHandle)
 end
 
 ---@param A location
@@ -1025,6 +1048,14 @@ end
 function GetCurrentCameraSetup ()
 	local theCam = CreateCameraSetup() ---@type camerasetup
 	local duration = 0 ---@type number real
+	CameraSetupSetField(theCam, CAMERA_FIELD_TARGET_DISTANCE, GetCameraField(CAMERA_FIELD_TARGET_DISTANCE), duration)
+	CameraSetupSetField(theCam, CAMERA_FIELD_FARZ, GetCameraField(CAMERA_FIELD_FARZ), duration)
+	CameraSetupSetField(theCam, CAMERA_FIELD_ZOFFSET, GetCameraField(CAMERA_FIELD_ZOFFSET), duration)
+	CameraSetupSetField(theCam, CAMERA_FIELD_ANGLE_OF_ATTACK, bj_RADTODEG * GetCameraField(CAMERA_FIELD_ANGLE_OF_ATTACK), duration)
+	CameraSetupSetField(theCam, CAMERA_FIELD_FIELD_OF_VIEW, bj_RADTODEG * GetCameraField(CAMERA_FIELD_FIELD_OF_VIEW), duration)
+	CameraSetupSetField(theCam, CAMERA_FIELD_ROLL, bj_RADTODEG * GetCameraField(CAMERA_FIELD_ROLL), duration)
+	CameraSetupSetField(theCam, CAMERA_FIELD_ROTATION, bj_RADTODEG * GetCameraField(CAMERA_FIELD_ROTATION), duration)
+	CameraSetupSetDestPosition(theCam, GetCameraTargetPositionX(), GetCameraTargetPositionY(), duration)
 	return theCam
 end
 
@@ -1034,6 +1065,7 @@ end
 ---@param duration number real
 function CameraSetupApplyForPlayer (doPan, whichSetup, whichPlayer, duration)
 	if (GetLocalPlayer() == whichPlayer) then
+		CameraSetupApplyForceDuration(whichSetup, doPan, duration)
 	end
 end
 
@@ -1050,6 +1082,7 @@ end
 ---@param duration number real
 function SetCameraFieldForPlayer (whichPlayer, whichField, value, duration)
 	if (GetLocalPlayer() == whichPlayer) then
+		SetCameraField(whichField, value, duration)
 	end
 end
 
@@ -1060,6 +1093,7 @@ end
 ---@param inheritOrientation boolean
 function SetCameraTargetControllerNoZForPlayer (whichPlayer, whichUnit, xoffset, yoffset, inheritOrientation)
 	if (GetLocalPlayer() == whichPlayer) then
+		SetCameraTargetController(whichUnit, xoffset, yoffset, inheritOrientation)
 	end
 end
 
@@ -1068,6 +1102,7 @@ end
 ---@param y number real
 function SetCameraPositionForPlayer (whichPlayer, x, y)
 	if (GetLocalPlayer() == whichPlayer) then
+		SetCameraPosition(x, y)
 	end
 end
 
@@ -1075,6 +1110,7 @@ end
 ---@param loc location
 function SetCameraPositionLocForPlayer (whichPlayer, loc)
 	if (GetLocalPlayer() == whichPlayer) then
+		SetCameraPosition(GetLocationX(loc), GetLocationY(loc))
 	end
 end
 
@@ -1084,6 +1120,7 @@ end
 ---@param duration number real
 function RotateCameraAroundLocBJ (degrees, loc, whichPlayer, duration)
 	if (GetLocalPlayer() == whichPlayer) then
+		SetCameraRotateMode(GetLocationX(loc), GetLocationY(loc), bj_DEGTORAD * degrees, duration)
 	end
 end
 
@@ -1092,6 +1129,7 @@ end
 ---@param y number real
 function PanCameraToForPlayer (whichPlayer, x, y)
 	if (GetLocalPlayer() == whichPlayer) then
+		PanCameraTo(x, y)
 	end
 end
 
@@ -1099,6 +1137,7 @@ end
 ---@param loc location
 function PanCameraToLocForPlayer (whichPlayer, loc)
 	if (GetLocalPlayer() == whichPlayer) then
+		PanCameraTo(GetLocationX(loc), GetLocationY(loc))
 	end
 end
 
@@ -1108,6 +1147,7 @@ end
 ---@param duration number real
 function PanCameraToTimedForPlayer (whichPlayer, x, y, duration)
 	if (GetLocalPlayer() == whichPlayer) then
+		PanCameraToTimed(x, y, duration)
 	end
 end
 
@@ -1116,6 +1156,7 @@ end
 ---@param duration number real
 function PanCameraToTimedLocForPlayer (whichPlayer, loc, duration)
 	if (GetLocalPlayer() == whichPlayer) then
+		PanCameraToTimed(GetLocationX(loc), GetLocationY(loc), duration)
 	end
 end
 
@@ -1125,6 +1166,7 @@ end
 ---@param duration number real
 function PanCameraToTimedLocWithZForPlayer (whichPlayer, loc, zOffset, duration)
 	if (GetLocalPlayer() == whichPlayer) then
+		PanCameraToTimedWithZ(GetLocationX(loc), GetLocationY(loc), zOffset, duration)
 	end
 end
 
@@ -1136,7 +1178,9 @@ function SmartCameraPanBJ (whichPlayer, loc, duration)
 	if (GetLocalPlayer() == whichPlayer) then
 		dist = DistanceBetweenPoints(loc, GetCameraTargetPositionLoc())
 		if (dist >= bj_SMARTPAN_TRESHOLD_SNAP) then
+			PanCameraToTimed(GetLocationX(loc), GetLocationY(loc), 0)
 		elseif (dist >= bj_SMARTPAN_TRESHOLD_SNAP) then
+			PanCameraToTimed(GetLocationX(loc), GetLocationY(loc), duration)
 		else
 		end
 	end
@@ -1146,6 +1190,7 @@ end
 ---@param cameraModelFile string
 function SetCinematicCameraForPlayer (whichPlayer, cameraModelFile)
 	if (GetLocalPlayer() == whichPlayer) then
+		SetCinematicCamera(cameraModelFile)
 	end
 end
 
@@ -1153,6 +1198,7 @@ end
 ---@param duration number real
 function ResetToGameCameraForPlayer (whichPlayer, duration)
 	if (GetLocalPlayer() == whichPlayer) then
+		ResetToGameCamera(duration)
 	end
 end
 
@@ -1161,6 +1207,7 @@ end
 ---@param velocity number real
 function CameraSetSourceNoiseForPlayer (whichPlayer, magnitude, velocity)
 	if (GetLocalPlayer() == whichPlayer) then
+		CameraSetSourceNoise(magnitude, velocity)
 	end
 end
 
@@ -1169,6 +1216,7 @@ end
 ---@param velocity number real
 function CameraSetTargetNoiseForPlayer (whichPlayer, magnitude, velocity)
 	if (GetLocalPlayer() == whichPlayer) then
+		CameraSetTargetNoise(magnitude, velocity)
 	end
 end
 
@@ -1183,12 +1231,16 @@ function CameraSetEQNoiseForPlayer (whichPlayer, magnitude)
 		richter = 2.0
 	end
 	if (GetLocalPlayer() == whichPlayer) then
+		CameraSetTargetNoiseEx(magnitude * 2.0, magnitude * Pow(10, richter), true)
+		CameraSetSourceNoiseEx(magnitude * 2.0, magnitude * Pow(10, richter), true)
 	end
 end
 
 ---@param whichPlayer player
 function CameraClearNoiseForPlayer (whichPlayer)
 	if (GetLocalPlayer() == whichPlayer) then
+		CameraSetSourceNoise(0, 0)
+		CameraSetTargetNoise(0, 0)
 	end
 end
 
@@ -1218,12 +1270,14 @@ function SetCameraBoundsToRect (r)
 	local minY = GetRectMinY(r) ---@type number real
 	local maxX = GetRectMaxX(r) ---@type number real
 	local maxY = GetRectMaxY(r) ---@type number real
+	SetCameraBounds(minX, minY, minX, maxY, maxX, maxY, maxX, minY)
 end
 
 ---@param whichPlayer player
 ---@param r rect
 function SetCameraBoundsToRectForPlayerBJ (whichPlayer, r)
 	if (GetLocalPlayer() == whichPlayer) then
+		SetCameraBoundsToRect(r)
 	end
 end
 
@@ -1257,6 +1311,7 @@ function AdjustCameraBoundsBJ (adjustMethod, dxWest, dxEast, dyNorth, dySouth)
 		minY = (minY + maxY) * 0.5
 		maxY = minY
 	end
+	SetCameraBounds(minX, minY, minX, maxY, maxX, maxY, maxX, minY)
 end
 
 ---@param adjustMethod number integer
@@ -1267,6 +1322,7 @@ end
 ---@param dySouth number real
 function AdjustCameraBoundsForPlayerBJ (adjustMethod, whichPlayer, dxWest, dxEast, dyNorth, dySouth)
 	if (GetLocalPlayer() == whichPlayer) then
+		AdjustCameraBoundsBJ(adjustMethod, dxWest, dxEast, dyNorth, dySouth)
 	end
 end
 
@@ -1275,6 +1331,7 @@ end
 ---@param y number real
 function SetCameraQuickPositionForPlayer (whichPlayer, x, y)
 	if (GetLocalPlayer() == whichPlayer) then
+		SetCameraQuickPosition(x, y)
 	end
 end
 
@@ -1282,16 +1339,19 @@ end
 ---@param loc location
 function SetCameraQuickPositionLocForPlayer (whichPlayer, loc)
 	if (GetLocalPlayer() == whichPlayer) then
+		SetCameraQuickPosition(GetLocationX(loc), GetLocationY(loc))
 	end
 end
 
 ---@param loc location
 function SetCameraQuickPositionLoc (loc)
+	SetCameraQuickPosition(GetLocationX(loc), GetLocationY(loc))
 end
 
 ---@param whichPlayer player
 function StopCameraForPlayerBJ (whichPlayer)
 	if (GetLocalPlayer() == whichPlayer) then
+		StopCamera()
 	end
 end
 
@@ -1301,20 +1361,24 @@ end
 ---@param yoffset number real
 function SetCameraOrientControllerForPlayerBJ (whichPlayer, whichUnit, xoffset, yoffset)
 	if (GetLocalPlayer() == whichPlayer) then
+		SetCameraOrientController(whichUnit, xoffset, yoffset)
 	end
 end
 
 ---@param factor number real
 function CameraSetSmoothingFactorBJ (factor)
+	CameraSetSmoothingFactor(factor)
 end
 
 function CameraResetSmoothingFactorBJ ()
+	CameraSetSmoothingFactor(0)
 end
 
 ---@param toForce force
 ---@param message string
 function DisplayTextToForce (toForce, message)
 	if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+		DisplayTextToPlayer(GetLocalPlayer(), 0, 0, message)
 	end
 end
 
@@ -1323,12 +1387,14 @@ end
 ---@param message string
 function DisplayTimedTextToForce (toForce, duration, message)
 	if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+		DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, duration, message)
 	end
 end
 
 ---@param toForce force
 function ClearTextMessagesBJ (toForce)
 	if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+		ClearTextMessages()
 	end
 end
 
@@ -1387,6 +1453,7 @@ function TriggerRegisterAnyUnitEventBJ (trig, whichEvent)
 	local index ---@type number integer
 	index = 0
 	while(true) do
+		TriggerRegisterPlayerUnitEvent(trig, Player(index), whichEvent, nil)
 		index = index + 1
 		if (index == bj_MAX_PLAYER_SLOTS) then break end
 	end
@@ -1501,6 +1568,7 @@ end
 ---@return event
 function TriggerRegisterEnterRectSimple (trig, r)
 	local rectRegion = CreateRegion() ---@type region
+	RegionAddRect(rectRegion, r)
 	return TriggerRegisterEnterRegion(trig, rectRegion, nil)
 end
 
@@ -1509,6 +1577,7 @@ end
 ---@return event
 function TriggerRegisterLeaveRectSimple (trig, r)
 	local rectRegion = CreateRegion() ---@type region
+	RegionAddRect(rectRegion, r)
 	return TriggerRegisterLeaveRegion(trig, rectRegion, nil)
 end
 
@@ -1581,6 +1650,7 @@ end
 function RegisterDestDeathInRegionEnum ()
 	bj_destInRegionDiesCount = bj_destInRegionDiesCount + 1
 	if (bj_destInRegionDiesCount <= bj_MAX_DEST_IN_REGION_EVENTS) then
+		TriggerRegisterDeathEvent(bj_destInRegionDiesTrig, GetEnumDestructable())
 	end
 end
 
@@ -1589,6 +1659,7 @@ end
 function TriggerRegisterDestDeathInRegionEvent (trig, r)
 	bj_destInRegionDiesTrig = trig
 	bj_destInRegionDiesCount = 0
+	EnumDestructablesInRect(r, nil, RegisterDestDeathInRegionEnum)
 end
 
 ---@param where rect
@@ -1606,6 +1677,7 @@ end
 
 ---@param whichWeatherEffect weathereffect
 function RemoveWeatherEffectBJ (whichWeatherEffect)
+	RemoveWeatherEffect(whichWeatherEffect)
 end
 
 ---@param duration number real
@@ -1680,6 +1752,7 @@ end
 ---@param deformation terraindeformation
 ---@param duration number real
 function TerrainDeformationStopBJ (deformation, duration)
+	TerrainDeformStop(deformation, R2I(duration * 1000))
 end
 
 ---@return terraindeformation
@@ -1788,6 +1861,7 @@ end
 ---@param area number integer
 ---@param shape number integer
 function SetTerrainTypeBJ (where, terrainType, variation, area, shape)
+	SetTerrainType(GetLocationX(where), GetLocationY(where), terrainType, variation, area, shape)
 end
 
 ---@param where location
@@ -1801,6 +1875,7 @@ end
 ---@param t pathingtype
 ---@param flag boolean
 function SetTerrainPathableBJ (where, t, flag)
+	SetTerrainPathable(GetLocationX(where), GetLocationY(where), t, flag)
 end
 
 ---@param red number real
@@ -1808,6 +1883,7 @@ end
 ---@param blue number real
 ---@param transparency number real
 function SetWaterBaseColorBJ (red, green, blue, transparency)
+	SetWaterBaseColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 end
 
 ---@param whichPlayer player
@@ -1839,6 +1915,7 @@ end
 function CreateFogModifierRectBJ (enabled, whichPlayer, whichFogState, r)
 	bj_lastCreatedFogModifier = CreateFogModifierRect(whichPlayer, whichFogState, r, true, false)
 	if enabled then
+		FogModifierStart(bj_lastCreatedFogModifier)
 	end
 	return bj_lastCreatedFogModifier
 end
@@ -1852,6 +1929,7 @@ end
 function CreateFogModifierRadiusLocBJ (enabled, whichPlayer, whichFogState, center, radius)
 	bj_lastCreatedFogModifier = CreateFogModifierRadiusLoc(whichPlayer, whichFogState, center, radius, true, false)
 	if enabled then
+		FogModifierStart(bj_lastCreatedFogModifier)
 	end
 	return bj_lastCreatedFogModifier
 end
@@ -1862,19 +1940,24 @@ function GetLastCreatedFogModifier ()
 end
 
 function FogEnableOn ()
+	FogEnable(true)
 end
 
 function FogEnableOff ()
+	FogEnable(false)
 end
 
 function FogMaskEnableOn ()
+	FogMaskEnable(true)
 end
 
 function FogMaskEnableOff ()
+	FogMaskEnable(false)
 end
 
 ---@param flag boolean
 function UseTimeOfDayBJ (flag)
+	SuspendTimeOfDay(not flag)
 end
 
 ---@param style number integer
@@ -1885,9 +1968,11 @@ end
 ---@param green number real
 ---@param blue number real
 function SetTerrainFogExBJ (style, zstart, zend, density, red, green, blue)
+	SetTerrainFogEx(style, zstart, zend, density, red * 0.01, green * 0.01, blue * 0.01)
 end
 
 function ResetTerrainFogBJ ()
+	ResetTerrainFog()
 end
 
 ---@param animName string
@@ -1895,18 +1980,21 @@ end
 ---@param radius number real
 ---@param center location
 function SetDoodadAnimationBJ (animName, doodadID, radius, center)
+	SetDoodadAnimation(GetLocationX(center), GetLocationY(center), radius, doodadID, false, animName, false)
 end
 
 ---@param animName string
 ---@param doodadID number integer
 ---@param r rect
 function SetDoodadAnimationRectBJ (animName, doodadID, r)
+	SetDoodadAnimationRect(r, doodadID, animName, false)
 end
 
 ---@param add boolean
 ---@param animProperties string
 ---@param whichUnit unit
 function AddUnitAnimationPropertiesBJ (add, animProperties, whichUnit)
+	AddUnitAnimationProperties(whichUnit, animProperties, add)
 end
 
 ---@param file string
@@ -1923,12 +2011,14 @@ end
 ---@param flag boolean
 ---@param whichImage image
 function ShowImageBJ (flag, whichImage)
+	ShowImage(whichImage, flag)
 end
 
 ---@param whichImage image
 ---@param where location
 ---@param zOffset number real
 function SetImagePositionBJ (whichImage, where, zOffset)
+	SetImagePosition(whichImage, GetLocationX(where), GetLocationY(where), zOffset)
 end
 
 ---@param whichImage image
@@ -1937,6 +2027,7 @@ end
 ---@param blue number real
 ---@param alpha number real
 function SetImageColorBJ (whichImage, red, green, blue, alpha)
+	SetImageColor(whichImage, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - alpha))
 end
 
 ---@return image
@@ -1961,6 +2052,7 @@ end
 ---@param flag boolean
 ---@param whichSplat ubersplat
 function ShowUbersplatBJ (flag, whichSplat)
+	ShowUbersplat(whichSplat, flag)
 end
 
 ---@return ubersplat
@@ -1972,43 +2064,51 @@ end
 function PlaySoundBJ (soundHandle)
 	bj_lastPlayedSound = soundHandle
 	if (soundHandle ~= nil) then
+		StartSound(soundHandle)
 	end
 end
 
 ---@param soundHandle sound
 ---@param fadeOut boolean
 function StopSoundBJ (soundHandle, fadeOut)
+	StopSound(soundHandle, false, fadeOut)
 end
 
 ---@param soundHandle sound
 ---@param volumePercent number real
 function SetSoundVolumeBJ (soundHandle, volumePercent)
+	SetSoundVolume(soundHandle, PercentToInt(volumePercent, 127))
 end
 
 ---@param newOffset number real
 ---@param soundHandle sound
 function SetSoundOffsetBJ (newOffset, soundHandle)
+	SetSoundPlayPosition(soundHandle, R2I(newOffset * 1000))
 end
 
 ---@param soundHandle sound
 ---@param cutoff number real
 function SetSoundDistanceCutoffBJ (soundHandle, cutoff)
+	SetSoundDistanceCutoff(soundHandle, cutoff)
 end
 
 ---@param soundHandle sound
 ---@param pitch number real
 function SetSoundPitchBJ (soundHandle, pitch)
+	SetSoundPitch(soundHandle, pitch)
 end
 
 ---@param soundHandle sound
 ---@param loc location
 ---@param z number real
 function SetSoundPositionLocBJ (soundHandle, loc, z)
+	SetSoundPosition(soundHandle, GetLocationX(loc), GetLocationY(loc), z)
 end
 
 ---@param soundHandle sound
 ---@param whichUnit unit
 function AttachSoundToUnitBJ (soundHandle, whichUnit)
+	AttachSoundToUnit(soundHandle, whichUnit)
 end
 
 ---@param soundHandle sound
@@ -2016,10 +2116,12 @@ end
 ---@param outside number real
 ---@param outsideVolumePercent number real
 function SetSoundConeAnglesBJ (soundHandle, inside, outside, outsideVolumePercent)
+	SetSoundConeAngles(soundHandle, inside, outside, PercentToInt(outsideVolumePercent, 127))
 end
 
 ---@param soundHandle sound
 function KillSoundWhenDoneBJ (soundHandle)
+	KillSoundWhenDone(soundHandle)
 end
 
 ---@param soundHandle sound
@@ -2027,23 +2129,33 @@ end
 ---@param loc location
 ---@param z number real
 function PlaySoundAtPointBJ (soundHandle, volumePercent, loc, z)
+	SetSoundPositionLocBJ(soundHandle, loc, z)
+	SetSoundVolumeBJ(soundHandle, volumePercent)
+	PlaySoundBJ(soundHandle)
 end
 
 ---@param soundHandle sound
 ---@param volumePercent number real
 ---@param whichUnit unit
 function PlaySoundOnUnitBJ (soundHandle, volumePercent, whichUnit)
+	AttachSoundToUnitBJ(soundHandle, whichUnit)
+	SetSoundVolumeBJ(soundHandle, volumePercent)
+	PlaySoundBJ(soundHandle)
 end
 
 ---@param soundHandle sound
 ---@param volumePercent number real
 ---@param startingOffset number real
 function PlaySoundFromOffsetBJ (soundHandle, volumePercent, startingOffset)
+	SetSoundVolumeBJ(soundHandle, volumePercent)
+	PlaySoundBJ(soundHandle)
+	SetSoundOffsetBJ(startingOffset, soundHandle)
 end
 
 ---@param musicFileName string
 function PlayMusicBJ (musicFileName)
 	bj_lastPlayedMusic = musicFileName
+	PlayMusic(musicFileName)
 end
 
 ---@param musicFileName string
@@ -2051,37 +2163,46 @@ end
 ---@param fadeInTime number real
 function PlayMusicExBJ (musicFileName, startingOffset, fadeInTime)
 	bj_lastPlayedMusic = musicFileName
+	PlayMusicEx(musicFileName, R2I(startingOffset * 1000), R2I(fadeInTime * 1000))
 end
 
 ---@param newOffset number real
 function SetMusicOffsetBJ (newOffset)
+	SetMusicPlayPosition(R2I(newOffset * 1000))
 end
 
 ---@param musicName string
 function PlayThematicMusicBJ (musicName)
+	PlayThematicMusic(musicName)
 end
 
 ---@param musicName string
 ---@param startingOffset number real
 function PlayThematicMusicExBJ (musicName, startingOffset)
+	PlayThematicMusicEx(musicName, R2I(startingOffset * 1000))
 end
 
 ---@param newOffset number real
 function SetThematicMusicOffsetBJ (newOffset)
+	SetThematicMusicPlayPosition(R2I(newOffset * 1000))
 end
 
 function EndThematicMusicBJ ()
+	EndThematicMusic()
 end
 
 ---@param fadeOut boolean
 function StopMusicBJ (fadeOut)
+	StopMusic(fadeOut)
 end
 
 function ResumeMusicBJ ()
+	ResumeMusic()
 end
 
 ---@param volumePercent number real
 function SetMusicVolumeBJ (volumePercent)
+	SetMusicVolume(PercentToInt(volumePercent, 127))
 end
 
 ---@param soundHandle sound
@@ -2113,32 +2234,56 @@ end
 ---@param vgroup volumegroup
 ---@param percent number real
 function VolumeGroupSetVolumeBJ (vgroup, percent)
+	VolumeGroupSetVolume(vgroup, percent * 0.01)
 end
 
 function SetCineModeVolumeGroupsImmediateBJ ()
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT, bj_CINEMODE_VOLUME_UNITMOVEMENT)
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS, bj_CINEMODE_VOLUME_UNITSOUNDS)
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_COMBAT, bj_CINEMODE_VOLUME_COMBAT)
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_SPELLS, bj_CINEMODE_VOLUME_SPELLS)
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UI, bj_CINEMODE_VOLUME_UI)
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_MUSIC, bj_CINEMODE_VOLUME_MUSIC)
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_AMBIENTSOUNDS, bj_CINEMODE_VOLUME_AMBIENTSOUNDS)
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_FIRE, bj_CINEMODE_VOLUME_FIRE)
 end
 
 function SetCineModeVolumeGroupsBJ ()
 	if bj_gameStarted then
+		SetCineModeVolumeGroupsImmediateBJ()
 	else
+		TimerStart(bj_volumeGroupsTimer, bj_GAME_STARTED_THRESHOLD, false, SetCineModeVolumeGroupsImmediateBJ)
 	end
 end
 
 function SetSpeechVolumeGroupsImmediateBJ ()
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITMOVEMENT, bj_SPEECH_VOLUME_UNITMOVEMENT)
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UNITSOUNDS, bj_SPEECH_VOLUME_UNITSOUNDS)
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_COMBAT, bj_SPEECH_VOLUME_COMBAT)
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_SPELLS, bj_SPEECH_VOLUME_SPELLS)
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_UI, bj_SPEECH_VOLUME_UI)
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_MUSIC, bj_SPEECH_VOLUME_MUSIC)
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_AMBIENTSOUNDS, bj_SPEECH_VOLUME_AMBIENTSOUNDS)
+	VolumeGroupSetVolume(SOUND_VOLUMEGROUP_FIRE, bj_SPEECH_VOLUME_FIRE)
 end
 
 function SetSpeechVolumeGroupsBJ ()
 	if bj_gameStarted then
+		SetSpeechVolumeGroupsImmediateBJ()
 	else
+		TimerStart(bj_volumeGroupsTimer, bj_GAME_STARTED_THRESHOLD, false, SetSpeechVolumeGroupsImmediateBJ)
 	end
 end
 
 function VolumeGroupResetImmediateBJ ()
+	VolumeGroupReset()
 end
 
 function VolumeGroupResetBJ ()
 	if bj_gameStarted then
+		VolumeGroupResetImmediateBJ()
 	else
+		TimerStart(bj_volumeGroupsTimer, bj_GAME_STARTED_THRESHOLD, false, VolumeGroupResetImmediateBJ)
 	end
 end
 
@@ -2151,18 +2296,22 @@ end
 ---@param soundHandle sound
 ---@param offset number real
 function WaitForSoundBJ (soundHandle, offset)
+	TriggerWaitForSound(soundHandle, offset)
 end
 
 ---@param musicName string
 ---@param index number integer
 function SetMapMusicIndexedBJ (musicName, index)
+	SetMapMusic(musicName, false, index)
 end
 
 ---@param musicName string
 function SetMapMusicRandomBJ (musicName)
+	SetMapMusic(musicName, true, 0)
 end
 
 function ClearMapMusicBJ ()
+	ClearMapMusic()
 end
 
 ---@param add boolean
@@ -2171,8 +2320,11 @@ end
 function SetStackedSoundBJ (add, soundHandle, r)
 	local width = GetRectMaxX(r) - GetRectMinX(r) ---@type number real
 	local height = GetRectMaxY(r) - GetRectMinY(r) ---@type number real
+	SetSoundPosition(soundHandle, GetRectCenterX(r), GetRectCenterY(r), 0)
 	if add then
+		RegisterStackedSound(soundHandle, true, width, height)
 	else
+		UnregisterStackedSound(soundHandle, true, width, height)
 	end
 end
 
@@ -2180,6 +2332,7 @@ end
 ---@param soundHandle sound
 function StartSoundForPlayerBJ (whichPlayer, soundHandle)
 	if (whichPlayer == GetLocalPlayer()) then
+		StartSound(soundHandle)
 	end
 end
 
@@ -2188,6 +2341,7 @@ end
 ---@param scale number real
 function VolumeGroupSetVolumeForPlayerBJ (whichPlayer, vgroup, scale)
 	if (GetLocalPlayer() == whichPlayer) then
+		VolumeGroupSetVolume(vgroup, scale)
 	end
 end
 
@@ -2205,10 +2359,12 @@ end
 function SetAmbientDaySound (inLabel)
 	local ToD ---@type number real
 	if (bj_dayAmbientSound ~= nil) then
+		StopSound(bj_dayAmbientSound, true, true)
 	end
 	bj_dayAmbientSound = CreateMIDISound(inLabel, 20, 20)
 	ToD = GetTimeOfDay()
 	if (ToD >= bj_TOD_DAWN and ToD < bj_TOD_DUSK) then
+		StartSound(bj_dayAmbientSound)
 	end
 end
 
@@ -2216,10 +2372,12 @@ end
 function SetAmbientNightSound (inLabel)
 	local ToD ---@type number real
 	if (bj_nightAmbientSound ~= nil) then
+		StopSound(bj_nightAmbientSound, true, true)
 	end
 	bj_nightAmbientSound = CreateMIDISound(inLabel, 20, 20)
 	ToD = GetTimeOfDay()
 	if (ToD < bj_TOD_DAWN or ToD >= bj_TOD_DUSK) then
+		StartSound(bj_nightAmbientSound)
 	end
 end
 
@@ -2242,6 +2400,7 @@ end
 
 ---@param whichEffect effect
 function DestroyEffectBJ (whichEffect)
+	DestroyEffect(whichEffect)
 end
 
 ---@return effect
@@ -2264,12 +2423,14 @@ end
 ---@param whichWidget widget
 ---@param life number real
 function SetItemLifeBJ (whichWidget, life)
+	SetWidgetLife(whichWidget, life)
 end
 
 ---@param xpToAdd number integer
 ---@param whichHero unit
 ---@param showEyeCandy boolean
 function AddHeroXPSwapped (xpToAdd, whichHero, showEyeCandy)
+	AddHeroXP(whichHero, xpToAdd, showEyeCandy)
 end
 
 ---@param whichHero unit
@@ -2278,7 +2439,9 @@ end
 function SetHeroLevelBJ (whichHero, newLevel, showEyeCandy)
 	local oldLevel = GetHeroLevel(whichHero) ---@type number integer
 	if (newLevel > oldLevel) then
+		SetHeroLevel(whichHero, newLevel, showEyeCandy)
 	elseif (newLevel > oldLevel) then
+		UnitStripHeroLevel(whichHero, oldLevel - newLevel)
 	else
 	end
 end
@@ -2338,6 +2501,7 @@ end
 ---@return item
 function UnitAddItemByIdSwapped (itemId, whichHero)
 	bj_lastCreatedItem = CreateItem(itemId, GetUnitX(whichHero), GetUnitY(whichHero))
+	UnitAddItem(whichHero, bj_lastCreatedItem)
 	return bj_lastCreatedItem
 end
 
@@ -2345,6 +2509,7 @@ end
 ---@param whichHero unit
 function UnitRemoveItemSwapped (whichItem, whichHero)
 	bj_lastRemovedItem = whichItem
+	UnitRemoveItem(whichHero, whichItem)
 end
 
 ---@param itemSlot number integer
@@ -2376,6 +2541,7 @@ end
 ---@param whichItem item
 ---@param loc location
 function SetItemPositionLoc (whichItem, loc)
+	SetItemPosition(whichItem, GetLocationX(loc), GetLocationY(loc))
 end
 
 ---@return number integer
@@ -2386,11 +2552,13 @@ end
 ---@param flag boolean
 ---@param whichHero unit
 function SuspendHeroXPBJ (flag, whichHero)
+	SuspendHeroXP(whichHero, not flag)
 end
 
 ---@param whichPlayer player
 ---@param handicapPercent number real
 function SetPlayerHandicapXPBJ (whichPlayer, handicapPercent)
+	SetPlayerHandicapXP(whichPlayer, handicapPercent * 0.01)
 end
 
 ---@param whichPlayer player
@@ -2402,6 +2570,7 @@ end
 ---@param whichPlayer player
 ---@param handicapPercent number real
 function SetPlayerHandicapBJ (whichPlayer, handicapPercent)
+	SetPlayerHandicap(whichPlayer, handicapPercent * 0.01)
 end
 
 ---@param whichPlayer player
@@ -2434,8 +2603,11 @@ function SetHeroStat (whichHero, whichStat, value)
 		return
 	end
 	if (whichStat == bj_HEROSTAT_STR) then
+		SetHeroStr(whichHero, value, true)
 	elseif (whichStat == bj_HEROSTAT_STR) then
+		SetHeroAgi(whichHero, value, true)
 	elseif (whichStat == bj_HEROSTAT_STR) then
+		SetHeroInt(whichHero, value, true)
 	else
 	end
 end
@@ -2446,8 +2618,11 @@ end
 ---@param value number integer
 function ModifyHeroStat (whichStat, whichHero, modifyMethod, value)
 	if (modifyMethod == bj_MODIFYMETHOD_ADD) then
+		SetHeroStat(whichHero, whichStat, GetHeroStatBJ(whichStat, whichHero, false) + value)
 	elseif (modifyMethod == bj_MODIFYMETHOD_ADD) then
+		SetHeroStat(whichHero, whichStat, GetHeroStatBJ(whichStat, whichHero, false) - value)
 	elseif (modifyMethod == bj_MODIFYMETHOD_ADD) then
+		SetHeroStat(whichHero, whichStat, value)
 	else
 	end
 end
@@ -2585,27 +2760,32 @@ end
 ---@param whichItem item
 ---@param flag boolean
 function SetItemInvulnerableBJ (whichItem, flag)
+	SetItemInvulnerable(whichItem, flag)
 end
 
 ---@param whichItem item
 ---@param flag boolean
 function SetItemDropOnDeathBJ (whichItem, flag)
+	SetItemDropOnDeath(whichItem, flag)
 end
 
 ---@param whichItem item
 ---@param flag boolean
 function SetItemDroppableBJ (whichItem, flag)
+	SetItemDroppable(whichItem, flag)
 end
 
 ---@param whichItem item
 ---@param whichPlayer player
 ---@param changeColor boolean
 function SetItemPlayerBJ (whichItem, whichPlayer, changeColor)
+	SetItemPlayer(whichItem, whichPlayer, changeColor)
 end
 
 ---@param show boolean
 ---@param whichItem item
 function SetItemVisibleBJ (show, whichItem)
+	SetItemVisible(whichItem, show)
 end
 
 ---@param whichItem item
@@ -2641,6 +2821,7 @@ end
 ---@param r rect
 ---@param actionFunc function
 function EnumItemsInRectBJ (r, actionFunc)
+	EnumItemsInRect(r, nil, actionFunc)
 end
 
 function RandomItemInRectBJEnum ()
@@ -2656,6 +2837,8 @@ end
 function RandomItemInRectBJ (r, filter)
 	bj_itemRandomConsidered = 0
 	bj_itemRandomCurrentPick = nil
+	EnumItemsInRect(r, filter, RandomItemInRectBJEnum)
+	DestroyBoolExpr(filter)
 	return bj_itemRandomCurrentPick
 end
 
@@ -2789,9 +2972,12 @@ end
 ---@param face number real
 ---@return group
 function CreateNUnitsAtLoc (count, unitId, whichPlayer, loc, face)
+	GroupClear(bj_lastCreatedGroup)
 	while(true) do
 		count = count - 1
 		if (count < 0) then break end
+		CreateUnitAtLocSaveLast(whichPlayer, unitId, loc, face)
+		GroupAddUnit(bj_lastCreatedGroup, bj_lastCreatedUnit)
 	end
 	return bj_lastCreatedGroup
 end
@@ -2807,11 +2993,13 @@ function CreateNUnitsAtLocFacingLocBJ (count, unitId, whichPlayer, loc, lookAt)
 end
 
 function GetLastCreatedGroupEnum ()
+	GroupAddUnit(bj_groupLastCreatedDest, GetEnumUnit())
 end
 
 ---@return group
 function GetLastCreatedGroup ()
 	bj_groupLastCreatedDest = CreateGroup()
+	ForGroup(bj_lastCreatedGroup, GetLastCreatedGroupEnum)
 	return bj_groupLastCreatedDest
 end
 
@@ -2827,23 +3015,30 @@ end
 ---@param suspend boolean
 ---@param whichUnit unit
 function UnitSuspendDecayBJ (suspend, whichUnit)
+	UnitSuspendDecay(whichUnit, suspend)
 end
 
 function DelayedSuspendDecayStopAnimEnum ()
 	local enumUnit = GetEnumUnit() ---@type unit
 	if (GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
+		SetUnitTimeScale(enumUnit, 0.0001)
 	end
 end
 
 function DelayedSuspendDecayBoneEnum ()
 	local enumUnit = GetEnumUnit() ---@type unit
 	if (GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
+		UnitSuspendDecay(enumUnit, true)
+		SetUnitTimeScale(enumUnit, 0.0001)
 	end
 end
 
 function DelayedSuspendDecayFleshEnum ()
 	local enumUnit = GetEnumUnit() ---@type unit
 	if (GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
+		UnitSuspendDecay(enumUnit, true)
+		SetUnitTimeScale(enumUnit, 10.0)
+		SetUnitAnimation(enumUnit, "decay flesh")
 	end
 end
 
@@ -2854,10 +3049,21 @@ function DelayedSuspendDecay ()
 	fleshGroup = bj_suspendDecayFleshGroup
 	bj_suspendDecayBoneGroup = CreateGroup()
 	bj_suspendDecayFleshGroup = CreateGroup()
+	ForGroup(fleshGroup, DelayedSuspendDecayStopAnimEnum)
+	ForGroup(boneGroup, DelayedSuspendDecayStopAnimEnum)
+	TriggerSleepAction(bj_CORPSE_MAX_DEATH_TIME)
+	ForGroup(fleshGroup, DelayedSuspendDecayFleshEnum)
+	ForGroup(boneGroup, DelayedSuspendDecayBoneEnum)
+	TriggerSleepAction(0.05)
+	ForGroup(fleshGroup, DelayedSuspendDecayStopAnimEnum)
+	DestroyGroup(boneGroup)
+	DestroyGroup(fleshGroup)
 end
 
 function DelayedSuspendDecayCreate ()
 	bj_delayedSuspendDecayTrig = CreateTrigger()
+	TriggerRegisterTimerExpireEvent(bj_delayedSuspendDecayTrig, bj_delayedSuspendDecayTimer)
+	TriggerAddAction(bj_delayedSuspendDecayTrig, DelayedSuspendDecay)
 end
 
 ---@param style number integer
@@ -2868,10 +3074,18 @@ end
 ---@return unit
 function CreatePermanentCorpseLocBJ (style, unitid, whichPlayer, loc, facing)
 	bj_lastCreatedUnit = CreateCorpse(whichPlayer, unitid, GetLocationX(loc), GetLocationY(loc), facing)
+	SetUnitBlendTime(bj_lastCreatedUnit, 0)
 	if (style == bj_CORPSETYPE_FLESH) then
+		SetUnitAnimation(bj_lastCreatedUnit, "decay flesh")
+		GroupAddUnit(bj_suspendDecayFleshGroup, bj_lastCreatedUnit)
 	elseif (style == bj_CORPSETYPE_FLESH) then
+		SetUnitAnimation(bj_lastCreatedUnit, "decay bone")
+		GroupAddUnit(bj_suspendDecayBoneGroup, bj_lastCreatedUnit)
 	else
+		SetUnitAnimation(bj_lastCreatedUnit, "decay bone")
+		GroupAddUnit(bj_suspendDecayBoneGroup, bj_lastCreatedUnit)
 	end
+	TimerStart(bj_delayedSuspendDecayTimer, 0.05, false, nil)
 	return bj_lastCreatedUnit
 end
 
@@ -2909,26 +3123,34 @@ end
 
 ---@param whichUnit unit
 function SelectUnitSingle (whichUnit)
+	ClearSelection()
+	SelectUnit(whichUnit, true)
 end
 
 function SelectGroupBJEnum ()
+	SelectUnit(GetEnumUnit(), true)
 end
 
 ---@param g group
 function SelectGroupBJ (g)
+	ClearSelection()
+	ForGroup(g, SelectGroupBJEnum)
 end
 
 ---@param whichUnit unit
 function SelectUnitAdd (whichUnit)
+	SelectUnit(whichUnit, true)
 end
 
 ---@param whichUnit unit
 function SelectUnitRemove (whichUnit)
+	SelectUnit(whichUnit, false)
 end
 
 ---@param whichPlayer player
 function ClearSelectionForPlayer (whichPlayer)
 	if (GetLocalPlayer() == whichPlayer) then
+		ClearSelection()
 	end
 end
 
@@ -2936,6 +3158,8 @@ end
 ---@param whichPlayer player
 function SelectUnitForPlayerSingle (whichUnit, whichPlayer)
 	if (GetLocalPlayer() == whichPlayer) then
+		ClearSelection()
+		SelectUnit(whichUnit, true)
 	end
 end
 
@@ -2943,6 +3167,8 @@ end
 ---@param whichPlayer player
 function SelectGroupForPlayerBJ (g, whichPlayer)
 	if (GetLocalPlayer() == whichPlayer) then
+		ClearSelection()
+		ForGroup(g, SelectGroupBJEnum)
 	end
 end
 
@@ -2950,6 +3176,7 @@ end
 ---@param whichPlayer player
 function SelectUnitAddForPlayer (whichUnit, whichPlayer)
 	if (GetLocalPlayer() == whichPlayer) then
+		SelectUnit(whichUnit, true)
 	end
 end
 
@@ -2957,27 +3184,32 @@ end
 ---@param whichPlayer player
 function SelectUnitRemoveForPlayer (whichUnit, whichPlayer)
 	if (GetLocalPlayer() == whichPlayer) then
+		SelectUnit(whichUnit, false)
 	end
 end
 
 ---@param whichUnit unit
 ---@param newValue number real
 function SetUnitLifeBJ (whichUnit, newValue)
+	SetUnitState(whichUnit, UNIT_STATE_LIFE, RMaxBJ(0, newValue))
 end
 
 ---@param whichUnit unit
 ---@param newValue number real
 function SetUnitManaBJ (whichUnit, newValue)
+	SetUnitState(whichUnit, UNIT_STATE_MANA, RMaxBJ(0, newValue))
 end
 
 ---@param whichUnit unit
 ---@param percent number real
 function SetUnitLifePercentBJ (whichUnit, percent)
+	SetUnitState(whichUnit, UNIT_STATE_LIFE, GetUnitState(whichUnit, UNIT_STATE_MAX_LIFE) * RMaxBJ(0, percent) * 0.01)
 end
 
 ---@param whichUnit unit
 ---@param percent number real
 function SetUnitManaPercentBJ (whichUnit, percent)
+	SetUnitState(whichUnit, UNIT_STATE_MANA, GetUnitState(whichUnit, UNIT_STATE_MAX_MANA) * RMaxBJ(0, percent) * 0.01)
 end
 
 ---@param whichUnit unit
@@ -3004,7 +3236,9 @@ function IsUnitGroupDeadBJ (g)
 	local wantDestroy = bj_wantDestroyGroup ---@type boolean
 	bj_wantDestroyGroup = false
 	bj_isUnitGroupDeadResult = true
+	ForGroup(g, IsUnitGroupDeadBJEnum)
 	if (wantDestroy) then
+		DestroyGroup(g)
 	end
 	return bj_isUnitGroupDeadResult
 end
@@ -3019,7 +3253,9 @@ function IsUnitGroupEmptyBJ (g)
 	local wantDestroy = bj_wantDestroyGroup ---@type boolean
 	bj_wantDestroyGroup = false
 	bj_isUnitGroupEmptyResult = true
+	ForGroup(g, IsUnitGroupEmptyBJEnum)
 	if (wantDestroy) then
+		DestroyGroup(g)
 	end
 	return bj_isUnitGroupEmptyResult
 end
@@ -3036,6 +3272,7 @@ end
 function IsUnitGroupInRectBJ (g, r)
 	bj_isUnitGroupInRectResult = true
 	bj_isUnitGroupInRectRect = r
+	ForGroup(g, IsUnitGroupInRectBJEnum)
 	return bj_isUnitGroupInRectResult
 end
 
@@ -3047,6 +3284,7 @@ end
 
 ---@param whichUnit unit
 function ShowUnitHide (whichUnit)
+	ShowUnit(whichUnit, false)
 end
 
 ---@param whichUnit unit
@@ -3054,6 +3292,7 @@ function ShowUnitShow (whichUnit)
 	if (IsUnitType(whichUnit, UNIT_TYPE_HERO) and IsUnitDeadBJ(whichUnit)) then
 		return
 	end
+	ShowUnit(whichUnit, true)
 end
 
 ---@return boolean
@@ -3068,7 +3307,9 @@ function IssueHauntOrderAtLocBJ (whichPeon, loc)
 	local g = nil ---@type group
 	local goldMine = nil ---@type unit
 	g = CreateGroup()
+	GroupEnumUnitsInRangeOfLoc(g, loc, 2 * bj_CELLWIDTH, filterIssueHauntOrderAtLocBJ)
 	goldMine = FirstOfGroup(g)
+	DestroyGroup(g)
 	if (goldMine == nil) then
 		return false
 	end
@@ -3117,11 +3358,13 @@ end
 ---@param newHeight number real
 ---@param rate number real
 function SetUnitFlyHeightBJ (whichUnit, newHeight, rate)
+	SetUnitFlyHeight(whichUnit, newHeight, rate)
 end
 
 ---@param whichUnit unit
 ---@param turnSpeed number real
 function SetUnitTurnSpeedBJ (whichUnit, turnSpeed)
+	SetUnitTurnSpeed(whichUnit, turnSpeed)
 end
 
 ---@param whichUnit unit
@@ -3134,6 +3377,7 @@ function SetUnitPropWindowBJ (whichUnit, propWindow)
 		angle = 359
 	end
 	angle = angle * bj_DEGTORAD
+	SetUnitPropWindow(whichUnit, angle)
 end
 
 ---@param whichUnit unit
@@ -3151,16 +3395,19 @@ end
 ---@param whichUnit unit
 ---@param blendTime number real
 function SetUnitBlendTimeBJ (whichUnit, blendTime)
+	SetUnitBlendTime(whichUnit, blendTime)
 end
 
 ---@param whichUnit unit
 ---@param acquireRange number real
 function SetUnitAcquireRangeBJ (whichUnit, acquireRange)
+	SetUnitAcquireRange(whichUnit, acquireRange)
 end
 
 ---@param whichUnit unit
 ---@param canSleep boolean
 function UnitSetCanSleepBJ (whichUnit, canSleep)
+	UnitAddSleep(whichUnit, canSleep)
 end
 
 ---@param whichUnit unit
@@ -3171,6 +3418,7 @@ end
 
 ---@param whichUnit unit
 function UnitWakeUpBJ (whichUnit)
+	UnitWakeUp(whichUnit)
 end
 
 ---@param whichUnit unit
@@ -3180,16 +3428,22 @@ function UnitIsSleepingBJ (whichUnit)
 end
 
 function WakePlayerUnitsEnum ()
+	UnitWakeUp(GetEnumUnit())
 end
 
 ---@param whichPlayer player
 function WakePlayerUnits (whichPlayer)
 	local g = CreateGroup() ---@type group
+	GroupEnumUnitsOfPlayer(g, whichPlayer, nil)
+	ForGroup(g, WakePlayerUnitsEnum)
+	DestroyGroup(g)
 end
 
 ---@param enable boolean
 function EnableCreepSleepBJ (enable)
+	SetPlayerState(Player(PLAYER_NEUTRAL_AGGRESSIVE), PLAYER_STATE_NO_CREEP_SLEEP, IntegerTertiaryOp(enable, 0, 1))
 	if (not enable) then
+		WakePlayerUnits(Player(PLAYER_NEUTRAL_AGGRESSIVE))
 	end
 end
 
@@ -3207,6 +3461,7 @@ function DoesUnitGenerateAlarms (whichUnit)
 end
 
 function PauseAllUnitsBJEnum ()
+	PauseUnit(GetEnumUnit(), bj_pauseAllUnitsFlag)
 end
 
 ---@param pause boolean
@@ -3220,15 +3475,21 @@ function PauseAllUnitsBJ (pause)
 	while(true) do
 		indexPlayer = Player(index)
 		if (GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER) then
+			PauseCompAI(indexPlayer, pause)
 		end
+		GroupEnumUnitsOfPlayer(g, indexPlayer, nil)
+		ForGroup(g, PauseAllUnitsBJEnum)
+		GroupClear(g)
 		index = index + 1
 		if (index == bj_MAX_PLAYER_SLOTS) then break end
 	end
+	DestroyGroup(g)
 end
 
 ---@param pause boolean
 ---@param whichUnit unit
 function PauseUnitBJ (pause, whichUnit)
+	PauseUnit(whichUnit, pause)
 end
 
 ---@param whichUnit unit
@@ -3240,27 +3501,34 @@ end
 ---@param flag boolean
 ---@param whichUnit unit
 function UnitPauseTimedLifeBJ (flag, whichUnit)
+	UnitPauseTimedLife(whichUnit, flag)
 end
 
 ---@param duration number real
 ---@param buffId number integer
 ---@param whichUnit unit
 function UnitApplyTimedLifeBJ (duration, buffId, whichUnit)
+	UnitApplyTimedLife(whichUnit, buffId, duration)
 end
 
 ---@param share boolean
 ---@param whichUnit unit
 ---@param whichPlayer player
 function UnitShareVisionBJ (share, whichUnit, whichPlayer)
+	UnitShareVision(whichUnit, whichPlayer, share)
 end
 
 ---@param buffType number integer
 ---@param whichUnit unit
 function UnitRemoveBuffsBJ (buffType, whichUnit)
 	if (buffType == bj_REMOVEBUFFS_POSITIVE) then
+		UnitRemoveBuffs(whichUnit, true, false)
 	elseif (buffType == bj_REMOVEBUFFS_POSITIVE) then
+		UnitRemoveBuffs(whichUnit, false, true)
 	elseif (buffType == bj_REMOVEBUFFS_POSITIVE) then
+		UnitRemoveBuffs(whichUnit, true, true)
 	elseif (buffType == bj_REMOVEBUFFS_POSITIVE) then
+		UnitRemoveBuffsEx(whichUnit, true, true, false, false, false, true, false)
 	else
 	end
 end
@@ -3275,6 +3543,7 @@ function UnitRemoveBuffsExBJ (polarity, resist, whichUnit, bTLife, bAura)
 	local bNeg = (polarity == bj_BUFF_POLARITY_EITHER) or (polarity == bj_BUFF_POLARITY_NEGATIVE) ---@type boolean
 	local bMagic = (resist == bj_BUFF_RESIST_BOTH) or (resist == bj_BUFF_RESIST_MAGIC) ---@type boolean
 	local bPhys = (resist == bj_BUFF_RESIST_BOTH) or (resist == bj_BUFF_RESIST_PHYSICAL) ---@type boolean
+	UnitRemoveBuffsEx(whichUnit, bPos, bNeg, bMagic, bPhys, bTLife, bAura, false)
 end
 
 ---@param polarity number integer
@@ -3330,10 +3599,13 @@ end
 ---@param whichUnit unit
 ---@param exploded boolean
 function SetUnitExplodedBJ (whichUnit, exploded)
+	SetUnitExploded(whichUnit, exploded)
 end
 
 ---@param whichUnit unit
 function ExplodeUnitBJ (whichUnit)
+	SetUnitExploded(whichUnit, true)
+	KillUnit(whichUnit)
 end
 
 ---@return unit
@@ -3381,6 +3653,7 @@ function ReplaceUnitBJ (whichUnit, newUnitId, unitStateMethod)
 		return oldUnit
 	end
 	wasHidden = IsUnitHidden(oldUnit)
+	ShowUnit(oldUnit, false)
 	if (newUnitId == 'ugol') then
 		newUnit = CreateBlightedGoldmine(GetOwningPlayer(oldUnit), GetUnitX(oldUnit), GetUnitY(oldUnit), GetUnitFacing(oldUnit))
 	else
@@ -3389,29 +3662,42 @@ function ReplaceUnitBJ (whichUnit, newUnitId, unitStateMethod)
 	if (unitStateMethod == bj_UNIT_STATE_METHOD_RELATIVE) then
 		if (GetUnitState(oldUnit, UNIT_STATE_MAX_LIFE) > 0) then
 			oldRatio = GetUnitState(oldUnit, UNIT_STATE_LIFE) / GetUnitState(oldUnit, UNIT_STATE_MAX_LIFE)
+			SetUnitState(newUnit, UNIT_STATE_LIFE, oldRatio * GetUnitState(newUnit, UNIT_STATE_MAX_LIFE))
 		end
 		if (GetUnitState(oldUnit, UNIT_STATE_MAX_MANA) > 0) and (GetUnitState(newUnit, UNIT_STATE_MAX_MANA) > 0) then
 			oldRatio = GetUnitState(oldUnit, UNIT_STATE_MANA) / GetUnitState(oldUnit, UNIT_STATE_MAX_MANA)
+			SetUnitState(newUnit, UNIT_STATE_MANA, oldRatio * GetUnitState(newUnit, UNIT_STATE_MAX_MANA))
 		end
 	elseif (unitStateMethod == bj_UNIT_STATE_METHOD_RELATIVE) then
+		SetUnitState(newUnit, UNIT_STATE_LIFE, GetUnitState(oldUnit, UNIT_STATE_LIFE))
 		if (GetUnitState(newUnit, UNIT_STATE_MAX_MANA) > 0) then
+			SetUnitState(newUnit, UNIT_STATE_MANA, GetUnitState(oldUnit, UNIT_STATE_MANA))
 		end
 	elseif (unitStateMethod == bj_UNIT_STATE_METHOD_RELATIVE) then
 	elseif (unitStateMethod == bj_UNIT_STATE_METHOD_RELATIVE) then
+		SetUnitState(newUnit, UNIT_STATE_LIFE, GetUnitState(newUnit, UNIT_STATE_MAX_LIFE))
+		SetUnitState(newUnit, UNIT_STATE_MANA, GetUnitState(newUnit, UNIT_STATE_MAX_MANA))
 	else
 	end
+	SetResourceAmount(newUnit, GetResourceAmount(oldUnit))
 	if (IsUnitType(oldUnit, UNIT_TYPE_HERO) and IsUnitType(newUnit, UNIT_TYPE_HERO)) then
+		SetHeroXP(newUnit, GetHeroXP(oldUnit), false)
 		index = 0
 		while(true) do
 			indexItem = UnitItemInSlot(oldUnit, index)
 			if (indexItem ~= nil) then
+				UnitRemoveItem(oldUnit, indexItem)
+				UnitAddItem(newUnit, indexItem)
 			end
 			index = index + 1
 			if (index >= bj_MAX_INVENTORY) then break end
 		end
 	end
 	if wasHidden then
+		KillUnit(oldUnit)
+		RemoveUnit(oldUnit)
 	else
+		RemoveUnit(oldUnit)
 	end
 	bj_lastReplacedUnit = newUnit
 	return newUnit
@@ -3426,12 +3712,16 @@ end
 ---@param loc location
 ---@param facing number real
 function SetUnitPositionLocFacingBJ (whichUnit, loc, facing)
+	SetUnitPositionLoc(whichUnit, loc)
+	SetUnitFacing(whichUnit, facing)
 end
 
 ---@param whichUnit unit
 ---@param loc location
 ---@param lookAt location
 function SetUnitPositionLocFacingLocBJ (whichUnit, loc, lookAt)
+	SetUnitPositionLoc(whichUnit, loc)
+	SetUnitFacing(whichUnit, AngleBetweenPoints(loc, lookAt))
 end
 
 ---@param itemId number integer
@@ -3439,6 +3729,7 @@ end
 ---@param currentStock number integer
 ---@param stockMax number integer
 function AddItemToStockBJ (itemId, whichUnit, currentStock, stockMax)
+	AddItemToStock(whichUnit, itemId, currentStock, stockMax)
 end
 
 ---@param unitId number integer
@@ -3446,21 +3737,25 @@ end
 ---@param currentStock number integer
 ---@param stockMax number integer
 function AddUnitToStockBJ (unitId, whichUnit, currentStock, stockMax)
+	AddUnitToStock(whichUnit, unitId, currentStock, stockMax)
 end
 
 ---@param itemId number integer
 ---@param whichUnit unit
 function RemoveItemFromStockBJ (itemId, whichUnit)
+	RemoveItemFromStock(whichUnit, itemId)
 end
 
 ---@param unitId number integer
 ---@param whichUnit unit
 function RemoveUnitFromStockBJ (unitId, whichUnit)
+	RemoveUnitFromStock(whichUnit, unitId)
 end
 
 ---@param enable boolean
 ---@param whichUnit unit
 function SetUnitUseFoodBJ (enable, whichUnit)
+	SetUnitUseFood(whichUnit, enable)
 end
 
 ---@param whichUnit unit
@@ -3515,11 +3810,13 @@ end
 ---@param flag boolean
 ---@param d destructable
 function ShowDestructableBJ (flag, d)
+	ShowDestructable(d, flag)
 end
 
 ---@param d destructable
 ---@param flag boolean
 function SetDestructableInvulnerableBJ (d, flag)
+	SetDestructableInvulnerable(d, flag)
 end
 
 ---@param d destructable
@@ -3537,6 +3834,7 @@ end
 ---@param r rect
 ---@param actionFunc function
 function EnumDestructablesInRectAll (r, actionFunc)
+	EnumDestructablesInRect(r, nil, actionFunc)
 end
 
 ---@return boolean
@@ -3544,6 +3842,7 @@ function EnumDestructablesInCircleBJFilter ()
 	local destLoc = GetDestructableLoc(GetFilterDestructable()) ---@type location
 	local result ---@type boolean
 	result = DistanceBetweenPoints(destLoc, bj_enumDestructableCenter) <= bj_enumDestructableRadius
+	RemoveLocation(destLoc)
 	return result
 end
 
@@ -3572,6 +3871,8 @@ end
 function RandomDestructableInRectBJ (r, filter)
 	bj_destRandomConsidered = 0
 	bj_destRandomCurrentPick = nil
+	EnumDestructablesInRect(r, filter, RandomDestructableInRectBJEnum)
+	DestroyBoolExpr(filter)
 	return bj_destRandomCurrentPick
 end
 
@@ -3590,17 +3891,21 @@ function EnumDestructablesInCircleBJ (radius, loc, actionFunc)
 		bj_enumDestructableCenter = loc
 		bj_enumDestructableRadius = radius
 		r = GetRectFromCircleBJ(loc, radius)
+		EnumDestructablesInRect(r, filterEnumDestructablesInCircleBJ, actionFunc)
+		RemoveRect(r)
 	end
 end
 
 ---@param d destructable
 ---@param percent number real
 function SetDestructableLifePercentBJ (d, percent)
+	SetDestructableLife(d, GetDestructableMaxLife(d) * percent * 0.01)
 end
 
 ---@param d destructable
 ---@param max number real
 function SetDestructableMaxLifeBJ (d, max)
+	SetDestructableMaxLife(d, max)
 end
 
 ---@param gateOperation number integer
@@ -3608,13 +3913,19 @@ end
 function ModifyGateBJ (gateOperation, d)
 	if (gateOperation == bj_GATEOPERATION_CLOSE) then
 		if (GetDestructableLife(d) <= 0) then
+			DestructableRestoreLife(d, GetDestructableMaxLife(d), true)
 		end
+		SetDestructableAnimation(d, "stand")
 	elseif (gateOperation == bj_GATEOPERATION_CLOSE) then
 		if (GetDestructableLife(d) > 0) then
+			KillDestructable(d)
 		end
+		SetDestructableAnimation(d, "death alternate")
 	elseif (gateOperation == bj_GATEOPERATION_CLOSE) then
 		if (GetDestructableLife(d) > 0) then
+			KillDestructable(d)
 		end
+		SetDestructableAnimation(d, "death")
 	else
 	end
 end
@@ -3637,20 +3948,36 @@ function ChangeElevatorHeight (d, newHeight)
 	newHeight = IMaxBJ(1, newHeight)
 	newHeight = IMinBJ(3, newHeight)
 	oldHeight = GetElevatorHeight(d)
+	SetDestructableOccluderHeight(d, bj_CLIFFHEIGHT * (newHeight - 1))
 	if (newHeight == 1) then
 		if (oldHeight == 2) then
+			SetDestructableAnimation(d, "birth")
+			QueueDestructableAnimation(d, "stand")
 		elseif (oldHeight == 2) then
+			SetDestructableAnimation(d, "birth third")
+			QueueDestructableAnimation(d, "stand")
 		else
+			SetDestructableAnimation(d, "stand")
 		end
 	elseif (newHeight == 1) then
 		if (oldHeight == 1) then
+			SetDestructableAnimation(d, "death")
+			QueueDestructableAnimation(d, "stand second")
 		elseif (oldHeight == 1) then
+			SetDestructableAnimation(d, "birth second")
+			QueueDestructableAnimation(d, "stand second")
 		else
+			SetDestructableAnimation(d, "stand second")
 		end
 	elseif (newHeight == 1) then
 		if (oldHeight == 1) then
+			SetDestructableAnimation(d, "death third")
+			QueueDestructableAnimation(d, "stand third")
 		elseif (oldHeight == 1) then
+			SetDestructableAnimation(d, "death second")
+			QueueDestructableAnimation(d, "stand third")
 		else
+			SetDestructableAnimation(d, "stand third")
 		end
 	else
 	end
@@ -3658,16 +3985,22 @@ end
 
 function NudgeUnitsInRectEnum ()
 	local nudgee = GetEnumUnit() ---@type unit
+	SetUnitPosition(nudgee, GetUnitX(nudgee), GetUnitY(nudgee))
 end
 
 function NudgeItemsInRectEnum ()
 	local nudgee = GetEnumItem() ---@type item
+	SetItemPosition(nudgee, GetItemX(nudgee), GetItemY(nudgee))
 end
 
 ---@param nudgeArea rect
 function NudgeObjectsInRect (nudgeArea)
 	local g ---@type group
 	g = CreateGroup()
+	GroupEnumUnitsInRect(g, nudgeArea, nil)
+	ForGroup(g, NudgeUnitsInRectEnum)
+	DestroyGroup(g)
+	EnumItemsInRect(nudgeArea, nil, NudgeItemsInRectEnum)
 end
 
 function NearbyElevatorExistsEnum ()
@@ -3686,6 +4019,8 @@ function NearbyElevatorExists (x, y)
 	local r ---@type rect
 	r = Rect(x - findThreshold, y - findThreshold, x + findThreshold, y + findThreshold)
 	bj_elevatorNeighbor = nil
+	EnumDestructablesInRect(r, nil, NearbyElevatorExistsEnum)
+	RemoveRect(r)
 	return bj_elevatorNeighbor ~= nil
 end
 
@@ -3705,6 +4040,8 @@ function ChangeElevatorWallBlocker (x, y, facing, open)
 	local r ---@type rect
 	r = Rect(x - findThreshold, y - findThreshold, x + findThreshold, y + findThreshold)
 	bj_elevatorWallBlocker = nil
+	EnumDestructablesInRect(r, nil, FindElevatorWallBlockerEnum)
+	RemoveRect(r)
 	blocker = bj_elevatorWallBlocker
 	if (blocker == nil) then
 		blocker = CreateDeadDestructable(bj_ELEVATOR_BLOCKER_CODE, x, y, facing, 1, 0)
@@ -3713,14 +4050,20 @@ function ChangeElevatorWallBlocker (x, y, facing, open)
 	end
 	if (open) then
 		if (GetDestructableLife(blocker) > 0) then
+			KillDestructable(blocker)
 		end
 	else
 		if (GetDestructableLife(blocker) <= 0) then
+			DestructableRestoreLife(blocker, GetDestructableMaxLife(blocker), false)
 		end
 		if (facing == 0) then
 			r = Rect(x - nudgeWidth / 2, y - nudgeLength / 2, x + nudgeWidth / 2, y + nudgeLength / 2)
+			NudgeObjectsInRect(r)
+			RemoveRect(r)
 		elseif (facing == 0) then
 			r = Rect(x - nudgeLength / 2, y - nudgeWidth / 2, x + nudgeLength / 2, y + nudgeWidth / 2)
+			NudgeObjectsInRect(r)
+			RemoveRect(r)
 		else
 		end
 	end
@@ -3736,18 +4079,22 @@ function ChangeElevatorWalls (open, walls, d)
 	local distToNeighbor = 256 ---@type number real
 	if (walls == bj_ELEVATOR_WALL_TYPE_ALL) or (walls == bj_ELEVATOR_WALL_TYPE_EAST) then
 		if (not NearbyElevatorExists(x + distToNeighbor, y)) then
+			ChangeElevatorWallBlocker(x + distToBlocker, y, 0, open)
 		end
 	end
 	if (walls == bj_ELEVATOR_WALL_TYPE_ALL) or (walls == bj_ELEVATOR_WALL_TYPE_NORTH) then
 		if (not NearbyElevatorExists(x, y + distToNeighbor)) then
+			ChangeElevatorWallBlocker(x, y + distToBlocker, 90, open)
 		end
 	end
 	if (walls == bj_ELEVATOR_WALL_TYPE_ALL) or (walls == bj_ELEVATOR_WALL_TYPE_SOUTH) then
 		if (not NearbyElevatorExists(x, y - distToNeighbor)) then
+			ChangeElevatorWallBlocker(x, y - distToBlocker, 90, open)
 		end
 	end
 	if (walls == bj_ELEVATOR_WALL_TYPE_ALL) or (walls == bj_ELEVATOR_WALL_TYPE_WEST) then
 		if (not NearbyElevatorExists(x - distToNeighbor, y)) then
+			ChangeElevatorWallBlocker(x - distToBlocker, y, 0, open)
 		end
 	end
 end
@@ -3755,6 +4102,7 @@ end
 ---@param activate boolean
 ---@param waygate unit
 function WaygateActivateBJ (activate, waygate)
+	WaygateActivate(waygate, activate)
 end
 
 ---@param waygate unit
@@ -3766,6 +4114,7 @@ end
 ---@param waygate unit
 ---@param loc location
 function WaygateSetDestinationLocBJ (waygate, loc)
+	WaygateSetDestination(waygate, GetLocationX(loc), GetLocationY(loc))
 end
 
 ---@param waygate unit
@@ -3777,18 +4126,21 @@ end
 ---@param flag boolean
 ---@param whichUnit unit
 function UnitSetUsesAltIconBJ (flag, whichUnit)
+	UnitSetUsesAltIcon(whichUnit, flag)
 end
 
 ---@param whichPlayer player
 ---@param key string
 function ForceUIKeyBJ (whichPlayer, key)
 	if (GetLocalPlayer() == whichPlayer) then
+		ForceUIKey(key)
 	end
 end
 
 ---@param whichPlayer player
 function ForceUICancelBJ (whichPlayer)
 	if (GetLocalPlayer() == whichPlayer) then
+		ForceUICancel()
 	end
 end
 
@@ -3797,21 +4149,26 @@ end
 function ForGroupBJ (whichGroup, callback)
 	local wantDestroy = bj_wantDestroyGroup ---@type boolean
 	bj_wantDestroyGroup = false
+	ForGroup(whichGroup, callback)
 	if (wantDestroy) then
+		DestroyGroup(whichGroup)
 	end
 end
 
 ---@param whichUnit unit
 ---@param whichGroup group
 function GroupAddUnitSimple (whichUnit, whichGroup)
+	GroupAddUnit(whichGroup, whichUnit)
 end
 
 ---@param whichUnit unit
 ---@param whichGroup group
 function GroupRemoveUnitSimple (whichUnit, whichGroup)
+	GroupRemoveUnit(whichGroup, whichUnit)
 end
 
 function GroupAddGroupEnum ()
+	GroupAddUnit(bj_groupAddGroupDest, GetEnumUnit())
 end
 
 ---@param sourceGroup group
@@ -3820,11 +4177,14 @@ function GroupAddGroup (sourceGroup, destGroup)
 	local wantDestroy = bj_wantDestroyGroup ---@type boolean
 	bj_wantDestroyGroup = false
 	bj_groupAddGroupDest = destGroup
+	ForGroup(sourceGroup, GroupAddGroupEnum)
 	if (wantDestroy) then
+		DestroyGroup(sourceGroup)
 	end
 end
 
 function GroupRemoveGroupEnum ()
+	GroupRemoveUnit(bj_groupRemoveGroupDest, GetEnumUnit())
 end
 
 ---@param sourceGroup group
@@ -3833,18 +4193,22 @@ function GroupRemoveGroup (sourceGroup, destGroup)
 	local wantDestroy = bj_wantDestroyGroup ---@type boolean
 	bj_wantDestroyGroup = false
 	bj_groupRemoveGroupDest = destGroup
+	ForGroup(sourceGroup, GroupRemoveGroupEnum)
 	if (wantDestroy) then
+		DestroyGroup(sourceGroup)
 	end
 end
 
 ---@param whichPlayer player
 ---@param whichForce force
 function ForceAddPlayerSimple (whichPlayer, whichForce)
+	ForceAddPlayer(whichForce, whichPlayer)
 end
 
 ---@param whichPlayer player
 ---@param whichForce force
 function ForceRemovePlayerSimple (whichPlayer, whichForce)
+	ForceRemovePlayer(whichForce, whichPlayer)
 end
 
 function GroupPickRandomUnitEnum ()
@@ -3861,7 +4225,9 @@ function GroupPickRandomUnit (whichGroup)
 	bj_wantDestroyGroup = false
 	bj_groupRandomConsidered = 0
 	bj_groupRandomCurrentPick = nil
+	ForGroup(whichGroup, GroupPickRandomUnitEnum)
 	if (wantDestroy) then
+		DestroyGroup(whichGroup)
 	end
 	return bj_groupRandomCurrentPick
 end
@@ -3878,6 +4244,7 @@ end
 function ForcePickRandomPlayer (whichForce)
 	bj_forceRandomConsidered = 0
 	bj_forceRandomCurrentPick = nil
+	ForForce(whichForce, ForcePickRandomPlayerEnum)
 	return bj_forceRandomCurrentPick
 end
 
@@ -3886,6 +4253,11 @@ end
 ---@param enumAction function
 function EnumUnitsSelected (whichPlayer, enumFilter, enumAction)
 	local g = CreateGroup() ---@type group
+	SyncSelections()
+	GroupEnumUnitsSelected(g, whichPlayer, enumFilter)
+	DestroyBoolExpr(enumFilter)
+	ForGroup(g, enumAction)
+	DestroyGroup(g)
 end
 
 ---@param r rect
@@ -3893,6 +4265,8 @@ end
 ---@return group
 function GetUnitsInRectMatching (r, filter)
 	local g = CreateGroup() ---@type group
+	GroupEnumUnitsInRect(g, r, filter)
+	DestroyBoolExpr(filter)
 	return g
 end
 
@@ -3913,6 +4287,7 @@ end
 function GetUnitsInRectOfPlayer (r, whichPlayer)
 	local g = CreateGroup() ---@type group
 	bj_groupEnumOwningPlayer = whichPlayer
+	GroupEnumUnitsInRect(g, r, filterGetUnitsInRectOfPlayer)
 	return g
 end
 
@@ -3922,6 +4297,8 @@ end
 ---@return group
 function GetUnitsInRangeOfLocMatching (radius, whichLocation, filter)
 	local g = CreateGroup() ---@type group
+	GroupEnumUnitsInRangeOfLoc(g, whichLocation, radius, filter)
+	DestroyBoolExpr(filter)
 	return g
 end
 
@@ -3946,9 +4323,13 @@ function GetUnitsOfTypeIdAll (unitid)
 	index = 0
 	while(true) do
 		bj_groupEnumTypeId = unitid
+		GroupClear(g)
+		GroupEnumUnitsOfPlayer(g, Player(index), filterGetUnitsOfTypeIdAll)
+		GroupAddGroup(g, result)
 		index = index + 1
 		if (index == bj_MAX_PLAYER_SLOTS) then break end
 	end
+	DestroyGroup(g)
 	return result
 end
 
@@ -3957,6 +4338,8 @@ end
 ---@return group
 function GetUnitsOfPlayerMatching (whichPlayer, filter)
 	local g = CreateGroup() ---@type group
+	GroupEnumUnitsOfPlayer(g, whichPlayer, filter)
+	DestroyBoolExpr(filter)
 	return g
 end
 
@@ -3977,6 +4360,7 @@ end
 function GetUnitsOfPlayerAndTypeId (whichPlayer, unitid)
 	local g = CreateGroup() ---@type group
 	bj_groupEnumTypeId = unitid
+	GroupEnumUnitsOfPlayer(g, whichPlayer, filterGetUnitsOfPlayerAndTypeId)
 	return g
 end
 
@@ -3984,6 +4368,8 @@ end
 ---@return group
 function GetUnitsSelectedAll (whichPlayer)
 	local g = CreateGroup() ---@type group
+	SyncSelections()
+	GroupEnumUnitsSelected(g, whichPlayer, nil)
 	return g
 end
 
@@ -3991,6 +4377,7 @@ end
 ---@return force
 function GetForceOfPlayer (whichPlayer)
 	local f = CreateForce() ---@type force
+	ForceAddPlayer(f, whichPlayer)
 	return f
 end
 
@@ -4009,6 +4396,7 @@ function GetPlayersByMapControl (whichControl)
 	while(true) do
 		indexPlayer = Player(playerIndex)
 		if GetPlayerController(indexPlayer) == whichControl then
+			ForceAddPlayer(f, indexPlayer)
 		end
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYER_SLOTS) then break end
@@ -4020,6 +4408,7 @@ end
 ---@return force
 function GetPlayersAllies (whichPlayer)
 	local f = CreateForce() ---@type force
+	ForceEnumAllies(f, whichPlayer, nil)
 	return f
 end
 
@@ -4027,6 +4416,7 @@ end
 ---@return force
 function GetPlayersEnemies (whichPlayer)
 	local f = CreateForce() ---@type force
+	ForceEnumEnemies(f, whichPlayer, nil)
 	return f
 end
 
@@ -4034,6 +4424,8 @@ end
 ---@return force
 function GetPlayersMatching (filter)
 	local f = CreateForce() ---@type force
+	ForceEnumPlayers(f, filter)
+	DestroyBoolExpr(filter)
 	return f
 end
 
@@ -4047,7 +4439,9 @@ function CountUnitsInGroup (g)
 	local wantDestroy = bj_wantDestroyGroup ---@type boolean
 	bj_wantDestroyGroup = false
 	bj_groupCountUnits = 0
+	ForGroup(g, CountUnitsInGroupEnum)
 	if (wantDestroy) then
+		DestroyGroup(g)
 	end
 	return bj_groupCountUnits
 end
@@ -4060,12 +4454,14 @@ end
 ---@return number integer
 function CountPlayersInForceBJ (f)
 	bj_forceCountPlayers = 0
+	ForForce(f, CountPlayersInForceEnum)
 	return bj_forceCountPlayers
 end
 
 function GetRandomSubGroupEnum ()
 	if (bj_randomSubGroupWant > 0) then
 		if (bj_randomSubGroupWant >= bj_randomSubGroupTotal) or (GetRandomReal(0, 1) < bj_randomSubGroupChance) then
+			GroupAddUnit(bj_randomSubGroupGroup, GetEnumUnit())
 			bj_randomSubGroupWant = bj_randomSubGroupWant - 1
 		end
 	end
@@ -4084,6 +4480,7 @@ function GetRandomSubGroup (count, sourceGroup)
 		return g
 	end
 	bj_randomSubGroupChance = I2R(bj_randomSubGroupWant) / I2R(bj_randomSubGroupTotal)
+	ForGroup(sourceGroup, GetRandomSubGroupEnum)
 	return g
 end
 
@@ -4101,17 +4498,21 @@ function CountLivingPlayerUnitsOfTypeId (unitId, whichPlayer)
 	local matchedCount ---@type number integer
 	g = CreateGroup()
 	bj_livingPlayerUnitsTypeId = unitId
+	GroupEnumUnitsOfPlayer(g, whichPlayer, filterLivingPlayerUnitsOfTypeId)
 	matchedCount = CountUnitsInGroup(g)
+	DestroyGroup(g)
 	return matchedCount
 end
 
 ---@param whichUnit unit
 function ResetUnitAnimation (whichUnit)
+	SetUnitAnimation(whichUnit, "stand")
 end
 
 ---@param whichUnit unit
 ---@param percentScale number real
 function SetUnitTimeScalePercent (whichUnit, percentScale)
+	SetUnitTimeScale(whichUnit, percentScale * 0.01)
 end
 
 ---@param whichUnit unit
@@ -4119,6 +4520,7 @@ end
 ---@param percentScaleY number real
 ---@param percentScaleZ number real
 function SetUnitScalePercent (whichUnit, percentScaleX, percentScaleY, percentScaleZ)
+	SetUnitScale(whichUnit, percentScaleX * 0.01, percentScaleY * 0.01, percentScaleZ * 0.01)
 end
 
 ---@param whichUnit unit
@@ -4127,6 +4529,7 @@ end
 ---@param blue number real
 ---@param transparency number real
 function SetUnitVertexColorBJ (whichUnit, red, green, blue, transparency)
+	SetUnitVertexColor(whichUnit, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 end
 
 ---@param whichUnit unit
@@ -4135,6 +4538,7 @@ end
 ---@param blue number real
 ---@param transparency number real
 function UnitAddIndicatorBJ (whichUnit, red, green, blue, transparency)
+	AddIndicator(whichUnit, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 end
 
 ---@param whichDestructable destructable
@@ -4143,6 +4547,7 @@ end
 ---@param blue number real
 ---@param transparency number real
 function DestructableAddIndicatorBJ (whichDestructable, red, green, blue, transparency)
+	AddIndicator(whichDestructable, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 end
 
 ---@param whichItem item
@@ -4151,6 +4556,7 @@ end
 ---@param blue number real
 ---@param transparency number real
 function ItemAddIndicatorBJ (whichItem, red, green, blue, transparency)
+	AddIndicator(whichItem, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 end
 
 ---@param whichUnit unit
@@ -4158,6 +4564,8 @@ end
 ---@param duration number real
 function SetUnitFacingToFaceLocTimed (whichUnit, target, duration)
 	local unitLoc = GetUnitLoc(whichUnit) ---@type location
+	SetUnitFacingTimed(whichUnit, AngleBetweenPoints(unitLoc, target), duration)
+	RemoveLocation(unitLoc)
 end
 
 ---@param whichUnit unit
@@ -4165,37 +4573,45 @@ end
 ---@param duration number real
 function SetUnitFacingToFaceUnitTimed (whichUnit, target, duration)
 	local unitLoc = GetUnitLoc(target) ---@type location
+	SetUnitFacingToFaceLocTimed(whichUnit, unitLoc, duration)
+	RemoveLocation(unitLoc)
 end
 
 ---@param whichUnit unit
 ---@param whichAnimation string
 function QueueUnitAnimationBJ (whichUnit, whichAnimation)
+	QueueUnitAnimation(whichUnit, whichAnimation)
 end
 
 ---@param d destructable
 ---@param whichAnimation string
 function SetDestructableAnimationBJ (d, whichAnimation)
+	SetDestructableAnimation(d, whichAnimation)
 end
 
 ---@param d destructable
 ---@param whichAnimation string
 function QueueDestructableAnimationBJ (d, whichAnimation)
+	QueueDestructableAnimation(d, whichAnimation)
 end
 
 ---@param d destructable
 ---@param percentScale number real
 function SetDestAnimationSpeedPercent (d, percentScale)
+	SetDestructableAnimationSpeed(d, percentScale * 0.01)
 end
 
 ---@param flag boolean
 ---@param whichDialog dialog
 ---@param whichPlayer player
 function DialogDisplayBJ (flag, whichDialog, whichPlayer)
+	DialogDisplay(whichPlayer, whichDialog, flag)
 end
 
 ---@param whichDialog dialog
 ---@param message string
 function DialogSetMessageBJ (whichDialog, message)
+	DialogSetMessage(whichDialog, message)
 end
 
 ---@param whichDialog dialog
@@ -4217,6 +4633,7 @@ end
 
 ---@param whichDialog dialog
 function DialogClearBJ (whichDialog)
+	DialogClear(whichDialog)
 end
 
 ---@return button
@@ -4242,30 +4659,39 @@ function SetPlayerAllianceBJ (sourcePlayer, whichAllianceSetting, value, otherPl
 	if (sourcePlayer == otherPlayer) then
 		return
 	end
+	SetPlayerAlliance(sourcePlayer, otherPlayer, whichAllianceSetting, value)
 end
 
 ---@param sourcePlayer player
 ---@param otherPlayer player
 ---@param flag boolean
 function SetPlayerAllianceStateAllyBJ (sourcePlayer, otherPlayer, flag)
+	SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_PASSIVE, flag)
+	SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_HELP_REQUEST, flag)
+	SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_HELP_RESPONSE, flag)
+	SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_SHARED_XP, flag)
+	SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_SHARED_SPELLS, flag)
 end
 
 ---@param sourcePlayer player
 ---@param otherPlayer player
 ---@param flag boolean
 function SetPlayerAllianceStateVisionBJ (sourcePlayer, otherPlayer, flag)
+	SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_SHARED_VISION, flag)
 end
 
 ---@param sourcePlayer player
 ---@param otherPlayer player
 ---@param flag boolean
 function SetPlayerAllianceStateControlBJ (sourcePlayer, otherPlayer, flag)
+	SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_SHARED_CONTROL, flag)
 end
 
 ---@param sourcePlayer player
 ---@param otherPlayer player
 ---@param flag boolean
 function SetPlayerAllianceStateFullControlBJ (sourcePlayer, otherPlayer, flag)
+	SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_SHARED_ADVANCED_CONTROL, flag)
 end
 
 ---@param sourcePlayer player
@@ -4276,13 +4702,47 @@ function SetPlayerAllianceStateBJ (sourcePlayer, otherPlayer, allianceState)
 		return
 	end
 	if allianceState == bj_ALLIANCE_UNALLIED then
+		SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, false)
 	elseif allianceState == bj_ALLIANCE_UNALLIED then
+		SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, true)
+		SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, false)
 	elseif allianceState == bj_ALLIANCE_UNALLIED then
+		SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, true)
+		SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, false)
 	elseif allianceState == bj_ALLIANCE_UNALLIED then
+		SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, true)
+		SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, true)
+		SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, false)
 	elseif allianceState == bj_ALLIANCE_UNALLIED then
+		SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, true)
+		SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, true)
+		SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, true)
+		SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, false)
 	elseif allianceState == bj_ALLIANCE_UNALLIED then
+		SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, true)
+		SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, true)
+		SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, true)
+		SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, true)
 	elseif allianceState == bj_ALLIANCE_UNALLIED then
+		SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_PASSIVE, true)
 	elseif allianceState == bj_ALLIANCE_UNALLIED then
+		SetPlayerAllianceStateAllyBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAllianceStateVisionBJ(sourcePlayer, otherPlayer, true)
+		SetPlayerAllianceStateControlBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAllianceStateFullControlBJ(sourcePlayer, otherPlayer, false)
+		SetPlayerAlliance(sourcePlayer, otherPlayer, ALLIANCE_PASSIVE, true)
 	else
 	end
 end
@@ -4299,6 +4759,7 @@ function SetForceAllianceStateBJ (sourceForce, targetForce, allianceState)
 			targetIndex = 0
 			while(true) do
 				if (targetForce == bj_FORCE_ALL_PLAYERS or IsPlayerInForce(Player(targetIndex), targetForce)) then
+					SetPlayerAllianceStateBJ(Player(sourceIndex), Player(targetIndex), allianceState)
 				end
 				targetIndex = targetIndex + 1
 				if (targetIndex == bj_MAX_PLAYER_SLOTS) then break end
@@ -4333,6 +4794,9 @@ function ShareEverythingWithTeamAI (whichPlayer)
 		indexPlayer = Player(playerIndex)
 		if (PlayersAreCoAllied(whichPlayer, indexPlayer) and whichPlayer ~= indexPlayer) then
 			if (GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER) then
+				SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_VISION, true)
+				SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_CONTROL, true)
+				SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_ADVANCED_CONTROL, true)
 			end
 		end
 		playerIndex = playerIndex + 1
@@ -4348,6 +4812,10 @@ function ShareEverythingWithTeam (whichPlayer)
 	while(true) do
 		indexPlayer = Player(playerIndex)
 		if (PlayersAreCoAllied(whichPlayer, indexPlayer) and whichPlayer ~= indexPlayer) then
+			SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_VISION, true)
+			SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_CONTROL, true)
+			SetPlayerAlliance(indexPlayer, whichPlayer, ALLIANCE_SHARED_CONTROL, true)
+			SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_ADVANCED_CONTROL, true)
 		end
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
@@ -4361,18 +4829,28 @@ function ConfigureNeutralVictim ()
 	index = 0
 	while(true) do
 		indexPlayer = Player(index)
+		SetPlayerAlliance(neutralVictim, indexPlayer, ALLIANCE_PASSIVE, true)
+		SetPlayerAlliance(indexPlayer, neutralVictim, ALLIANCE_PASSIVE, false)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
 	end
 	indexPlayer = Player(PLAYER_NEUTRAL_AGGRESSIVE)
+	SetPlayerAlliance(neutralVictim, indexPlayer, ALLIANCE_PASSIVE, true)
+	SetPlayerAlliance(indexPlayer, neutralVictim, ALLIANCE_PASSIVE, true)
+	SetPlayerState(neutralVictim, PLAYER_STATE_GIVES_BOUNTY, 0)
 end
 
 function MakeUnitsPassiveForPlayerEnum ()
+	SetUnitOwner(GetEnumUnit(), Player(bj_PLAYER_NEUTRAL_VICTIM), false)
 end
 
 ---@param whichPlayer player
 function MakeUnitsPassiveForPlayer (whichPlayer)
 	local playerUnits = CreateGroup() ---@type group
+	CachePlayerHeroData(whichPlayer)
+	GroupEnumUnitsOfPlayer(playerUnits, whichPlayer, nil)
+	ForGroup(playerUnits, MakeUnitsPassiveForPlayerEnum)
+	DestroyGroup(playerUnits)
 end
 
 ---@param whichPlayer player
@@ -4383,6 +4861,7 @@ function MakeUnitsPassiveForTeam (whichPlayer)
 	while(true) do
 		indexPlayer = Player(playerIndex)
 		if PlayersAreCoAllied(whichPlayer, indexPlayer) then
+			MakeUnitsPassiveForPlayer(indexPlayer)
 		end
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
@@ -4405,6 +4884,7 @@ function AllowVictoryDefeat (gameResult)
 end
 
 function EndGameBJ ()
+	EndGame(true)
 end
 
 ---@param whichPlayer player
@@ -4418,7 +4898,13 @@ function MeleeVictoryDialogBJ (whichPlayer, leftGame)
 	else
 		formatString = GetLocalizedString("PLAYER_VICTORIOUS")
 	end
+	DisplayTimedTextFromPlayer(whichPlayer, 0, 0, 60, formatString)
+	DialogSetMessage(d, GetLocalizedString("GAMEOVER_VICTORY_MSG"))
+	DialogAddButton(d, GetLocalizedString("GAMEOVER_CONTINUE_GAME"), GetLocalizedHotkey("GAMEOVER_CONTINUE_GAME"))
 	t = CreateTrigger()
+	TriggerRegisterDialogButtonEvent(t, DialogAddQuitButton(d, true, GetLocalizedString("GAMEOVER_QUIT_GAME"), GetLocalizedHotkey("GAMEOVER_QUIT_GAME")))
+	DialogDisplay(whichPlayer, d, true)
+	StartSoundForPlayerBJ(whichPlayer, bj_victoryDialogSound)
 end
 
 ---@param whichPlayer player
@@ -4432,9 +4918,15 @@ function MeleeDefeatDialogBJ (whichPlayer, leftGame)
 	else
 		formatString = GetLocalizedString("PLAYER_DEFEATED")
 	end
+	DisplayTimedTextFromPlayer(whichPlayer, 0, 0, 60, formatString)
+	DialogSetMessage(d, GetLocalizedString("GAMEOVER_DEFEAT_MSG"))
 	if (not bj_meleeGameOver and IsMapFlagSet(MAP_OBSERVERS_ON_DEATH)) then
+		DialogAddButton(d, GetLocalizedString("GAMEOVER_CONTINUE_OBSERVING"), GetLocalizedHotkey("GAMEOVER_CONTINUE_OBSERVING"))
 	end
 	t = CreateTrigger()
+	TriggerRegisterDialogButtonEvent(t, DialogAddQuitButton(d, true, GetLocalizedString("GAMEOVER_QUIT_GAME"), GetLocalizedHotkey("GAMEOVER_QUIT_GAME")))
+	DialogDisplay(whichPlayer, d, true)
+	StartSoundForPlayerBJ(whichPlayer, bj_defeatDialogSound)
 end
 
 ---@param whichPlayer player
@@ -4443,12 +4935,17 @@ function GameOverDialogBJ (whichPlayer, leftGame)
 	local t = CreateTrigger() ---@type trigger
 	local d = DialogCreate() ---@type dialog
 	local s ---@type string
+	DisplayTimedTextFromPlayer(whichPlayer, 0, 0, 60, GetLocalizedString("PLAYER_LEFT_GAME"))
 	if (GetIntegerGameState(GAME_STATE_DISCONNECTED) ~= 0) then
 		s = GetLocalizedString("GAMEOVER_DISCONNECTED")
 	else
 		s = GetLocalizedString("GAMEOVER_GAME_OVER")
 	end
+	DialogSetMessage(d, s)
 	t = CreateTrigger()
+	TriggerRegisterDialogButtonEvent(t, DialogAddQuitButton(d, true, GetLocalizedString("GAMEOVER_OK"), GetLocalizedHotkey("GAMEOVER_OK")))
+	DialogDisplay(whichPlayer, d, true)
+	StartSoundForPlayerBJ(whichPlayer, bj_defeatDialogSound)
 end
 
 ---@param whichPlayer player
@@ -4456,46 +4953,71 @@ end
 ---@param leftGame boolean
 function RemovePlayerPreserveUnitsBJ (whichPlayer, gameResult, leftGame)
 	if AllowVictoryDefeat(gameResult) then
+		RemovePlayer(whichPlayer, gameResult)
 		if (gameResult == PLAYER_GAME_RESULT_VICTORY) then
+			MeleeVictoryDialogBJ(whichPlayer, leftGame)
 			return
 		elseif (gameResult == PLAYER_GAME_RESULT_VICTORY) then
+			MeleeDefeatDialogBJ(whichPlayer, leftGame)
 		else
+			GameOverDialogBJ(whichPlayer, leftGame)
 		end
 	end
 end
 
 function CustomVictoryOkBJ ()
 	if bj_isSinglePlayer then
+		PauseGame(false)
+		SetGameDifficulty(GetDefaultDifficulty())
 	end
 	if (bj_changeLevelMapName == nil) then
+		EndGame(bj_changeLevelShowScores)
 	else
+		ChangeLevel(bj_changeLevelMapName, bj_changeLevelShowScores)
 	end
 end
 
 function CustomVictoryQuitBJ ()
 	if bj_isSinglePlayer then
+		PauseGame(false)
+		SetGameDifficulty(GetDefaultDifficulty())
 	end
+	EndGame(bj_changeLevelShowScores)
 end
 
 ---@param whichPlayer player
 function CustomVictoryDialogBJ (whichPlayer)
 	local t = CreateTrigger() ---@type trigger
 	local d = DialogCreate() ---@type dialog
+	DialogSetMessage(d, GetLocalizedString("GAMEOVER_VICTORY_MSG"))
 	t = CreateTrigger()
+	TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_CONTINUE"), GetLocalizedHotkey("GAMEOVER_CONTINUE")))
+	TriggerAddAction(t, CustomVictoryOkBJ)
 	t = CreateTrigger()
+	TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_QUIT_MISSION"), GetLocalizedHotkey("GAMEOVER_QUIT_MISSION")))
+	TriggerAddAction(t, CustomVictoryQuitBJ)
 	if (GetLocalPlayer() == whichPlayer) then
+		EnableUserControl(true)
 		if bj_isSinglePlayer then
+			PauseGame(true)
 		end
+		EnableUserUI(false)
 	end
+	DialogDisplay(whichPlayer, d, true)
+	VolumeGroupSetVolumeForPlayerBJ(whichPlayer, SOUND_VOLUMEGROUP_UI, 1.0)
+	StartSoundForPlayerBJ(whichPlayer, bj_victoryDialogSound)
 end
 
 ---@param whichPlayer player
 function CustomVictorySkipBJ (whichPlayer)
 	if (GetLocalPlayer() == whichPlayer) then
 		if bj_isSinglePlayer then
+			SetGameDifficulty(GetDefaultDifficulty())
 		end
 		if (bj_changeLevelMapName == nil) then
+			EndGame(bj_changeLevelShowScores)
 		else
+			ChangeLevel(bj_changeLevelMapName, bj_changeLevelShowScores)
 		end
 	end
 end
@@ -4505,35 +5027,50 @@ end
 ---@param showScores boolean
 function CustomVictoryBJ (whichPlayer, showDialog, showScores)
 	if AllowVictoryDefeat(PLAYER_GAME_RESULT_VICTORY) then
+		RemovePlayer(whichPlayer, PLAYER_GAME_RESULT_VICTORY)
 		if not bj_isSinglePlayer then
+			DisplayTimedTextFromPlayer(whichPlayer, 0, 0, 60, GetLocalizedString("PLAYER_VICTORIOUS"))
 		end
 		if (GetPlayerController(whichPlayer) == MAP_CONTROL_USER) then
 			bj_changeLevelShowScores = showScores
 			if showDialog then
+				CustomVictoryDialogBJ(whichPlayer)
 			else
+				CustomVictorySkipBJ(whichPlayer)
 			end
 		end
 	end
 end
 
 function CustomDefeatRestartBJ ()
+	PauseGame(false)
+	RestartGame(true)
 end
 
 function CustomDefeatReduceDifficultyBJ ()
 	local diff = GetGameDifficulty() ---@type gamedifficulty
+	PauseGame(false)
 	if (diff == MAP_DIFFICULTY_EASY) then
 	elseif (diff == MAP_DIFFICULTY_EASY) then
+		SetGameDifficulty(MAP_DIFFICULTY_EASY)
 	elseif (diff == MAP_DIFFICULTY_EASY) then
+		SetGameDifficulty(MAP_DIFFICULTY_NORMAL)
 	else
 	end
+	RestartGame(true)
 end
 
 function CustomDefeatLoadBJ ()
+	PauseGame(false)
+	DisplayLoadDialog()
 end
 
 function CustomDefeatQuitBJ ()
 	if bj_isSinglePlayer then
+		PauseGame(false)
 	end
+	SetGameDifficulty(GetDefaultDifficulty())
+	EndGame(true)
 end
 
 ---@param whichPlayer player
@@ -4541,27 +5078,45 @@ end
 function CustomDefeatDialogBJ (whichPlayer, message)
 	local t = CreateTrigger() ---@type trigger
 	local d = DialogCreate() ---@type dialog
+	DialogSetMessage(d, message)
 	if bj_isSinglePlayer then
 		t = CreateTrigger()
+		TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_RESTART"), GetLocalizedHotkey("GAMEOVER_RESTART")))
+		TriggerAddAction(t, CustomDefeatRestartBJ)
 		if (GetGameDifficulty() ~= MAP_DIFFICULTY_EASY) then
 			t = CreateTrigger()
+			TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_REDUCE_DIFFICULTY"), GetLocalizedHotkey("GAMEOVER_REDUCE_DIFFICULTY")))
+			TriggerAddAction(t, CustomDefeatReduceDifficultyBJ)
 		end
 		t = CreateTrigger()
+		TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_LOAD"), GetLocalizedHotkey("GAMEOVER_LOAD")))
+		TriggerAddAction(t, CustomDefeatLoadBJ)
 	end
 	t = CreateTrigger()
+	TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_QUIT_MISSION"), GetLocalizedHotkey("GAMEOVER_QUIT_MISSION")))
+	TriggerAddAction(t, CustomDefeatQuitBJ)
 	if (GetLocalPlayer() == whichPlayer) then
+		EnableUserControl(true)
 		if bj_isSinglePlayer then
+			PauseGame(true)
 		end
+		EnableUserUI(false)
 	end
+	DialogDisplay(whichPlayer, d, true)
+	VolumeGroupSetVolumeForPlayerBJ(whichPlayer, SOUND_VOLUMEGROUP_UI, 1.0)
+	StartSoundForPlayerBJ(whichPlayer, bj_defeatDialogSound)
 end
 
 ---@param whichPlayer player
 ---@param message string
 function CustomDefeatBJ (whichPlayer, message)
 	if AllowVictoryDefeat(PLAYER_GAME_RESULT_DEFEAT) then
+		RemovePlayer(whichPlayer, PLAYER_GAME_RESULT_DEFEAT)
 		if not bj_isSinglePlayer then
+			DisplayTimedTextFromPlayer(whichPlayer, 0, 0, 60, GetLocalizedString("PLAYER_DEFEATED"))
 		end
 		if (GetPlayerController(whichPlayer) == MAP_CONTROL_USER) then
+			CustomDefeatDialogBJ(whichPlayer, message)
 		end
 	end
 end
@@ -4578,6 +5133,7 @@ end
 ---@param flag boolean
 ---@param whichPlayer player
 function SetPlayerOnScoreScreenBJ (flag, whichPlayer)
+	SetPlayerOnScoreScreen(whichPlayer, flag)
 end
 
 ---@param questType number integer
@@ -4589,41 +5145,54 @@ function CreateQuestBJ (questType, title, description, iconPath)
 	local required = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or (questType == bj_QUESTTYPE_REQ_UNDISCOVERED) ---@type boolean
 	local discovered = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or (questType == bj_QUESTTYPE_OPT_DISCOVERED) ---@type boolean
 	bj_lastCreatedQuest = CreateQuest()
+	QuestSetTitle(bj_lastCreatedQuest, title)
+	QuestSetDescription(bj_lastCreatedQuest, description)
+	QuestSetIconPath(bj_lastCreatedQuest, iconPath)
+	QuestSetRequired(bj_lastCreatedQuest, required)
+	QuestSetDiscovered(bj_lastCreatedQuest, discovered)
+	QuestSetCompleted(bj_lastCreatedQuest, false)
 	return bj_lastCreatedQuest
 end
 
 ---@param whichQuest quest
 function DestroyQuestBJ (whichQuest)
+	DestroyQuest(whichQuest)
 end
 
 ---@param enabled boolean
 ---@param whichQuest quest
 function QuestSetEnabledBJ (enabled, whichQuest)
+	QuestSetEnabled(whichQuest, enabled)
 end
 
 ---@param whichQuest quest
 ---@param title string
 function QuestSetTitleBJ (whichQuest, title)
+	QuestSetTitle(whichQuest, title)
 end
 
 ---@param whichQuest quest
 ---@param description string
 function QuestSetDescriptionBJ (whichQuest, description)
+	QuestSetDescription(whichQuest, description)
 end
 
 ---@param whichQuest quest
 ---@param completed boolean
 function QuestSetCompletedBJ (whichQuest, completed)
+	QuestSetCompleted(whichQuest, completed)
 end
 
 ---@param whichQuest quest
 ---@param failed boolean
 function QuestSetFailedBJ (whichQuest, failed)
+	QuestSetFailed(whichQuest, failed)
 end
 
 ---@param whichQuest quest
 ---@param discovered boolean
 function QuestSetDiscoveredBJ (whichQuest, discovered)
+	QuestSetDiscovered(whichQuest, discovered)
 end
 
 ---@return quest
@@ -4636,17 +5205,21 @@ end
 ---@return questitem
 function CreateQuestItemBJ (whichQuest, description)
 	bj_lastCreatedQuestItem = QuestCreateItem(whichQuest)
+	QuestItemSetDescription(bj_lastCreatedQuestItem, description)
+	QuestItemSetCompleted(bj_lastCreatedQuestItem, false)
 	return bj_lastCreatedQuestItem
 end
 
 ---@param whichQuestItem questitem
 ---@param description string
 function QuestItemSetDescriptionBJ (whichQuestItem, description)
+	QuestItemSetDescription(whichQuestItem, description)
 end
 
 ---@param whichQuestItem questitem
 ---@param completed boolean
 function QuestItemSetCompletedBJ (whichQuestItem, completed)
+	QuestItemSetCompleted(whichQuestItem, completed)
 end
 
 ---@return questitem
@@ -4658,16 +5231,19 @@ end
 ---@return defeatcondition
 function CreateDefeatConditionBJ (description)
 	bj_lastCreatedDefeatCondition = CreateDefeatCondition()
+	DefeatConditionSetDescription(bj_lastCreatedDefeatCondition, description)
 	return bj_lastCreatedDefeatCondition
 end
 
 ---@param whichCondition defeatcondition
 function DestroyDefeatConditionBJ (whichCondition)
+	DestroyDefeatCondition(whichCondition)
 end
 
 ---@param whichCondition defeatcondition
 ---@param description string
 function DefeatConditionSetDescriptionBJ (whichCondition, description)
+	DefeatConditionSetDescription(whichCondition, description)
 end
 
 ---@return defeatcondition
@@ -4676,6 +5252,7 @@ function GetLastCreatedDefeatConditionBJ ()
 end
 
 function FlashQuestDialogButtonBJ ()
+	FlashQuestDialogButton()
 end
 
 ---@param f force
@@ -4684,18 +5261,59 @@ end
 function QuestMessageBJ (f, messageType, message)
 	if (IsPlayerInForce(GetLocalPlayer(), f)) then
 		if (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUEST, " ")
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUEST, message)
+			StartSound(bj_questDiscoveredSound)
+			FlashQuestDialogButton()
 		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTUPDATE, " ")
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTUPDATE, message)
+			StartSound(bj_questUpdatedSound)
+			FlashQuestDialogButton()
 		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTDONE, " ")
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTDONE, message)
+			StartSound(bj_questCompletedSound)
+			FlashQuestDialogButton()
 		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTFAILED, " ")
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTFAILED, message)
+			StartSound(bj_questFailedSound)
+			FlashQuestDialogButton()
 		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTREQUIREMENT, message)
 		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_MISSIONFAILED, " ")
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_MISSIONFAILED, message)
+			StartSound(bj_questFailedSound)
 		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_HINT, " ")
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_HINT, message)
+			StartSound(bj_questHintSound)
 		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_ALWAYSHINT, " ")
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_ALWAYSHINT, message)
+			StartSound(bj_questHintSound)
 		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_SECRET, " ")
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_SECRET, message)
+			StartSound(bj_questSecretSound)
 		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_UNITACQUIRED, " ")
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_UNITACQUIRED, message)
+			StartSound(bj_questHintSound)
 		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_UNITAVAILABLE, " ")
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_UNITAVAILABLE, message)
+			StartSound(bj_questHintSound)
 		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_ITEMACQUIRED, " ")
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_ITEMACQUIRED, message)
+			StartSound(bj_questItemAcquiredSound)
 		elseif (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_WARNING, " ")
+			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_WARNING, message)
+			StartSound(bj_questWarningSound)
 		else
 		end
 	end
@@ -4707,6 +5325,7 @@ end
 ---@return timer
 function StartTimerBJ (t, periodic, timeout)
 	bj_lastStartedTimer = t
+	TimerStart(t, timeout, periodic, nil)
 	return bj_lastStartedTimer
 end
 
@@ -4715,18 +5334,22 @@ end
 ---@return timer
 function CreateTimerBJ (periodic, timeout)
 	bj_lastStartedTimer = CreateTimer()
+	TimerStart(bj_lastStartedTimer, timeout, periodic, nil)
 	return bj_lastStartedTimer
 end
 
 ---@param whichTimer timer
 function DestroyTimerBJ (whichTimer)
+	DestroyTimer(whichTimer)
 end
 
 ---@param pause boolean
 ---@param whichTimer timer
 function PauseTimerBJ (pause, whichTimer)
 	if pause then
+		PauseTimer(whichTimer)
 	else
+		ResumeTimer(whichTimer)
 	end
 end
 
@@ -4740,16 +5363,20 @@ end
 ---@return timerdialog
 function CreateTimerDialogBJ (t, title)
 	bj_lastCreatedTimerDialog = CreateTimerDialog(t)
+	TimerDialogSetTitle(bj_lastCreatedTimerDialog, title)
+	TimerDialogDisplay(bj_lastCreatedTimerDialog, true)
 	return bj_lastCreatedTimerDialog
 end
 
 ---@param td timerdialog
 function DestroyTimerDialogBJ (td)
+	DestroyTimerDialog(td)
 end
 
 ---@param td timerdialog
 ---@param title string
 function TimerDialogSetTitleBJ (td, title)
+	TimerDialogSetTitle(td, title)
 end
 
 ---@param td timerdialog
@@ -4758,6 +5385,7 @@ end
 ---@param blue number real
 ---@param transparency number real
 function TimerDialogSetTitleColorBJ (td, red, green, blue, transparency)
+	TimerDialogSetTitleColor(td, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 end
 
 ---@param td timerdialog
@@ -4766,11 +5394,13 @@ end
 ---@param blue number real
 ---@param transparency number real
 function TimerDialogSetTimeColorBJ (td, red, green, blue, transparency)
+	TimerDialogSetTimeColor(td, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 end
 
 ---@param td timerdialog
 ---@param speedMultFactor number real
 function TimerDialogSetSpeedBJ (td, speedMultFactor)
+	TimerDialogSetSpeed(td, speedMultFactor)
 end
 
 ---@param show boolean
@@ -4778,12 +5408,14 @@ end
 ---@param whichPlayer player
 function TimerDialogDisplayForPlayerBJ (show, td, whichPlayer)
 	if (GetLocalPlayer() == whichPlayer) then
+		TimerDialogDisplay(td, show)
 	end
 end
 
 ---@param show boolean
 ---@param td timerdialog
 function TimerDialogDisplayBJ (show, td)
+	TimerDialogDisplay(td, show)
 end
 
 ---@return timerdialog
@@ -4797,18 +5429,21 @@ function LeaderboardResizeBJ (lb)
 	if (LeaderboardGetLabelText(lb) == "") then
 		size = size - 1
 	end
+	LeaderboardSetSizeByItemCount(lb, size)
 end
 
 ---@param whichPlayer player
 ---@param lb leaderboard
 ---@param val number integer
 function LeaderboardSetPlayerItemValueBJ (whichPlayer, lb, val)
+	LeaderboardSetItemValue(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), val)
 end
 
 ---@param whichPlayer player
 ---@param lb leaderboard
 ---@param val string
 function LeaderboardSetPlayerItemLabelBJ (whichPlayer, lb, val)
+	LeaderboardSetItemLabel(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), val)
 end
 
 ---@param whichPlayer player
@@ -4817,6 +5452,7 @@ end
 ---@param showValue boolean
 ---@param showIcon boolean
 function LeaderboardSetPlayerItemStyleBJ (whichPlayer, lb, showLabel, showValue, showIcon)
+	LeaderboardSetItemStyle(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), showLabel, showValue, showIcon)
 end
 
 ---@param whichPlayer player
@@ -4826,6 +5462,7 @@ end
 ---@param blue number real
 ---@param transparency number real
 function LeaderboardSetPlayerItemLabelColorBJ (whichPlayer, lb, red, green, blue, transparency)
+	LeaderboardSetItemLabelColor(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 end
 
 ---@param whichPlayer player
@@ -4835,6 +5472,7 @@ end
 ---@param blue number real
 ---@param transparency number real
 function LeaderboardSetPlayerItemValueColorBJ (whichPlayer, lb, red, green, blue, transparency)
+	LeaderboardSetItemValueColor(lb, LeaderboardGetPlayerIndex(lb, whichPlayer), PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 end
 
 ---@param lb leaderboard
@@ -4843,6 +5481,7 @@ end
 ---@param blue number real
 ---@param transparency number real
 function LeaderboardSetLabelColorBJ (lb, red, green, blue, transparency)
+	LeaderboardSetLabelColor(lb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 end
 
 ---@param lb leaderboard
@@ -4851,11 +5490,14 @@ end
 ---@param blue number real
 ---@param transparency number real
 function LeaderboardSetValueColorBJ (lb, red, green, blue, transparency)
+	LeaderboardSetValueColor(lb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 end
 
 ---@param lb leaderboard
 ---@param label string
 function LeaderboardSetLabelBJ (lb, label)
+	LeaderboardSetLabel(lb, label)
+	LeaderboardResizeBJ(lb)
 end
 
 ---@param lb leaderboard
@@ -4864,6 +5506,7 @@ end
 ---@param showValues boolean
 ---@param showIcons boolean
 function LeaderboardSetStyleBJ (lb, showLabel, showNames, showValues, showIcons)
+	LeaderboardSetStyle(lb, showLabel, showNames, showValues, showIcons)
 end
 
 ---@param lb leaderboard
@@ -4888,6 +5531,7 @@ function ForceSetLeaderboardBJ (lb, toForce)
 	while(true) do
 		indexPlayer = Player(index)
 		if IsPlayerInForce(indexPlayer, toForce) then
+			PlayerSetLeaderboard(indexPlayer, lb)
 		end
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
@@ -4899,16 +5543,21 @@ end
 ---@return leaderboard
 function CreateLeaderboardBJ (toForce, label)
 	bj_lastCreatedLeaderboard = CreateLeaderboard()
+	LeaderboardSetLabel(bj_lastCreatedLeaderboard, label)
+	ForceSetLeaderboardBJ(bj_lastCreatedLeaderboard, toForce)
+	LeaderboardDisplay(bj_lastCreatedLeaderboard, true)
 	return bj_lastCreatedLeaderboard
 end
 
 ---@param lb leaderboard
 function DestroyLeaderboardBJ (lb)
+	DestroyLeaderboard(lb)
 end
 
 ---@param show boolean
 ---@param lb leaderboard
 function LeaderboardDisplayBJ (show, lb)
+	LeaderboardDisplay(lb, show)
 end
 
 ---@param whichPlayer player
@@ -4917,12 +5566,17 @@ end
 ---@param value number integer
 function LeaderboardAddItemBJ (whichPlayer, lb, label, value)
 	if (LeaderboardHasPlayerItem(lb, whichPlayer)) then
+		LeaderboardRemovePlayerItem(lb, whichPlayer)
 	end
+	LeaderboardAddItem(lb, label, value, whichPlayer)
+	LeaderboardResizeBJ(lb)
 end
 
 ---@param whichPlayer player
 ---@param lb leaderboard
 function LeaderboardRemovePlayerItemBJ (whichPlayer, lb)
+	LeaderboardRemovePlayerItem(lb, whichPlayer)
+	LeaderboardResizeBJ(lb)
 end
 
 ---@param lb leaderboard
@@ -4930,8 +5584,11 @@ end
 ---@param ascending boolean
 function LeaderboardSortItemsBJ (lb, sortType, ascending)
 	if (sortType == bj_SORTTYPE_SORTBYVALUE) then
+		LeaderboardSortItemsByValue(lb, ascending)
 	elseif (sortType == bj_SORTTYPE_SORTBYVALUE) then
+		LeaderboardSortItemsByPlayer(lb, ascending)
 	elseif (sortType == bj_SORTTYPE_SORTBYVALUE) then
+		LeaderboardSortItemsByLabel(lb, ascending)
 	else
 	end
 end
@@ -4939,11 +5596,13 @@ end
 ---@param lb leaderboard
 ---@param ascending boolean
 function LeaderboardSortItemsByPlayerBJ (lb, ascending)
+	LeaderboardSortItemsByPlayer(lb, ascending)
 end
 
 ---@param lb leaderboard
 ---@param ascending boolean
 function LeaderboardSortItemsByLabelBJ (lb, ascending)
+	LeaderboardSortItemsByLabel(lb, ascending)
 end
 
 ---@param whichPlayer player
@@ -4988,11 +5647,16 @@ end
 ---@return multiboard
 function CreateMultiboardBJ (cols, rows, title)
 	bj_lastCreatedMultiboard = CreateMultiboard()
+	MultiboardSetRowCount(bj_lastCreatedMultiboard, rows)
+	MultiboardSetColumnCount(bj_lastCreatedMultiboard, cols)
+	MultiboardSetTitleText(bj_lastCreatedMultiboard, title)
+	MultiboardDisplay(bj_lastCreatedMultiboard, true)
 	return bj_lastCreatedMultiboard
 end
 
 ---@param mb multiboard
 function DestroyMultiboardBJ (mb)
+	DestroyMultiboard(mb)
 end
 
 ---@return multiboard
@@ -5003,11 +5667,13 @@ end
 ---@param show boolean
 ---@param mb multiboard
 function MultiboardDisplayBJ (show, mb)
+	MultiboardDisplay(mb, show)
 end
 
 ---@param minimize boolean
 ---@param mb multiboard
 function MultiboardMinimizeBJ (minimize, mb)
+	MultiboardMinimize(mb, minimize)
 end
 
 ---@param mb multiboard
@@ -5016,10 +5682,12 @@ end
 ---@param blue number real
 ---@param transparency number real
 function MultiboardSetTitleTextColorBJ (mb, red, green, blue, transparency)
+	MultiboardSetTitleTextColor(mb, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 end
 
 ---@param flag boolean
 function MultiboardAllowDisplayBJ (flag)
+	MultiboardSuppressDisplay(not flag)
 end
 
 ---@param mb multiboard
@@ -5043,6 +5711,8 @@ function MultiboardSetItemStyleBJ (mb, col, row, showValue, showIcon)
 				if (curCol > numCols) then break end
 				if (col == 0 or col == curCol) then
 					mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
+					MultiboardSetItemStyle(mbitem, showValue, showIcon)
+					MultiboardReleaseItem(mbitem)
 				end
 			end
 		end
@@ -5069,6 +5739,8 @@ function MultiboardSetItemValueBJ (mb, col, row, val)
 				if (curCol > numCols) then break end
 				if (col == 0 or col == curCol) then
 					mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
+					MultiboardSetItemValue(mbitem, val)
+					MultiboardReleaseItem(mbitem)
 				end
 			end
 		end
@@ -5098,6 +5770,8 @@ function MultiboardSetItemColorBJ (mb, col, row, red, green, blue, transparency)
 				if (curCol > numCols) then break end
 				if (col == 0 or col == curCol) then
 					mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
+					MultiboardSetItemValueColor(mbitem, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
+					MultiboardReleaseItem(mbitem)
 				end
 			end
 		end
@@ -5124,6 +5798,8 @@ function MultiboardSetItemWidthBJ (mb, col, row, width)
 				if (curCol > numCols) then break end
 				if (col == 0 or col == curCol) then
 					mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
+					MultiboardSetItemWidth(mbitem, width / 100.0)
+					MultiboardReleaseItem(mbitem)
 				end
 			end
 		end
@@ -5150,6 +5826,8 @@ function MultiboardSetItemIconBJ (mb, col, row, iconFileName)
 				if (curCol > numCols) then break end
 				if (col == 0 or col == curCol) then
 					mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
+					MultiboardSetItemIcon(mbitem, iconFileName)
+					MultiboardReleaseItem(mbitem)
 				end
 			end
 		end
@@ -5174,6 +5852,7 @@ end
 ---@param blue number real
 ---@param transparency number real
 function SetTextTagColorBJ (tt, red, green, blue, transparency)
+	SetTextTagColor(tt, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 end
 
 ---@param tt texttag
@@ -5183,6 +5862,7 @@ function SetTextTagVelocityBJ (tt, speed, angle)
 	local vel = TextTagSpeed2Velocity(speed) ---@type number real
 	local xvel = vel * Cos(angle * bj_DEGTORAD) ---@type number real
 	local yvel = vel * Sin(angle * bj_DEGTORAD) ---@type number real
+	SetTextTagVelocity(tt, xvel, yvel)
 end
 
 ---@param tt texttag
@@ -5190,43 +5870,51 @@ end
 ---@param size number real
 function SetTextTagTextBJ (tt, s, size)
 	local textHeight = TextTagSize2Height(size) ---@type number real
+	SetTextTagText(tt, s, textHeight)
 end
 
 ---@param tt texttag
 ---@param loc location
 ---@param zOffset number real
 function SetTextTagPosBJ (tt, loc, zOffset)
+	SetTextTagPos(tt, GetLocationX(loc), GetLocationY(loc), zOffset)
 end
 
 ---@param tt texttag
 ---@param whichUnit unit
 ---@param zOffset number real
 function SetTextTagPosUnitBJ (tt, whichUnit, zOffset)
+	SetTextTagPosUnit(tt, whichUnit, zOffset)
 end
 
 ---@param tt texttag
 ---@param flag boolean
 function SetTextTagSuspendedBJ (tt, flag)
+	SetTextTagSuspended(tt, flag)
 end
 
 ---@param tt texttag
 ---@param flag boolean
 function SetTextTagPermanentBJ (tt, flag)
+	SetTextTagPermanent(tt, flag)
 end
 
 ---@param tt texttag
 ---@param age number real
 function SetTextTagAgeBJ (tt, age)
+	SetTextTagAge(tt, age)
 end
 
 ---@param tt texttag
 ---@param lifespan number real
 function SetTextTagLifespanBJ (tt, lifespan)
+	SetTextTagLifespan(tt, lifespan)
 end
 
 ---@param tt texttag
 ---@param fadepoint number real
 function SetTextTagFadepointBJ (tt, fadepoint)
+	SetTextTagFadepoint(tt, fadepoint)
 end
 
 ---@param s string
@@ -5240,6 +5928,9 @@ end
 ---@return texttag
 function CreateTextTagLocBJ (s, loc, zOffset, size, red, green, blue, transparency)
 	bj_lastCreatedTextTag = CreateTextTag()
+	SetTextTagTextBJ(bj_lastCreatedTextTag, s, size)
+	SetTextTagPosBJ(bj_lastCreatedTextTag, loc, zOffset)
+	SetTextTagColorBJ(bj_lastCreatedTextTag, red, green, blue, transparency)
 	return bj_lastCreatedTextTag
 end
 
@@ -5254,11 +5945,15 @@ end
 ---@return texttag
 function CreateTextTagUnitBJ (s, whichUnit, zOffset, size, red, green, blue, transparency)
 	bj_lastCreatedTextTag = CreateTextTag()
+	SetTextTagTextBJ(bj_lastCreatedTextTag, s, size)
+	SetTextTagPosUnitBJ(bj_lastCreatedTextTag, whichUnit, zOffset)
+	SetTextTagColorBJ(bj_lastCreatedTextTag, red, green, blue, transparency)
 	return bj_lastCreatedTextTag
 end
 
 ---@param tt texttag
 function DestroyTextTagBJ (tt)
+	DestroyTextTag(tt)
 end
 
 ---@param show boolean
@@ -5266,6 +5961,7 @@ end
 ---@param whichForce force
 function ShowTextTagForceBJ (show, tt, whichForce)
 	if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+		SetTextTagVisibility(tt, show)
 	end
 end
 
@@ -5275,20 +5971,24 @@ function GetLastCreatedTextTag ()
 end
 
 function PauseGameOn ()
+	PauseGame(true)
 end
 
 function PauseGameOff ()
+	PauseGame(false)
 end
 
 ---@param whichForce force
 function SetUserControlForceOn (whichForce)
 	if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+		EnableUserControl(true)
 	end
 end
 
 ---@param whichForce force
 function SetUserControlForceOff (whichForce)
 	if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+		EnableUserControl(false)
 	end
 end
 
@@ -5296,6 +5996,7 @@ end
 ---@param fadeDuration number real
 function ShowInterfaceForceOn (whichForce, fadeDuration)
 	if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+		ShowInterface(true, fadeDuration)
 	end
 end
 
@@ -5303,6 +6004,7 @@ end
 ---@param fadeDuration number real
 function ShowInterfaceForceOff (whichForce, fadeDuration)
 	if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+		ShowInterface(false, fadeDuration)
 	end
 end
 
@@ -5312,6 +6014,7 @@ end
 ---@param duration number real
 function PingMinimapForForce (whichForce, x, y, duration)
 	if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+		PingMinimap(x, y, duration)
 	end
 end
 
@@ -5319,6 +6022,7 @@ end
 ---@param loc location
 ---@param duration number real
 function PingMinimapLocForForce (whichForce, loc, duration)
+	PingMinimapForForce(whichForce, GetLocationX(loc), GetLocationY(loc), duration)
 end
 
 ---@param whichPlayer player
@@ -5327,6 +6031,7 @@ end
 ---@param duration number real
 function PingMinimapForPlayer (whichPlayer, x, y, duration)
 	if (GetLocalPlayer() == whichPlayer) then
+		PingMinimap(x, y, duration)
 	end
 end
 
@@ -5334,6 +6039,7 @@ end
 ---@param loc location
 ---@param duration number real
 function PingMinimapLocForPlayer (whichPlayer, loc, duration)
+	PingMinimapForPlayer(whichPlayer, GetLocationX(loc), GetLocationY(loc), duration)
 end
 
 ---@param whichForce force
@@ -5353,8 +6059,11 @@ function PingMinimapForForceEx (whichForce, x, y, duration, style, red, green, b
 			red255 = 254
 		end
 		if (style == bj_MINIMAPPINGSTYLE_SIMPLE) then
+			PingMinimapEx(x, y, duration, red255, green255, blue255, false)
 		elseif (style == bj_MINIMAPPINGSTYLE_SIMPLE) then
+			PingMinimapEx(x, y, duration, red255, green255, blue255, true)
 		elseif (style == bj_MINIMAPPINGSTYLE_SIMPLE) then
+			PingMinimapEx(x, y, duration, 255, 0, 0, false)
 		else
 		end
 	end
@@ -5368,12 +6077,14 @@ end
 ---@param green number real
 ---@param blue number real
 function PingMinimapLocForForceEx (whichForce, loc, duration, style, red, green, blue)
+	PingMinimapForForceEx(whichForce, GetLocationX(loc), GetLocationY(loc), duration, style, red, green, blue)
 end
 
 ---@param enable boolean
 ---@param f force
 function EnableWorldFogBoundaryBJ (enable, f)
 	if (IsPlayerInForce(GetLocalPlayer(), f)) then
+		EnableWorldFogBoundary(enable)
 	end
 end
 
@@ -5381,10 +6092,13 @@ end
 ---@param f force
 function EnableOcclusionBJ (enable, f)
 	if (IsPlayerInForce(GetLocalPlayer(), f)) then
+		EnableOcclusion(enable)
 	end
 end
 
 function CancelCineSceneBJ ()
+	StopSoundBJ(bj_cineSceneLastSound, true)
+	EndCinematicScene()
 end
 
 function TryInitCinematicBehaviorBJ ()
@@ -5393,9 +6107,11 @@ function TryInitCinematicBehaviorBJ ()
 		bj_cineSceneBeingSkipped = CreateTrigger()
 		index = 0
 		while(true) do
+			TriggerRegisterPlayerEvent(bj_cineSceneBeingSkipped, Player(index), EVENT_PLAYER_END_CINEMATIC)
 			index = index + 1
 			if (index == bj_MAX_PLAYERS) then break end
 		end
+		TriggerAddAction(bj_cineSceneBeingSkipped, CancelCineSceneBJ)
 	end
 end
 
@@ -5408,6 +6124,8 @@ end
 ---@param voiceoverDuration number real
 function SetCinematicSceneBJ (soundHandle, portraitUnitId, color, speakerTitle, text, sceneDuration, voiceoverDuration)
 	bj_cineSceneLastSound = soundHandle
+	PlaySoundBJ(soundHandle)
+	SetCinematicScene(portraitUnitId, color, speakerTitle, text, sceneDuration, voiceoverDuration)
 end
 
 ---@param soundHandle sound
@@ -5436,9 +6154,14 @@ end
 ---@param timeVal number real
 function WaitTransmissionDuration (soundHandle, timeType, timeVal)
 	if (timeType == bj_TIMETYPE_SET) then
+		TriggerSleepAction(timeVal)
 	elseif (timeType == bj_TIMETYPE_SET) then
+		TriggerSleepAction(bj_NOTHING_SOUND_DURATION)
 	elseif (timeType == bj_TIMETYPE_SET) then
+		WaitForSoundBJ(soundHandle, timeVal)
 	elseif (timeType == bj_TIMETYPE_SET) then
+		WaitForSoundBJ(soundHandle, 0)
+		TriggerSleepAction(timeVal)
 	else
 	end
 end
@@ -5452,7 +6175,9 @@ end
 ---@param message string
 ---@param duration number real
 function DoTransmissionBasicsXYBJ (unitId, color, x, y, soundHandle, unitName, message, duration)
+	SetCinematicSceneBJ(soundHandle, unitId, color, unitName, message, duration + bj_TRANSMISSION_PORT_HANGTIME, duration)
 	if (unitId ~= 0) then
+		PingMinimap(x, y, bj_TRANSMISSION_PING_TIME)
 	end
 end
 
@@ -5465,17 +6190,22 @@ end
 ---@param timeVal number real
 ---@param wait boolean
 function TransmissionFromUnitWithNameBJ (toForce, whichUnit, unitName, soundHandle, message, timeType, timeVal, wait)
+	TryInitCinematicBehaviorBJ()
 	timeVal = RMaxBJ(timeVal, 0)
 	bj_lastTransmissionDuration = GetTransmissionDuration(soundHandle, timeType, timeVal)
 	bj_lastPlayedSound = soundHandle
 	if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
 		if (whichUnit == nil) then
+			DoTransmissionBasicsXYBJ(0, PLAYER_COLOR_RED, 0, 0, soundHandle, unitName, message, bj_lastTransmissionDuration)
 		else
+			DoTransmissionBasicsXYBJ(GetUnitTypeId(whichUnit), GetPlayerColor(GetOwningPlayer(whichUnit)), GetUnitX(whichUnit), GetUnitY(whichUnit), soundHandle, unitName, message, bj_lastTransmissionDuration)
 			if (not IsUnitHidden(whichUnit)) then
+				UnitAddIndicator(whichUnit, bj_TRANSMISSION_IND_RED, bj_TRANSMISSION_IND_BLUE, bj_TRANSMISSION_IND_GREEN, bj_TRANSMISSION_IND_ALPHA)
 			end
 		end
 	end
 	if wait and (bj_lastTransmissionDuration > 0) then
+		WaitTransmissionDuration(soundHandle, timeType, timeVal)
 	end
 end
 
@@ -5490,12 +6220,15 @@ end
 ---@param timeVal number real
 ---@param wait boolean
 function TransmissionFromUnitTypeWithNameBJ (toForce, fromPlayer, unitId, unitName, loc, soundHandle, message, timeType, timeVal, wait)
+	TryInitCinematicBehaviorBJ()
 	timeVal = RMaxBJ(timeVal, 0)
 	bj_lastTransmissionDuration = GetTransmissionDuration(soundHandle, timeType, timeVal)
 	bj_lastPlayedSound = soundHandle
 	if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+		DoTransmissionBasicsXYBJ(unitId, GetPlayerColor(fromPlayer), GetLocationX(loc), GetLocationY(loc), soundHandle, unitName, message, bj_lastTransmissionDuration)
 	end
 	if wait and (bj_lastTransmissionDuration > 0) then
+		WaitTransmissionDuration(soundHandle, timeType, timeVal)
 	end
 end
 
@@ -5506,6 +6239,7 @@ end
 
 ---@param flag boolean
 function ForceCinematicSubtitlesBJ (flag)
+	ForceCinematicSubtitles(flag)
 end
 
 ---@param cineMode boolean
@@ -5525,21 +6259,48 @@ function CinematicModeExBJ (cineMode, forForce, interfaceFadeTime)
 			bj_cineModeSavedSeed = GetRandomInt(0, 1000000)
 		end
 		if (IsPlayerInForce(GetLocalPlayer(), forForce)) then
+			ClearTextMessages()
+			ShowInterface(false, interfaceFadeTime)
+			EnableUserControl(false)
+			EnableOcclusion(false)
+			SetCineModeVolumeGroupsBJ()
 		end
+		SetGameSpeed(bj_CINEMODE_GAMESPEED)
+		SetMapFlag(MAP_LOCK_SPEED, true)
+		FogMaskEnable(false)
+		FogEnable(false)
+		EnableWorldFogBoundary(false)
+		EnableDawnDusk(false)
+		SetRandomSeed(0)
 	else
 		bj_cineModeAlreadyIn = false
 		if (IsPlayerInForce(GetLocalPlayer(), forForce)) then
+			ShowInterface(true, interfaceFadeTime)
+			EnableUserControl(true)
+			EnableOcclusion(true)
+			VolumeGroupReset()
+			EndThematicMusic()
+			CameraResetSmoothingFactorBJ()
 		end
+		SetMapFlag(MAP_LOCK_SPEED, false)
+		SetGameSpeed(bj_cineModePriorSpeed)
+		FogMaskEnable(bj_cineModePriorMaskSetting)
+		FogEnable(bj_cineModePriorFogSetting)
+		EnableWorldFogBoundary(true)
+		EnableDawnDusk(bj_cineModePriorDawnDusk)
+		SetRandomSeed(bj_cineModeSavedSeed)
 	end
 end
 
 ---@param cineMode boolean
 ---@param forForce force
 function CinematicModeBJ (cineMode, forForce)
+	CinematicModeExBJ(cineMode, forForce, bj_CINEMODE_INTERFACEFADE)
 end
 
 ---@param flag boolean
 function DisplayCineFilterBJ (flag)
+	DisplayCineFilter(flag)
 end
 
 ---@param red number real
@@ -5553,19 +6314,35 @@ function CinematicFadeCommonBJ (red, green, blue, duration, tex, startTrans, end
 	if (duration == 0) then
 		startTrans = endTrans
 	end
+	EnableUserUI(false)
+	SetCineFilterTexture(tex)
+	SetCineFilterBlendMode(BLEND_MODE_BLEND)
+	SetCineFilterTexMapFlags(TEXMAP_FLAG_NONE)
+	SetCineFilterStartUV(0, 0, 1, 1)
+	SetCineFilterEndUV(0, 0, 1, 1)
+	SetCineFilterStartColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100 - startTrans))
+	SetCineFilterEndColor(PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100 - endTrans))
+	SetCineFilterDuration(duration)
+	DisplayCineFilter(true)
 end
 
 function FinishCinematicFadeBJ ()
+	DestroyTimer(bj_cineFadeFinishTimer)
 	bj_cineFadeFinishTimer = nil
+	DisplayCineFilter(false)
+	EnableUserUI(true)
 end
 
 ---@param duration number real
 function FinishCinematicFadeAfterBJ (duration)
 	bj_cineFadeFinishTimer = CreateTimer()
+	TimerStart(bj_cineFadeFinishTimer, duration, false, FinishCinematicFadeBJ)
 end
 
 function ContinueCinematicFadeBJ ()
+	DestroyTimer(bj_cineFadeContinueTimer)
 	bj_cineFadeContinueTimer = nil
+	CinematicFadeCommonBJ(bj_cineFadeContinueRed, bj_cineFadeContinueGreen, bj_cineFadeContinueBlue, bj_cineFadeContinueDuration, bj_cineFadeContinueTex, bj_cineFadeContinueTrans, 100)
 end
 
 ---@param duration number real
@@ -5582,12 +6359,15 @@ function ContinueCinematicFadeAfterBJ (duration, red, green, blue, trans, tex)
 	bj_cineFadeContinueDuration = duration
 	bj_cineFadeContinueTex = tex
 	bj_cineFadeContinueTimer = CreateTimer()
+	TimerStart(bj_cineFadeContinueTimer, duration, false, ContinueCinematicFadeBJ)
 end
 
 function AbortCinematicFadeBJ ()
 	if (bj_cineFadeContinueTimer ~= nil) then
+		DestroyTimer(bj_cineFadeContinueTimer)
 	end
 	if (bj_cineFadeFinishTimer ~= nil) then
+		DestroyTimer(bj_cineFadeFinishTimer)
 	end
 end
 
@@ -5600,9 +6380,18 @@ end
 ---@param trans number real
 function CinematicFadeBJ (fadetype, duration, tex, red, green, blue, trans)
 	if (fadetype == bj_CINEFADETYPE_FADEOUT) then
+		AbortCinematicFadeBJ()
+		CinematicFadeCommonBJ(red, green, blue, duration, tex, 100, trans)
 	elseif (fadetype == bj_CINEFADETYPE_FADEOUT) then
+		AbortCinematicFadeBJ()
+		CinematicFadeCommonBJ(red, green, blue, duration, tex, trans, 100)
+		FinishCinematicFadeAfterBJ(duration)
 	elseif (fadetype == bj_CINEFADETYPE_FADEOUT) then
 		if (duration > 0) then
+			AbortCinematicFadeBJ()
+			CinematicFadeCommonBJ(red, green, blue, duration * 0.5, tex, 100, trans)
+			ContinueCinematicFadeAfterBJ(duration * 0.5, red, green, blue, trans, tex)
+			FinishCinematicFadeAfterBJ(duration)
 		end
 	else
 	end
@@ -5620,6 +6409,16 @@ end
 ---@param blue1 number real
 ---@param trans1 number real
 function CinematicFilterGenericBJ (duration, bmode, tex, red0, green0, blue0, trans0, red1, green1, blue1, trans1)
+	AbortCinematicFadeBJ()
+	SetCineFilterTexture(tex)
+	SetCineFilterBlendMode(bmode)
+	SetCineFilterTexMapFlags(TEXMAP_FLAG_NONE)
+	SetCineFilterStartUV(0, 0, 1, 1)
+	SetCineFilterEndUV(0, 0, 1, 1)
+	SetCineFilterStartColor(PercentTo255(red0), PercentTo255(green0), PercentTo255(blue0), PercentTo255(100 - trans0))
+	SetCineFilterEndColor(PercentTo255(red1), PercentTo255(green1), PercentTo255(blue1), PercentTo255(100 - trans1))
+	SetCineFilterDuration(duration)
+	DisplayCineFilter(true)
 end
 
 ---@param whichUnit unit
@@ -5629,12 +6428,18 @@ function RescueUnitBJ (whichUnit, rescuer, changeColor)
 	if IsUnitDeadBJ(whichUnit) or (GetOwningPlayer(whichUnit) == rescuer) then
 		return
 	end
+	StartSound(bj_rescueSound)
+	SetUnitOwner(whichUnit, rescuer, changeColor)
+	UnitAddIndicator(whichUnit, 0, 255, 0, 255)
+	PingMinimapForPlayer(rescuer, GetUnitX(whichUnit), GetUnitY(whichUnit), bj_RESCUE_PING_TIME)
 end
 
 function TriggerActionUnitRescuedBJ ()
 	local theUnit = GetTriggerUnit() ---@type unit
 	if IsUnitType(theUnit, UNIT_TYPE_STRUCTURE) then
+		RescueUnitBJ(theUnit, GetOwningPlayer(GetRescuer()), bj_rescueChangeColorBldg)
 	else
+		RescueUnitBJ(theUnit, GetOwningPlayer(GetRescuer()), bj_rescueChangeColorUnit)
 	end
 end
 
@@ -5644,9 +6449,11 @@ function TryInitRescuableTriggersBJ ()
 		bj_rescueUnitBehavior = CreateTrigger()
 		index = 0
 		while(true) do
+			TriggerRegisterPlayerUnitEvent(bj_rescueUnitBehavior, Player(index), EVENT_PLAYER_UNIT_RESCUED, nil)
 			index = index + 1
 			if (index == bj_MAX_PLAYER_SLOTS) then break end
 		end
+		TriggerAddAction(bj_rescueUnitBehavior, TriggerActionUnitRescuedBJ)
 	end
 end
 
@@ -5661,6 +6468,8 @@ function SetRescueBuildingColorChangeBJ (changeColor)
 end
 
 function MakeUnitRescuableToForceBJEnum ()
+	TryInitRescuableTriggersBJ()
+	SetUnitRescuable(bj_makeUnitRescuableUnit, GetEnumPlayer(), bj_makeUnitRescuableFlag)
 end
 
 ---@param whichUnit unit
@@ -5669,6 +6478,7 @@ end
 function MakeUnitRescuableToForceBJ (whichUnit, isRescuable, whichForce)
 	bj_makeUnitRescuableUnit = whichUnit
 	bj_makeUnitRescuableFlag = isRescuable
+	ForForce(whichForce, MakeUnitRescuableToForceBJEnum)
 end
 
 function InitRescuableBehaviorBJ ()
@@ -5676,6 +6486,7 @@ function InitRescuableBehaviorBJ ()
 	index = 0
 	while(true) do
 		if (GetPlayerController(Player(index)) == MAP_CONTROL_RESCUABLE) then
+			TryInitRescuableTriggersBJ()
 			return
 		end
 		index = index + 1
@@ -5687,17 +6498,20 @@ end
 ---@param levels number integer
 ---@param whichPlayer player
 function SetPlayerTechResearchedSwap (techid, levels, whichPlayer)
+	SetPlayerTechResearched(whichPlayer, techid, levels)
 end
 
 ---@param techid number integer
 ---@param maximum number integer
 ---@param whichPlayer player
 function SetPlayerTechMaxAllowedSwap (techid, maximum, whichPlayer)
+	SetPlayerTechMaxAllowed(whichPlayer, techid, maximum)
 end
 
 ---@param maximum number integer
 ---@param whichPlayer player
 function SetPlayerMaxHeroesAllowed (maximum, whichPlayer)
+	SetPlayerTechMaxAllowed(whichPlayer, 'HERO', maximum)
 end
 
 ---@param techid number integer
@@ -5718,19 +6532,29 @@ end
 ---@param abilid number integer
 ---@param whichPlayer player
 function SetPlayerAbilityAvailableBJ (avail, abilid, whichPlayer)
+	SetPlayerAbilityAvailable(whichPlayer, abilid, avail)
 end
 
 ---@param campaignNumber number integer
 function SetCampaignMenuRaceBJ (campaignNumber)
 	if (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+		SetCampaignMenuRace(RACE_OTHER)
 	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+		SetCampaignMenuRace(RACE_HUMAN)
 	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+		SetCampaignMenuRace(RACE_UNDEAD)
 	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+		SetCampaignMenuRace(RACE_ORC)
 	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+		SetCampaignMenuRace(RACE_NIGHTELF)
 	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+		SetCampaignMenuRaceEx(bj_CAMPAIGN_OFFSET_XN)
 	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+		SetCampaignMenuRaceEx(bj_CAMPAIGN_OFFSET_XH)
 	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+		SetCampaignMenuRaceEx(bj_CAMPAIGN_OFFSET_XU)
 	elseif (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+		SetCampaignMenuRaceEx(bj_CAMPAIGN_OFFSET_XO)
 	else
 	end
 end
@@ -5740,6 +6564,7 @@ end
 function SetMissionAvailableBJ (available, missionIndex)
 	local campaignNumber = missionIndex / 1000 ---@type number integer
 	local missionNumber = missionIndex - campaignNumber * 1000 ---@type number integer
+	SetMissionAvailable(campaignNumber, missionNumber, available)
 end
 
 ---@param available boolean
@@ -5747,6 +6572,7 @@ end
 function SetCampaignAvailableBJ (available, campaignNumber)
 	local campaignOffset ---@type number integer
 	if (campaignNumber == bj_CAMPAIGN_INDEX_H) then
+		SetTutorialCleared(true)
 	end
 	if (campaignNumber == bj_CAMPAIGN_INDEX_XN) then
 		campaignOffset = bj_CAMPAIGN_OFFSET_XN
@@ -5759,22 +6585,47 @@ function SetCampaignAvailableBJ (available, campaignNumber)
 	else
 		campaignOffset = campaignNumber
 	end
+	SetCampaignAvailable(campaignOffset, available)
+	SetCampaignMenuRaceBJ(campaignNumber)
+	ForceCampaignSelectScreen()
 end
 
 ---@param available boolean
 ---@param cinematicIndex number integer
 function SetCinematicAvailableBJ (available, cinematicIndex)
 	if (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+		SetOpCinematicAvailable(bj_CAMPAIGN_INDEX_T, available)
+		PlayCinematic("TutorialOp")
 	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+		SetOpCinematicAvailable(bj_CAMPAIGN_INDEX_H, available)
+		PlayCinematic("HumanOp")
 	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+		SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_H, available)
+		PlayCinematic("HumanEd")
 	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+		SetOpCinematicAvailable(bj_CAMPAIGN_INDEX_O, available)
+		PlayCinematic("OrcOp")
 	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+		SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_O, available)
+		PlayCinematic("OrcEd")
 	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+		SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_U, available)
+		PlayCinematic("UndeadOp")
 	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+		SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_U, available)
+		PlayCinematic("UndeadEd")
 	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+		SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_N, available)
+		PlayCinematic("NightElfOp")
 	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+		SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_N, available)
+		PlayCinematic("NightElfEd")
 	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+		SetOpCinematicAvailable(bj_CAMPAIGN_OFFSET_XN, available)
+		PlayCinematic("IntroX")
 	elseif (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+		SetEdCinematicAvailable(bj_CAMPAIGN_OFFSET_XU, available)
+		PlayCinematic("OutroX")
 	else
 	end
 end
@@ -5813,6 +6664,7 @@ end
 ---@param missionKey string
 ---@param cache gamecache
 function StoreRealBJ (value, key, missionKey, cache)
+	StoreReal(cache, missionKey, key, value)
 end
 
 ---@param value number integer
@@ -5820,6 +6672,7 @@ end
 ---@param missionKey string
 ---@param cache gamecache
 function StoreIntegerBJ (value, key, missionKey, cache)
+	StoreInteger(cache, missionKey, key, value)
 end
 
 ---@param value boolean
@@ -5827,6 +6680,7 @@ end
 ---@param missionKey string
 ---@param cache gamecache
 function StoreBooleanBJ (value, key, missionKey, cache)
+	StoreBoolean(cache, missionKey, key, value)
 end
 
 ---@param value string
@@ -5852,6 +6706,7 @@ end
 ---@param missionKey number integer
 ---@param table hashtable
 function SaveRealBJ (value, key, missionKey, table)
+	SaveReal(table, missionKey, key, value)
 end
 
 ---@param value number integer
@@ -5859,6 +6714,7 @@ end
 ---@param missionKey number integer
 ---@param table hashtable
 function SaveIntegerBJ (value, key, missionKey, table)
+	SaveInteger(table, missionKey, key, value)
 end
 
 ---@param value boolean
@@ -5866,6 +6722,7 @@ end
 ---@param missionKey number integer
 ---@param table hashtable
 function SaveBooleanBJ (value, key, missionKey, table)
+	SaveBoolean(table, missionKey, key, value)
 end
 
 ---@param value string
@@ -6638,20 +7495,24 @@ end
 
 ---@param cache gamecache
 function FlushGameCacheBJ (cache)
+	FlushGameCache(cache)
 end
 
 ---@param missionKey string
 ---@param cache gamecache
 function FlushStoredMissionBJ (missionKey, cache)
+	FlushStoredMission(cache, missionKey)
 end
 
 ---@param table hashtable
 function FlushParentHashtableBJ (table)
+	FlushParentHashtable(table)
 end
 
 ---@param missionKey number integer
 ---@param table hashtable
 function FlushChildHashtableBJ (missionKey, table)
+	FlushChildHashtable(table, missionKey)
 end
 
 ---@param key string
@@ -6699,6 +7560,7 @@ end
 ---@param show boolean
 ---@param whichButton number integer
 function ShowCustomCampaignButton (show, whichButton)
+	SetCustomCampaignButtonVisible(whichButton - 1, show)
 end
 
 ---@param whichButton number integer
@@ -6710,18 +7572,23 @@ end
 ---@param loadFileName string
 ---@param doScoreScreen boolean
 function LoadGameBJ (loadFileName, doScoreScreen)
+	LoadGame(loadFileName, doScoreScreen)
 end
 
 ---@param saveFileName string
 ---@param newLevel string
 ---@param doScoreScreen boolean
 function SaveAndChangeLevelBJ (saveFileName, newLevel, doScoreScreen)
+	SaveGame(saveFileName)
+	ChangeLevel(newLevel, doScoreScreen)
 end
 
 ---@param saveFileName string
 ---@param loadFileName string
 ---@param doScoreScreen boolean
 function SaveAndLoadGameBJ (saveFileName, loadFileName, doScoreScreen)
+	SaveGame(saveFileName)
+	LoadGame(loadFileName, doScoreScreen)
 end
 
 ---@param sourceDirName string
@@ -6797,6 +7664,7 @@ end
 ---@param whichPlayerState playerstate
 ---@param delta number integer
 function AdjustPlayerStateSimpleBJ (whichPlayer, whichPlayerState, delta)
+	SetPlayerState(whichPlayer, whichPlayerState, GetPlayerState(whichPlayer, whichPlayerState) + delta)
 end
 
 ---@param delta number integer
@@ -6805,9 +7673,12 @@ end
 function AdjustPlayerStateBJ (delta, whichPlayer, whichPlayerState)
 	if (delta > 0) then
 		if (whichPlayerState == PLAYER_STATE_RESOURCE_GOLD) then
+			AdjustPlayerStateSimpleBJ(whichPlayer, PLAYER_STATE_GOLD_GATHERED, delta)
 		elseif (whichPlayerState == PLAYER_STATE_RESOURCE_GOLD) then
+			AdjustPlayerStateSimpleBJ(whichPlayer, PLAYER_STATE_LUMBER_GATHERED, delta)
 		end
 	end
+	AdjustPlayerStateSimpleBJ(whichPlayer, whichPlayerState, delta)
 end
 
 ---@param whichPlayer player
@@ -6815,12 +7686,14 @@ end
 ---@param value number integer
 function SetPlayerStateBJ (whichPlayer, whichPlayerState, value)
 	local oldValue = GetPlayerState(whichPlayer, whichPlayerState) ---@type number integer
+	AdjustPlayerStateBJ(value - oldValue, whichPlayer, whichPlayerState)
 end
 
 ---@param whichPlayerFlag playerstate
 ---@param flag boolean
 ---@param whichPlayer player
 function SetPlayerFlagBJ (whichPlayerFlag, flag, whichPlayer)
+	SetPlayerState(whichPlayer, whichPlayerFlag, IntegerTertiaryOp(flag, 1, 0))
 end
 
 ---@param rate number integer
@@ -6828,6 +7701,7 @@ end
 ---@param sourcePlayer player
 ---@param otherPlayer player
 function SetPlayerTaxRateBJ (rate, whichResource, sourcePlayer, otherPlayer)
+	SetPlayerTaxRate(sourcePlayer, otherPlayer, whichResource, rate)
 end
 
 ---@param whichResource playerstate
@@ -6848,6 +7722,7 @@ end
 ---@param delta number integer
 ---@param whichUnit unit
 function AddResourceAmountBJ (delta, whichUnit)
+	AddResourceAmount(whichUnit, delta)
 end
 
 ---@param whichPlayer player
@@ -6888,7 +7763,9 @@ function BlightGoldMineForPlayerBJ (goldMine, whichPlayer)
 	mineX = GetUnitX(goldMine)
 	mineY = GetUnitY(goldMine)
 	mineGold = GetResourceAmount(goldMine)
+	RemoveUnit(goldMine)
 	newMine = CreateBlightedGoldmine(whichPlayer, mineX, mineY, bj_UNIT_FACING)
+	SetResourceAmount(newMine, mineGold)
 	return newMine
 end
 
@@ -6912,6 +7789,7 @@ function IsPointBlightedBJ (where)
 end
 
 function SetPlayerColorBJEnum ()
+	SetUnitColor(GetEnumUnit(), bj_setPlayerTargetColor)
 end
 
 ---@param whichPlayer player
@@ -6919,9 +7797,13 @@ end
 ---@param changeExisting boolean
 function SetPlayerColorBJ (whichPlayer, color, changeExisting)
 	local g ---@type group
+	SetPlayerColor(whichPlayer, color)
 	if changeExisting then
 		bj_setPlayerTargetColor = color
 		g = CreateGroup()
+		GroupEnumUnitsOfPlayer(g, whichPlayer, nil)
+		ForGroup(g, SetPlayerColorBJEnum)
+		DestroyGroup(g)
 	end
 end
 
@@ -6930,14 +7812,18 @@ end
 ---@param whichPlayer player
 function SetPlayerUnitAvailableBJ (unitId, allowed, whichPlayer)
 	if allowed then
+		SetPlayerTechMaxAllowed(whichPlayer, unitId, -1)
 	else
+		SetPlayerTechMaxAllowed(whichPlayer, unitId, 0)
 	end
 end
 
 function LockGameSpeedBJ ()
+	SetMapFlag(MAP_LOCK_SPEED, true)
 end
 
 function UnlockGameSpeedBJ ()
+	SetMapFlag(MAP_LOCK_SPEED, false)
 end
 
 ---@param whichUnit unit
@@ -7026,16 +7912,19 @@ end
 ---@param whichUnit unit
 ---@param targPos location
 function SetUnitRallyPoint (whichUnit, targPos)
+	IssuePointOrderLocBJ(whichUnit, "setrally", targPos)
 end
 
 ---@param whichUnit unit
 ---@param targUnit unit
 function SetUnitRallyUnit (whichUnit, targUnit)
+	IssueTargetOrder(whichUnit, "setrally", targUnit)
 end
 
 ---@param whichUnit unit
 ---@param targDest destructable
 function SetUnitRallyDestructable (whichUnit, targDest)
+	IssueTargetOrder(whichUnit, "setrally", targDest)
 end
 
 function SaveDyingWidget ()
@@ -7046,6 +7935,7 @@ end
 ---@param whichPlayer player
 ---@param r rect
 function SetBlightRectBJ (addBlight, whichPlayer, r)
+	SetBlightRect(whichPlayer, r, addBlight)
 end
 
 ---@param addBlight boolean
@@ -7053,6 +7943,7 @@ end
 ---@param loc location
 ---@param radius number real
 function SetBlightRadiusLocBJ (addBlight, whichPlayer, loc, radius)
+	SetBlightLoc(whichPlayer, loc, radius, addBlight)
 end
 
 ---@param abilcode number integer
@@ -7062,6 +7953,7 @@ function GetAbilityName (abilcode)
 end
 
 function MeleeStartingVisibility ()
+	SetFloatGameState(GAME_STATE_TIME_OF_DAY, bj_MELEE_STARTING_TOD)
 end
 
 function MeleeStartingResources ()
@@ -7082,6 +7974,8 @@ function MeleeStartingResources ()
 	while(true) do
 		indexPlayer = Player(index)
 		if (GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
+			SetPlayerState(indexPlayer, PLAYER_STATE_RESOURCE_GOLD, startingGold)
+			SetPlayerState(indexPlayer, PLAYER_STATE_RESOURCE_LUMBER, startingLumber)
 		end
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
@@ -7094,6 +7988,7 @@ end
 function ReducePlayerTechMaxAllowed (whichPlayer, techId, limit)
 	local oldMax = GetPlayerTechMaxAllowed(whichPlayer, techId) ---@type number integer
 	if (oldMax < 0 or oldMax > limit) then
+		SetPlayerTechMaxAllowed(whichPlayer, techId, limit)
 	end
 end
 
@@ -7101,6 +7996,31 @@ function MeleeStartingHeroLimit ()
 	local index ---@type number integer
 	index = 0
 	while(true) do
+		SetPlayerMaxHeroesAllowed(bj_MELEE_HERO_LIMIT, Player(index))
+		ReducePlayerTechMaxAllowed(Player(index), 'Hamg', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Hmkg', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Hpal', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Hblm', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Obla', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Ofar', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Otch', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Oshd', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Edem', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Ekee', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Emoo', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Ewar', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Udea', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Udre', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Ulic', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Ucrl', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Npbm', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Nbrn', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Nngs', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Nplh', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Nbst', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Nalc', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Ntin', bj_MELEE_HERO_TYPE_LIMIT)
+		ReducePlayerTechMaxAllowed(Player(index), 'Nfir', bj_MELEE_HERO_TYPE_LIMIT)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
 	end
@@ -7115,14 +8035,17 @@ end
 function MeleeGrantItemsToHero (whichUnit)
 	local owner = GetPlayerId(GetOwningPlayer(whichUnit)) ---@type number integer
 	if (bj_meleeTwinkedHeroes[owner] < bj_MELEE_MAX_TWINKED_HEROES) then
+		UnitAddItemById(whichUnit, 'stwp')
 		bj_meleeTwinkedHeroes[owner] = bj_meleeTwinkedHeroes[owner] + 1
 	end
 end
 
 function MeleeGrantItemsToTrainedHero ()
+	MeleeGrantItemsToHero(GetTrainedUnit())
 end
 
 function MeleeGrantItemsToHiredHero ()
+	MeleeGrantItemsToHero(GetSoldUnit())
 end
 
 function MeleeGrantHeroItems ()
@@ -7137,10 +8060,14 @@ function MeleeGrantHeroItems ()
 	index = 0
 	while(true) do
 		trig = CreateTrigger()
+		TriggerRegisterPlayerUnitEvent(trig, Player(index), EVENT_PLAYER_UNIT_TRAIN_FINISH, filterMeleeTrainedUnitIsHeroBJ)
+		TriggerAddAction(trig, MeleeGrantItemsToTrainedHero)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
 	end
 	trig = CreateTrigger()
+	TriggerRegisterPlayerUnitEvent(trig, Player(PLAYER_NEUTRAL_PASSIVE), EVENT_PLAYER_UNIT_SELL, filterMeleeTrainedUnitIsHeroBJ)
+	TriggerAddAction(trig, MeleeGrantItemsToHiredHero)
 	bj_meleeGrantHeroItems = true
 end
 
@@ -7148,8 +8075,10 @@ function MeleeClearExcessUnit ()
 	local theUnit = GetEnumUnit() ---@type unit
 	local owner = GetPlayerId(GetOwningPlayer(theUnit)) ---@type number integer
 	if (owner == PLAYER_NEUTRAL_AGGRESSIVE) then
+		RemoveUnit(GetEnumUnit())
 	elseif (owner == PLAYER_NEUTRAL_AGGRESSIVE) then
 		if not IsUnitType(theUnit, UNIT_TYPE_STRUCTURE) then
+			RemoveUnit(GetEnumUnit())
 		end
 	end
 end
@@ -7160,6 +8089,9 @@ end
 function MeleeClearNearbyUnits (x, y, range)
 	local nearbyUnits ---@type group
 	nearbyUnits = CreateGroup()
+	GroupEnumUnitsInRange(nearbyUnits, x, y, range, nil)
+	ForGroup(nearbyUnits, MeleeClearExcessUnit)
+	DestroyGroup(nearbyUnits)
 end
 
 function MeleeClearExcessUnits ()
@@ -7173,6 +8105,7 @@ function MeleeClearExcessUnits ()
 		if (GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
 			locX = GetStartLocationX(GetPlayerStartLocation(indexPlayer))
 			locY = GetStartLocationY(GetPlayerStartLocation(indexPlayer))
+			MeleeClearNearbyUnits(locX, locY, bj_MELEE_CLEAR_UNITS_RADIUS)
 		end
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
@@ -7186,6 +8119,7 @@ function MeleeEnumFindNearestMine ()
 	if (GetUnitTypeId(enumUnit) == 'ngol') then
 		unitLoc = GetUnitLoc(enumUnit)
 		dist = DistanceBetweenPoints(unitLoc, bj_meleeNearestMineToLoc)
+		RemoveLocation(unitLoc)
 		if (bj_meleeNearestMineDist < 0) or (dist < bj_meleeNearestMineDist) then
 			bj_meleeNearestMine = enumUnit
 			bj_meleeNearestMineDist = dist
@@ -7202,6 +8136,9 @@ function MeleeFindNearestMine (src, range)
 	bj_meleeNearestMineDist = -1
 	bj_meleeNearestMineToLoc = src
 	nearbyMines = CreateGroup()
+	GroupEnumUnitsInRangeOfLoc(nearbyMines, src, range, nil)
+	ForGroup(nearbyMines, MeleeEnumFindNearestMine)
+	DestroyGroup(nearbyMines)
 	return bj_meleeNearestMine
 end
 
@@ -7236,6 +8173,7 @@ function MeleeRandomHeroLoc (p, id1, id2, id3, id4, loc)
 	end
 	hero = CreateUnitAtLoc(p, pick, loc, bj_UNIT_FACING)
 	if bj_meleeGrantHeroItems then
+		MeleeGrantItemsToHero(hero)
 	end
 	return hero
 end
@@ -7290,6 +8228,7 @@ function MeleeStartingUnitsHuman (whichPlayer, startLoc, doHeroes, doCamera, doP
 	local peonY ---@type number real
 	local townHall = nil ---@type unit
 	if (doPreload) then
+		Preloader("scripts\\HumanMelee.pld")
 	end
 	nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
 	if (nearestMine ~= nil) then
@@ -7297,21 +8236,37 @@ function MeleeStartingUnitsHuman (whichPlayer, startLoc, doHeroes, doCamera, doP
 		nearMineLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 320, 0)
 		peonX = GetLocationX(nearMineLoc)
 		peonY = GetLocationY(nearMineLoc)
+		CreateUnit(whichPlayer, 'hpea', peonX + 0.00 * unitSpacing, peonY + 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'hpea', peonX + 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'hpea', peonX - 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'hpea', peonX + 0.60 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'hpea', peonX - 0.60 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
 		heroLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 384, 45)
 	else
 		townHall = CreateUnitAtLoc(whichPlayer, 'htow', startLoc, bj_UNIT_FACING)
 		peonX = GetLocationX(startLoc)
 		peonY = GetLocationY(startLoc) - 224.00
+		CreateUnit(whichPlayer, 'hpea', peonX + 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'hpea', peonX + 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'hpea', peonX + 0.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'hpea', peonX - 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'hpea', peonX - 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
 		heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
 	end
 	if (townHall ~= nil) then
+		UnitAddAbilityBJ('Amic', townHall)
+		UnitMakeAbilityPermanentBJ(true, 'Amic', townHall)
 	end
 	if (doHeroes) then
 		if useRandomHero then
+			MeleeRandomHeroLoc(whichPlayer, 'Hamg', 'Hmkg', 'Hpal', 'Hblm', heroLoc)
 		else
+			SetPlayerState(whichPlayer, PLAYER_STATE_RESOURCE_HERO_TOKENS, bj_MELEE_STARTING_HERO_TOKENS)
 		end
 	end
 	if (doCamera) then
+		SetCameraPositionForPlayer(whichPlayer, peonX, peonY)
+		SetCameraQuickPositionForPlayer(whichPlayer, peonX, peonY)
 	end
 end
 
@@ -7329,24 +8284,41 @@ function MeleeStartingUnitsOrc (whichPlayer, startLoc, doHeroes, doCamera, doPre
 	local peonX ---@type number real
 	local peonY ---@type number real
 	if (doPreload) then
+		Preloader("scripts\\OrcMelee.pld")
 	end
 	nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
 	if (nearestMine ~= nil) then
+		CreateUnitAtLoc(whichPlayer, 'ogre', startLoc, bj_UNIT_FACING)
 		nearMineLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 320, 0)
 		peonX = GetLocationX(nearMineLoc)
 		peonY = GetLocationY(nearMineLoc)
+		CreateUnit(whichPlayer, 'opeo', peonX + 0.00 * unitSpacing, peonY + 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'opeo', peonX + 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'opeo', peonX - 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'opeo', peonX + 0.60 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'opeo', peonX - 0.60 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
 		heroLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 384, 45)
 	else
+		CreateUnitAtLoc(whichPlayer, 'ogre', startLoc, bj_UNIT_FACING)
 		peonX = GetLocationX(startLoc)
 		peonY = GetLocationY(startLoc) - 224.00
+		CreateUnit(whichPlayer, 'opeo', peonX + 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'opeo', peonX + 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'opeo', peonX + 0.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'opeo', peonX - 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'opeo', peonX - 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
 		heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
 	end
 	if (doHeroes) then
 		if useRandomHero then
+			MeleeRandomHeroLoc(whichPlayer, 'Obla', 'Ofar', 'Otch', 'Oshd', heroLoc)
 		else
+			SetPlayerState(whichPlayer, PLAYER_STATE_RESOURCE_HERO_TOKENS, bj_MELEE_STARTING_HERO_TOKENS)
 		end
 	end
 	if (doCamera) then
+		SetCameraPositionForPlayer(whichPlayer, peonX, peonY)
+		SetCameraQuickPositionForPlayer(whichPlayer, peonX, peonY)
 	end
 end
 
@@ -7367,9 +8339,11 @@ function MeleeStartingUnitsUndead (whichPlayer, startLoc, doHeroes, doCamera, do
 	local ghoulX ---@type number real
 	local ghoulY ---@type number real
 	if (doPreload) then
+		Preloader("scripts\\UndeadMelee.pld")
 	end
 	nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
 	if (nearestMine ~= nil) then
+		CreateUnitAtLoc(whichPlayer, 'unpl', startLoc, bj_UNIT_FACING)
 		nearestMine = BlightGoldMineForPlayerBJ(nearestMine, whichPlayer)
 		nearTownLoc = MeleeGetProjectedLoc(startLoc, GetUnitLoc(nearestMine), 288, 0)
 		ghoulX = GetLocationX(nearTownLoc)
@@ -7378,18 +8352,32 @@ function MeleeStartingUnitsUndead (whichPlayer, startLoc, doHeroes, doCamera, do
 		nearMineLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 320, 0)
 		peonX = GetLocationX(nearMineLoc)
 		peonY = GetLocationY(nearMineLoc)
+		CreateUnit(whichPlayer, 'uaco', peonX + 0.00 * unitSpacing, peonY + 0.50 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'uaco', peonX + 0.65 * unitSpacing, peonY - 0.50 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'uaco', peonX - 0.65 * unitSpacing, peonY - 0.50 * unitSpacing, bj_UNIT_FACING)
+		SetBlightLoc(whichPlayer, nearMineLoc, 768, true)
 		heroLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 384, 45)
 	else
+		CreateUnitAtLoc(whichPlayer, 'unpl', startLoc, bj_UNIT_FACING)
 		peonX = GetLocationX(startLoc)
 		peonY = GetLocationY(startLoc) - 224.00
+		CreateUnit(whichPlayer, 'uaco', peonX - 1.50 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'uaco', peonX - 0.50 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'uaco', peonX + 0.50 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'ugho', peonX + 1.50 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		SetBlightLoc(whichPlayer, startLoc, 768, true)
 		heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
 	end
 	if (doHeroes) then
 		if useRandomHero then
+			MeleeRandomHeroLoc(whichPlayer, 'Udea', 'Udre', 'Ulic', 'Ucrl', heroLoc)
 		else
+			SetPlayerState(whichPlayer, PLAYER_STATE_RESOURCE_HERO_TOKENS, bj_MELEE_STARTING_HERO_TOKENS)
 		end
 	end
 	if (doCamera) then
+		SetCameraPositionForPlayer(whichPlayer, peonX, peonY)
+		SetCameraQuickPositionForPlayer(whichPlayer, peonX, peonY)
 	end
 end
 
@@ -7411,28 +8399,45 @@ function MeleeStartingUnitsNightElf (whichPlayer, startLoc, doHeroes, doCamera, 
 	local peonY ---@type number real
 	local tree ---@type unit
 	if (doPreload) then
+		Preloader("scripts\\NightElfMelee.pld")
 	end
 	nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
 	if (nearestMine ~= nil) then
 		nearMineLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 650, 0)
 		nearMineLoc = MeleeGetLocWithinRect(nearMineLoc, GetRectFromCircleBJ(GetUnitLoc(nearestMine), minTreeDist))
 		tree = CreateUnitAtLoc(whichPlayer, 'etol', nearMineLoc, bj_UNIT_FACING)
+		IssueTargetOrder(tree, "entangleinstant", nearestMine)
 		wispLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 320, 0)
 		wispLoc = MeleeGetLocWithinRect(wispLoc, GetRectFromCircleBJ(GetUnitLoc(nearestMine), minWispDist))
 		peonX = GetLocationX(wispLoc)
 		peonY = GetLocationY(wispLoc)
+		CreateUnit(whichPlayer, 'ewsp', peonX + 0.00 * unitSpacing, peonY + 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'ewsp', peonX + 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'ewsp', peonX - 1.00 * unitSpacing, peonY + 0.15 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'ewsp', peonX + 0.58 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'ewsp', peonX - 0.58 * unitSpacing, peonY - 1.00 * unitSpacing, bj_UNIT_FACING)
 		heroLoc = MeleeGetProjectedLoc(GetUnitLoc(nearestMine), startLoc, 384, 45)
 	else
+		CreateUnitAtLoc(whichPlayer, 'etol', startLoc, bj_UNIT_FACING)
 		peonX = GetLocationX(startLoc)
 		peonY = GetLocationY(startLoc) - 224.00
+		CreateUnit(whichPlayer, 'ewsp', peonX - 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'ewsp', peonX - 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'ewsp', peonX + 0.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'ewsp', peonX + 1.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
+		CreateUnit(whichPlayer, 'ewsp', peonX + 2.00 * unitSpacing, peonY + 0.00 * unitSpacing, bj_UNIT_FACING)
 		heroLoc = Location(peonX, peonY - 2.00 * unitSpacing)
 	end
 	if (doHeroes) then
 		if useRandomHero then
+			MeleeRandomHeroLoc(whichPlayer, 'Edem', 'Ekee', 'Emoo', 'Ewar', heroLoc)
 		else
+			SetPlayerState(whichPlayer, PLAYER_STATE_RESOURCE_HERO_TOKENS, bj_MELEE_STARTING_HERO_TOKENS)
 		end
 	end
 	if (doCamera) then
+		SetCameraPositionForPlayer(whichPlayer, peonX, peonY)
+		SetCameraQuickPositionForPlayer(whichPlayer, peonX, peonY)
 	end
 end
 
@@ -7447,12 +8452,16 @@ function MeleeStartingUnitsUnknownRace (whichPlayer, startLoc, doHeroes, doCamer
 	end
 	index = 0
 	while(true) do
+		CreateUnit(whichPlayer, 'nshe', GetLocationX(startLoc) + GetRandomReal(-256, 256), GetLocationY(startLoc) + GetRandomReal(-256, 256), GetRandomReal(0, 360))
 		index = index + 1
 		if (index == 12) then break end
 	end
 	if (doHeroes) then
+		SetPlayerState(whichPlayer, PLAYER_STATE_RESOURCE_HERO_TOKENS, bj_MELEE_STARTING_HERO_TOKENS)
 	end
 	if (doCamera) then
+		SetCameraPositionLocForPlayer(whichPlayer, startLoc)
+		SetCameraQuickPositionLocForPlayer(whichPlayer, startLoc)
 	end
 end
 
@@ -7461,6 +8470,7 @@ function MeleeStartingUnits ()
 	local indexPlayer ---@type player
 	local indexStartLoc ---@type location
 	local indexRace ---@type race
+	Preloader("scripts\\SharedMelee.pld")
 	index = 0
 	while(true) do
 		indexPlayer = Player(index)
@@ -7468,10 +8478,15 @@ function MeleeStartingUnits ()
 			indexStartLoc = GetStartLocationLoc(GetPlayerStartLocation(indexPlayer))
 			indexRace = GetPlayerRace(indexPlayer)
 			if (indexRace == RACE_HUMAN) then
+				MeleeStartingUnitsHuman(indexPlayer, indexStartLoc, true, true, true)
 			elseif (indexRace == RACE_HUMAN) then
+				MeleeStartingUnitsOrc(indexPlayer, indexStartLoc, true, true, true)
 			elseif (indexRace == RACE_HUMAN) then
+				MeleeStartingUnitsUndead(indexPlayer, indexStartLoc, true, true, true)
 			elseif (indexRace == RACE_HUMAN) then
+				MeleeStartingUnitsNightElf(indexPlayer, indexStartLoc, true, true, true)
 			else
+				MeleeStartingUnitsUnknownRace(indexPlayer, indexStartLoc, true, true, true)
 			end
 		end
 		index = index + 1
@@ -7485,9 +8500,13 @@ end
 ---@param doHeroes boolean
 function MeleeStartingUnitsForPlayer (whichRace, whichPlayer, loc, doHeroes)
 	if (whichRace == RACE_HUMAN) then
+		MeleeStartingUnitsHuman(whichPlayer, loc, doHeroes, false, false)
 	elseif (whichRace == RACE_HUMAN) then
+		MeleeStartingUnitsOrc(whichPlayer, loc, doHeroes, false, false)
 	elseif (whichRace == RACE_HUMAN) then
+		MeleeStartingUnitsUndead(whichPlayer, loc, doHeroes, false, false)
 	elseif (whichRace == RACE_HUMAN) then
+		MeleeStartingUnitsNightElf(whichPlayer, loc, doHeroes, false, false)
 	else
 	end
 end
@@ -7499,6 +8518,7 @@ end
 function PickMeleeAI (num, s1, s2, s3)
 	local pick ---@type number integer
 	if GetAIDifficulty(num) == AI_DIFFICULTY_NEWBIE then
+		StartMeleeAI(num, s1)
 		return
 	end
 	if s2 == nil then
@@ -7509,8 +8529,11 @@ function PickMeleeAI (num, s1, s2, s3)
 		pick = GetRandomInt(1, 3)
 	end
 	if pick == 1 then
+		StartMeleeAI(num, s1)
 	elseif pick == 1 then
+		StartMeleeAI(num, s2)
 	else
+		StartMeleeAI(num, s3)
 	end
 end
 
@@ -7525,11 +8548,17 @@ function MeleeStartingAI ()
 			indexRace = GetPlayerRace(indexPlayer)
 			if (GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER) then
 				if (indexRace == RACE_HUMAN) then
+					PickMeleeAI(indexPlayer, "human.ai", nil, nil)
 				elseif (indexRace == RACE_HUMAN) then
+					PickMeleeAI(indexPlayer, "orc.ai", nil, nil)
 				elseif (indexRace == RACE_HUMAN) then
+					PickMeleeAI(indexPlayer, "undead.ai", nil, nil)
+					RecycleGuardPosition(bj_ghoul[index])
 				elseif (indexRace == RACE_HUMAN) then
+					PickMeleeAI(indexPlayer, "elf.ai", nil, nil)
 				else
 				end
+				ShareEverythingWithTeamAI(indexPlayer)
 			end
 		end
 		index = index + 1
@@ -7539,6 +8568,7 @@ end
 
 ---@param targ unit
 function LockGuardPosition (targ)
+	SetUnitCreepGuard(targ, true)
 end
 
 ---@param playerIndex number integer
@@ -7630,6 +8660,8 @@ end
 
 function MeleeDoDrawEnum ()
 	local thePlayer = GetEnumPlayer() ---@type player
+	CachePlayerHeroData(thePlayer)
+	RemovePlayerPreserveUnitsBJ(thePlayer, PLAYER_GAME_RESULT_TIE, false)
 end
 
 function MeleeDoVictoryEnum ()
@@ -7637,23 +8669,31 @@ function MeleeDoVictoryEnum ()
 	local playerIndex = GetPlayerId(thePlayer) ---@type number integer
 	if (not bj_meleeVictoried[playerIndex]) then
 		bj_meleeVictoried[playerIndex] = true
+		CachePlayerHeroData(thePlayer)
+		RemovePlayerPreserveUnitsBJ(thePlayer, PLAYER_GAME_RESULT_VICTORY, false)
 	end
 end
 
 ---@param whichPlayer player
 function MeleeDoDefeat (whichPlayer)
 	bj_meleeDefeated[GetPlayerId(whichPlayer)] = true
+	RemovePlayerPreserveUnitsBJ(whichPlayer, PLAYER_GAME_RESULT_DEFEAT, false)
 end
 
 function MeleeDoDefeatEnum ()
 	local thePlayer = GetEnumPlayer() ---@type player
+	CachePlayerHeroData(thePlayer)
+	MakeUnitsPassiveForTeam(thePlayer)
+	MeleeDoDefeat(thePlayer)
 end
 
 ---@param whichPlayer player
 function MeleeDoLeave (whichPlayer)
 	if (GetIntegerGameState(GAME_STATE_DISCONNECTED) ~= 0) then
+		GameOverDialogBJ(whichPlayer, true)
 	else
 		bj_meleeDefeated[GetPlayerId(whichPlayer)] = true
+		RemovePlayerPreserveUnitsBJ(whichPlayer, PLAYER_GAME_RESULT_DEFEAT, true)
 	end
 end
 
@@ -7664,6 +8704,7 @@ function MeleeRemoveObservers ()
 	while(true) do
 		indexPlayer = Player(playerIndex)
 		if (IsPlayerObserver(indexPlayer)) then
+			RemovePlayerPreserveUnitsBJ(indexPlayer, PLAYER_GAME_RESULT_NEUTRAL, false)
 		end
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
@@ -7687,6 +8728,7 @@ function MeleeCheckForVictors ()
 				opponentIndex = opponentIndex + 1
 				if (opponentIndex == bj_MAX_PLAYERS) then break end
 			end
+			ForceAddPlayer(opponentlessPlayers, Player(playerIndex))
 			gameOver = true
 		end
 		playerIndex = playerIndex + 1
@@ -7714,6 +8756,7 @@ function MeleeCheckForLosersAndVictors ()
 		indexPlayer = Player(playerIndex)
 		if (not bj_meleeDefeated[playerIndex] and not bj_meleeVictoried[playerIndex]) then
 			if (MeleeGetAllyStructureCount(indexPlayer) <= 0) then
+				ForceAddPlayer(defeatedPlayers, Player(playerIndex))
 				bj_meleeDefeated[playerIndex] = true
 			end
 		end
@@ -7721,7 +8764,10 @@ function MeleeCheckForLosersAndVictors ()
 		if (playerIndex == bj_MAX_PLAYERS) then break end
 	end
 	victoriousPlayers = MeleeCheckForVictors()
+	ForForce(defeatedPlayers, MeleeDoDefeatEnum)
+	ForForce(victoriousPlayers, MeleeDoVictoryEnum)
 	if (bj_meleeGameOver) then
+		MeleeRemoveObservers()
 	end
 end
 
@@ -7771,15 +8817,19 @@ function MeleeExposePlayer (whichPlayer, expose)
 	local playerIndex ---@type number integer
 	local indexPlayer ---@type player
 	local toExposeTo = CreateForce() ---@type force
+	CripplePlayer(whichPlayer, toExposeTo, false)
 	bj_playerIsExposed[GetPlayerId(whichPlayer)] = expose
 	playerIndex = 0
 	while(true) do
 		indexPlayer = Player(playerIndex)
 		if (not PlayersAreCoAllied(whichPlayer, indexPlayer)) then
+			ForceAddPlayer(toExposeTo, indexPlayer)
 		end
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
 	end
+	CripplePlayer(whichPlayer, toExposeTo, expose)
+	DestroyForce(toExposeTo)
 end
 
 function MeleeExposeAllPlayers ()
@@ -7791,19 +8841,24 @@ function MeleeExposeAllPlayers ()
 	playerIndex = 0
 	while(true) do
 		indexPlayer = Player(playerIndex)
+		ForceClear(toExposeTo)
+		CripplePlayer(indexPlayer, toExposeTo, false)
 		playerIndex2 = 0
 		while(true) do
 			indexPlayer2 = Player(playerIndex2)
 			if playerIndex ~= playerIndex2 then
 				if (not PlayersAreCoAllied(indexPlayer, indexPlayer2)) then
+					ForceAddPlayer(toExposeTo, indexPlayer2)
 				end
 			end
 			playerIndex2 = playerIndex2 + 1
 			if (playerIndex2 == bj_MAX_PLAYERS) then break end
 		end
+		CripplePlayer(indexPlayer, toExposeTo, true)
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
 	end
+	DestroyForce(toExposeTo)
 end
 
 function MeleeCrippledPlayerTimeout ()
@@ -7823,7 +8878,10 @@ function MeleeCrippledPlayerTimeout ()
 	end
 	exposedPlayer = Player(playerIndex)
 	if (GetLocalPlayer() == exposedPlayer) then
+		TimerDialogDisplay(bj_crippledTimerWindows[playerIndex], false)
 	end
+	DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_MELEE_CRIPPLE_MSG_DURATION, MeleeGetCrippledRevealedMessage(exposedPlayer))
+	MeleeExposePlayer(exposedPlayer, true)
 end
 
 ---@param whichPlayer player
@@ -7849,17 +8907,25 @@ function MeleeCheckForCrippledPlayers ()
 		isNowCrippled = MeleePlayerIsCrippled(indexPlayer)
 		if (not bj_playerIsCrippled[playerIndex] and isNowCrippled) then
 			bj_playerIsCrippled[playerIndex] = true
+			TimerStart(bj_crippledTimer[playerIndex], bj_MELEE_CRIPPLE_TIMEOUT, false, MeleeCrippledPlayerTimeout)
 			if (GetLocalPlayer() == indexPlayer) then
+				TimerDialogDisplay(bj_crippledTimerWindows[playerIndex], true)
+				DisplayTimedTextToPlayer(indexPlayer, 0, 0, bj_MELEE_CRIPPLE_MSG_DURATION, MeleeGetCrippledWarningMessage(indexPlayer))
 			end
 		elseif (not bj_playerIsCrippled[playerIndex] and isNowCrippled) then
 			bj_playerIsCrippled[playerIndex] = false
+			PauseTimer(bj_crippledTimer[playerIndex])
 			if (GetLocalPlayer() == indexPlayer) then
+				TimerDialogDisplay(bj_crippledTimerWindows[playerIndex], false)
 				if (MeleeGetAllyStructureCount(indexPlayer) > 0) then
 					if (bj_playerIsExposed[playerIndex]) then
+						DisplayTimedTextToPlayer(indexPlayer, 0, 0, bj_MELEE_CRIPPLE_MSG_DURATION, GetLocalizedString("CRIPPLE_UNREVEALED"))
 					else
+						DisplayTimedTextToPlayer(indexPlayer, 0, 0, bj_MELEE_CRIPPLE_MSG_DURATION, GetLocalizedString("CRIPPLE_UNCRIPPLED"))
 					end
 				end
 			end
+			MeleeExposePlayer(indexPlayer, false)
 		end
 		playerIndex = playerIndex + 1
 		if (playerIndex == bj_MAX_PLAYERS) then break end
@@ -7870,49 +8936,70 @@ end
 function MeleeCheckLostUnit (lostUnit)
 	local lostUnitOwner = GetOwningPlayer(lostUnit) ---@type player
 	if (GetPlayerStructureCount(lostUnitOwner, true) <= 0) then
+		MeleeCheckForLosersAndVictors()
 	end
+	MeleeCheckForCrippledPlayers()
 end
 
 ---@param addedUnit unit
 function MeleeCheckAddedUnit (addedUnit)
 	local addedUnitOwner = GetOwningPlayer(addedUnit) ---@type player
 	if (bj_playerIsCrippled[GetPlayerId(addedUnitOwner)]) then
+		MeleeCheckForCrippledPlayers()
 	end
 end
 
 function MeleeTriggerActionConstructCancel ()
+	MeleeCheckLostUnit(GetCancelledStructure())
 end
 
 function MeleeTriggerActionUnitDeath ()
 	if (IsUnitType(GetDyingUnit(), UNIT_TYPE_STRUCTURE)) then
+		MeleeCheckLostUnit(GetDyingUnit())
 	end
 end
 
 function MeleeTriggerActionUnitConstructionStart ()
+	MeleeCheckAddedUnit(GetConstructingStructure())
 end
 
 function MeleeTriggerActionPlayerDefeated ()
 	local thePlayer = GetTriggerPlayer() ---@type player
+	CachePlayerHeroData(thePlayer)
 	if (MeleeGetAllyCount(thePlayer) > 0) then
+		ShareEverythingWithTeam(thePlayer)
 		if (not bj_meleeDefeated[GetPlayerId(thePlayer)]) then
+			MeleeDoDefeat(thePlayer)
 		end
 	else
+		MakeUnitsPassiveForTeam(thePlayer)
 		if (not bj_meleeDefeated[GetPlayerId(thePlayer)]) then
+			MeleeDoDefeat(thePlayer)
 		end
 	end
+	MeleeCheckForLosersAndVictors()
 end
 
 function MeleeTriggerActionPlayerLeft ()
 	local thePlayer = GetTriggerPlayer() ---@type player
 	if (IsPlayerObserver(thePlayer)) then
+		RemovePlayerPreserveUnitsBJ(thePlayer, PLAYER_GAME_RESULT_NEUTRAL, false)
 		return
 	end
+	CachePlayerHeroData(thePlayer)
 	if (MeleeGetAllyCount(thePlayer) > 0) then
+		ShareEverythingWithTeam(thePlayer)
+		MeleeDoLeave(thePlayer)
 	else
+		MakeUnitsPassiveForTeam(thePlayer)
+		MeleeDoLeave(thePlayer)
 	end
+	MeleeCheckForLosersAndVictors()
 end
 
 function MeleeTriggerActionAllianceChange ()
+	MeleeCheckForLosersAndVictors()
+	MeleeCheckForCrippledPlayers()
 end
 
 function MeleeTriggerTournamentFinishSoon ()
@@ -7926,13 +9013,18 @@ function MeleeTriggerTournamentFinishSoon ()
 			indexPlayer = Player(playerIndex)
 			if bj_playerIsCrippled[playerIndex] then
 				bj_playerIsCrippled[playerIndex] = false
+				PauseTimer(bj_crippledTimer[playerIndex])
 				if (GetLocalPlayer() == indexPlayer) then
+					TimerDialogDisplay(bj_crippledTimerWindows[playerIndex], false)
 				end
 			end
 			playerIndex = playerIndex + 1
 			if (playerIndex == bj_MAX_PLAYERS) then break end
 		end
+		MeleeExposeAllPlayers()
 	end
+	TimerDialogDisplay(bj_finishSoonTimerDialog, true)
+	TimerDialogSetRealTimeRemaining(bj_finishSoonTimerDialog, timeRemaining)
 end
 
 ---@param whichPlayer player
@@ -7986,6 +9078,7 @@ function MeleeTournamentFinishNowRuleA (multiplier)
 					indexPlayer2 = Player(index2)
 					if PlayersAreCoAllied(indexPlayer, indexPlayer2) then
 						teamScore[teamCount] = teamScore[teamCount] + playerScore[index2]
+						ForceAddPlayer(teamForce[teamCount], indexPlayer2)
 						playerScore[index2] = 0
 					end
 				end
@@ -8024,6 +9117,7 @@ function MeleeTournamentFinishNowRuleA (multiplier)
 		if draw then
 			index = 0
 			while(true) do
+				ForForce(teamForce[index], MeleeDoDrawEnum)
 				index = index + 1
 				if (index == teamCount) then break end
 			end
@@ -8031,10 +9125,12 @@ function MeleeTournamentFinishNowRuleA (multiplier)
 			index = 0
 			while(true) do
 				if index ~= bestTeam then
+					ForForce(teamForce[index], MeleeDoDefeatEnum)
 				end
 				index = index + 1
 				if (index == teamCount) then break end
 			end
+			ForForce(teamForce[bestTeam], MeleeDoVictoryEnum)
 		end
 	end
 end
@@ -8045,8 +9141,11 @@ function MeleeTriggerTournamentFinishNow ()
 		return
 	end
 	if (rule == 1) then
+		MeleeTournamentFinishNowRuleA(1)
 	else
+		MeleeTournamentFinishNowRuleA(3)
 	end
+	MeleeRemoveObservers()
 end
 
 function MeleeInitVictoryDefeat ()
@@ -8055,7 +9154,11 @@ function MeleeInitVictoryDefeat ()
 	local indexPlayer ---@type player
 	bj_finishSoonTimerDialog = CreateTimerDialog(nil)
 	trig = CreateTrigger()
+	TriggerRegisterGameEvent(trig, EVENT_GAME_TOURNAMENT_FINISH_SOON)
+	TriggerAddAction(trig, MeleeTriggerTournamentFinishSoon)
 	trig = CreateTrigger()
+	TriggerRegisterGameEvent(trig, EVENT_GAME_TOURNAMENT_FINISH_NOW)
+	TriggerAddAction(trig, MeleeTriggerTournamentFinishNow)
 	index = 0
 	while(true) do
 		indexPlayer = Player(index)
@@ -8066,22 +9169,39 @@ function MeleeInitVictoryDefeat ()
 			bj_playerIsExposed[index] = false
 			bj_crippledTimer[index] = CreateTimer()
 			bj_crippledTimerWindows[index] = CreateTimerDialog(bj_crippledTimer[index])
+			TimerDialogSetTitle(bj_crippledTimerWindows[index], MeleeGetCrippledTimerMessage(indexPlayer))
 			trig = CreateTrigger()
+			TriggerRegisterPlayerUnitEvent(trig, indexPlayer, EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL, nil)
+			TriggerAddAction(trig, MeleeTriggerActionConstructCancel)
 			trig = CreateTrigger()
+			TriggerRegisterPlayerUnitEvent(trig, indexPlayer, EVENT_PLAYER_UNIT_DEATH, nil)
+			TriggerAddAction(trig, MeleeTriggerActionUnitDeath)
 			trig = CreateTrigger()
+			TriggerRegisterPlayerUnitEvent(trig, indexPlayer, EVENT_PLAYER_UNIT_CONSTRUCT_START, nil)
+			TriggerAddAction(trig, MeleeTriggerActionUnitConstructionStart)
 			trig = CreateTrigger()
+			TriggerRegisterPlayerEvent(trig, indexPlayer, EVENT_PLAYER_DEFEAT)
+			TriggerAddAction(trig, MeleeTriggerActionPlayerDefeated)
 			trig = CreateTrigger()
+			TriggerRegisterPlayerEvent(trig, indexPlayer, EVENT_PLAYER_LEAVE)
+			TriggerAddAction(trig, MeleeTriggerActionPlayerLeft)
 			trig = CreateTrigger()
+			TriggerRegisterPlayerAllianceChange(trig, indexPlayer, ALLIANCE_PASSIVE)
+			TriggerRegisterPlayerStateEvent(trig, indexPlayer, PLAYER_STATE_ALLIED_VICTORY, EQUAL, 1)
+			TriggerAddAction(trig, MeleeTriggerActionAllianceChange)
 		else
 			bj_meleeDefeated[index] = true
 			bj_meleeVictoried[index] = false
 			if (IsPlayerObserver(indexPlayer)) then
 				trig = CreateTrigger()
+				TriggerRegisterPlayerEvent(trig, indexPlayer, EVENT_PLAYER_LEAVE)
+				TriggerAddAction(trig, MeleeTriggerActionPlayerLeft)
 			end
 		end
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
 	end
+	TimerStart(CreateTimer(), 2.0, false, MeleeTriggerActionAllianceChange)
 end
 
 function CheckInitPlayerSlotAvailability ()
@@ -8102,6 +9222,7 @@ end
 ---@param control mapcontrol
 function SetPlayerSlotAvailable (whichPlayer, control)
 	local playerIndex = GetPlayerId(whichPlayer) ---@type number integer
+	CheckInitPlayerSlotAvailability()
 	bj_slotControlUsed[playerIndex] = true
 	bj_slotControl[playerIndex] = control
 end
@@ -8111,11 +9232,14 @@ function TeamInitPlayerSlots (teamCount)
 	local index ---@type number integer
 	local indexPlayer ---@type player
 	local team ---@type number integer
+	SetTeams(teamCount)
+	CheckInitPlayerSlotAvailability()
 	index = 0
 	team = 0
 	while(true) do
 		if (bj_slotControlUsed[index]) then
 			indexPlayer = Player(index)
+			SetPlayerTeam(indexPlayer, team)
 			team = team + 1
 			if (team >= teamCount) then
 				team = 0
@@ -8127,34 +9251,47 @@ function TeamInitPlayerSlots (teamCount)
 end
 
 function MeleeInitPlayerSlots ()
+	TeamInitPlayerSlots(bj_MAX_PLAYERS)
 end
 
 function FFAInitPlayerSlots ()
+	TeamInitPlayerSlots(bj_MAX_PLAYERS)
 end
 
 function OneOnOneInitPlayerSlots ()
+	SetTeams(2)
+	SetPlayers(2)
+	TeamInitPlayerSlots(2)
 end
 
 function InitGenericPlayerSlots ()
 	local gType = GetGameTypeSelected() ---@type gametype
 	if (gType == GAME_TYPE_MELEE) then
+		MeleeInitPlayerSlots()
+	elseif (gType == GAME_TYPE_MELEE) then
+		FFAInitPlayerSlots()
 	elseif (gType == GAME_TYPE_MELEE) then
 	elseif (gType == GAME_TYPE_MELEE) then
+		OneOnOneInitPlayerSlots()
 	elseif (gType == GAME_TYPE_MELEE) then
+		TeamInitPlayerSlots(2)
 	elseif (gType == GAME_TYPE_MELEE) then
+		TeamInitPlayerSlots(3)
 	elseif (gType == GAME_TYPE_MELEE) then
-	elseif (gType == GAME_TYPE_MELEE) then
+		TeamInitPlayerSlots(4)
 	else
 	end
 end
 
 function SetDNCSoundsDawn ()
 	if bj_useDawnDuskSounds then
+		StartSound(bj_dawnSound)
 	end
 end
 
 function SetDNCSoundsDusk ()
 	if bj_useDawnDuskSounds then
+		StartSound(bj_duskSound)
 	end
 end
 
@@ -8162,6 +9299,8 @@ function SetDNCSoundsDay ()
 	local ToD = GetTimeOfDay() ---@type number real
 	if (ToD >= bj_TOD_DAWN and ToD < bj_TOD_DUSK) and not bj_dncIsDaytime then
 		bj_dncIsDaytime = true
+		StopSound(bj_nightAmbientSound, false, true)
+		StartSound(bj_dayAmbientSound)
 	end
 end
 
@@ -8169,6 +9308,8 @@ function SetDNCSoundsNight ()
 	local ToD = GetTimeOfDay() ---@type number real
 	if (ToD < bj_TOD_DAWN or ToD >= bj_TOD_DUSK) and bj_dncIsDaytime then
 		bj_dncIsDaytime = false
+		StopSound(bj_dayAmbientSound, false, true)
+		StartSound(bj_nightAmbientSound)
 	end
 end
 
@@ -8176,9 +9317,19 @@ function InitDNCSounds ()
 	bj_dawnSound = CreateSoundFromLabel("RoosterSound", false, false, false, 10000, 10000)
 	bj_duskSound = CreateSoundFromLabel("WolfSound", false, false, false, 10000, 10000)
 	bj_dncSoundsDawn = CreateTrigger()
+	TriggerRegisterGameStateEvent(bj_dncSoundsDawn, GAME_STATE_TIME_OF_DAY, EQUAL, bj_TOD_DAWN)
+	TriggerAddAction(bj_dncSoundsDawn, SetDNCSoundsDawn)
 	bj_dncSoundsDusk = CreateTrigger()
+	TriggerRegisterGameStateEvent(bj_dncSoundsDusk, GAME_STATE_TIME_OF_DAY, EQUAL, bj_TOD_DUSK)
+	TriggerAddAction(bj_dncSoundsDusk, SetDNCSoundsDusk)
 	bj_dncSoundsDay = CreateTrigger()
+	TriggerRegisterGameStateEvent(bj_dncSoundsDay, GAME_STATE_TIME_OF_DAY, GREATER_THAN_OR_EQUAL, bj_TOD_DAWN)
+	TriggerRegisterGameStateEvent(bj_dncSoundsDay, GAME_STATE_TIME_OF_DAY, LESS_THAN, bj_TOD_DUSK)
+	TriggerAddAction(bj_dncSoundsDay, SetDNCSoundsDay)
 	bj_dncSoundsNight = CreateTrigger()
+	TriggerRegisterGameStateEvent(bj_dncSoundsNight, GAME_STATE_TIME_OF_DAY, LESS_THAN, bj_TOD_DAWN)
+	TriggerRegisterGameStateEvent(bj_dncSoundsNight, GAME_STATE_TIME_OF_DAY, GREATER_THAN_OR_EQUAL, bj_TOD_DUSK)
+	TriggerAddAction(bj_dncSoundsNight, SetDNCSoundsNight)
 end
 
 function InitBlizzardGlobals ()
@@ -8196,9 +9347,11 @@ function InitBlizzardGlobals ()
 	while(true) do
 		if (index == bj_MAX_PLAYER_SLOTS) then break end
 		bj_FORCE_PLAYER[index] = CreateForce()
+		ForceAddPlayer(bj_FORCE_PLAYER[index], Player(index))
 		index = index + 1
 	end
 	bj_FORCE_ALL_PLAYERS = CreateForce()
+	ForceEnumPlayers(bj_FORCE_ALL_PLAYERS, nil)
 	bj_cineModePriorSpeed = GetGameSpeed()
 	bj_cineModePriorFogSetting = IsFogEnabled()
 	bj_cineModePriorMaskSetting = IsFogMaskEnabled()
@@ -8231,6 +9384,7 @@ function InitBlizzardGlobals ()
 	bj_questWarningSound = CreateSoundFromLabel("Warning", false, false, false, 10000, 10000)
 	bj_victoryDialogSound = CreateSoundFromLabel("QuestCompleted", false, false, false, 10000, 10000)
 	bj_defeatDialogSound = CreateSoundFromLabel("QuestFailed", false, false, false, 10000, 10000)
+	DelayedSuspendDecayCreate()
 	v = VersionGet()
 	if (v == VERSION_REIGN_OF_CHAOS) then
 		bj_MELEE_MAX_TWINKED_HEROES = bj_MELEE_MAX_TWINKED_HEROES_V0
@@ -8241,6 +9395,8 @@ end
 
 function InitQueuedTriggers ()
 	bj_queuedExecTimeout = CreateTrigger()
+	TriggerRegisterTimerExpireEvent(bj_queuedExecTimeout, bj_queuedExecTimeoutTimer)
+	TriggerAddAction(bj_queuedExecTimeout, QueuedTriggerDoneBJ)
 end
 
 function InitMapRects ()
@@ -8253,9 +9409,12 @@ function InitSummonableCaps ()
 	index = 0
 	while(true) do
 		if (not GetPlayerTechResearched(Player(index), 'Rhrt', true)) then
+			SetPlayerTechMaxAllowed(Player(index), 'hrtt', 0)
 		end
 		if (not GetPlayerTechResearched(Player(index), 'Robk', true)) then
+			SetPlayerTechMaxAllowed(Player(index), 'otbk', 0)
 		end
+		SetPlayerTechMaxAllowed(Player(index), 'uske', bj_MAX_SKELETONS)
 		index = index + 1
 		if (index == bj_MAX_PLAYERS) then break end
 	end
@@ -8286,6 +9445,7 @@ function UpdateEachStockBuildingEnum ()
 			return
 		end
 	end
+	AddItemToStock(GetEnumUnit(), pickedItemId, 1, 1)
 end
 
 ---@param iType itemtype
@@ -8295,6 +9455,9 @@ function UpdateEachStockBuilding (iType, iLevel)
 	bj_stockPickedItemType = iType
 	bj_stockPickedItemLevel = iLevel
 	g = CreateGroup()
+	GroupEnumUnitsOfType(g, "marketplace", nil)
+	ForGroup(g, UpdateEachStockBuildingEnum)
+	DestroyGroup(g)
 end
 
 function PerformStockUpdates ()
@@ -8332,12 +9495,16 @@ function PerformStockUpdates ()
 	if (allowedCombinations == 0) then
 		return
 	end
+	UpdateEachStockBuilding(pickedItemType, pickedItemLevel)
 end
 
 function StartStockUpdates ()
+	PerformStockUpdates()
+	TimerStart(bj_stockUpdateTimer, bj_STOCK_RESTOCK_INTERVAL, true, PerformStockUpdates)
 end
 
 function RemovePurchasedItem ()
+	RemoveItemFromStock(GetSellingUnit(), GetItemTypeId(GetSoldItem()))
 end
 
 function InitNeutralBuildings ()
@@ -8350,19 +9517,35 @@ function InitNeutralBuildings ()
 		iLevel = iLevel + 1
 		if (iLevel > bj_MAX_ITEM_LEVEL) then break end
 	end
+	SetAllItemTypeSlots(bj_MAX_STOCK_ITEM_SLOTS)
+	SetAllUnitTypeSlots(bj_MAX_STOCK_UNIT_SLOTS)
 	bj_stockUpdateTimer = CreateTimer()
+	TimerStart(bj_stockUpdateTimer, bj_STOCK_RESTOCK_INITIAL_DELAY, false, StartStockUpdates)
 	bj_stockItemPurchased = CreateTrigger()
+	TriggerRegisterPlayerUnitEvent(bj_stockItemPurchased, Player(PLAYER_NEUTRAL_PASSIVE), EVENT_PLAYER_UNIT_SELL_ITEM, nil)
+	TriggerAddAction(bj_stockItemPurchased, RemovePurchasedItem)
 end
 
 function MarkGameStarted ()
 	bj_gameStarted = true
+	DestroyTimer(bj_gameStartedTimer)
 end
 
 function DetectGameStarted ()
 	bj_gameStartedTimer = CreateTimer()
+	TimerStart(bj_gameStartedTimer, bj_GAME_STARTED_THRESHOLD, false, MarkGameStarted)
 end
 
 function InitBlizzard ()
+	ConfigureNeutralVictim()
+	InitBlizzardGlobals()
+	InitQueuedTriggers()
+	InitRescuableBehaviorBJ()
+	InitDNCSounds()
+	InitMapRects()
+	InitSummonableCaps()
+	InitNeutralBuildings()
+	DetectGameStarted()
 end
 
 function RandomDistReset ()
@@ -8430,6 +9613,8 @@ function UnitDropItem (inUnit, inItemID)
 	x = GetRandomReal(unitX - radius, unitX + radius)
 	y = GetRandomReal(unitY - radius, unitY + radius)
 	droppedItem = CreateItem(inItemID, x, y)
+	SetItemDropID(droppedItem, GetUnitTypeId(inUnit))
+	UpdateStockAvailability(droppedItem)
 	return droppedItem
 end
 

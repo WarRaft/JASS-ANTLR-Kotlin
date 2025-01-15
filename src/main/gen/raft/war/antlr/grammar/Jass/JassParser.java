@@ -997,39 +997,133 @@ public class JassParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class StmtContext extends ParserRuleContext {
-		public SetContext set() {
-			return getRuleContext(SetContext.class,0);
-		}
-		public CallContext call() {
-			return getRuleContext(CallContext.class,0);
-		}
-		public ReturnContext return_() {
-			return getRuleContext(ReturnContext.class,0);
-		}
-		public IfContext if_() {
-			return getRuleContext(IfContext.class,0);
-		}
-		public LoopContext loop() {
-			return getRuleContext(LoopContext.class,0);
-		}
-		public ExitwhenContext exitwhen() {
-			return getRuleContext(ExitwhenContext.class,0);
-		}
 		public StmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_stmt; }
+	 
+		public StmtContext() { }
+		public void copyFrom(StmtContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class StmtIfContext extends StmtContext {
+		public IfContext if_() {
+			return getRuleContext(IfContext.class,0);
+		}
+		public StmtIfContext(StmtContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterStmtIf(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitStmt(this);
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitStmtIf(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitStmt(this);
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitStmtIf(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class StmtCallContext extends StmtContext {
+		public CallContext call() {
+			return getRuleContext(CallContext.class,0);
+		}
+		public StmtCallContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterStmtCall(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitStmtCall(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitStmtCall(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class StmtExitWhenContext extends StmtContext {
+		public ExitwhenContext exitwhen() {
+			return getRuleContext(ExitwhenContext.class,0);
+		}
+		public StmtExitWhenContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterStmtExitWhen(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitStmtExitWhen(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitStmtExitWhen(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class StmtLoopContext extends StmtContext {
+		public LoopContext loop() {
+			return getRuleContext(LoopContext.class,0);
+		}
+		public StmtLoopContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterStmtLoop(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitStmtLoop(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitStmtLoop(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class StmtSetContext extends StmtContext {
+		public SetContext set() {
+			return getRuleContext(SetContext.class,0);
+		}
+		public StmtSetContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterStmtSet(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitStmtSet(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitStmtSet(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class StmtReturnContext extends StmtContext {
+		public ReturnContext return_() {
+			return getRuleContext(ReturnContext.class,0);
+		}
+		public StmtReturnContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).enterStmtReturn(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JassListener ) ((JassListener)listener).exitStmtReturn(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitStmtReturn(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1042,6 +1136,7 @@ public class JassParser extends Parser {
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case SET:
+				_localctx = new StmtSetContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(142);
@@ -1050,6 +1145,7 @@ public class JassParser extends Parser {
 				break;
 			case CALL:
 			case DEBUG:
+				_localctx = new StmtCallContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(143);
@@ -1057,6 +1153,7 @@ public class JassParser extends Parser {
 				}
 				break;
 			case RETURN:
+				_localctx = new StmtReturnContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(144);
@@ -1064,6 +1161,7 @@ public class JassParser extends Parser {
 				}
 				break;
 			case IF:
+				_localctx = new StmtIfContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(145);
@@ -1071,6 +1169,7 @@ public class JassParser extends Parser {
 				}
 				break;
 			case LOOP:
+				_localctx = new StmtLoopContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
 				setState(146);
@@ -1078,6 +1177,7 @@ public class JassParser extends Parser {
 				}
 				break;
 			case EXITWHEN:
+				_localctx = new StmtExitWhenContext(_localctx);
 				enterOuterAlt(_localctx, 6);
 				{
 				setState(147);

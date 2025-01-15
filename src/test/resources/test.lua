@@ -1,9 +1,13 @@
+i = '""""' ---@type number integer
+
+
 ---@param key string
 ---@param valueType number integer
 ---@param missionKey string
 ---@param cache gamecache
 ---@return boolean
 function HaveStoredValue1 (key, valueType, missionKey, cache)
+	PauseGame(false)
 	if (valueType == bj_GAMECACHE_BOOLEAN) then
 		return HaveStoredBoolean(cache, missionKey, key)
 	elseif (valueType == bj_GAMECACHE_BOOLEAN) then
@@ -55,6 +59,7 @@ end
 function BJDebugMsg1 (msg)
 	local i = 0 ---@type number integer
 	while(true) do
+		DisplayTimedTextToPlayer(Player(i), 0, 0, 60, msg)
 		i = i + 1
 		if (i == bj_MAX_PLAYERS) then break end
 	end

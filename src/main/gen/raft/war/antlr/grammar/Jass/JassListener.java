@@ -138,15 +138,77 @@ public interface JassListener extends ParseTreeListener {
 	 */
 	void exitFunction(JassParser.FunctionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JassParser#stmt}.
+	 * Enter a parse tree produced by the {@code stmtSet}
+	 * labeled alternative in {@link JassParser#stmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterStmt(JassParser.StmtContext ctx);
+	void enterStmtSet(JassParser.StmtSetContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JassParser#stmt}.
+	 * Exit a parse tree produced by the {@code stmtSet}
+	 * labeled alternative in {@link JassParser#stmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitStmt(JassParser.StmtContext ctx);
+	void exitStmtSet(JassParser.StmtSetContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code stmtCall}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterStmtCall(JassParser.StmtCallContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code stmtCall}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitStmtCall(JassParser.StmtCallContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code stmtReturn}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterStmtReturn(JassParser.StmtReturnContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code stmtReturn}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitStmtReturn(JassParser.StmtReturnContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code stmtIf}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterStmtIf(JassParser.StmtIfContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code stmtIf}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitStmtIf(JassParser.StmtIfContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code stmtLoop}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterStmtLoop(JassParser.StmtLoopContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code stmtLoop}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitStmtLoop(JassParser.StmtLoopContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code stmtExitWhen}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterStmtExitWhen(JassParser.StmtExitWhenContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code stmtExitWhen}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitStmtExitWhen(JassParser.StmtExitWhenContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JassParser#setBrack}.
 	 * @param ctx the parse tree

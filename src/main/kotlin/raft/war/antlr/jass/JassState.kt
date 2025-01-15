@@ -2,7 +2,6 @@ package raft.war.antlr.jass
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.ParserRuleContext
 import raft.war.antlr.grammar.Jass.JassBaseVisitor
 import raft.war.antlr.grammar.Jass.JassLexer
 import raft.war.antlr.grammar.Jass.JassParser
@@ -318,98 +317,125 @@ class JassState : JassBaseVisitor<IJassNode>() {
         val f = scopes.first() as JassFun
 
         for (item in ctxs) {
-            val set: SetContext? = item.set()
-            if (set != null) {
-                val name = set.ID().text
-                var node = getNode(name, f)
+            when (item) {
+                is StmtSetContext -> {
+                    val set = item.set()
+                    val name = set.ID().text
+                    var node = getNode(name, f)
 
-                if (node !is JassVar) {
-                    errors.add(JassError(JassErrorId.ERROR, set.start.line, 0, "[set] $name not exists"))
-                    continue
-                }
+                    if (node !is JassVar) {
+                        errors.add(JassError(JassErrorId.ERROR, set.start.line, 0, "[set] $name not exists"))
+                        continue
+                    }
 
-                val e = expr(set.expr(), f)
-                if (e == null) {
-                    errors.add(
-                        JassError(
-                            JassErrorId.ERROR,
-                            set.start.line,
-                            0,
-                            "[set] $name no have expression"
+                    val e = expr(set.expr(), f)
+                    if (e == null) {
+                        errors.add(
+                            JassError(
+                                JassErrorId.ERROR,
+                                set.start.line,
+                                0,
+                                "[set] $name no have expression"
+                            )
+                        )
+                        continue
+                    }
+
+                    list.add(
+                        node.clone(
+                            expr = e,
+                            index = expr(set.setBrack()?.expr(), f),
                         )
                     )
                     continue
                 }
 
-                list.add(
-                    node.clone(
-                        expr = e,
-                        index = expr(set.setBrack()?.expr(), f),
-                    )
-                )
-                continue
-            }
+                is StmtCallContext -> {
+                    val call = item.call()
+                    val name = call.ID().text
+                    var node = getNode(name, f)
 
-            val loop: LoopContext? = item.loop()
-            if (loop != null) {
-                val l = JassLoop()
-                list.add(l)
-                val ss = scopes.toMutableList()
-                ss.add(l)
-                stmt(loop.stmt(), l.stmt, ss)
-            }
-
-            val exitWhen: ExitwhenContext? = item.exitwhen()
-            if (exitWhen != null) {
-                val exp = expr(exitWhen.expr(), f)
-                if (exp == null) {
-                    println("🔥exitwhen no expr")
-                } else {
-                    list.add(JassExitWhen(expr = exp))
-                }
-            }
-
-            val ctxr: ReturnContext? = item.return_()
-            if (ctxr != null) {
-                list.add(
-                    JassReturn(
-                        expr = expr(ctxr.expr(), f),
-                    )
-                )
-            }
-
-            val ctxIf: IfContext? = item.if_()
-            if (ctxIf != null) {
-                val e = expr(ctxIf.expr(), f)
-                if (e == null) {
-                    errors.add(JassError(JassErrorId.ERROR, ctxIf.start.line, 0, "[if] not have expr"))
-                    continue
-                }
-                val nodeIf = JassIf(expr = e)
-                list.add(nodeIf)
-                val ss = scopes.toMutableList()
-                ss.add(nodeIf)
-                stmt(ctxIf.stmt(), nodeIf.stmt, ss)
-
-                for (ctxElseif in ctxIf.elseif()) {
-                    val e = expr(ctxIf.expr(), f)
-                    if (e == null) {
-                        errors.add(JassError(JassErrorId.ERROR, ctxIf.start.line, 0, "[elseif] not have expr"))
+                    if (node !is JassFun) {
+                        errors.add(JassError(JassErrorId.ERROR, call.start.line, 0, "[call] $name not exists"))
                         continue
                     }
-                    val nodeElseif = JassIf(expr = e)
-                    nodeIf.elseifs.add(nodeElseif)
-                    stmt(ctxElseif.stmt(), nodeElseif.stmt, ss)
+
+                    val cf = JassFun(
+                        base = node,
+                        call = true,
+                        name = name,
+                    )
+
+                    call.expr().forEach {
+                        val e = expr(it, f)
+                        if (e != null) {
+                            cf.arg.add(e)
+                        }
+                    }
+
+                    list.add(cf)
                 }
 
-                val ctxElse = ctxIf.else_()
-                if (ctxElse != null) {
-                    val elser = JassIf()
-                    nodeIf.elser = elser
-                    stmt(ctxElse.stmt(), elser.stmt, ss)
+                is StmtLoopContext -> {
+                    val l = JassLoop()
+                    list.add(l)
+                    val ss = scopes.toMutableList()
+                    ss.add(l)
+                    stmt(item.loop().stmt(), l.stmt, ss)
                 }
+
+                is StmtExitWhenContext -> {
+                    val exitWhen = item.exitwhen()
+                    val exp = expr(exitWhen.expr(), f)
+                    if (exp == null) {
+                        println("🔥exitwhen no expr")
+                    } else {
+                        list.add(JassExitWhen(expr = exp))
+                    }
+                }
+
+                is StmtReturnContext -> {
+                    list.add(
+                        JassReturn(
+                            expr = expr(item.return_().expr(), f),
+                        )
+                    )
+                }
+
+                is StmtIfContext -> {
+                    val ctxIf = item.if_()
+                    val e = expr(ctxIf.expr(), f)
+                    if (e == null) {
+                        errors.add(JassError(JassErrorId.ERROR, ctxIf.start.line, 0, "[if] not have expr"))
+                        continue
+                    }
+                    val nodeIf = JassIf(expr = e)
+                    list.add(nodeIf)
+                    val ss = scopes.toMutableList()
+                    ss.add(nodeIf)
+                    stmt(ctxIf.stmt(), nodeIf.stmt, ss)
+
+                    for (ctxElseif in ctxIf.elseif()) {
+                        val e = expr(ctxIf.expr(), f)
+                        if (e == null) {
+                            errors.add(JassError(JassErrorId.ERROR, ctxIf.start.line, 0, "[elseif] not have expr"))
+                            continue
+                        }
+                        val nodeElseif = JassIf(expr = e)
+                        nodeIf.elseifs.add(nodeElseif)
+                        stmt(ctxElseif.stmt(), nodeElseif.stmt, ss)
+                    }
+
+                    val ctxElse = ctxIf.else_()
+                    if (ctxElse != null) {
+                        val elser = JassIf()
+                        nodeIf.elser = elser
+                        stmt(ctxElse.stmt(), elser.stmt, ss)
+                    }
+                }
+
+                else -> println("🔥JASS: Missing stmt: ${item.javaClass.name}")
             }
-
         }
     }
 

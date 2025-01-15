@@ -89,11 +89,47 @@ public interface JassVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunction(JassParser.FunctionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JassParser#stmt}.
+	 * Visit a parse tree produced by the {@code stmtSet}
+	 * labeled alternative in {@link JassParser#stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStmt(JassParser.StmtContext ctx);
+	T visitStmtSet(JassParser.StmtSetContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stmtCall}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStmtCall(JassParser.StmtCallContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stmtReturn}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStmtReturn(JassParser.StmtReturnContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stmtIf}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStmtIf(JassParser.StmtIfContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stmtLoop}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStmtLoop(JassParser.StmtLoopContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stmtExitWhen}
+	 * labeled alternative in {@link JassParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStmtExitWhen(JassParser.StmtExitWhenContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JassParser#setBrack}.
 	 * @param ctx the parse tree
