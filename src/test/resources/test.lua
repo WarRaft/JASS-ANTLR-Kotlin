@@ -1,6 +1,10 @@
 i = FourCC('""""') ---@type number integer
 
 
+function table ()
+	return
+end
+
 ---@param key string
 ---@param valueType number integer
 ---@param missionKey string

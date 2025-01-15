@@ -3,6 +3,9 @@ globals
 
 endglobals
 
+function table takes nothing returns nothing
+  return
+endfunction
 
 function HaveStoredValue1 takes string key, integer valueType, string missionKey, gamecache cache returns boolean
     call PauseGame( false )

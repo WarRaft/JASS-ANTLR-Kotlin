@@ -7,5 +7,5 @@ java -jar <path to .jar>
 ```
 
 ```
-> java -cp <path to .jar> JassLuaKt
+java -cp ANTLR.jar JassLuaKt common.j blizzard.j war3map.j 
 ```
