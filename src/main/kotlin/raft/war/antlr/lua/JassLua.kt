@@ -16,7 +16,7 @@ class JassLua(val jass: JassState, val output: Path) {
     }
 
     fun reserved(name: String): Boolean = when (name) {
-        "break", "end", "for", "in", "nil", "repeat", "until", "while", "do" -> true
+        "and", "break", "do", "else", "elseif", "end", "false", "for", "function", "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while" -> true
         else -> false
     }
 
