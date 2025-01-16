@@ -8,11 +8,13 @@ class JassCodeType() : IJassType {
                 is JassCodeType,
                 is JassNullType,
                     -> JassCodeType()
+
                 else -> JassUndefinedType()
             }
+
             else -> JassUndefinedType()
         }
     }
 
-    override fun toString(): String = name
+    override fun toString(): String = "<primitive>$name"
 }

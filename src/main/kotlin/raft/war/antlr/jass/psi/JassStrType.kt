@@ -19,5 +19,5 @@ class JassStrType : IJassType {
         }
     }
 
-    override fun toString(): String = name
+    override fun toString(): String = "<primitive>$name"
 }

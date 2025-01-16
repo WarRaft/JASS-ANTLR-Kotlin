@@ -3,6 +3,7 @@
   <component name="AdditionalModuleElements">
     <content url="file://$MODULE_DIR$/../../src/test" dumb="true">
       <sourceFolder url="file://$MODULE_DIR$/../../src/test/kotlin" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/../../src/test/resources/sdk" />
     </content>
   </component>
 </module>

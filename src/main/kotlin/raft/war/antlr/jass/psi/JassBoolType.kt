@@ -1,7 +1,7 @@
 package raft.war.antlr.jass.psi
 
 class JassBoolType : IJassType {
-    override val name: String = "bool"
+    override val name: String = "boolean"
 
     override fun op(op: JassExprOp, b: IJassType): IJassType {
         return when (op) {
@@ -14,5 +14,5 @@ class JassBoolType : IJassType {
         }
     }
 
-    override fun toString(): String = name
+    override fun toString(): String = "<primitive>$name"
 }

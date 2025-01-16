@@ -3,8 +3,6 @@ package raft.war.antlr.jass.psi
 class JassRealType : IJassType {
     override val name: String = "real"
 
-    override fun toString(): String = name
-
     override fun op(op: JassExprOp, b: IJassType): IJassType {
         return when (op) {
             JassExprOp.Add -> when (b) {
@@ -26,4 +24,6 @@ class JassRealType : IJassType {
             else -> JassUndefinedType()
         }
     }
+
+    override fun toString(): String = "<primitive>$name"
 }

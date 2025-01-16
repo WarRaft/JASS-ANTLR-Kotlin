@@ -1,8 +1,7 @@
 import org.antlr.v4.runtime.CharStreams
 import raft.war.antlr.jass.JassState
-import raft.war.antlr.lua.JassLua
+import raft.war.antlr.jass.converter.JassLua
 import java.nio.file.Paths
-import kotlin.io.path.absolute
 
 fun main(args: Array<String>) {
     if (args.isEmpty()) {

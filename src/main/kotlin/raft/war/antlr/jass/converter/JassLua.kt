@@ -1,8 +1,30 @@
-package raft.war.antlr.lua
+@file:Suppress("DuplicatedCode")
+
+package raft.war.antlr.jass.converter
 
 import raft.war.antlr.jass.JassState
-import raft.war.antlr.jass.psi.*
-import raft.war.antlr.jass.psi.JassExprOp.*
+import raft.war.antlr.jass.psi.IJassNode
+import raft.war.antlr.jass.psi.IJassType
+import raft.war.antlr.jass.psi.JassBool
+import raft.war.antlr.jass.psi.JassBoolType
+import raft.war.antlr.jass.psi.JassCodeType
+import raft.war.antlr.jass.psi.JassExitWhen
+import raft.war.antlr.jass.psi.JassExpr
+import raft.war.antlr.jass.psi.JassExprOp
+import raft.war.antlr.jass.psi.JassFun
+import raft.war.antlr.jass.psi.JassHandleType
+import raft.war.antlr.jass.psi.JassIf
+import raft.war.antlr.jass.psi.JassInt
+import raft.war.antlr.jass.psi.JassIntType
+import raft.war.antlr.jass.psi.JassLoop
+import raft.war.antlr.jass.psi.JassNull
+import raft.war.antlr.jass.psi.JassReal
+import raft.war.antlr.jass.psi.JassRealType
+import raft.war.antlr.jass.psi.JassReturn
+import raft.war.antlr.jass.psi.JassStr
+import raft.war.antlr.jass.psi.JassStrType
+import raft.war.antlr.jass.psi.JassUndefinedType
+import raft.war.antlr.jass.psi.JassVar
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.absolute
@@ -22,24 +44,24 @@ class JassLua(val jass: JassState, val output: Path) {
 
     fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
         val s = when (op) {
-            Mul -> "*"
-            Div -> "/"
-            Add -> {
+            JassExprOp.Mul -> "*"
+            JassExprOp.Div -> "/"
+            JassExprOp.Add -> {
                 if (a.type is JassStrType || b.type is JassStrType) ".."
                 else "+"
             }
 
-            Sub -> "-"
-            Lt -> "<"
-            LtEq -> "<="
-            Gt -> ">"
-            GtEq -> ">="
+            JassExprOp.Sub -> "-"
+            JassExprOp.Lt -> "<"
+            JassExprOp.LtEq -> "<="
+            JassExprOp.Gt -> ">"
+            JassExprOp.GtEq -> ">="
 
-            Eq -> "=="
-            Neq -> "~="
+            JassExprOp.Eq -> "=="
+            JassExprOp.Neq -> "~="
 
-            And -> "and"
-            Or -> "or"
+            JassExprOp.And -> "and"
+            JassExprOp.Or -> "or"
 
             else -> {
                 println("⚠️Lua: Missing $op")
@@ -80,31 +102,31 @@ class JassLua(val jass: JassState, val output: Path) {
             }
 
             is JassExpr -> when (e.op) {
-                Get -> expr(e.a)
-                Set -> {
+                JassExprOp.Get -> expr(e.a)
+                JassExprOp.Set -> {
                     println("🍒Lua: expr Set!!!")
                 }
 
-                Add, Sub,
-                Mul, Div,
-                Lt, LtEq, Gt, GtEq,
-                Eq, Neq,
-                And, Or,
+                JassExprOp.Add, JassExprOp.Sub,
+                JassExprOp.Mul, JassExprOp.Div,
+                JassExprOp.Lt, JassExprOp.LtEq, JassExprOp.Gt, JassExprOp.GtEq,
+                JassExprOp.Eq, JassExprOp.Neq,
+                JassExprOp.And, JassExprOp.Or,
                     -> if (e.a != null && e.b != null)
                     expr(e.op, e.a, e.b)
 
-                Paren -> {
+                JassExprOp.Paren -> {
                     builder.append("(")
                     expr(e.a)
                     builder.append(")")
                 }
 
-                UnSub -> {
+                JassExprOp.UnSub -> {
                     builder.append("-")
                     expr(e.a)
                 }
 
-                UnNot -> {
+                JassExprOp.UnNot -> {
                     builder.append("not ")
                     expr(e.a)
                 }
@@ -138,7 +160,7 @@ class JassLua(val jass: JassState, val output: Path) {
         }
     }
 
-    fun variable(v: JassVar) {
+    fun global(v: JassVar) {
         if (v.local) builder.append("local ")
         builder.append(v.name).append(" = ")
         if (v.expr == null) builder.append(if (v.array) "{}" else "nil")
@@ -192,8 +214,8 @@ class JassLua(val jass: JassState, val output: Path) {
                 }
 
                 is JassFun -> {
-                    tab(level).append(node.basename)
                     if (!node.call) continue
+                    tab(level).append(node.basename)
 
                     builder.append("(")
                     node.arg.forEachIndexed { index, arg ->
@@ -280,9 +302,7 @@ class JassLua(val jass: JassState, val output: Path) {
 
         stmt(f.stmt, 0)
 
-        builder.append("end")
-
-        builder.append("\n")
+        builder.append("end\n")
     }
 
     fun type(t: JassHandleType) {
@@ -303,7 +323,7 @@ class JassLua(val jass: JassState, val output: Path) {
 
         builder.append("\n")
 
-        jass.globals.forEach(::variable)
+        jass.globals.forEach(::global)
 
         builder.append("\n")
 

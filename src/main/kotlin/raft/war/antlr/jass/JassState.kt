@@ -487,7 +487,6 @@ class JassState : JassBaseVisitor<IJassNode>() {
     fun parse(stream: CharStream, states: List<JassState> = listOf()) {
         this.states = states
 
-
         val errorJassErrorListener = JassErrorListener()
 
         val lexer = JassLexer(stream)
