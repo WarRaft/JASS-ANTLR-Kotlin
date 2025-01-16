@@ -1,15 +1,21 @@
 package raft.war.antlr.jass
 
-import org.antlr.v4.runtime.CharStreams
+import org.antlr.v4.runtime.BaseErrorListener
+import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.Parser
+import org.antlr.v4.runtime.RecognitionException
+import org.antlr.v4.runtime.Recognizer
+import org.antlr.v4.runtime.atn.ATNConfigSet
+import org.antlr.v4.runtime.dfa.DFA
 import raft.war.antlr.grammar.Jass.JassBaseVisitor
 import raft.war.antlr.grammar.Jass.JassLexer
 import raft.war.antlr.grammar.Jass.JassParser
 import raft.war.antlr.grammar.Jass.JassParser.*
 import raft.war.antlr.jass.error.JassError
 import raft.war.antlr.jass.error.JassErrorId
-import raft.war.antlr.jass.error.JassErrorListener
 import raft.war.antlr.jass.psi.*
+import java.util.BitSet
 
 class JassState : JassBaseVisitor<IJassNode>() {
     var states: List<JassState> = listOf()
@@ -478,14 +484,13 @@ class JassState : JassBaseVisitor<IJassNode>() {
 
     val errors = mutableListOf<JassError>()
 
-    fun parse(path: String, states: List<JassState> = listOf()) {
+    fun parse(stream: CharStream, states: List<JassState> = listOf()) {
         this.states = states
 
-        val cs = CharStreams.fromFileName(path)
 
         val errorJassErrorListener = JassErrorListener()
 
-        val lexer = JassLexer(cs)
+        val lexer = JassLexer(stream)
         lexer.removeErrorListeners()
         lexer.addErrorListener(errorJassErrorListener)
 
@@ -511,5 +516,64 @@ class JassState : JassBaseVisitor<IJassNode>() {
             }
         }
         return null
+    }
+
+    companion object {
+        private class JassErrorListener : BaseErrorListener() {
+            val jassErrors = mutableListOf<JassError>()
+
+            override fun syntaxError(
+                recognizer: Recognizer<*, *>?,
+                offendingSymbol: Any?,
+                line: Int,
+                charPositionInLine: Int,
+                msg: String?,
+                e: RecognitionException?,
+            ) {
+                jassErrors.add(
+                    JassError(
+                        jassErrorId = JassErrorId.SYNTAX,
+                        line = line,
+                        char = charPositionInLine,
+                        message = msg ?: "Unknown error"
+                    )
+                )
+            }
+
+            override fun reportAmbiguity(
+                recognizer: Parser?,
+                dfa: DFA?,
+                startIndex: Int,
+                stopIndex: Int,
+                exact: Boolean,
+                ambigAlts: BitSet?,
+                configs: ATNConfigSet?,
+            ) {
+                if (false) println("[$startIndex, $stopIndex] reportAmbiguity")
+            }
+
+            override fun reportAttemptingFullContext(
+                recognizer: Parser?,
+                dfa: DFA?,
+                startIndex: Int,
+                stopIndex: Int,
+                conflictingAlts: BitSet?,
+                configs: ATNConfigSet?,
+            ) {
+                if (false) println("[$startIndex, $stopIndex] reportAttemptingFullContext")
+            }
+
+            override fun reportContextSensitivity(
+                recognizer: Parser?,
+                dfa: DFA?,
+                startIndex: Int,
+                stopIndex: Int,
+                prediction: Int,
+                configs: ATNConfigSet?,
+            ) {
+                if (false) println("[$startIndex, $stopIndex] reportContextSensitivity")
+            }
+        }
+
     }
 }

@@ -6,13 +6,17 @@ plugins {
     kotlin("jvm") version "2.1.0"
 }
 
+group = "raft.war"
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    testImplementation(kotlin("test"))
     implementation("org.antlr:antlr4:4.13.2")
     implementation("org.antlr:antlr4-runtime:4.13.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 
@@ -27,6 +31,11 @@ sourceSets {
             srcDirs("src/main/gen")
         }
     }
+
+    configureEach {
+        val generateGrammarSource = tasks.named(getTaskName("generate", "GrammarSource"))
+        java.srcDir(generateGrammarSource.map { files() })
+    }
 }
 
 kotlin {
@@ -40,5 +49,9 @@ tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
     archiveBaseName.set("ANTLR")
-    archiveVersion.set("0.0.1")
+    archiveVersion.set("0.0.2")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

@@ -1,3 +1,4 @@
+import org.antlr.v4.runtime.CharStreams
 import raft.war.antlr.jass.JassState
 import raft.war.antlr.lua.JassLua
 import java.nio.file.Paths
@@ -17,7 +18,9 @@ fun main(args: Array<String>) {
         val p = Paths.get(arg)
 
         println("parse $arg")
-        s.parse(p.absolute().toString(), states)
+        val stream = CharStreams.fromPath(p)
+
+        s.parse(stream, states)
         states.add(s)
 
         s.errors.forEach { println("⚠️JASS error: $it") }

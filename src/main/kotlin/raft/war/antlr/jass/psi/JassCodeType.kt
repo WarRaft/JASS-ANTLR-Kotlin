@@ -5,10 +5,11 @@ class JassCodeType() : IJassType {
     override fun op(op: JassExprOp, b: IJassType): IJassType {
         return when (op) {
             JassExprOp.Set -> when (b) {
-                is JassCodeType -> JassCodeType()
+                is JassCodeType,
+                is JassNullType,
+                    -> JassCodeType()
                 else -> JassUndefinedType()
             }
-
             else -> JassUndefinedType()
         }
     }
