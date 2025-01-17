@@ -31,8 +31,6 @@ class JassJassTest {
         val wjp = Paths.get("src", "test", "resources", "jass", "test.j")
         val wj = fromPath(wjp, listOf(cj, bj))
 
-        JassFakeName(wj)
-
         JassJass(
             state = wj,
             output = j2l(wjp),

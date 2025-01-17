@@ -2,6 +2,8 @@
 
 package raft.war.antlr.jass.converter
 
+import raft.war.antlr.jass.JassFakeName
+import raft.war.antlr.jass.JassFakeName.Companion.LuaKeywords
 import raft.war.antlr.jass.JassState
 import raft.war.antlr.jass.psi.IJassNode
 import raft.war.antlr.jass.psi.IJassType
@@ -29,7 +31,11 @@ import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.absolute
 
-class JassLua(val jass: JassState, val output: Path) {
+class JassLua(
+    val state: JassState,
+    val output: Path,
+    val fakename: Boolean = false,
+) {
     val builder = StringBuilder()
 
     fun tab(c: Int): StringBuilder {
@@ -37,21 +43,16 @@ class JassLua(val jass: JassState, val output: Path) {
         return builder
     }
 
-    fun varname(v: JassVar): StringBuilder {
+    fun varname(v: JassVar): String {
         val root = v.root
-        builder.append(root.name)
-        return builder
+        var name = root.name
+        return if (fakename || LuaKeywords.contains(name)) root.fakename else name
     }
 
-    fun funname(f: JassFun): StringBuilder {
+    fun funname(f: JassFun): String {
         val root = f.root
-        builder.append(root.name)
-        return builder
-    }
-
-    fun reserved(name: String): Boolean = when (name) {
-        "and", "break", "do", "else", "elseif", "end", "false", "for", "function", "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while" -> true
-        else -> false
+        var name = root.name
+        return if ((fakename || LuaKeywords.contains(name)) && !f.native) root.fakename else name
     }
 
     fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
@@ -105,7 +106,7 @@ class JassLua(val jass: JassState, val output: Path) {
             is JassReal -> builder.append(e.raw)
             is JassStr -> builder.append(e.raw)
             is JassVar -> {
-                varname(e)
+                builder.append(varname(e))
                 if (e.index != null) {
                     builder.append("[")
                     expr(e.index)
@@ -146,7 +147,7 @@ class JassLua(val jass: JassState, val output: Path) {
             }
 
             is JassFun -> {
-                funname(e)
+                builder.append(funname(e))
                 if (!e.ref) {
                     builder.append("(")
                     e.arg.forEachIndexed { index, arg ->
@@ -174,7 +175,7 @@ class JassLua(val jass: JassState, val output: Path) {
 
     fun global(v: JassVar) {
         if (v.local) builder.append("local ")
-        builder.append(v.name).append(" = ")
+        builder.append(varname(v)).append(" = ")
         if (v.expr == null) builder.append(if (v.array) "{}" else "nil")
         else expr(v.expr!!)
 
@@ -216,7 +217,8 @@ class JassLua(val jass: JassState, val output: Path) {
 
                 is JassVar -> {
                     tab(level)
-                    varname(node)
+                    builder.append(varname(node))
+
 
                     if (node.index != null) {
                         builder.append("[")
@@ -230,8 +232,7 @@ class JassLua(val jass: JassState, val output: Path) {
                 is JassFun -> {
                     if (!node.call) continue
                     tab(level)
-                    funname(node)
-
+                    builder.append(funname(node))
                     builder.append("(")
                     node.arg.forEachIndexed { index, arg ->
                         if (index > 0) builder.append(", ")
@@ -274,11 +275,12 @@ class JassLua(val jass: JassState, val output: Path) {
         builder.append("\n")
         if (f.native) builder.append("--- native\n")
         f.param.forEach {
-            if (reserved(it.name)) {
-                it.name += "_anal"
-            }
             if (it.param) {
-                builder.append("---@param ${it.name} ${typeName(it.type)}\n")
+                builder.append("---@param ")
+                    .append(varname(it))
+                    .append(" ")
+                    .append(typeName(it.type))
+                    .append("\n")
             }
         }
 
@@ -286,11 +288,13 @@ class JassLua(val jass: JassState, val output: Path) {
             builder.append("---@return ${typeName(f.type)}\n")
         }
 
-        builder.append("function ${f.name} (")
+        builder.append("function ")
+            .append(funname(f))
+            .append("(")
         val list: MutableList<String> = mutableListOf()
         for (it in f.param) {
             if (!it.param) break
-            list.add(it.name)
+            list.add(varname(it))
         }
 
         builder.append(list.joinToString(", "))
@@ -298,11 +302,10 @@ class JassLua(val jass: JassState, val output: Path) {
 
         for (it in f.param) {
             if (it.param) continue
-            if (reserved(it.name)) {
-                it.name += "_"
-            }
 
-            builder.append("\tlocal ${it.name}")
+            builder
+                .append("\tlocal ")
+                .append(varname(it))
 
             if (it.expr != null) {
                 builder.append(" = ")
@@ -329,21 +332,27 @@ class JassLua(val jass: JassState, val output: Path) {
         builder.append("\n")
     }
 
-    fun convert() {
+    private fun convert() {
+        JassFakeName(state = state)
+
         builder.clear()
 
-        jass.types.forEach(::type)
+        state.types.forEach(::type)
 
-        jass.natives.forEach(::function)
-
-        builder.append("\n")
-
-        jass.globals.forEach(::global)
+        state.natives.forEach(::function)
 
         builder.append("\n")
 
-        jass.functions.forEach(::function)
+        state.globals.forEach(::global)
+
+        builder.append("\n")
+
+        state.functions.forEach(::function)
 
         File(output.absolute().toString()).writeText(builder.toString().trim())
+    }
+
+    init {
+        convert()
     }
 }

@@ -2,6 +2,7 @@
 
 package raft.war.antlr.jass.converter
 
+import raft.war.antlr.jass.JassFakeName
 import raft.war.antlr.jass.JassState
 import raft.war.antlr.jass.psi.*
 import java.io.File
@@ -279,7 +280,9 @@ class JassJass(
         builder.append("\n")
     }
 
-    fun convert() {
+    private fun convert() {
+        JassFakeName(state = state)
+
         builder.clear()
 
         state.types.forEach(::type)

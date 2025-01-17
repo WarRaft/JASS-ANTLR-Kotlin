@@ -18,7 +18,7 @@ class JassLuaTest {
 
         assert(state.errors.isEmpty())
 
-        JassLua(state, j2l(path)).convert()
+        JassLua(state, j2l(path))
 
         return state
     }
@@ -28,6 +28,13 @@ class JassLuaTest {
         val cj = fromPath(cjp)
         val bj = fromPath(bjp, listOf(cj))
         fromPath(Paths.get("src", "test", "resources", "lua", "concatenation.j"), listOf(cj, bj))
+    }
+
+    @Test
+    fun keyword() {
+        val cj = fromPath(cjp)
+        val bj = fromPath(bjp, listOf(cj))
+        fromPath(Paths.get("src", "test", "resources", "lua", "keyword.j"), listOf(cj, bj))
     }
 
     @Test

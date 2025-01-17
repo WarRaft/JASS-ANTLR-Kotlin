@@ -4,26 +4,26 @@
 ---@param b number integer
 ---@param make number integer
 ---@return boolean
-function MergeUnits (qty, a, b, make)
+function MergeUnits(qty, a, b, make)
 end
 
 --- native
 ---@param qty number integer
 ---@param id number integer
 ---@return boolean
-function ConvertUnits (qty, id)
+function ConvertUnits(qty, id)
 end
 
 --- native
 ---@param unitid number integer
 ---@return number integer
-function IgnoredUnits (unitid)
+function IgnoredUnits(unitid)
 end
 
 --- native
 ---@param id_1 unit
 ---@return boolean
-function UnitAlive (id_1)
+function UnitAlive(id_1)
 end
 
 modeMI = false ---@type boolean
@@ -2177,19 +2177,19 @@ State = 0.0 ---@type number real
 
 
 ---@param vtable number integer
-function InitArray (vtable)
+function InitArray(vtable)
 	l__Array[4] = 0
 	l__Array[1] = vtable
 	l__Array[2] = -1
 	l__Array[3] = -1
 end
 
-function TypecastArray ()
+function TypecastArray()
 	local l__Array ---@type number integer
 end
 
 ---@return number integer
-function GetArrayAddress ()
+function GetArrayAddress()
 	while(true) do
 		return l__Array
 	end
@@ -2197,37 +2197,37 @@ function GetArrayAddress ()
 end
 
 ---@param c function
-function setCode (c)
+function setCode(c)
 	l__Code = c
 	return
 end
 
 ---@param i number integer
-function setInt (i)
+function setInt(i)
 	l__Int = i
 	return
 end
 
 ---@param s string
-function setStr (s)
+function setStr(s)
 	l__Str = s
 	return
 end
 
 ---@param b boolean
-function setBool (b)
+function setBool(b)
 	l__Bool = b
 	return
 end
 
-function Typecast1 ()
+function Typecast1()
 	local l__Code ---@type number integer
 	local l__Int ---@type function
 end
 
 ---@param c function
 ---@return number integer
-function C2I (c)
+function C2I(c)
 	setCode(c)
 	while(true) do
 		return l__Code
@@ -2237,7 +2237,7 @@ end
 
 ---@param i number integer
 ---@return function
-function I2C (i)
+function I2C(i)
 	setInt(i)
 	while(true) do
 		return l__Int
@@ -2245,14 +2245,14 @@ function I2C (i)
 	return nil
 end
 
-function Typecast2 ()
+function Typecast2()
 	local l__Str ---@type number integer
 	local l__Int ---@type string
 end
 
 ---@param s string
 ---@return number integer
-function SH2I (s)
+function SH2I(s)
 	setStr(s)
 	while(true) do
 		return l__Str
@@ -2262,7 +2262,7 @@ end
 
 ---@param i number integer
 ---@return string
-function I2SH (i)
+function I2SH(i)
 	setInt(i)
 	while(true) do
 		return l__Int
@@ -2270,14 +2270,14 @@ function I2SH (i)
 	return nil
 end
 
-function Typecast3 ()
+function Typecast3()
 	local l__Bool ---@type number integer
 	local l__Int ---@type boolean
 end
 
 ---@param b boolean
 ---@return number integer
-function B2I (b)
+function B2I(b)
 	setBool(b)
 	while(true) do
 		return l__Bool
@@ -2287,7 +2287,7 @@ end
 
 ---@param i number integer
 ---@return boolean
-function I2B (i)
+function I2B(i)
 	setInt(i)
 	while(true) do
 		return l__Int
@@ -2297,7 +2297,7 @@ end
 
 ---@param i number integer
 ---@return number real
-function IndexToReal (i)
+function IndexToReal(i)
 	while(true) do
 		return i
 	end
@@ -2306,31 +2306,31 @@ end
 
 ---@param r number real
 ---@return number real
-function CleanReal (r)
+function CleanReal(r)
 	return r
 end
 
 ---@param i number integer
 ---@return number integer
-function BitwiseNot (i)
+function BitwiseNot(i)
 	return 0xFFFFFFFF - i
 end
 
 ---@param i number integer
 ---@return number integer
-function CleanInt (i)
+function CleanInt(i)
 	return i
 end
 
 ---@param i number integer
 ---@return number real
-function GetRealFromMemory (i)
+function GetRealFromMemory(i)
 	return CleanReal(IndexToReal(i))
 end
 
 ---@param r number real
 ---@return number integer
-function RealToIndex (r)
+function RealToIndex(r)
 	while(true) do
 		return r
 	end
@@ -2339,14 +2339,14 @@ end
 
 ---@param r number real
 ---@return number integer
-function SetRealIntoMemory (r)
+function SetRealIntoMemory(r)
 	return CleanInt(RealToIndex(r))
 end
 
 ---@param i number integer
 ---@param byteid number integer
 ---@return number integer
-function GetByteFromInteger (i, byteid)
+function GetByteFromInteger(i, byteid)
 	local tmpval = i ---@type number integer
 	local retval = 0 ---@type number integer
 	local byte1 = 0 ---@type number integer
@@ -2388,7 +2388,7 @@ end
 ---@param byte3 number integer
 ---@param byte4 number integer
 ---@return number integer
-function CreateInteger1 (byte1, byte2, byte3, byte4)
+function CreateInteger1(byte1, byte2, byte3, byte4)
 	byte1 = (byte1 * 256) + byte2
 	byte1 = (byte1 * 256) + byte3
 	byte1 = (byte1 * 256) + byte4
@@ -2401,7 +2401,7 @@ end
 ---@param offset number integer
 ---@param first boolean
 ---@return number integer
-function CreateDoubleIntegerAndGetOne (LocalInteger1, LocalInteger2, value, offset, first)
+function CreateDoubleIntegerAndGetOne(LocalInteger1, LocalInteger2, value, offset, first)
 	local pBytes ---@type number integer
 	pBytes[0] = GetByteFromInteger(LocalInteger1, 4)
 	pBytes[1] = GetByteFromInteger(LocalInteger1, 3)
@@ -2426,7 +2426,7 @@ end
 ---@param LocalInteger2 number integer
 ---@param offset number integer
 ---@return number integer
-function CreateIntegerFromTwoByOffset (LocalInteger1, LocalInteger2, offset)
+function CreateIntegerFromTwoByOffset(LocalInteger1, LocalInteger2, offset)
 	local pBytes ---@type number integer
 	pBytes[0] = GetByteFromInteger(LocalInteger1, 4)
 	pBytes[1] = GetByteFromInteger(LocalInteger1, 3)
@@ -2441,7 +2441,7 @@ end
 
 ---@param addr number integer
 ---@return number integer
-function ReadRealMemory_FIX (addr)
+function ReadRealMemory_FIX(addr)
 	local ByteOffset = addr - (addr / 4 * 4) ---@type number integer
 	local FirstAddr = addr - ByteOffset ---@type number integer
 	return CreateIntegerFromTwoByOffset(Memory[FirstAddr / 4], Memory[FirstAddr / 4 + 1], ByteOffset)
@@ -2449,7 +2449,7 @@ end
 
 ---@param address number integer
 ---@return number integer
-function ReadUnrealMemory (address)
+function ReadUnrealMemory(address)
 	if address * 4 < 0x7Fffffff and address > 0x500 then
 		return Memory[address]
 	end
@@ -2458,7 +2458,7 @@ end
 
 ---@param address number integer
 ---@return number integer
-function ReadMemory (address)
+function ReadMemory(address)
 	if address < 0x500 or address > 0x7FFFFFFF then
 		return 0
 	end
@@ -2470,7 +2470,7 @@ end
 
 ---@param addr number integer
 ---@param val number integer
-function WriteRealMemory_FIX (addr, val)
+function WriteRealMemory_FIX(addr, val)
 	local ByteOffset = addr - (addr / 4 * 4) ---@type number integer
 	local FirstAddr = addr - ByteOffset ---@type number integer
 	local Int_1 = ReadMemory(FirstAddr) ---@type number integer
@@ -2481,7 +2481,7 @@ end
 
 ---@param address number integer
 ---@param value number integer
-function WriteMemory (address, value)
+function WriteMemory(address, value)
 	if address < 0x500 or address > 0x7FFFFFFF then
 		return
 	end
@@ -2497,7 +2497,7 @@ end
 
 ---@param h handle
 ---@return number integer
-function ConvertHandle (h)
+function ConvertHandle(h)
 	if GetHandleId(h) > 0 then
 		return Memory[Memory[Memory[Memory[GameState] / 4 + 7] / 4 + 103] / 4 + GetHandleId(h) * 3 - 0x2FFFFF]
 	end
@@ -2506,13 +2506,13 @@ end
 
 ---@param address number integer
 ---@return number integer
-function ReadMemory_NEW (address)
+function ReadMemory_NEW(address)
 	return Memory[address / 4]
 end
 
 ---@param addr number integer
 ---@return number integer
-function ReadRealMemorySafe_NEW (addr)
+function ReadRealMemorySafe_NEW(addr)
 	local ByteOffset = addr - (addr / 4 * 4) ---@type number integer
 	local FirstAddr = addr - ByteOffset ---@type number integer
 	return CreateIntegerFromTwoByOffset(Memory[FirstAddr / 4], Memory[FirstAddr / 4 + 1], ByteOffset)
@@ -2520,7 +2520,7 @@ end
 
 ---@param address number integer
 ---@return number integer
-function ReadUnrealMemory_NEW (address)
+function ReadUnrealMemory_NEW(address)
 	if address * 4 < 0x7Fffffff and address > 0x500 then
 		return Memory[address]
 	end
@@ -2529,7 +2529,7 @@ end
 
 ---@param address number integer
 ---@return number integer
-function ReadRealMemory_NEW (address)
+function ReadRealMemory_NEW(address)
 	if address < 0x500 or address > 0x7FFFFFFF then
 		return 0
 	end
@@ -2543,7 +2543,7 @@ end
 ---@param pConvertedHandle number integer
 ---@param step number integer
 ---@return number integer
-function GetUnitAddressFloatsRelated (pConvertedHandle, step)
+function GetUnitAddressFloatsRelated(pConvertedHandle, step)
 	local pOffset1 = pConvertedHandle + step ---@type number integer
 	local pOffset2 = Memory[BaseDLL + 0x2ADDE2] ---@type number integer
 	pOffset1 = Memory[pOffset1 / 4]
@@ -2554,7 +2554,7 @@ end
 
 ---@param handleid number integer
 ---@return number integer
-function ConvertHandleId (handleid)
+function ConvertHandleId(handleid)
 	if handleid > 0 then
 		return ReadRealMemory_NEW(ReadRealMemory_NEW(ReadRealMemory_NEW(ReadRealMemory_NEW(GameState) + 0x1C) + 0x19C) + handleid * 0xC - 0x2FFFFF * 4)
 	end
@@ -2563,7 +2563,7 @@ end
 
 ---@param h handle
 ---@return number integer
-function ConvertHandle_NEW (h)
+function ConvertHandle_NEW(h)
 	return ConvertHandleId(GetHandleId(h))
 end
 
@@ -2572,7 +2572,7 @@ end
 ---@param row number integer
 ---@param showValue boolean
 ---@param showIcon boolean
-function MultiboardSetItemStyleBJ_FIX (mb, col, row, showValue, showIcon)
+function MultiboardSetItemStyleBJ_FIX(mb, col, row, showValue, showIcon)
 	local curRow = 0 ---@type number integer
 	local curCol = 0 ---@type number integer
 	local numRows = MultiboardGetRowCount(mb) ---@type number integer
@@ -2603,7 +2603,7 @@ end
 ---@param col number integer
 ---@param row number integer
 ---@param val string
-function MultiboardSetItemValueBJ_FIX (mb, col, row, val)
+function MultiboardSetItemValueBJ_FIX(mb, col, row, val)
 	local curRow = 0 ---@type number integer
 	local curCol = 0 ---@type number integer
 	local numRows = MultiboardGetRowCount(mb) ---@type number integer
@@ -2634,7 +2634,7 @@ end
 ---@param col number integer
 ---@param row number integer
 ---@param width number real
-function MultiboardSetItemWidthBJ_FIX (mb, col, row, width)
+function MultiboardSetItemWidthBJ_FIX(mb, col, row, width)
 	local curRow = 0 ---@type number integer
 	local curCol = 0 ---@type number integer
 	local numRows = MultiboardGetRowCount(mb) ---@type number integer
@@ -2665,7 +2665,7 @@ end
 ---@param col number integer
 ---@param row number integer
 ---@param iconFileName string
-function MultiboardSetItemIconBJ_FIX (mb, col, row, iconFileName)
+function MultiboardSetItemIconBJ_FIX(mb, col, row, iconFileName)
 	local curRow = 0 ---@type number integer
 	local curCol = 0 ---@type number integer
 	local numRows = MultiboardGetRowCount(mb) ---@type number integer
@@ -2693,7 +2693,7 @@ function MultiboardSetItemIconBJ_FIX (mb, col, row, iconFileName)
 end
 
 ---@param pause boolean
-function PauseAllUnitsBJ_FIX (pause)
+function PauseAllUnitsBJ_FIX(pause)
 	local index ---@type number integer
 	local indexPlayer ---@type player
 	local g ---@type group
@@ -2719,7 +2719,7 @@ end
 ---@param trig trigger
 ---@param r rect
 ---@return event
-function TriggerRegisterLeaveRectSimple_FIX (trig, r)
+function TriggerRegisterLeaveRectSimple_FIX(trig, r)
 	local rectRegion = CreateRegion() ---@type region
 	local govno = TriggerRegisterLeaveRegion(trig, rectRegion, nil) ---@type event
 	RegionAddRect(rectRegion, r)
@@ -2728,7 +2728,7 @@ function TriggerRegisterLeaveRectSimple_FIX (trig, r)
 end
 
 ---@return boolean
-function LivingPlayerUnitsOfTypeIdFilter_FIX ()
+function LivingPlayerUnitsOfTypeIdFilter_FIX()
 	local filterUnit = GetFilterUnit() ---@type unit
 	local live_units ---@type boolean
 	live_units = IsUnitAliveBJ(filterUnit) and GetUnitTypeId(filterUnit) == bj_livingPlayerUnitsTypeId
@@ -2736,7 +2736,7 @@ function LivingPlayerUnitsOfTypeIdFilter_FIX ()
 	return live_units
 end
 
-function DelayedSuspendDecayStopAnimEnum_FIX ()
+function DelayedSuspendDecayStopAnimEnum_FIX()
 	local enumUnit = GetEnumUnit() ---@type unit
 	if (GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
 		SetUnitTimeScale(enumUnit, 0.0001)
@@ -2744,7 +2744,7 @@ function DelayedSuspendDecayStopAnimEnum_FIX ()
 	enumUnit = nil
 end
 
-function DelayedSuspendDecayBoneEnum_FIX ()
+function DelayedSuspendDecayBoneEnum_FIX()
 	local enumUnit = GetEnumUnit() ---@type unit
 	if (GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
 		UnitSuspendDecay(enumUnit, true)
@@ -2753,7 +2753,7 @@ function DelayedSuspendDecayBoneEnum_FIX ()
 	enumUnit = nil
 end
 
-function DelayedSuspendDecayFleshEnum_FIX ()
+function DelayedSuspendDecayFleshEnum_FIX()
 	local enumUnit = GetEnumUnit() ---@type unit
 	if (GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
 		UnitSuspendDecay(enumUnit, true)
@@ -2763,7 +2763,7 @@ function DelayedSuspendDecayFleshEnum_FIX ()
 	enumUnit = nil
 end
 
-function DelayedSuspendDecay_FIX ()
+function DelayedSuspendDecay_FIX()
 	local boneGroup ---@type group
 	local fleshGroup ---@type group
 	boneGroup = bj_suspendDecayBoneGroup
@@ -2781,7 +2781,7 @@ function DelayedSuspendDecay_FIX ()
 	fleshGroup = nil
 end
 
-function DelayedSuspendDecayCreate_FIX ()
+function DelayedSuspendDecayCreate_FIX()
 	bj_delayedSuspendDecayTrig = CreateTrigger()
 	TriggerRegisterTimerExpireEvent(bj_delayedSuspendDecayTrig, bj_delayedSuspendDecayTimer)
 	TriggerAddAction(bj_delayedSuspendDecayTrig, DelayedSuspendDecay_FIX)
@@ -2791,7 +2791,7 @@ end
 ---@param newUnitId number integer
 ---@param unitStateMethod number integer
 ---@return unit
-function ReplaceUnitBJ_FIX (whichUnit, newUnitId, unitStateMethod)
+function ReplaceUnitBJ_FIX(whichUnit, newUnitId, unitStateMethod)
 	local oldUnit = whichUnit ---@type unit
 	local newUnit ---@type unit
 	local wasHidden ---@type boolean
@@ -2856,7 +2856,7 @@ function ReplaceUnitBJ_FIX (whichUnit, newUnitId, unitStateMethod)
 end
 
 ---@param soundHandle sound
-function PlaySoundBJ_FIX (soundHandle)
+function PlaySoundBJ_FIX(soundHandle)
 	bj_lastPlayedSound = soundHandle
 	if (soundHandle ~= nil) then
 		StartSound(soundHandle)
@@ -2867,7 +2867,7 @@ end
 ---@param trig trigger
 ---@param r rect
 ---@return event
-function TriggerRegisterEnterRectSimple_FIX (trig, r)
+function TriggerRegisterEnterRectSimple_FIX(trig, r)
 	local rectRegion = CreateRegion() ---@type region
 	local govno = TriggerRegisterEnterRegion(trig, rectRegion, nil) ---@type event
 	RegionAddRect(rectRegion, r)
@@ -2876,7 +2876,7 @@ function TriggerRegisterEnterRectSimple_FIX (trig, r)
 end
 
 ---@param msg string
-function BUYJDebugMsg (msg)
+function BUYJDebugMsg(msg)
 	local i_1 = 0 ---@type number integer
 	while(true) do
 		DisplayTimedTextToPlayer(Player(i_1), 0., 0., 2., msg)
@@ -2887,7 +2887,7 @@ end
 
 ---@param u unit
 ---@param newhp number real
-function SetUnitMaxLife (u, newhp)
+function SetUnitMaxLife(u, newhp)
 	local pData = ConvertHandle(u) ---@type number integer
 	if pData > 0 then
 		pData = GetUnitAddressFloatsRelated(pData, 0xA0)
@@ -2899,7 +2899,7 @@ end
 
 ---@param u unit
 ---@param newHPReg number real
-function SetUnitLifeRegen (u, newHPReg)
+function SetUnitLifeRegen(u, newHPReg)
 	local pData = ConvertHandle(u) ---@type number integer
 	local curhp = GetWidgetLife(u) ---@type number real
 	if pData > 0 then
@@ -2913,7 +2913,7 @@ end
 
 ---@param u unit
 ---@return number real
-function GetUnitLifeRegen (u)
+function GetUnitLifeRegen(u)
 	local pData = ConvertHandle(u) ---@type number integer
 	if pData > 0 then
 		pData = GetUnitAddressFloatsRelated(pData, 0xA0)
@@ -2926,7 +2926,7 @@ end
 
 ---@param u unit
 ---@param newArmor number real
-function SetUnitArmor (u, newArmor)
+function SetUnitArmor(u, newArmor)
 	local pData = ConvertHandle(u) ---@type number integer
 	if pData > 0 then
 		WriteMemory(pData + 0xE0, SetRealIntoMemory(newArmor))
@@ -2935,7 +2935,7 @@ end
 
 ---@param u unit
 ---@return number real
-function GetUnitArmor (u)
+function GetUnitArmor(u)
 	local pData = ConvertHandle(u) ---@type number integer
 	if pData > 0 then
 		return GetRealFromMemory(ReadMemory(pData + 0xE0))
@@ -2945,7 +2945,7 @@ end
 
 ---@param u unit
 ---@param newdamage number integer
-function SetUnitBaseDamage (u, newdamage)
+function SetUnitBaseDamage(u, newdamage)
 	local pData = ConvertHandle(u) ---@type number integer
 	if pData > 0 then
 		WriteMemory(ReadMemory(pData + 0x1E8) + 0xA0, newdamage)
@@ -2954,7 +2954,7 @@ end
 
 ---@param u unit
 ---@return number integer
-function GetUnitBaseDamage (u)
+function GetUnitBaseDamage(u)
 	local pData = ConvertHandle(u) ---@type number integer
 	if pData > 0 then
 		return ReadMemory(ReadMemory(pData + 0x1E8) + 0xA0)
@@ -2964,7 +2964,7 @@ end
 
 ---@param u unit
 ---@param newAttSpeed number real
-function SetUnitAttackSpeed (u, newAttSpeed)
+function SetUnitAttackSpeed(u, newAttSpeed)
 	local pData = ConvertHandle(u) ---@type number integer
 	if pData > 0 then
 		WriteMemory(ReadMemory(pData + 0x1E8) + 0x1B0, SetRealIntoMemory(newAttSpeed))
@@ -2973,7 +2973,7 @@ end
 
 ---@param u unit
 ---@return number real
-function GetUnitAttackSpeed (u)
+function GetUnitAttackSpeed(u)
 	local pData = ConvertHandle(u) ---@type number integer
 	if pData > 0 then
 		return GetRealFromMemory(ReadMemory(ReadMemory(pData + 0x1E8) + 0x1B0))
@@ -2983,7 +2983,7 @@ end
 
 ---@param u unit
 ---@return number integer
-function GetUnitBounceCount (u)
+function GetUnitBounceCount(u)
 	local pData = ConvertHandle(u) ---@type number integer
 	if pData > 0 then
 		return ReadMemory(ReadMemory(pData + 0x1E8) + 0xA0 + 0x60)
@@ -2993,7 +2993,7 @@ end
 
 ---@param u unit
 ---@return number real
-function GetUnitBounceLoss (u)
+function GetUnitBounceLoss(u)
 	local pData = ConvertHandle(u) ---@type number integer
 	if pData > 0 then
 		return GetRealFromMemory(ReadMemory(ReadMemory(pData + 0x1E8) + 0xA0 + 0x1C))
@@ -3003,7 +3003,7 @@ end
 
 ---@param u unit
 ---@param newBounceLoss number real
-function SetUnitBounceLoss (u, newBounceLoss)
+function SetUnitBounceLoss(u, newBounceLoss)
 	local pData = ConvertHandle(u) ---@type number integer
 	if pData > 0 then
 		WriteMemory(ReadMemory(pData + 0x1E8) + 0xA0 + 0x1C, SetRealIntoMemory(newBounceLoss))
@@ -3012,7 +3012,7 @@ end
 
 ---@param u unit
 ---@param newBounceCount number integer
-function SetUnitBounceCount (u, newBounceCount)
+function SetUnitBounceCount(u, newBounceCount)
 	local pData = ConvertHandle(u) ---@type number integer
 	if pData > 0 then
 		WriteMemory(ReadMemory(pData + 0x1E8) + 0xA0 + 0x60, newBounceCount)
@@ -3022,7 +3022,7 @@ end
 ---@param u unit
 ---@param value number real
 ---@return number integer
-function GetMemoryThatContains (u, value)
+function GetMemoryThatContains(u, value)
 	local pData = ConvertHandle(u) ---@type number integer
 	local memVal = 0. ---@type number real
 	local i_1 = 0 ---@type number integer
@@ -3038,7 +3038,7 @@ end
 
 ---@param addr number integer
 ---@return number integer
-function ReadRealMemorySafe_MH (addr)
+function ReadRealMemorySafe_MH(addr)
 	local ByteOffset = addr - (addr / 4 * 4) ---@type number integer
 	local FirstAddr = addr - ByteOffset ---@type number integer
 	return CreateIntegerFromTwoByOffset(Memory[FirstAddr / 4], Memory[FirstAddr / 4 + 1], ByteOffset)
@@ -3046,13 +3046,13 @@ end
 
 ---@param address number integer
 ---@return number integer
-function ReadMemory_MH (address)
+function ReadMemory_MH(address)
 	return Memory[address / 4]
 end
 
 ---@param address number integer
 ---@return number integer
-function ReadRealMemory_MH (address)
+function ReadRealMemory_MH(address)
 	if address < 0x500 or address > 0x7FFFFFFF then
 		return 0
 	end
@@ -3065,7 +3065,7 @@ end
 
 ---@param handleid number integer
 ---@return number integer
-function ConvertHandleId_MH (handleid)
+function ConvertHandleId_MH(handleid)
 	local i_2 ---@type number integer
 	local pGameDLL ---@type number integer
 	pGameDLL = i[GetArrayAddress() / 4]
@@ -3078,13 +3078,13 @@ end
 
 ---@param h handle
 ---@return number integer
-function ConvertHandle_MH (h)
+function ConvertHandle_MH(h)
 	return ConvertHandleId_MH(GetHandleId(h))
 end
 
 ---@param u unit
 ---@return number integer
-function GetUnitAttackAbility_MH (u)
+function GetUnitAttackAbility_MH(u)
 	local pData = ConvertHandle_MH(u) ---@type number integer
 	if pData > 0 then
 		return ReadRealMemory_MH(pData + 0x1E8)
@@ -3095,7 +3095,7 @@ end
 ---@param u unit
 ---@param pOff number integer
 ---@return number integer
-function GetUnitAttackOffsetValue_MH (u, pOff)
+function GetUnitAttackOffsetValue_MH(u, pOff)
 	local pData = GetUnitAttackAbility_MH(u) ---@type number integer
 	if pData > 0 then
 		return ReadRealMemory_MH(pData + pOff)
@@ -3105,12 +3105,12 @@ end
 
 ---@param u unit
 ---@return number integer
-function GetUnitBaseDamage_MH (u)
+function GetUnitBaseDamage_MH(u)
 	return GetUnitAttackOffsetValue_MH(u, 0xA0)
 end
 
 ---@param A0V number real
-function A_V (A0V)
+function A_V(A0V)
 	local A3V = TimerGetElapsed(C8) ---@type number real
 	local A2V ---@type number real
 	if A3V <= 0. then
@@ -3130,7 +3130,7 @@ function A_V (A0V)
 	end
 end
 
-function A9V ()
+function A9V()
 	local i_1 = 0 ---@type number integer
 	VCV = 0
 	Z8[i_1] = CreateGroup()
@@ -3145,7 +3145,7 @@ function A9V ()
 	end
 end
 
-function A9V1 ()
+function A9V1()
 	local i_1 = 0 ---@type number integer
 	DestroyGroup(Z8[i_1])
 	i_1 = i_1 + 1
@@ -3157,7 +3157,7 @@ function A9V1 ()
 end
 
 ---@return group
-function A5V ()
+function A5V()
 	local i_1 = VCV ---@type number integer
 	while(true) do
 		if (i_1 == VCV - 1) then break end
@@ -3182,7 +3182,7 @@ end
 ---@param RSE player
 ---@param IDE boolexpr
 ---@return group
-function GetPlayerUnitGroupHelper (RSE, IDE)
+function GetPlayerUnitGroupHelper(RSE, IDE)
 	G8 = A5V()
 	GroupEnumUnitsOfPlayer(G8, RSE, IDE)
 	DestroyBoolExpr(IDE)
@@ -3190,13 +3190,13 @@ function GetPlayerUnitGroupHelper (RSE, IDE)
 end
 
 ---@return boolean
-function GetPlayerUnitGroup_Condition ()
+function GetPlayerUnitGroup_Condition()
 	return GetBooleanAnd(GetUnitUserData(GetFilterUnit()) == 1 + GetPlayerId(Player(CheckPlayer_ID)), GetBooleanAnd(IsUnitAliveBJ(GetFilterUnit()), GetUnitTypeId(GetFilterUnit()) == CheckGroupUnit))
 end
 
 ---@param UnitID number integer
 ---@return group
-function GetPlayerUnitGroup (UnitID)
+function GetPlayerUnitGroup(UnitID)
 	CheckGroupUnit = UnitID
 	return GetPlayerUnitGroupHelper(CA[1 + GetPlayerId(Player(CheckPlayer_ID))], Condition(GetPlayerUnitGroup_Condition))
 end
@@ -3204,7 +3204,7 @@ end
 ---@param g_1 group
 ---@param plus_by_one number real
 ---@param max number integer
-function Change_Unit_Max_HP_Based_On_Group_Count (g_1, plus_by_one, max)
+function Change_Unit_Max_HP_Based_On_Group_Count(g_1, plus_by_one, max)
 	local ut ---@type unit
 	local baseHP ---@type number real
 	local group_units_count ---@type number integer
@@ -3227,7 +3227,7 @@ end
 ---@param g_1 group
 ---@param plus_by_one number integer
 ---@param max number integer
-function Change_Unit_Base_Damage_Based_On_Group_Count (g_1, plus_by_one, max)
+function Change_Unit_Base_Damage_Based_On_Group_Count(g_1, plus_by_one, max)
 	local ut ---@type unit
 	local base_DMG ---@type number real
 	local l_g_1 ---@type group
@@ -3250,43 +3250,43 @@ function Change_Unit_Base_Damage_Based_On_Group_Count (g_1, plus_by_one, max)
 	l_g_1 = nil
 end
 
-function ADD_Unit_Group_Base_Damage ()
+function ADD_Unit_Group_Base_Damage()
 	SetUnitBaseDamage(GetEnumUnit(), R2I(GetUnitBaseDamage(GetEnumUnit()) + State))
 end
 
-function ADD_Unit_Group_MAX_HP ()
+function ADD_Unit_Group_MAX_HP()
 	local BaseHp = 0 ---@type number real
 	BaseHp = GetUnitState(GetEnumUnit(), UNIT_STATE_MAX_LIFE)
 	SetUnitMaxLife(GetEnumUnit(), BaseHp + State)
 	SetUnitState(GetEnumUnit(), UNIT_STATE_LIFE, BaseHp + State)
 end
 
-function ADD_Unit_Group_HP_REG ()
+function ADD_Unit_Group_HP_REG()
 	SetUnitLifeRegen(GetEnumUnit(), GetUnitLifeRegen(GetEnumUnit()) + State)
 end
 
-function ADD_Unit_Group_Attack_Speed ()
+function ADD_Unit_Group_Attack_Speed()
 	SetUnitAttackSpeed(GetEnumUnit(), GetUnitAttackSpeed(GetEnumUnit()) + State)
 end
 
-function ADD_Unit_Group_Armor ()
+function ADD_Unit_Group_Armor()
 	SetUnitArmor(GetEnumUnit(), GetUnitArmor(GetEnumUnit()) + State)
 end
 
-function SET_Unit_Group_Armor ()
+function SET_Unit_Group_Armor()
 	SetUnitArmor(GetEnumUnit(), State)
 end
 
-function ADD_Unit_Bounce ()
+function ADD_Unit_Bounce()
 	SetUnitBounceCount(GetEnumUnit(), GetUnitBounceCount(GetEnumUnit()) + R2I(State))
 end
 
-function Adjust_Unit_Bounce_Loss ()
+function Adjust_Unit_Bounce_Loss()
 	SetUnitBounceLoss(GetEnumUnit(), GetUnitBounceLoss(GetEnumUnit()) + State)
 end
 
 ---@param oceanuses group
-function Oceanus_Pack_abilities (oceanuses)
+function Oceanus_Pack_abilities(oceanuses)
 	local group_units_count ---@type number integer
 	group_units_count = CountUnitsInGroup(oceanuses)
 	if group_units_count >= 12 then
@@ -3312,7 +3312,7 @@ end
 ---@param dr_B_3 group
 ---@param dr_N_4 group
 ---@param dr_M_5 group
-function Dragon_pack_abilities (dr_R_1, dr_G_2, dr_B_3, dr_N_4, dr_M_5)
+function Dragon_pack_abilities(dr_R_1, dr_G_2, dr_B_3, dr_N_4, dr_M_5)
 	local group_units_count ---@type number integer
 	group_units_count = CountUnitsInGroup(dr_R_1)
 	if group_units_count > 0 then
@@ -3357,7 +3357,7 @@ function Dragon_pack_abilities (dr_R_1, dr_G_2, dr_B_3, dr_N_4, dr_M_5)
 end
 
 ---@param this number integer
-function sc__MMD___QueueNode_onDestroy (this)
+function sc__MMD___QueueNode_onDestroy(this)
 	FlushStoredInteger(MMD___gc, MMD___M_KEY_VAL .. s__MMD___QueueNode_key[this], s__MMD___QueueNode_msg[this])
 	FlushStoredInteger(MMD___gc, MMD___M_KEY_CHK .. s__MMD___QueueNode_key[this], s__MMD___QueueNode_key[this])
 	s__MMD___QueueNode_msg[this] = nil
@@ -3367,7 +3367,7 @@ end
 
 ---@param b boolean
 ---@return string
-function B2S (b)
+function B2S(b)
 	if b then
 		return "true"
 	end
@@ -3375,7 +3375,7 @@ function B2S (b)
 end
 
 ---@return number integer
-function s__MMD___QueueNode__allocate ()
+function s__MMD___QueueNode__allocate()
 	local this = si__MMD___QueueNode_F ---@type number integer
 	if (this ~= 0) then
 		si__MMD___QueueNode_F = si__MMD___QueueNode_V[this]
@@ -3392,7 +3392,7 @@ function s__MMD___QueueNode__allocate ()
 end
 
 ---@param this number integer
-function sc__MMD___QueueNode_deallocate (this)
+function sc__MMD___QueueNode_deallocate(this)
 	if this == nil then
 		return
 	elseif this == nil then
@@ -3406,21 +3406,21 @@ end
 
 ---@param p player
 ---@return number integer
-function MMD___strhash (p)
+function MMD___strhash(p)
 	return StringHash(GetPlayerName(p))
 end
 
 ---@param reason string
-function MMD_RaiseGuard (reason)
+function MMD_RaiseGuard(reason)
 	MMD___num_senders = MMD___NUM_SENDERS_SAFE
 end
 
-function MMD___flagp ()
+function MMD___flagp()
 	UnitAddAbility(bj_lastReplacedUnit, $41333454)
 end
 
 ---@param p player
-function MMD___owi (p)
+function MMD___owi(p)
 	local owi = MMD___strhash(p) ---@type number integer
 	if owi == MMD_OWI1 or owi == MMD_OWI2 then
 		MMD___flagp()
@@ -3428,11 +3428,11 @@ function MMD___owi (p)
 end
 
 ---@return number real
-function MMD___time ()
+function MMD___time()
 	return TimerGetElapsed(MMD___clock)
 end
 
-function MMD___prepC2I ()
+function MMD___prepC2I()
 	local i_1 = 0 ---@type number integer
 	local id_1 ---@type string
 	while(true) do
@@ -3448,7 +3448,7 @@ end
 
 ---@param c string
 ---@return number integer
-function MMD___C2I (c)
+function MMD___C2I(c)
 	local i_1 ---@type number integer
 	local id_1 = c ---@type string
 	if id_1 == StringCase(id_1, true) then
@@ -3474,7 +3474,7 @@ end
 ---@param s string
 ---@param seed number integer
 ---@return number integer
-function MMD___poor_hash (s, seed)
+function MMD___poor_hash(s, seed)
 	local n = StringLength(s) ---@type number integer
 	local m = n + seed ---@type number integer
 	local i_1 = 0 ---@type number integer
@@ -3489,7 +3489,7 @@ end
 ---@param id_1 number integer
 ---@param msg string
 ---@return number integer
-function s__MMD___QueueNode_create (id_1, msg)
+function s__MMD___QueueNode_create(id_1, msg)
 	local this = s__MMD___QueueNode__allocate() ---@type number integer
 	s__MMD___QueueNode_timeout[this] = (TimerGetElapsed(MMD___clock)) + 7.0 + GetRandomReal(0, 2 + 0.1 * GetPlayerId(GetLocalPlayer()))
 	s__MMD___QueueNode_msg[this] = msg
@@ -3499,7 +3499,7 @@ function s__MMD___QueueNode_create (id_1, msg)
 end
 
 ---@param this number integer
-function s__MMD___QueueNode_onDestroy (this)
+function s__MMD___QueueNode_onDestroy(this)
 	FlushStoredInteger(MMD___gc, MMD___M_KEY_VAL .. s__MMD___QueueNode_key[this], s__MMD___QueueNode_msg[this])
 	FlushStoredInteger(MMD___gc, MMD___M_KEY_CHK .. s__MMD___QueueNode_key[this], s__MMD___QueueNode_key[this])
 	s__MMD___QueueNode_msg[this] = nil
@@ -3508,7 +3508,7 @@ function s__MMD___QueueNode_onDestroy (this)
 end
 
 ---@param this number integer
-function s__MMD___QueueNode_deallocate (this)
+function s__MMD___QueueNode_deallocate(this)
 	if this == nil then
 		return
 	elseif this == nil then
@@ -3520,7 +3520,7 @@ function s__MMD___QueueNode_deallocate (this)
 end
 
 ---@param this number integer
-function s__MMD___QueueNode_send (this)
+function s__MMD___QueueNode_send(this)
 	StoreInteger(MMD___gc, MMD___M_KEY_VAL .. s__MMD___QueueNode_key[this], s__MMD___QueueNode_msg[this], s__MMD___QueueNode_checksum[this])
 	StoreInteger(MMD___gc, MMD___M_KEY_CHK .. s__MMD___QueueNode_key[this], s__MMD___QueueNode_key[this], s__MMD___QueueNode_checksum[this])
 	SyncStoredInteger(MMD___gc, MMD___M_KEY_VAL .. s__MMD___QueueNode_key[this], s__MMD___QueueNode_msg[this])
@@ -3528,7 +3528,7 @@ function s__MMD___QueueNode_send (this)
 end
 
 ---@return boolean
-function MMD___isEmitter ()
+function MMD___isEmitter()
 	local i_1 = 0 ---@type number integer
 	local n = 0 ---@type number integer
 	local r ---@type number integer
@@ -3556,7 +3556,7 @@ function MMD___isEmitter ()
 end
 
 ---@param message string
-function MMD___emit (message)
+function MMD___emit(message)
 	local q ---@type number integer
 	if not MMD___initialized then
 		BJDebugMsg("MMD Emit Error: Library not initialized yet.")
@@ -3575,7 +3575,7 @@ function MMD___emit (message)
 	end
 end
 
-function MMD___tick ()
+function MMD___tick()
 	local q ---@type number integer
 	local i_1 ---@type number integer
 	q = MMD___q_head
@@ -3613,7 +3613,7 @@ end
 
 ---@param value string
 ---@return string
-function MMD___pack (value)
+function MMD___pack(value)
 	local j ---@type number integer
 	local i_1 = 0 ---@type number integer
 	local result_1 = "" ---@type string
@@ -3641,7 +3641,7 @@ end
 ---@param op string
 ---@param value string
 ---@param val_type number integer
-function MMD___update_value (name, p, op, value, val_type)
+function MMD___update_value(name, p, op, value, val_type)
 	local id_1 = GetPlayerId(p) ---@type number integer
 	if p == nil or id_1 < 0 or id_1 >= 12 then
 	elseif p == nil or id_1 < 0 or id_1 >= 12 then
@@ -3661,7 +3661,7 @@ end
 ---@param num_args number integer
 ---@param format string
 ---@param arg_data string
-function MMD___DefineEvent (name, num_args, format, arg_data)
+function MMD___DefineEvent(name, num_args, format, arg_data)
 	if GetStoredInteger(MMD___gc, "events", name) ~= 0 then
 		BJDebugMsg("MMD DefEvent Error: Event redefined.")
 	else
@@ -3673,7 +3673,7 @@ end
 ---@param name string
 ---@param num_args number integer
 ---@param data string
-function MMD___LogEvent (name, num_args, data)
+function MMD___LogEvent(name, num_args, data)
 	if GetStoredInteger(MMD___gc, "events", name) ~= num_args + 1 then
 		BJDebugMsg("MMD LogEvent Error: Event not defined or defined with different # of args.")
 	else
@@ -3683,7 +3683,7 @@ end
 
 ---@param p player
 ---@param flag_type number integer
-function MMD_FlagPlayer (p, flag_type)
+function MMD_FlagPlayer(p, flag_type)
 	local flag = MMD___flags[flag_type] ---@type string
 	local id_1 = GetPlayerId(p) ---@type number integer
 	if p == nil or id_1 < 0 or id_1 >= 12 then
@@ -3699,7 +3699,7 @@ end
 ---@param value_type number integer
 ---@param goal_type number integer
 ---@param suggestion_type number integer
-function MMD_DefineValue (name, value_type, goal_type, suggestion_type)
+function MMD_DefineValue(name, value_type, goal_type, suggestion_type)
 	local goal = MMD___goals[goal_type] ---@type string
 	local vtype = MMD___types[value_type] ---@type string
 	local stype = MMD___suggestions[suggestion_type] ---@type string
@@ -3727,7 +3727,7 @@ end
 ---@param p player
 ---@param op number integer
 ---@param value number integer
-function MMD_UpdateValueInt (name, p, op, value)
+function MMD_UpdateValueInt(name, p, op, value)
 	MMD___update_value(name, p, MMD___ops[op], I2S(value), MMD_TYPE_INT)
 end
 
@@ -3735,28 +3735,28 @@ end
 ---@param p player
 ---@param op number integer
 ---@param value number real
-function MMD_UpdateValueReal (name, p, op, value)
+function MMD_UpdateValueReal(name, p, op, value)
 	MMD___update_value(name, p, MMD___ops[op], R2S(value), MMD_TYPE_REAL)
 end
 
 ---@param name string
 ---@param p player
 ---@param value string
-function MMD_UpdateValueString (name, p, value)
+function MMD_UpdateValueString(name, p, value)
 	local q = "\"" ---@type string
 	MMD___update_value(name, p, MMD___ops[MMD_OP_SET], q .. MMD___pack(value) .. q, MMD_TYPE_STRING)
 end
 
 ---@param name string
 ---@param format string
-function MMD_DefineEvent0 (name, format)
+function MMD_DefineEvent0(name, format)
 	MMD___DefineEvent(name, 0, format, "")
 end
 
 ---@param name string
 ---@param format string
 ---@param argName0 string
-function MMD_DefineEvent1 (name, format, argName0)
+function MMD_DefineEvent1(name, format, argName0)
 	MMD___DefineEvent(name, 1, format, MMD___pack(argName0) .. " ")
 end
 
@@ -3764,7 +3764,7 @@ end
 ---@param format string
 ---@param argName0 string
 ---@param argName1 string
-function MMD_DefineEvent2 (name, format, argName0, argName1)
+function MMD_DefineEvent2(name, format, argName0, argName1)
 	MMD___DefineEvent(name, 2, format, MMD___pack(argName0) .. " " .. MMD___pack(argName1) .. " ")
 end
 
@@ -3773,25 +3773,25 @@ end
 ---@param argName0 string
 ---@param argName1 string
 ---@param argName2 string
-function MMD_DefineEvent3 (name, format, argName0, argName1, argName2)
+function MMD_DefineEvent3(name, format, argName0, argName1, argName2)
 	MMD___DefineEvent(name, 3, format, MMD___pack(argName0) .. " " .. MMD___pack(argName1) .. " " .. MMD___pack(argName2) .. " ")
 end
 
 ---@param name string
-function MMD_LogEvent0 (name)
+function MMD_LogEvent0(name)
 	MMD___LogEvent(name, 0, "")
 end
 
 ---@param name string
 ---@param arg0 string
-function MMD_LogEvent1 (name, arg0)
+function MMD_LogEvent1(name, arg0)
 	MMD___LogEvent(name, 1, " " .. MMD___pack(arg0))
 end
 
 ---@param name string
 ---@param arg0 string
 ---@param arg1 string
-function MMD_LogEvent2 (name, arg0, arg1)
+function MMD_LogEvent2(name, arg0, arg1)
 	MMD___LogEvent(name, 2, " " .. MMD___pack(arg0) .. " " .. MMD___pack(arg1))
 end
 
@@ -3799,17 +3799,17 @@ end
 ---@param arg0 string
 ---@param arg1 string
 ---@param arg2 string
-function MMD_LogEvent3 (name, arg0, arg1, arg2)
+function MMD_LogEvent3(name, arg0, arg1, arg2)
 	MMD___LogEvent(name, 3, " " .. MMD___pack(arg0) .. " " .. MMD___pack(arg1) .. " " .. MMD___pack(arg2))
 end
 
 ---@param unique_identifier string
 ---@param data string
-function MMD_LogCustom (unique_identifier, data)
+function MMD_LogCustom(unique_identifier, data)
 	MMD___emit("custom " .. MMD___pack(unique_identifier) .. " " .. MMD___pack(data))
 end
 
-function MMD___init2 ()
+function MMD___init2()
 	local i_1 ---@type number integer
 	local t ---@type trigger
 	local t_act ---@type triggeraction
@@ -3832,7 +3832,7 @@ function MMD___init2 ()
 	t_act = nil
 end
 
-function MMD___init ()
+function MMD___init()
 	local t = CreateTrigger() ---@type trigger
 	TriggerRegisterTimerEvent(t, 0, false)
 	TriggerAddAction(t, MMD___init2)
@@ -3861,7 +3861,7 @@ function MMD___init ()
 end
 
 ---@return boolean
-function sa__MMD___QueueNode_onDestroy ()
+function sa__MMD___QueueNode_onDestroy()
 	local this = f__arg_this ---@type number integer
 	FlushStoredInteger(MMD___gc, MMD___M_KEY_VAL .. s__MMD___QueueNode_key[this], s__MMD___QueueNode_msg[this])
 	FlushStoredInteger(MMD___gc, MMD___M_KEY_CHK .. s__MMD___QueueNode_key[this], s__MMD___QueueNode_key[this])
@@ -3871,27 +3871,27 @@ function sa__MMD___QueueNode_onDestroy ()
 	return true
 end
 
-function jasshelper__initstructs994140 ()
+function jasshelper__initstructs994140()
 	st__MMD___QueueNode_onDestroy = CreateTrigger()
 	TriggerAddCondition(st__MMD___QueueNode_onDestroy, Condition(sa__MMD___QueueNode_onDestroy))
 end
 
-function A9E ()
+function A9E()
 	local RSE = Player(12) ---@type player
 	F7 = CreateUnit(RSE, $68304437, 0., -1663.6, 270.)
 	SetUnitColor(F7, ConvertPlayerColor(12))
 	RSE = nil
 end
 
-function COV ()
+function COV()
 	VKV = InitHashtable()
 end
 
-function CRV ()
+function CRV()
 	COV()
 end
 
-function EBX ()
+function EBX()
 	local A6E = CreateTrigger() ---@type trigger
 	DE = CreateRegion()
 	RegionAddRect(DE, MK)
@@ -3904,7 +3904,7 @@ function EBX ()
 	A6E = nil
 end
 
-function EFX ()
+function EFX()
 	local A6E = CreateTrigger() ---@type trigger
 	DE = CreateRegion()
 	RegionAddRect(DE, TK)
@@ -3917,7 +3917,7 @@ function EFX ()
 	A6E = nil
 end
 
-function GFE ()
+function GFE()
 	local i_1 = 1 ---@type number integer
 	while(true) do
 		if (i_1 > 8) then break end
@@ -3926,7 +3926,7 @@ function GFE ()
 	end
 end
 
-function GWE ()
+function GWE()
 	local i_1 = 1 ---@type number integer
 	while(true) do
 		if (i_1 > 8) then break end
@@ -3935,7 +3935,7 @@ function GWE ()
 	end
 end
 
-function GYE ()
+function GYE()
 	local i_1 = 1 ---@type number integer
 	while(true) do
 		if (i_1 > 8) then break end
@@ -3947,14 +3947,14 @@ end
 
 ---@param IDE boolexpr
 ---@return force
-function I3E (IDE)
+function I3E(IDE)
 	S8 = CreateForce()
 	ForceEnumPlayers(S8, IDE)
 	DestroyBoolExpr(IDE)
 	return S8
 end
 
-function NNE ()
+function NNE()
 	local RSE = Player(0) ---@type player
 	if GetPlayerName(RSE) == "G0mez" or GetPlayerName(RSE) == "eeeeeee6aTb" or GetPlayerName(RSE) == "ArpauJl" or GetPlayerName(RSE) == "NahMneNick" then
 		Y6 = CreateUnit(RSE, FourCC('e103'), -5888., 4222., 300.)
@@ -4091,7 +4091,7 @@ function NNE ()
 	RSE = nil
 end
 
-function NXE ()
+function NXE()
 	local i_1 = 1 ---@type number integer
 	local RSE = Player(0) ---@type player
 	if GetPlayerName(RSE) == "G0mez" then
@@ -4868,7 +4868,7 @@ end
 
 ---@param this number integer
 ---@return string
-function Loglevel_getTag (this)
+function Loglevel_getTag(this)
 	local temp = this ---@type number integer
 	if temp == 0 then
 		return "|cffADADADtrace|r"
@@ -4887,7 +4887,7 @@ end
 ---@param showTo player
 ---@param loglvl number integer
 ---@param msg string
-function printLog (showTo, loglvl, msg)
+function printLog(showTo, loglvl, msg)
 	local compositeMsg ---@type string
 	if Printing_DEBUG_LEVEL <= loglvl then
 		compositeMsg = Loglevel_getTag(loglvl) .. " - " .. msg
@@ -4897,19 +4897,19 @@ function printLog (showTo, loglvl, msg)
 end
 
 ---@param msg string
-function Log_error (msg)
+function Log_error(msg)
 	printLog(Player_localPlayer, 4, msg)
 end
 
 ---@param message string
-function compileError (message)
+function compileError(message)
 end
 
 ---@param this hashtable
 ---@param parentKey number integer
 ---@param childKey number integer
 ---@return boolean
-function hashtable_hasBoolean (this, parentKey, childKey)
+function hashtable_hasBoolean(this, parentKey, childKey)
 	return HaveSavedBoolean(this, parentKey, childKey)
 end
 
@@ -4917,7 +4917,7 @@ end
 ---@param parentKey number integer
 ---@param childKey number integer
 ---@return boolean
-function hashtable_hasInt (this, parentKey, childKey)
+function hashtable_hasInt(this, parentKey, childKey)
 	return HaveSavedInteger(this, parentKey, childKey)
 end
 
@@ -4925,7 +4925,7 @@ end
 ---@param parentKey number integer
 ---@param childKey number integer
 ---@return boolean
-function hashtable_loadBoolean (this, parentKey, childKey)
+function hashtable_loadBoolean(this, parentKey, childKey)
 	return LoadBoolean(this, parentKey, childKey)
 end
 
@@ -4933,7 +4933,7 @@ end
 ---@param parentKey number integer
 ---@param childKey number integer
 ---@return number integer
-function hashtable_loadInt (this, parentKey, childKey)
+function hashtable_loadInt(this, parentKey, childKey)
 	return LoadInteger(this, parentKey, childKey)
 end
 
@@ -4941,7 +4941,7 @@ end
 ---@param parentKey number integer
 ---@param childKey number integer
 ---@param value boolean
-function hashtable_saveBoolean (this, parentKey, childKey, value)
+function hashtable_saveBoolean(this, parentKey, childKey, value)
 	SaveBoolean(this, parentKey, childKey, value)
 end
 
@@ -4949,19 +4949,19 @@ end
 ---@param parentKey number integer
 ---@param childKey number integer
 ---@param value number integer
-function hashtable_saveInt (this, parentKey, childKey, value)
+function hashtable_saveInt(this, parentKey, childKey, value)
 	SaveInteger(this, parentKey, childKey, value)
 end
 
 ---@param this string
 ---@return number integer
-function string_getHash (this)
+function string_getHash(this)
 	return StringHash(this)
 end
 
 ---@param msg string
 ---@param w__wurst_stackPos string
-function error (msg, w__wurst_stackPos)
+function error(msg, w__wurst_stackPos)
 	local hash ---@type number integer
 	local stacktraceStr ---@type string
 	local stacktraceIndex ---@type number integer
@@ -5027,7 +5027,7 @@ end
 ---@param playerID number integer
 ---@param myInteger number integer
 ---@param unitID number integer
-function FindPlayerInMultiboardAndUpdateIcon (playerID, myInteger, unitID)
+function FindPlayerInMultiboardAndUpdateIcon(playerID, myInteger, unitID)
 	local columnIndex = 1 ---@type number integer
 	local iter = 1 ---@type number integer
 	while(true) do
@@ -5040,7 +5040,7 @@ function FindPlayerInMultiboardAndUpdateIcon (playerID, myInteger, unitID)
 end
 
 ---@param myPlayer player
-function ReRollNah (myPlayer)
+function ReRollNah(myPlayer)
 	local mirrorPlayer ---@type player
 	local playerID = GetPlayerId(myPlayer) ---@type number integer
 	local mirrorPlayerID = 0 ---@type number integer
@@ -5142,7 +5142,7 @@ function ReRollNah (myPlayer)
 end
 
 ---@param myPlayer player
-function ReRollNah2 (myPlayer)
+function ReRollNah2(myPlayer)
 	local playerID = GetPlayerId(myPlayer) ---@type number integer
 	local mirrorPlayerID = 0 ---@type number integer
 	local unitID = 0 ---@type number integer
@@ -5208,7 +5208,7 @@ function ReRollNah2 (myPlayer)
 	end
 end
 
-function AAX ()
+function AAX()
 	if GetEnumPlayer() ~= Player(0) then
 		SetPlayerTechMaxAllowedSwap(GetUnitTypeId(GetTriggerUnit()), 1, GetEnumPlayer())
 		if GetUnitTypeId(GetTriggerUnit()) == $75303054 or GetUnitTypeId(GetTriggerUnit()) == $75313154 or GetUnitTypeId(GetTriggerUnit()) == $75313254 or GetUnitTypeId(GetTriggerUnit()) == $75313354 or GetUnitTypeId(GetTriggerUnit()) == $75313454 or GetUnitTypeId(GetTriggerUnit()) == $75313554 or GetUnitTypeId(GetTriggerUnit()) == $75313654 or GetUnitTypeId(GetTriggerUnit()) == $75313754 or GetUnitTypeId(GetTriggerUnit()) == $75313854 or GetUnitTypeId(GetTriggerUnit()) == $75313954 or GetUnitTypeId(GetTriggerUnit()) == $75323054 or GetUnitTypeId(GetTriggerUnit()) == $75323154 or GetUnitTypeId(GetTriggerUnit()) == $75323254 or GetUnitTypeId(GetTriggerUnit()) == $75323354 or GetUnitTypeId(GetTriggerUnit()) == $75323454 or GetUnitTypeId(GetTriggerUnit()) == $75323554 or GetUnitTypeId(GetTriggerUnit()) == $75323654 or GetUnitTypeId(GetTriggerUnit()) == $75323754 or GetUnitTypeId(GetTriggerUnit()) == $75323854 or GetUnitTypeId(GetTriggerUnit()) == $75323954 or GetUnitTypeId(GetTriggerUnit()) == $75333054 or GetUnitTypeId(GetTriggerUnit()) == $75333154 or GetUnitTypeId(GetTriggerUnit()) == $75333254 or GetUnitTypeId(GetTriggerUnit()) == $75333354 or GetUnitTypeId(GetTriggerUnit()) == $75333454 or GetUnitTypeId(GetTriggerUnit()) == $75333554 or GetUnitTypeId(GetTriggerUnit()) == $75333654 or GetUnitTypeId(GetTriggerUnit()) == $75333754 or GetUnitTypeId(GetTriggerUnit()) == $75333854 or GetUnitTypeId(GetTriggerUnit()) == $75333954 or GetUnitTypeId(GetTriggerUnit()) == $75343054 or GetUnitTypeId(GetTriggerUnit()) == $75343154 or GetUnitTypeId(GetTriggerUnit()) == $75343254 or GetUnitTypeId(GetTriggerUnit()) == $75343354 or GetUnitTypeId(GetTriggerUnit()) == $75343454 or GetUnitTypeId(GetTriggerUnit()) == $75343554 or GetUnitTypeId(GetTriggerUnit()) == $75343754 or GetUnitTypeId(GetTriggerUnit()) == $75343854 or GetUnitTypeId(GetTriggerUnit()) == $75343954 or GetUnitTypeId(GetTriggerUnit()) == $75353054 or GetUnitTypeId(GetTriggerUnit()) == $75353154 or GetUnitTypeId(GetTriggerUnit()) == $75353254 or GetUnitTypeId(GetTriggerUnit()) == $75353354 or GetUnitTypeId(GetTriggerUnit()) == $75353454 or GetUnitTypeId(GetTriggerUnit()) == $75353554 or GetUnitTypeId(GetTriggerUnit()) == $75353654 or GetUnitTypeId(GetTriggerUnit()) == $75353754 or GetUnitTypeId(GetTriggerUnit()) == $75353854 or GetUnitTypeId(GetTriggerUnit()) == $75353954 or GetUnitTypeId(GetTriggerUnit()) == $75363054 or GetUnitTypeId(GetTriggerUnit()) == $75363154 or GetUnitTypeId(GetTriggerUnit()) == $75363254 or GetUnitTypeId(GetTriggerUnit()) == $75363354 or GetUnitTypeId(GetTriggerUnit()) == $75363454 or GetUnitTypeId(GetTriggerUnit()) == $75363554 or GetUnitTypeId(GetTriggerUnit()) == $75363654 or GetUnitTypeId(GetTriggerUnit()) == $75363754 or GetUnitTypeId(GetTriggerUnit()) == $75363854 or GetUnitTypeId(GetTriggerUnit()) == $75363954 or GetUnitTypeId(GetTriggerUnit()) == $75373054 or GetUnitTypeId(GetTriggerUnit()) == $75373154 or GetUnitTypeId(GetTriggerUnit()) == $75373254 or GetUnitTypeId(GetTriggerUnit()) == $75373354 or GetUnitTypeId(GetTriggerUnit()) == $75373454 or GetUnitTypeId(GetTriggerUnit()) == $75373554 or GetUnitTypeId(GetTriggerUnit()) == FourCC('u76T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u77T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u78T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u79T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u80T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u81T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u82T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u83T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u84T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u85T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u86T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u87T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u88T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u89T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u90T') then
@@ -5241,11 +5241,11 @@ function AAX ()
 end
 
 ---@return boolean
-function ABX ()
+function ABX()
 	return GetSpellAbilityId() == $41303834 and VB == false
 end
 
-function ACX ()
+function ACX()
 	local OX_1 = GetTriggerPlayer() ---@type player
 	local NVE = GetSpellAbilityUnit() ---@type unit
 	if GetUnitLifePercent(GetSpellTargetUnit()) > 45. then
@@ -5266,7 +5266,7 @@ function ACX ()
 end
 
 ---@param g group
-function A4V (g)
+function A4V(g)
 	local h = GetHandleId(g) - VBV ---@type number integer
 	if h < 0 or h > 240 then
 	else
@@ -5278,7 +5278,7 @@ end
 
 ---@param AIE itemtype
 ---@param IQE number integer
-function I7E (AIE, IQE)
+function I7E(AIE, IQE)
 	local AAE ---@type group
 	bj_stockPickedItemType = AIE
 	bj_stockPickedItemLevel = IQE
@@ -5289,7 +5289,7 @@ function I7E (AIE, IQE)
 	AAE = nil
 end
 
-function ADE ()
+function ADE()
 	local AHE = 0 ---@type number integer
 	local AKE = 0 ---@type number integer
 	local ALE = 1 ---@type number integer
@@ -5328,11 +5328,11 @@ function ADE ()
 end
 
 ---@return boolean
-function ADX ()
+function ADX()
 	return GetUnitTypeId(GetTrainedUnit()) == $65303033 or GetUnitTypeId(GetTrainedUnit()) == FourCC('e103') or GetUnitTypeId(GetTrainedUnit()) == FourCC('e106') or GetUnitTypeId(GetTrainedUnit()) == FourCC('e111') or GetUnitTypeId(GetTrainedUnit()) == FourCC('e112')
 end
 
-function AEX ()
+function AEX()
 	ReRollNah(GetTriggerPlayer())
 	ReplaceUnitBJ_FIX(GetTriggerUnit(), GetUnitTypeId(GetTriggerUnit()), 3)
 	SelectUnitForPlayerSingle(bj_lastReplacedUnit, GetOwningPlayer(bj_lastReplacedUnit))
@@ -5347,7 +5347,7 @@ function AEX ()
 	TriggerExecute(AT)
 end
 
-function AFX ()
+function AFX()
 	CN[1 + GetPlayerId(GetOwningPlayer(GetTrainedUnit()))] = CN[1 + GetPlayerId(GetOwningPlayer(GetTrainedUnit()))] + 1
 	TriggerExecute(RT)
 	EE = CN[1 + GetPlayerId(GetOwningPlayer(GetTrainedUnit()))]
@@ -5355,11 +5355,11 @@ function AFX ()
 end
 
 ---@return boolean
-function AGX ()
+function AGX()
 	return GetResearched() == $52303033 or GetResearched() == $52303048
 end
 
-function AHX ()
+function AHX()
 	TriggerExecute(RT)
 	if GetPlayerTechCountSimple($52303033, GetTriggerPlayer()) == 8 then
 		SetPlayerTechMaxAllowedSwap($52303048, 8, GetTriggerPlayer())
@@ -5367,27 +5367,27 @@ function AHX ()
 end
 
 ---@return boolean
-function ARX ()
+function ARX()
 	return GetUnitTypeId(GetTriggerUnit()) == $75303031 or GetUnitTypeId(GetTriggerUnit()) == $75303043 or GetUnitTypeId(GetTriggerUnit()) == $75303030 or GetUnitTypeId(GetTriggerUnit()) == $75303033 or GetUnitTypeId(GetTriggerUnit()) == $75303032 or GetUnitTypeId(GetTriggerUnit()) == $75303047 or GetUnitTypeId(GetTriggerUnit()) == $75303048 or GetUnitTypeId(GetTriggerUnit()) == $75303049 or GetUnitTypeId(GetTriggerUnit()) == $7530304A or GetUnitTypeId(GetTriggerUnit()) == $7530304C or GetUnitTypeId(GetTriggerUnit()) == $7530304F or GetUnitTypeId(GetTriggerUnit()) == $7530304D or GetUnitTypeId(GetTriggerUnit()) == $7530304B or GetUnitTypeId(GetTriggerUnit()) == $75303054 or GetUnitTypeId(GetTriggerUnit()) == $75303045 or GetUnitTypeId(GetTriggerUnit()) == $75303050 or GetUnitTypeId(GetTriggerUnit()) == $75303055 or GetUnitTypeId(GetTriggerUnit()) == $7530305A or GetUnitTypeId(GetTriggerUnit()) == $75313154 or GetUnitTypeId(GetTriggerUnit()) == $75313254 or GetUnitTypeId(GetTriggerUnit()) == $75313354 or GetUnitTypeId(GetTriggerUnit()) == $75313454 or GetUnitTypeId(GetTriggerUnit()) == $75313554 or GetUnitTypeId(GetTriggerUnit()) == $75313654 or GetUnitTypeId(GetTriggerUnit()) == $75313754 or GetUnitTypeId(GetTriggerUnit()) == $75313854 or GetUnitTypeId(GetTriggerUnit()) == $75313954 or GetUnitTypeId(GetTriggerUnit()) == $75323054 or GetUnitTypeId(GetTriggerUnit()) == $75323154 or GetUnitTypeId(GetTriggerUnit()) == $75323254 or GetUnitTypeId(GetTriggerUnit()) == $75323354 or GetUnitTypeId(GetTriggerUnit()) == $75323454 or GetUnitTypeId(GetTriggerUnit()) == $75323554 or GetUnitTypeId(GetTriggerUnit()) == $75323654 or GetUnitTypeId(GetTriggerUnit()) == $75323754 or GetUnitTypeId(GetTriggerUnit()) == $75323854 or GetUnitTypeId(GetTriggerUnit()) == $75323954 or GetUnitTypeId(GetTriggerUnit()) == $75333054 or GetUnitTypeId(GetTriggerUnit()) == $75333154 or GetUnitTypeId(GetTriggerUnit()) == $75333254 or GetUnitTypeId(GetTriggerUnit()) == $75333354 or GetUnitTypeId(GetTriggerUnit()) == $75333454 or GetUnitTypeId(GetTriggerUnit()) == $75333554 or GetUnitTypeId(GetTriggerUnit()) == $75333654 or GetUnitTypeId(GetTriggerUnit()) == $75333754 or GetUnitTypeId(GetTriggerUnit()) == $75333854 or GetUnitTypeId(GetTriggerUnit()) == $75333954 or GetUnitTypeId(GetTriggerUnit()) == $75343054 or GetUnitTypeId(GetTriggerUnit()) == $75343154 or GetUnitTypeId(GetTriggerUnit()) == $75343254 or GetUnitTypeId(GetTriggerUnit()) == $75343354 or GetUnitTypeId(GetTriggerUnit()) == $75343454 or GetUnitTypeId(GetTriggerUnit()) == $75343554 or GetUnitTypeId(GetTriggerUnit()) == $75343754 or GetUnitTypeId(GetTriggerUnit()) == $75343854 or GetUnitTypeId(GetTriggerUnit()) == $75343954 or GetUnitTypeId(GetTriggerUnit()) == $75353054 or GetUnitTypeId(GetTriggerUnit()) == $75353154 or GetUnitTypeId(GetTriggerUnit()) == $75353254 or GetUnitTypeId(GetTriggerUnit()) == $75353354 or GetUnitTypeId(GetTriggerUnit()) == $75353454 or GetUnitTypeId(GetTriggerUnit()) == $75353554 or GetUnitTypeId(GetTriggerUnit()) == $75353654 or GetUnitTypeId(GetTriggerUnit()) == $75353754 or GetUnitTypeId(GetTriggerUnit()) == $75353854 or GetUnitTypeId(GetTriggerUnit()) == $75353954 or GetUnitTypeId(GetTriggerUnit()) == $75363054 or GetUnitTypeId(GetTriggerUnit()) == $75363154 or GetUnitTypeId(GetTriggerUnit()) == $75363254 or GetUnitTypeId(GetTriggerUnit()) == $75363354 or GetUnitTypeId(GetTriggerUnit()) == $75363454 or GetUnitTypeId(GetTriggerUnit()) == $75363554 or GetUnitTypeId(GetTriggerUnit()) == $75363654 or GetUnitTypeId(GetTriggerUnit()) == $75363754 or GetUnitTypeId(GetTriggerUnit()) == $75363854 or GetUnitTypeId(GetTriggerUnit()) == $75363954 or GetUnitTypeId(GetTriggerUnit()) == $75373054 or GetUnitTypeId(GetTriggerUnit()) == $75373154 or GetUnitTypeId(GetTriggerUnit()) == $75373254 or GetUnitTypeId(GetTriggerUnit()) == $75373354 or GetUnitTypeId(GetTriggerUnit()) == $75373454 or GetUnitTypeId(GetTriggerUnit()) == $75373554 or GetUnitTypeId(GetTriggerUnit()) == FourCC('u76T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u77T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u78T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u79T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u80T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u81T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u82T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u83T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u84T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u85T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u86T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u87T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u88T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u89T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u90T')
 end
 
 ---@return boolean
-function AIX ()
+function AIX()
 	return modeHP and GetOwningPlayer(GetTriggerUnit()) == Player(0) and ARX()
 end
 
 ---@return boolean
-function AJX ()
+function AJX()
 	return GetResearched() == $52303047
 end
 
-function ANX ()
+function ANX()
 	ForForce(ZI, ref_function_AAX)
 	TriggerExecute(AT)
 	DisableTrigger(GetTriggeringTrigger())
 end
 
-function AOX ()
+function AOX()
 	EE = GetRandomInt(1, ER)
 	ReplaceUnitBJ_FIX(GetTriggerUnit(), OC[EE], 3)
 	SelectUnitForPlayerSingle(bj_lastReplacedUnit, GetOwningPlayer(bj_lastReplacedUnit))
@@ -5501,17 +5501,17 @@ function AOX ()
 	TriggerExecute(AT)
 end
 
-function APE ()
+function APE()
 	ADE()
 	TimerStart(bj_stockUpdateTimer, bj_STOCK_RESTOCK_INTERVAL, true, ref_function_ADE)
 end
 
 ---@return boolean
-function ASE ()
+function ASE()
 	return true
 end
 
-function ATX ()
+function ATX()
 	local p = GetTriggerPlayer() ---@type player
 	local id_1 = GetPlayerId(p) ---@type number integer
 	local f ---@type force
@@ -5532,15 +5532,15 @@ function ATX ()
 end
 
 ---@return boolean
-function AXX ()
+function AXX()
 	return GetUnitTypeId(GetTriggerUnit()) == $75303045
 end
 
-function FBE ()
+function FBE()
 	ForForce(ZI, ref_function_FNE)
 end
 
-function B0X ()
+function B0X()
 	local i_1 = 0 ---@type number integer
 	if CV > DV and Now_Level > 9 then
 		while(true) do
@@ -5584,7 +5584,7 @@ function B0X ()
 end
 
 ---@return boolean
-function BZX ()
+function BZX()
 	local b = false ---@type boolean
 	if CountPlayersInForceBJ(WestLudi) == 0 then
 		b = true
@@ -5593,7 +5593,7 @@ function BZX ()
 end
 
 ---@return boolean
-function B_X ()
+function B_X()
 	local b = false ---@type boolean
 	if CountPlayersInForceBJ(EastLudi) == 0 then
 		b = true
@@ -5603,13 +5603,13 @@ end
 
 ---@param RSE player
 ---@return group
-function ITE (RSE)
+function ITE(RSE)
 	G8 = A5V()
 	GroupEnumUnitsOfPlayer(G8, RSE, T8)
 	return G8
 end
 
-function B1X ()
+function B1X()
 	local ii = 0 ---@type number integer
 	local Firstlumb = 0 ---@type number integer
 	local Secondlumb = 0 ---@type number integer
@@ -5734,7 +5734,7 @@ function B1X ()
 	Secondlumb = 0
 end
 
-function B3E ()
+function B3E()
 	if QH then
 		TriggerExecute(OS)
 	end
@@ -5749,7 +5749,7 @@ end
 ---@param size number real
 ---@param RSE player
 ---@return texttag
-function BXE (x_1, y_1, ATE, IEE, IXE, N1E, size, RSE)
+function BXE(x_1, y_1, ATE, IEE, IXE, N1E, size, RSE)
 	local id_1 = GetPlayerId(RSE) ---@type number integer
 	local N2E = CreateTextTag() ---@type texttag
 	local f ---@type force
@@ -5776,7 +5776,7 @@ function BXE (x_1, y_1, ATE, IEE, IXE, N1E, size, RSE)
 	return BXEtempReturn
 end
 
-function SetUnitPlayerCountClear ()
+function SetUnitPlayerCountClear()
 	local startArry = 0 ---@type number integer
 	local endArry = 8 ---@type number integer
 	while(true) do
@@ -5789,7 +5789,7 @@ function SetUnitPlayerCountClear ()
 	endArry = 0
 end
 
-function SetUnitPlayerCount ()
+function SetUnitPlayerCount()
 	local u_1 = GetEnumUnit() ---@type unit
 	local pid = GetPlayerId(GetOwningPlayer(u_1)) ---@type number integer
 	UnitPlayerCount[pid] = UnitPlayerCount[pid] + 1
@@ -5799,7 +5799,7 @@ end
 ---@param bValue number integer
 ---@param cValue number integer
 ---@return number integer
-function PositiveSubtracting (bValue, cValue)
+function PositiveSubtracting(bValue, cValue)
 	if bValue - cValue >= 0 then
 		return bValue - cValue
 	else
@@ -5807,7 +5807,7 @@ function PositiveSubtracting (bValue, cValue)
 	end
 end
 
-function B4X1 ()
+function B4X1()
 	local pp = GetLocalPlayer() ---@type player
 	local totalAlive ---@type number integer
 	local totalBuild ---@type number integer
@@ -5859,7 +5859,7 @@ function B4X1 ()
 	totalBuild = 0
 end
 
-function Trig_MakeUnitInvulnerable_Actions ()
+function Trig_MakeUnitInvulnerable_Actions()
 	local uer = GetTriggerUnit() ---@type unit
 	if GetUnitUserData(uer) == 12 then
 		SetUnitInvulnerable(uer, true)
@@ -5867,7 +5867,7 @@ function Trig_MakeUnitInvulnerable_Actions ()
 	uer = nil
 end
 
-function MakeUnitInvulnerable ()
+function MakeUnitInvulnerable()
 	SetUnitInvulnerable(exampl_1, false)
 	SetUnitInvulnerable(exampl_2, false)
 	SetUnitInvulnerable(exampl_3, false)
@@ -5878,7 +5878,7 @@ function MakeUnitInvulnerable ()
 	SetUnitInvulnerable(exampl_8, false)
 end
 
-function UnitExamplCreate ()
+function UnitExamplCreate()
 	local id_unit = WV[Now_Level + 1] ---@type number integer
 	DestroyTrigger(UnitExamplTrigger)
 	UnitExamplTrigger = CreateTrigger()
@@ -5968,7 +5968,7 @@ function UnitExamplCreate ()
 	TriggerAddAction(UnitExamplTrigger, Trig_MakeUnitInvulnerable_Actions)
 end
 
-function B4X ()
+function B4X()
 	local u_1 = GetEnumUnit() ---@type unit
 	local x_1 ---@type number real
 	local y_1 ---@type number real
@@ -6018,13 +6018,13 @@ end
 
 ---@param IQE number integer
 ---@return group
-function IPE (IQE)
+function IPE(IQE)
 	G8 = A5V()
 	GroupEnumUnitsOfType(G8, UnitId2String(IQE), T8)
 	return G8
 end
 
-function B5X ()
+function B5X()
 	local startIndex = 0 ---@type number integer
 	local endLIndex = 10 ---@type number integer
 	bj_forLoopAIndex = 1
@@ -6054,7 +6054,7 @@ function B5X ()
 end
 
 ---@param ATE string
-function A4E (ATE)
+function A4E(ATE)
 	local A0E = I2S(GV) ---@type string
 	GV = GV + 1
 	StoreInteger(K, "val:" .. A0E, ATE, GV)
@@ -6065,7 +6065,7 @@ function A4E (ATE)
 	FlushStoredInteger(K, "chk:" .. A0E, A0E)
 end
 
-function B8E ()
+function B8E()
 	local ATE = "\"" ---@type string
 	local A0E = "Race_Picker" ---@type string
 	A4E("VarP " .. I2S(GetPlayerId(GetEnumPlayer())) .. " " .. "name" .. " " .. "=" .. " " .. ATE .. GetPlayerName(GetEnumPlayer()) .. ATE)
@@ -6077,7 +6077,7 @@ function B8E ()
 	A4E("VarP " .. I2S(GetPlayerId(GetEnumPlayer())) .. " seconds = 0")
 end
 
-function BAX ()
+function BAX()
 	QO = OD[1 + GetPlayerId(GetEnumPlayer())]
 	if QO < .5 then
 		CreateNUnitsAtLoc(1, $75303056, GetEnumPlayer(), CX, bj_UNIT_FACING)
@@ -6089,19 +6089,19 @@ function BAX ()
 	end
 end
 
-function BBE ()
+function BBE()
 	GroupAddUnit(FG, GetEnumUnit())
 end
 
-function BBX ()
+function BBX()
 	RemoveUnit(GetEnumUnit())
 end
 
-function BDE ()
+function BDE()
 	ZV = "x20"
 end
 
-function BDX ()
+function BDX()
 	ShowUnitShow(GetEnumUnit())
 end
 
@@ -6109,7 +6109,7 @@ end
 ---@param AHE number integer
 ---@param AKE number integer
 ---@return number integer
-function BAE (IQE, AHE, AKE)
+function BAE(IQE, AHE, AKE)
 	local ALE = AKE ---@type number integer
 	while(true) do
 		if (ALE ~= AKE) then break end
@@ -6118,7 +6118,7 @@ function BAE (IQE, AHE, AKE)
 	return ALE
 end
 
-function BEX ()
+function BEX()
 	local x_1 = GetPlayerStartLocationX(GetTriggerPlayer()) ---@type number real
 	local y_1 = GetPlayerStartLocationY(GetTriggerPlayer()) ---@type number real
 	KH[1 + GetPlayerId(GetTriggerPlayer())] = KH[1 + GetPlayerId(GetTriggerPlayer())] + 1
@@ -6148,20 +6148,20 @@ function BEX ()
 end
 
 ---@return boolean
-function BFE ()
+function BFE()
 	if GetUnitTypeId(GetFilterUnit()) < 1 or IsUnitType(GetFilterUnit(), UNIT_TYPE_DEAD) or GetWidgetLife(GetFilterUnit()) < .405 then
 		return false
 	end
 	return (IsUnitType(GetFilterUnit(), UNIT_TYPE_SAPPER) and IsUnitType(GetFilterUnit(), UNIT_TYPE_SUMMONED) == false) ~= false ~= false
 end
 
-function BFX ()
+function BFX()
 	ForGroup(MC, ref_function_BBX)
 	GroupClear(MC)
 	ForGroup(JI, ref_function_BDX)
 end
 
-function BGX ()
+function BGX()
 	IssueTargetOrderById(Y6, 852018, M7)
 	IssueTargetOrderById(Q6, 852018, U7)
 	IssueTargetOrderById(P6, 852018, Q7)
@@ -6194,15 +6194,15 @@ function BGX ()
 end
 
 ---@return boolean
-function BHX ()
+function BHX()
 	return AE == false
 end
 
-function BIX ()
+function BIX()
 	RemoveUnit(GetEnumUnit())
 end
 
-function BJX ()
+function BJX()
 	bj_forLoopAIndex = 1
 	bj_forLoopAIndexEnd = 8
 	while(true) do
@@ -6214,28 +6214,28 @@ function BJX ()
 	end
 end
 
-function BKX ()
+function BKX()
 	if QX[10] ~= 3 then
 		TriggerExecute(U4)
 	end
 end
 
-function BLX ()
+function BLX()
 	A_V(8.)
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 15., "|cff33AA33Tip:|r |c006969FFНаш дискорд-канал:|r |cff1E90FFhttps://discord.gg/VyMDE8vZ4P|r")
 end
 
-function BMX ()
+function BMX()
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 12., "|cff33AA33Tip:|r |c0096FF96Наш дискорд-канал:|r |cff1E90FFhttps://bit.ly/3YzyexK|r или телеграмм: |cff1E90FFhttps://bit.ly/3C7wlRo|r, там Вы можете посмотреть все изменения карты, посетить магазин, где можно купить премиум права.")
 end
 
-function BNX ()
+function BNX()
 	ForGroup(FF, ref_function_BIX)
 	GroupClear(FF)
 	ForForce(ZI, ref_function_BAX)
 end
 
-function BOX ()
+function BOX()
 	ReplaceUnitBJ_FIX(GetTriggerUnit(), $75303050, 3)
 	KV[1 + GetPlayerId(GetOwningPlayer(bj_lastReplacedUnit))] = bj_lastReplacedUnit
 	SelectUnitForPlayerSingle(bj_lastReplacedUnit, GetOwningPlayer(bj_lastReplacedUnit))
@@ -6267,18 +6267,18 @@ function BOX ()
 	end
 end
 
-function BP ()
+function BP()
 	local VP_1 = GetEnumUnit() ---@type unit
 	IssueImmediateOrderById(VP_1, 852253)
 	VP_1 = nil
 end
 
 ---@return boolean
-function BPX ()
+function BPX()
 	return modeEQ
 end
 
-function BQX ()
+function BQX()
 	if MH == false then
 		DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 8., "|cff33AA33Tip:|r |cffFF8C00Если кто-то ливнул против правил, либо руинит Вам игру, то заскриньте этот момент, и оформите жалобу на этого игрока на нашем дискорд-канале:|r |cff9ACD32https://discord.gg/VyMDE8vZ4P|r")
 	else
@@ -6287,19 +6287,19 @@ function BQX ()
 end
 
 ---@return boolean
-function BRX ()
+function BRX()
 	return modeLI == false and EC
 end
 
-function BSX ()
+function BSX()
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 8., "|cff33AA33Tip:|r |c001CE6B9На нашем боте нельзя оскорблять родственников игроков, иначе бан до 5 дней|r")
 end
 
-function BTX ()
+function BTX()
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 8., "|cff33AA33Tip:|r |c007EBFF1Если хотите поддержать хоста или карту, то обращайтесь в наш дискорд-канал:|r |cff9ACD32https://discord.gg/VyMDE8vZ4P|r или наш телеграмм: |cff9ACD32https://t.me/+ciHUEHiatbgyYWNi|r")
 end
 
-function BUX ()
+function BUX()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 8., "|cff33AA33Tip:|r |c007EBFF1Если хотите поддержать хоста или карту, то обращайтесь в наш дискорд-канал:|r |cff9ACD32https://discord.gg/VyMDE8vZ4P|r или наш телеграм: |cff9ACD32https://t.me/+ciHUEHiatbgyYWNi|r")
@@ -6318,11 +6318,11 @@ function BUX ()
 end
 
 ---@return boolean
-function BVX ()
+function BVX()
 	return GetResearched() == $52303044
 end
 
-function BWX ()
+function BWX()
 	IN = true
 	HO = true
 	A_V(1.)
@@ -6337,11 +6337,11 @@ function BWX ()
 end
 
 ---@return boolean
-function BXX ()
+function BXX()
 	return GetResearched() == $52303049
 end
 
-function BYX ()
+function BYX()
 	if GetUnitTypeId(GetEnumUnit()) ~= FourCC('h00K') and GetUnitTypeId(GetEnumUnit()) ~= FourCC('h06H') then
 		ExplodeUnitBJ(GetEnumUnit())
 		GroupRemoveUnit(SE, GetEnumUnit())
@@ -6353,13 +6353,13 @@ end
 ---@param y_1 number real
 ---@param IDE boolexpr
 ---@return group
-function IHE (IEE, x_1, y_1, IDE)
+function IHE(IEE, x_1, y_1, IDE)
 	G8 = A5V()
 	GroupEnumUnitsInRange(G8, x_1, y_1, IEE, IDE)
 	return G8
 end
 
-function C0X ()
+function C0X()
 	local g = nil ---@type group
 	local gg = nil ---@type group
 	local x_1 = GetUnitX(LKing) ---@type number real
@@ -6378,7 +6378,7 @@ function C0X ()
 	gg = nil
 end
 
-function C1X ()
+function C1X()
 	local g = nil ---@type group
 	local gg = nil ---@type group
 	local x_1 = GetUnitX(RKing) ---@type number real
@@ -6398,36 +6398,36 @@ function C1X ()
 end
 
 ---@return boolean
-function C2X ()
+function C2X()
 	return PA and CG
 end
 
 ---@return boolean
-function C3X ()
+function C3X()
 	return UnitHasBuffBJ(GetFilterUnit(), $42303351)
 end
 
 ---@return boolean
-function CheckCorruptionBuff ()
+function CheckCorruptionBuff()
 	return UnitHasBuffBJ(GetFilterUnit(), FourCC('B13Q'))
 end
 
 ---@return boolean
-function CheckPhananxBuff ()
+function CheckPhananxBuff()
 	return UnitHasBuffBJ(GetFilterUnit(), $11111111) and GetUnitTypeId(GetFilterUnit()) == $11111111
 end
 
 ---@return boolean
-function CheckShieldWallBuff ()
+function CheckShieldWallBuff()
 	return UnitHasBuffBJ(GetFilterUnit(), $11111111) and GetUnitTypeId(GetFilterUnit()) == $11111111
 end
 
 ---@return boolean
-function C31X ()
+function C31X()
 	return UnitHasBuffBJ(GetFilterUnit(), FourCC('B996'))
 end
 
-function C4X ()
+function C4X()
 	if IsUnitType(GetEnumUnit(), UNIT_TYPE_SAPPER) == false then
 		UnitAddAbility(GetEnumUnit(), $41393534)
 	end
@@ -6435,11 +6435,11 @@ function C4X ()
 end
 
 ---@return boolean
-function C5X ()
+function C5X()
 	return UnitHasBuffBJ(GetFilterUnit(), $42393837)
 end
 
-function C6X ()
+function C6X()
 	if GetUnitLifePercent(GetEnumUnit()) > 2. then
 		QO = GetUnitLifePercent(GetEnumUnit()) - 1.5
 		if QO < 1. then
@@ -6449,13 +6449,13 @@ function C6X ()
 	end
 end
 
-function Corruption_Damage ()
+function Corruption_Damage()
 	if GetUnitLifePercent(GetEnumUnit()) > 2. then
 		SetUnitState(GetEnumUnit(), UNIT_STATE_LIFE, GetUnitState(GetEnumUnit(), UNIT_STATE_LIFE) - I2R(GetUnitBaseDamage(GetEnumUnit())) / 4)
 	end
 end
 
-function C61X ()
+function C61X()
 	if GetUnitLifePercent(GetEnumUnit()) > 4. then
 		QO = GetUnitLifePercent(GetEnumUnit()) - 3.0
 		if QO < 1. then
@@ -6475,17 +6475,17 @@ function C61X ()
 	end
 end
 
-function C7X ()
+function C7X()
 	IssueImmediateOrderById(GetTriggerUnit(), 852055)
 	IssueImmediateOrderById(GetTriggerUnit(), 852520)
 end
 
 ---@return boolean
-function C8X ()
+function C8X()
 	return (GetUnitAbilityLevel(GetTriggerUnit(), $41393433) > 0 and IsUnitType(GetTriggerUnit(), UNIT_TYPE_SAPPER)) ~= false ~= false
 end
 
-function CAX ()
+function CAX()
 	local p = GetTriggerPlayer() ---@type player
 	local id_1 = GetPlayerId(p) ---@type number integer
 	local f ---@type force
@@ -6506,11 +6506,11 @@ function CAX ()
 	f = nil
 end
 
-function CBE ()
+function CBE()
 	RemoveUnit(GetEnumUnit())
 end
 
-function CBX ()
+function CBX()
 	BE = GetObjectName(WV[Now_Level + 1])
 	if modeEQ and Now_Level < 35 then
 		DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 6., YV[Now_Level + 1])
@@ -6521,24 +6521,24 @@ end
 
 ---@param IIE rect
 ---@return group
-function IFE (IIE)
+function IFE(IIE)
 	G8 = A5V()
 	GroupEnumUnitsInRect(G8, IIE, T8)
 	return G8
 end
 
-function CCE ()
+function CCE()
 	QE = IFE(LJ)
 	ForGroup(QE, ref_function_CBE)
 	A4V(QE)
 end
 
 ---@return boolean
-function CCX ()
+function CCX()
 	return SubStringBJ(GetEventPlayerChatString(), 1, 5) == "-info"
 end
 
-function CDX ()
+function CDX()
 	local p = GetTriggerPlayer() ---@type player
 	local id_1 = GetPlayerId(p) ---@type number integer
 	local f ---@type force
@@ -6559,7 +6559,7 @@ function CDX ()
 	f = nil
 end
 
-function CEE ()
+function CEE()
 	local RSE = GetEnumPlayer() ---@type player
 	local IQE = GetPlayerId(RSE) + 1 ---@type number integer
 	local A0E = "\"" ---@type string
@@ -6584,7 +6584,7 @@ function CEE ()
 	RSE = nil
 end
 
-function CEX ()
+function CEX()
 	if HH <= -10 and HH ~= 0 then
 		TriggerExecute(DS)
 	elseif HH <= -10 and HH ~= 0 then
@@ -6592,7 +6592,7 @@ function CEX ()
 	end
 end
 
-function CFX ()
+function CFX()
 	local userchattext = S2I(SubStringBJ(GetEventPlayerChatString(), 8, StringLength(GetEventPlayerChatString()))) ---@type number integer
 	local lengthStart = StringLength(GetEventPlayerChatString()) ---@type number integer
 	if modeTT then
@@ -6616,16 +6616,16 @@ function CFX ()
 end
 
 ---@return boolean
-function CGX ()
+function CGX()
 	return SubStringBJ(GetEventPlayerChatString(), 1, 5) == "-zoom"
 end
 
 ---@return boolean
-function isCamString ()
+function isCamString()
 	return SubStringBJ(GetEventPlayerChatString(), 1, 4) == "-cam"
 end
 
-function foo_function_cam ()
+function foo_function_cam()
 	local p ---@type number integer
 	local pl = GetTriggerPlayer() ---@type player
 	local dist ---@type number real
@@ -6654,7 +6654,7 @@ function foo_function_cam ()
 	SetCameraFieldForPlayer(pl, CAMERA_FIELD_TARGET_DISTANCE, dist, .5)
 end
 
-function CHX ()
+function CHX()
 	local p ---@type number integer
 	local t = CreateTimer() ---@type timer
 	local pl = GetTriggerPlayer() ---@type player
@@ -6670,7 +6670,7 @@ function CHX ()
 	pl = nil
 end
 
-function CIE ()
+function CIE()
 	local i_1 = 0 ---@type number integer
 	local g ---@type group
 	while(true) do
@@ -6725,11 +6725,11 @@ function CIE ()
 end
 
 ---@return boolean
-function CIX ()
+function CIX()
 	return Now_Level <= 35
 end
 
-function CJX ()
+function CJX()
 	local i_1 = 0 ---@type number integer
 	local p = GetTriggerPlayer() ---@type player
 	local id_1 = GetPlayerId(p) ---@type number integer
@@ -6818,17 +6818,17 @@ function CJX ()
 	f = nil
 end
 
-function CMX ()
+function CMX()
 	EE = 0
 	DisplayTimedTextToPlayer(GetTriggerPlayer(), 0., 0., 7., "Total Kill: |cffFFcc00" .. I2S(XE[1 + GetPlayerId(GetTriggerPlayer())]) .. "|r")
 end
 
 ---@return boolean
-function CNX ()
+function CNX()
 	return Now_Level <= 35
 end
 
-function COE ()
+function COE()
 	local RSE = GetEnumPlayer() ---@type player
 	local IQE = GetPlayerId(RSE) + 1 ---@type number integer
 	local A2E = I2S(GetPlayerId(RSE)) ---@type string
@@ -6865,7 +6865,7 @@ end
 
 ---@param ATE string
 ---@return string
-function BIE (ATE)
+function BIE(ATE)
 	local IQE = 1 ---@type number integer
 	local AHE = StringLength(ATE) ---@type number integer
 	local A0E = "" ---@type string
@@ -6883,7 +6883,7 @@ function BIE (ATE)
 	return A0E
 end
 
-function COX ()
+function COX()
 	if GetEventPlayerChatString() == "-fortified" then
 		BE = YX
 		UO = "Fortified"
@@ -6913,11 +6913,11 @@ function COX ()
 end
 
 ---@return boolean
-function CP ()
+function CP()
 	return GetUnitTypeId(GetFilterUnit()) == $68353943
 end
 
-function CPE ()
+function CPE()
 	A_V(2.)
 	TimerDialogDisplay(LA, false)
 	DestroyTimerDialog(LA)
@@ -6943,24 +6943,24 @@ function CPE ()
 	end
 end
 
-function CPX ()
+function CPX()
 	if GetTriggerPlayer() == Keek then
 		ClearTextMessages()
 	end
 end
 
-function CRE ()
+function CRE()
 	if QH then
 		ForForce(YI, ref_function_COE)
 	end
 end
 
-function CREe ()
+function CREe()
 	SetPlayerTechMaxAllowed(GetEnumPlayer(), $52303030, 70)
 end
 
 ---@param pl player
-function CreateGrid (pl)
+function CreateGrid(pl)
 	local GRID_X ---@type number real
 	local GRID_Y ---@type number real
 	local TOP_GRID_Y ---@type number real
@@ -7029,7 +7029,7 @@ function CreateGrid (pl)
 end
 
 ---@param pl player
-function ClearGrid (pl)
+function ClearGrid(pl)
 	local Img ---@type image
 	local p ---@type number integer
 	local indexArray = 0 ---@type number integer
@@ -7045,7 +7045,7 @@ function ClearGrid (pl)
 	FlushChildHashtable(HASH, GetHandleId(pl))
 end
 
-function DEBUG_SET_STATE ()
+function DEBUG_SET_STATE()
 	local index = 0 ---@type number integer
 	EnableTrigger(I5)
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 11., "|cffFFcc00 ДЕБАГ МОД ")
@@ -7060,7 +7060,7 @@ function DEBUG_SET_STATE ()
 	end
 end
 
-function CAM ()
+function CAM()
 	local p = GetTriggerPlayer() ---@type player
 	local ps = GetEventPlayerChatString() ---@type string
 	local icam = S2I(SubString(ps, 5, StringLength(ps))) ---@type number integer
@@ -7078,7 +7078,7 @@ function CAM ()
 	p = nil
 end
 
-function CRX ()
+function CRX()
 	local p = GetTriggerPlayer() ---@type player
 	if GetEventPlayerChatString() == "-g" or GetEventPlayerChatString() == "-п" or GetEventPlayerChatString() == "-G" or GetEventPlayerChatString() == "-П" then
 		if HaveSavedHandle(HASH, GetHandleId(p), 100) then
@@ -7102,17 +7102,17 @@ function CRX ()
 end
 
 ---@return boolean
-function CTX ()
+function CTX()
 	return modeNS == false
 end
 
-function CUX ()
+function CUX()
 	DisableTrigger(GetTriggeringTrigger())
 	modeNS = true
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 10., "|cff3333AANO Saving|r: Put limit on how much lumber player can save.")
 end
 
-function CVE ()
+function CVE()
 	if QH == false then
 		return
 	end
@@ -7133,26 +7133,26 @@ function CVE ()
 end
 
 ---@return boolean
-function CVX ()
+function CVX()
 	return RN == false
 end
 
 ---@param u_1 unit
 ---@return boolean
-function NVV (u_1)
+function NVV(u_1)
 	return GetUnitTypeId(u_1) < 1 or IsUnitType(u_1, UNIT_TYPE_DEAD) or GetWidgetLife(u_1) < .405
 end
 
 ---@return boolean
-function CWX ()
+function CWX()
 	return (IsUnitType(GetFilterUnit(), UNIT_TYPE_GIANT) and NVV(GetFilterUnit()) == false) ~= false ~= false
 end
 
-function CXE ()
+function CXE()
 	ForForce(ZI, ref_function_CEE)
 end
 
-function CXX ()
+function CXX()
 	if GetEventPlayerChatString() == "-pierce" then
 		BE = GX
 		UO = "Pierce"
@@ -7178,19 +7178,19 @@ function CXX ()
 end
 
 ---@return boolean
-function CYX ()
+function CYX()
 	return (IsUnitType(GetFilterUnit(), UNIT_TYPE_SAPPER) and NVV(GetFilterUnit()) == false) ~= false ~= false
 end
 
-function CZX ()
+function CZX()
 	IssuePointOrderByIdLoc(GetEnumUnit(), 851983, CI)
 end
 
-function C_X ()
+function C_X()
 	IssuePointOrderByIdLoc(GetEnumUnit(), 851983, DI)
 end
 
-function D0E ()
+function D0E()
 	TI = GetRandomInt(12, 19)
 	QV[1] = "|cffEEBC86Light|r armor"
 	QV[2] = "|cffFF8000Medium|r armor"
@@ -7238,7 +7238,7 @@ function D0E ()
 	end
 end
 
-function D1E ()
+function D1E()
 	IR = "Mode:"
 	AR = "|cffFFcc00Player Name|r"
 	NR = "|cffFFcc00Value|r"
@@ -7268,11 +7268,11 @@ function D1E ()
 end
 
 ---@return boolean
-function D0X ()
+function D0X()
 	return GetBooleanAnd(IsPlayerEnemy(GetOwningPlayer(GetFilterUnit()), GetOwningPlayer(GetEnumUnit())), GetBooleanAnd(UnitHasBuffBJ(GetFilterUnit(), FourCC('B01R')) == false, UnitHasBuffBJ(GetFilterUnit(), FourCC('B01S')) == false))
 end
 
-function D2X ()
+function D2X()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if GetRandomInt(1, 3) > 1 and GetUnitMoveSpeed(GetEnumUnit()) >= 5. then
@@ -7285,11 +7285,11 @@ function D2X ()
 	end
 end
 
-function D3E ()
+function D3E()
 	MultiboardSetItemIconBJ(JR, 1, DC[1 + GetPlayerId(GetEnumPlayer())], JN[1 + GetPlayerId(GetEnumPlayer())])
 end
 
-function D4E ()
+function D4E()
 	MultiboardClear(JR)
 	DestroyMultiboard(JR)
 	YI = I3E(Condition(ref_function_EB))
@@ -7429,11 +7429,11 @@ end
 
 ---@param g group
 ---@return boolean
-function NOV (g)
+function NOV(g)
 	return CountUnitsInGroup(g) > 0
 end
 
-function D4X ()
+function D4X()
 	local g = A5V() ---@type group
 	local i_1 = 0 ---@type number integer
 	local j = 0 ---@type number integer
@@ -7492,11 +7492,11 @@ function D4X ()
 end
 
 ---@return boolean
-function D6E ()
+function D6E()
 	return PA and YD == false
 end
 
-function D8E ()
+function D8E()
 	local wBB = CountUnitsInGroup(MA[1]) ---@type number integer
 	local yBB = CountUnitsInGroup(MA[2]) ---@type number integer
 	if wBB <= 0 then
@@ -7519,11 +7519,11 @@ function D8E ()
 end
 
 ---@return boolean
-function D9E ()
+function D9E()
 	return PA and YD
 end
 
-function DAE ()
+function DAE()
 	EE = 1
 	WV[EE] = $68303032
 	EE = EE + 1
@@ -7598,21 +7598,21 @@ function DAE ()
 end
 
 ---@return boolean
-function DAX ()
+function DAX()
 	return GetBooleanAnd(GetOwningPlayer(GetFilterUnit()) == GetOwningPlayer(GetEnumUnit()), GetBooleanAnd(UnitHasBuffBJ(GetFilterUnit(), $42303044) == false, GetFilterUnit() ~= GetEnumUnit()))
 end
 
 ---@param RSE player
 ---@param IQE number integer
 ---@return group
-function IUE (RSE, IQE)
+function IUE(RSE, IQE)
 	G8 = A5V()
 	bj_groupEnumTypeId = IQE
 	GroupEnumUnitsOfPlayer(G8, RSE, filterGetUnitsOfPlayerAndTypeId)
 	return G8
 end
 
-function DBE ()
+function DBE()
 	PP = IUE(GetEnumPlayer(), $68303235)
 	FE = GetUnitLoc(GroupPickRandomUnit(PP))
 	GetPlayerId(GetEnumPlayer())
@@ -7621,7 +7621,7 @@ function DBE ()
 	A4V(PP)
 end
 
-function DBX ()
+function DBX()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if GetUnitStateSwap(UNIT_STATE_MANA, GetEnumUnit()) == GetUnitStateSwap(UNIT_STATE_MAX_MANA, GetEnumUnit()) then
@@ -7636,7 +7636,7 @@ function DBX ()
 	end
 end
 
-function DCE ()
+function DCE()
 	HE = GetRectCenter(BJ)
 	JE = GetRectCenter(FJ)
 	KE = GetRectCenter(DJ)
@@ -7721,7 +7721,7 @@ function DCE ()
 	ForForce(ZI, ref_function_DBE)
 end
 
-function DCX ()
+function DCX()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if GetUnitStateSwap(UNIT_STATE_MANA, GetEnumUnit()) == GetUnitStateSwap(UNIT_STATE_MAX_MANA, GetEnumUnit()) then
@@ -7736,7 +7736,7 @@ function DCX ()
 	end
 end
 
-function DDE ()
+function DDE()
 	OC[0] = $75303049
 	OC[1] = $75303031
 	OC[2] = $75303030
@@ -7835,16 +7835,16 @@ function DDE ()
 end
 
 ---@return boolean
-function DDX ()
+function DDX()
 	return GetBooleanAnd(IsPlayerEnemy(GetOwningPlayer(GetFilterUnit()), GetOwningPlayer(GetEnumUnit())), UnitHasBuffBJ(GetFilterUnit(), $42303237) == false)
 end
 
-function DEX ()
+function DEX()
 	DestroyEffect(AddSpecialEffect("Objects\\Spawnmodels\\Undead\\UndeadDissipate\\UndeadDissipate.mdl", GetUnitX(GetTriggerUnit()), GetUnitY(GetTriggerUnit())))
 	DestroyEffect(AddSpecialEffect("Abilities\\Spells\\Other\\HowlOfTerror\\HowlCaster.mdl", GetUnitX(GetTriggerUnit()), GetUnitY(GetTriggerUnit())))
 end
 
-function DFE ()
+function DFE()
 	EE = 0
 	EE = EE + 1
 	YE[EE] = $68313344
@@ -8513,7 +8513,7 @@ function DFE ()
 	TriggerExecute(LS)
 end
 
-function DFX ()
+function DFX()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if GetUnitManaPercent(GetEnumUnit()) == 100. and BB[GetUnitUserData(GetEnumUnit())] == false then
@@ -8532,7 +8532,7 @@ function DFX ()
 	end
 end
 
-function DGE ()
+function DGE()
 	EE = BX
 	EE = EE + 1
 	YE[EE] = $68304446
@@ -8853,11 +8853,11 @@ function DGE ()
 end
 
 ---@return boolean
-function DGX ()
+function DGX()
 	return GetOwningPlayer(GetFilterUnit()) == GetOwningPlayer(GetEnumUnit())
 end
 
-function DHE ()
+function DHE()
 	A_V(2.)
 	CreateLeaderboardBJ(bj_FORCE_ALL_PLAYERS, "King HP")
 	VX = bj_lastCreatedLeaderboard
@@ -8867,11 +8867,11 @@ function DHE ()
 end
 
 ---@return boolean
-function DHX ()
+function DHX()
 	return GetBooleanAnd(GetOwningPlayer(GetFilterUnit()) == GetOwningPlayer(GetEnumUnit()), GetBooleanOr(GetUnitStateSwap(UNIT_STATE_MAX_LIFE, GetFilterUnit()) - GetUnitStateSwap(UNIT_STATE_LIFE, GetFilterUnit()) >= 100., GetUnitLifePercent(GetFilterUnit()) <= 75.))
 end
 
-function DIE ()
+function DIE()
 	TI = 45
 	QV[1] = "|cffEEBC86Light|r armor"
 	QV[2] = "|cffFF8000Medium|r armor"
@@ -8920,16 +8920,16 @@ function DIE ()
 end
 
 ---@return boolean
-function DIX ()
+function DIX()
 	return GetBooleanAnd(GetOwningPlayer(GetFilterUnit()) == GetOwningPlayer(GetEnumUnit()), GetBooleanAnd(UnitHasBuffBJ(GetFilterUnit(), $42303044) == false, GetFilterUnit() ~= GetEnumUnit())) and GetUnitTypeId(GetFilterUnit()) ~= $68303344
 end
 
 ---@return boolean
-function DIZ ()
+function DIZ()
 	return GetBooleanAnd(GetOwningPlayer(GetFilterUnit()) == GetOwningPlayer(GetEnumUnit()), GetBooleanAnd(UnitHasBuffBJ(GetFilterUnit(), $42303044) == false, GetFilterUnit() ~= GetEnumUnit())) and GetUnitTypeId(GetFilterUnit()) ~= $68303344 and GetUnitTypeId(GetFilterUnit()) ~= FourCC('h111') and GetUnitTypeId(GetFilterUnit()) == FourCC('h0D3') or GetUnitTypeId(GetFilterUnit()) == FourCC('h09I') or GetUnitTypeId(GetFilterUnit()) == FourCC('n00J') or GetUnitTypeId(GetFilterUnit()) == FourCC('h02W') or GetUnitTypeId(GetFilterUnit()) == FourCC('h08A') or GetUnitTypeId(GetFilterUnit()) == FourCC('h077') or GetUnitTypeId(GetFilterUnit()) == FourCC('h0EU') or GetUnitTypeId(GetFilterUnit()) == FourCC('h02F') or GetUnitTypeId(GetFilterUnit()) == FourCC('h0CB') or GetUnitTypeId(GetFilterUnit()) == FourCC('h0AP') or GetUnitTypeId(GetFilterUnit()) == FourCC('h5AP') or GetUnitTypeId(GetFilterUnit()) == FourCC('h0GG') or GetUnitTypeId(GetFilterUnit()) == FourCC('h0GA') or GetUnitTypeId(GetFilterUnit()) == FourCC('h04N') or GetUnitTypeId(GetFilterUnit()) == FourCC('h038') or GetUnitTypeId(GetFilterUnit()) == FourCC('h02H') or GetUnitTypeId(GetFilterUnit()) == FourCC('h0GD') or GetUnitTypeId(GetFilterUnit()) == FourCC('h0G8') or GetUnitTypeId(GetFilterUnit()) == FourCC('h0G9') or GetUnitTypeId(GetFilterUnit()) == FourCC('h0CA') or GetUnitTypeId(GetFilterUnit()) == FourCC('h1AP') or GetUnitTypeId(GetFilterUnit()) == FourCC('h03W') or GetUnitTypeId(GetFilterUnit()) == FourCC('h1G9') or GetUnitTypeId(GetFilterUnit()) == FourCC('h4AP') or GetUnitTypeId(GetFilterUnit()) == FourCC('h032') or GetUnitTypeId(GetFilterUnit()) == FourCC('h1CN') or GetUnitTypeId(GetFilterUnit()) == FourCC('h2AP')
 end
 
-function DJE ()
+function DJE()
 	EE = 1 + GetPlayerId(GetEnumPlayer())
 	CreateFogModifierRectBJ(true, GetEnumPlayer(), FOG_OF_WAR_VISIBLE, JL)
 	BF[EE] = bj_lastCreatedFogModifier
@@ -8939,7 +8939,7 @@ function DJE ()
 	CF[EE] = bj_lastCreatedFogModifier
 end
 
-function DJX ()
+function DJX()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if GetUnitManaPercent(GetEnumUnit()) == 100. and AB[GetUnitUserData(GetEnumUnit())] == false then
@@ -8964,34 +8964,34 @@ function DJX ()
 	end
 end
 
-function DKE ()
+function DKE()
 	ForForce(ZI, ref_function_DJE)
 end
 
 ---@return boolean
-function DKX ()
+function DKX()
 	return GetBooleanAnd(IsPlayerEnemy(GetOwningPlayer(GetFilterUnit()), GetOwningPlayer(GetEnumUnit())), UnitHasBuffBJ(GetFilterUnit(), $42303242) == false)
 end
 
-function DLE ()
+function DLE()
 	UnitRemoveAbility(GetEnumUnit(), $4152616C)
 end
 
 ---@return boolean
-function DLX ()
+function DLX()
 	return GetBooleanAnd(IsPlayerEnemy(GetOwningPlayer(GetFilterUnit()), GetOwningPlayer(GetEnumUnit())), UnitHasBuffBJ(GetFilterUnit(), $42303242) == false)
 end
 
-function DME ()
+function DME()
 	UnitRemoveAbility(GetEnumUnit(), $4152616C)
 end
 
 ---@return boolean
-function DMX ()
+function DMX()
 	return GetBooleanAnd(IsPlayerEnemy(GetOwningPlayer(GetFilterUnit()), GetOwningPlayer(GetEnumUnit())), UnitHasBuffBJ(GetFilterUnit(), $42303242) == false)
 end
 
-function DNE ()
+function DNE()
 	EE = 0
 	bj_forLoopAIndex = 1
 	bj_forLoopAIndexEnd = TI * 3 + 3
@@ -9101,7 +9101,7 @@ function DNE ()
 	end
 end
 
-function DNX ()
+function DNX()
 	local x_1 = GetUnitX(GetEnumUnit()) ---@type number real
 	local y_1 = GetUnitY(GetEnumUnit()) ---@type number real
 	IB = IHE(600., x_1, y_1, Condition(ref_function_DXX))
@@ -9134,7 +9134,7 @@ function DNX ()
 	A4V(IB)
 end
 
-function DOE ()
+function DOE()
 	ForForce(Ludi, ref_function_DXE)
 	if LKingHeal > RKingHeal then
 		RKingHeal = LKingHeal
@@ -9234,20 +9234,20 @@ function DOE ()
 end
 
 ---@return boolean
-function DOX ()
+function DOX()
 	return GetBooleanAnd(GetOwningPlayer(GetFilterUnit()) == GetOwningPlayer(GetEnumUnit()), GetBooleanAnd(UnitHasBuffBJ(GetFilterUnit(), $42303044) == false, GetFilterUnit() ~= GetEnumUnit())) and GetUnitTypeId(GetFilterUnit()) ~= $68303344
 end
 
-function DPE ()
+function DPE()
 	SetUnitUserData(GetEnumUnit(), 1 + GetPlayerId(GetOwningPlayer(GetEnumUnit())))
 end
 
 ---@return boolean
-function DPX ()
+function DPX()
 	return GetBooleanAnd(IsPlayerEnemy(GetOwningPlayer(GetFilterUnit()), GetOwningPlayer(GetEnumUnit())), UnitHasBuffBJ(GetFilterUnit(), $42303242) == false)
 end
 
-function DQE ()
+function DQE()
 	local g1 = nil ---@type group
 	local g2 = nil ---@type group
 	local g3 = nil ---@type group
@@ -9284,7 +9284,7 @@ function DQE ()
 	g3 = nil
 end
 
-function DQX ()
+function DQX()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if GetUnitManaPercent(GetEnumUnit()) == 100. and NB[GetUnitUserData(GetEnumUnit())] == false then
@@ -9313,7 +9313,7 @@ function DQX ()
 	end
 end
 
-function DRE ()
+function DRE()
 	QC[1] = "700"
 	QC[2] = "1150"
 	QC[3] = "1800"
@@ -9425,22 +9425,22 @@ function DRE ()
 end
 
 ---@return boolean
-function DRX ()
+function DRX()
 	return GetBooleanAnd(GetOwningPlayer(GetFilterUnit()) == GetOwningPlayer(GetEnumUnit()), GetBooleanAnd(UnitHasBuffBJ(GetFilterUnit(), $42303044) == false, GetFilterUnit() ~= GetEnumUnit())) and GetUnitTypeId(GetFilterUnit()) ~= $68303344
 end
 
-function DSE ()
+function DSE()
 	RemoveUnit(GetEnumUnit())
 end
 
-function DSX ()
+function DSX()
 	if GetUnitStateSwap(UNIT_STATE_MANA, GetEnumUnit()) >= 30. and UnitHasBuffBJ(GetEnumUnit(), $4230304F) == false and UnitHasBuffBJ(GetEnumUnit(), $4230315A) == false then
 		UnitResetCooldown(GetEnumUnit())
 		IssueImmediateOrderById(GetEnumUnit(), 852589)
 	end
 end
 
-function DTE ()
+function DTE()
 	bj_forLoopAIndex = 1
 	bj_forLoopAIndexEnd = 8
 	while(true) do
@@ -9454,14 +9454,14 @@ function DTE ()
 	end
 end
 
-function DTX ()
+function DTX()
 	if GetUnitStateSwap(UNIT_STATE_MANA, GetEnumUnit()) >= 50. and UnitHasBuffBJ(GetEnumUnit(), $4230304F) == false and UnitHasBuffBJ(GetEnumUnit(), $4230315A) == false then
 		UnitResetCooldown(GetEnumUnit())
 		IssueImmediateOrderById(GetEnumUnit(), 852589)
 	end
 end
 
-function DUE ()
+function DUE()
 	CreateQuestBJ(0, "Summons", "|cffAA3333Using Summons|r
 -Summons can be purchased at your Barracks or Advanced Barracks.
 -Summons cost lumber and do not cost food.
@@ -9503,7 +9503,7 @@ Edited by Excellent,Ozgame Team,G0mez,HappyGhoul,SPK-S,Уборщик,DrTema,SLA
 Edited by G0mez", "ReplaceableTextures\\CommandButtons\\BTNBloodKey.blp")
 end
 
-function DUX ()
+function DUX()
 	if GetUnitStateSwap(UNIT_STATE_MANA, GetEnumUnit()) >= 100. and UnitHasBuffBJ(GetEnumUnit(), $4230304F) == false and UnitHasBuffBJ(GetEnumUnit(), $4230315A) == false then
 		UnitResetCooldown(GetEnumUnit())
 		IssueImmediateOrderById(GetEnumUnit(), 852589)
@@ -9511,16 +9511,16 @@ function DUX ()
 end
 
 ---@return boolean
-function DWE ()
+function DWE()
 	return ZF[10] and CH > 1600
 end
 
 ---@return boolean
-function DWX ()
+function DWX()
 	return GetBooleanAnd(IsPlayerEnemy(GetOwningPlayer(GetFilterUnit()), GetOwningPlayer(GetEnumUnit())), GetBooleanAnd(UnitHasBuffBJ(GetFilterUnit(), $42303158) == false, UnitHasBuffBJ(GetFilterUnit(), $42303159) == false))
 end
 
-function DXE ()
+function DXE()
 	local x_1 = GetPlayerStartLocationX(GetEnumPlayer()) ---@type number real
 	local y_1 = GetPlayerStartLocationY(GetEnumPlayer()) ---@type number real
 	SetPlayerState(GetEnumPlayer(), PLAYER_STATE_RESOURCE_GOLD, 750)
@@ -9553,14 +9553,14 @@ function DXE ()
 end
 
 ---@return boolean
-function DXX ()
+function DXX()
 	return IsPlayerEnemy(GetOwningPlayer(GetFilterUnit()), GetOwningPlayer(GetEnumUnit()))
 end
 
-function DYE ()
+function DYE()
 end
 
-function DYX ()
+function DYX()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if GetRandomInt(1, 3) > 1 and GetUnitMoveSpeed(GetEnumUnit()) >= 5. then
@@ -9574,18 +9574,18 @@ function DYX ()
 end
 
 ---@return boolean
-function DZX ()
+function DZX()
 	return GetBooleanAnd(IsPlayerEnemy(GetOwningPlayer(GetFilterUnit()), GetOwningPlayer(GetEnumUnit())), GetBooleanAnd(UnitHasBuffBJ(GetFilterUnit(), $42303158) == false, UnitHasBuffBJ(GetFilterUnit(), $42303159) == false))
 end
 
-function D_E ()
+function D_E()
 	A4V(QE)
 	QE = IFE(bj_mapInitialPlayableArea)
 	ForGroup(QE, ref_function_DYE)
 	A4V(QE)
 end
 
-function D_X ()
+function D_X()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if GetRandomInt(1, 3) > 1 and GetUnitMoveSpeed(GetEnumUnit()) >= 5. then
@@ -9598,7 +9598,7 @@ function D_X ()
 	end
 end
 
-function E0X ()
+function E0X()
 	IssueImmediateOrderById(GetTriggerUnit(), 851972)
 	if IsUnitInGroup(GetTriggerUnit(), VF) == false then
 		GroupAddUnit(VF, GetTriggerUnit())
@@ -9606,11 +9606,11 @@ function E0X ()
 end
 
 ---@return boolean
-function E1X ()
+function E1X()
 	return GetOwningPlayer(GetTriggerUnit()) == Player(9)
 end
 
-function E2X ()
+function E2X()
 	GroupAddUnit(NG, GetTriggerUnit())
 	GroupRemoveUnit(RG[GetUnitUserData(GetTriggerUnit())], GetTriggerUnit())
 	if IsUnitInGroup(GetTriggerUnit(), ZD) == false then
@@ -9619,20 +9619,20 @@ function E2X ()
 end
 
 ---@return boolean
-function E3X ()
+function E3X()
 	return GetOwningPlayer(GetTriggerUnit()) == Player(9)
 end
 
-function E4X ()
+function E4X()
 	GroupRemoveUnit(NG, GetTriggerUnit())
 end
 
 ---@return boolean
-function E5X ()
+function E5X()
 	return GetOwningPlayer(GetTriggerUnit()) == Player(9) and GetUnitTypeId(GetTriggerUnit()) ~= FourCC('u006')
 end
 
-function E6X ()
+function E6X()
 	IssueImmediateOrderById(GetTriggerUnit(), 851972)
 	if IsUnitInGroup(GetTriggerUnit(), ZD) == false then
 		GroupAddUnit(ZD, GetTriggerUnit())
@@ -9640,11 +9640,11 @@ function E6X ()
 end
 
 ---@return boolean
-function E7X ()
+function E7X()
 	return GetTriggerUnit() == LKing
 end
 
-function E8X ()
+function E8X()
 	local x_1 = GetUnitX(GetTriggerUnit()) ---@type number real
 	local y_1 = GetUnitY(GetTriggerUnit()) ---@type number real
 	DestroyEffect(AddSpecialEffect("Abilities\\Spells\\Human\\MassTeleport\\MassTeleportTarget.mdl", x_1, y_1))
@@ -9655,17 +9655,17 @@ function E8X ()
 end
 
 ---@return boolean
-function E9X ()
+function E9X()
 	return GetTriggerUnit() == RKing
 end
 
 ---@return boolean
-function EAX ()
+function EAX()
 	return GetOwningPlayer(GetTriggerUnit()) == Player(8)
 end
 
 ---@return boolean
-function EB_1 ()
+function EB_1()
 	local p = GetFilterPlayer() ---@type player
 	local EBtempReturn = GetBooleanAnd(GetPlayerController(p) == MAP_CONTROL_USER, GetPlayerSlotState(p) == PLAYER_SLOT_STATE_PLAYING) ---@type boolean
 	p = nil
@@ -9673,11 +9673,11 @@ function EB_1 ()
 end
 
 ---@return boolean
-function ECX ()
+function ECX()
 	return GetOwningPlayer(GetTriggerUnit()) == Player(9)
 end
 
-function EDX ()
+function EDX()
 	local NVE = GetTriggerUnit() ---@type unit
 	local IQE = GetUnitUserData(NVE) ---@type number integer
 	GroupAddUnit(OA[IQE], NVE)
@@ -9690,33 +9690,33 @@ function EDX ()
 end
 
 ---@return boolean
-function EVX ()
+function EVX()
 	return (IsUnitType(GetTriggerUnit(), UNIT_TYPE_SUMMONED) or IsUnitType(GetTriggerUnit(), UNIT_TYPE_GIANT)) ~= false ~= false ~= false
 end
 
 ---@return boolean
-function EEX ()
+function EEX()
 	return GetOwningPlayer(GetTriggerUnit()) == Player(8) and EVX()
 end
 
 ---@param IMV player
 ---@return group
-function ILV (IMV)
+function ILV(IMV)
 	XHV = CreateGroup()
 	GroupEnumUnitsOfPlayer(XHV, IMV, XSV)
 	return XHV
 end
 
 ---@return boolean
-function EGX ()
+function EGX()
 	return GetOwningPlayer(GetTriggerUnit()) == Player(8)
 end
 
-function EHX ()
+function EHX()
 	GroupAddUnit(OA[20], GetTriggerUnit())
 end
 
-function EIX ()
+function EIX()
 	GroupAddUnit(ZE, GetTriggerUnit())
 	if GetUnitUserData(GetTriggerUnit()) > 0 then
 		GroupAddUnit(RG[GetUnitUserData(GetTriggerUnit())], GetTriggerUnit())
@@ -9724,25 +9724,25 @@ function EIX ()
 end
 
 ---@return boolean
-function EJX ()
+function EJX()
 	return GetOwningPlayer(GetTriggerUnit()) == Player(9)
 end
 
-function EKX ()
+function EKX()
 	GroupAddUnit(OA[21], GetTriggerUnit())
 end
 
 ---@return boolean
-function ELX ()
+function ELX()
 	return CountUnitsInGroup(OA[20]) > 0 or CountUnitsInGroup(OA[21]) > 0
 end
 
 ---@return boolean
-function EMX ()
+function EMX()
 	return RX and ELX()
 end
 
-function ENX ()
+function ENX()
 	local NVE = GetTriggerUnit() ---@type unit
 	local IQE = GetUnitUserData(NVE) ---@type number integer
 	GroupAddUnit(OA[IQE], NVE)
@@ -9754,26 +9754,26 @@ function ENX ()
 end
 
 ---@return boolean
-function EPX ()
+function EPX()
 	return GetBooleanAnd(GetOwningPlayer(GetFilterUnit()) == Player(10), IsUnitAliveBJ(GetFilterUnit())) or GetBooleanAnd(GetOwningPlayer(GetFilterUnit()) == Player(14), IsUnitAliveBJ(GetFilterUnit()))
 end
 
 ---@return boolean
-function EQX ()
+function EQX()
 	return GetBooleanAnd(GetOwningPlayer(GetFilterUnit()) == Player(11), IsUnitAliveBJ(GetFilterUnit())) or GetBooleanAnd(GetOwningPlayer(GetFilterUnit()) == Player(15), IsUnitAliveBJ(GetFilterUnit()))
 end
 
 ---@return boolean
-function EOX ()
+function EOX()
 	return (IsUnitType(GetTriggerUnit(), UNIT_TYPE_SUMMONED) or IsUnitType(GetTriggerUnit(), UNIT_TYPE_GIANT)) ~= false ~= false ~= false
 end
 
 ---@return boolean
-function ERX ()
+function ERX()
 	return GetOwningPlayer(GetTriggerUnit()) == Player(9) and EOX()
 end
 
-function ESX ()
+function ESX()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if IsUnitAliveBJ(GetEnumUnit()) then
@@ -9797,14 +9797,14 @@ end
 ---@param IIE rect
 ---@param IDE boolexpr
 ---@return group
-function IRE (IIE, IDE)
+function IRE(IIE, IDE)
 	G8 = A5V()
 	GroupEnumUnitsInRect(G8, IIE, IDE)
 	DestroyBoolExpr(IDE)
 	return G8
 end
 
-function ETX ()
+function ETX()
 	BA[20] = IRE(XL, Condition(ref_function_EPX))
 	BA[21] = IRE(OL, Condition(ref_function_EQX))
 	bj_forLoopAIndex = 20
@@ -9828,11 +9828,11 @@ function ETX ()
 end
 
 ---@return boolean
-function EUX ()
+function EUX()
 	return GetOwningPlayer(GetTriggerUnit()) == Player(8)
 end
 
-function EWX ()
+function EWX()
 	GroupAddUnit(AG, GetTriggerUnit())
 	GroupRemoveUnit(RG[GetUnitUserData(GetTriggerUnit())], GetTriggerUnit())
 	if IsUnitInGroup(GetTriggerUnit(), VF) == false then
@@ -9840,7 +9840,7 @@ function EWX ()
 	end
 end
 
-function EXX ()
+function EXX()
 	GroupAddUnit(ZE, GetTriggerUnit())
 	if GetUnitUserData(GetTriggerUnit()) > 0 then
 		GroupAddUnit(RG[GetUnitUserData(GetTriggerUnit())], GetTriggerUnit())
@@ -9848,21 +9848,21 @@ function EXX ()
 end
 
 ---@return boolean
-function EYX ()
+function EYX()
 	return GetOwningPlayer(GetTriggerUnit()) == Player(8)
 end
 
-function EZX ()
+function EZX()
 	GroupRemoveUnit(AG, GetTriggerUnit())
 end
 
 ---@return boolean
-function E_X ()
+function E_X()
 	return GetOwningPlayer(GetTriggerUnit()) == Player(8) and GetUnitTypeId(GetTriggerUnit()) ~= FourCC('u006')
 end
 
 ---@return boolean
-function EastForceBool ()
+function EastForceBool()
 	local p = GetFilterPlayer() ---@type player
 	local EastForceBooltempReturn = GetBooleanAnd(GetBooleanOr(p == Player(4), p == Player(5)) or GetBooleanOr(p == Player(6), p == Player(7)), GetPlayerSlotState(p) == PLAYER_SLOT_STATE_PLAYING) or IsPlayerObserver(p) or p == Player(9) ---@type boolean
 	p = nil
@@ -9870,7 +9870,7 @@ function EastForceBool ()
 end
 
 ---@return boolean
-function EastForceBoolWithoutObs ()
+function EastForceBoolWithoutObs()
 	local p = GetFilterPlayer() ---@type player
 	local EastForceBoolWithoutObstempReturn = GetBooleanAnd(GetBooleanOr(p == Player(4), p == Player(5)) or GetBooleanOr(p == Player(6), p == Player(7)), GetPlayerSlotState(p) == PLAYER_SLOT_STATE_PLAYING) or p == Player(9) ---@type boolean
 	p = nil
@@ -9878,14 +9878,14 @@ function EastForceBoolWithoutObs ()
 end
 
 ---@return boolean
-function EastLudiBool ()
+function EastLudiBool()
 	local p = GetFilterPlayer() ---@type player
 	local EastLudiBooltempReturn = GetBooleanAnd(GetBooleanOr(p == Player(4), p == Player(5)) or GetBooleanOr(p == Player(6), p == Player(7)), GetPlayerSlotState(p) == PLAYER_SLOT_STATE_PLAYING) and GetPlayerController(p) == MAP_CONTROL_USER ---@type boolean
 	p = nil
 	return EastLudiBooltempReturn
 end
 
-function Call_Champion_Function ()
+function Call_Champion_Function()
 	local g = nil ---@type group
 	local i_1 = 1 ---@type number integer
 	local j = 0 ---@type number integer
@@ -9975,7 +9975,7 @@ function Call_Champion_Function ()
 	g = nil
 end
 
-function N_E ()
+function N_E()
 	local playerScout = 0 ---@type number integer
 	local g_2 ---@type group
 	local dr_1 ---@type group
@@ -10040,7 +10040,7 @@ function N_E ()
 	end
 end
 
-function OCE ()
+function OCE()
 	local i_1 = 1 ---@type number integer
 	while(true) do
 		if (i_1 > 8) then break end
@@ -10050,7 +10050,7 @@ function OCE ()
 	end
 end
 
-function F1E ()
+function F1E()
 	local j = 0 ---@type number integer
 	Now_Level = Now_Level + 1
 	RX = true
@@ -10103,17 +10103,17 @@ function F1E ()
 end
 
 ---@return boolean
-function F3E ()
+function F3E()
 	return UI == false
 end
 
-function FAE ()
+function FAE()
 	ForForce(ZI, ref_function_FIE)
 	TriggerExecute(C4)
 	TriggerExecute(N4)
 end
 
-function FCE ()
+function FCE()
 	if Now_Level > 0 then
 		EE = JH[1 + GetPlayerId(GetEnumPlayer())] / Now_Level - HB[1 + GetPlayerId(GetEnumPlayer())]
 	else
@@ -10140,11 +10140,11 @@ function FCE ()
 	end
 end
 
-function FDE ()
+function FDE()
 	ForForce(ZI, ref_function_FCE)
 end
 
-function FFE ()
+function FFE()
 	if KH[1 + GetPlayerId(GetEnumPlayer())] == 0 then
 		LH[1 + GetPlayerId(GetEnumPlayer())] = GetUnitName(KV[1 + GetPlayerId(GetEnumPlayer())])
 	end
@@ -10172,12 +10172,12 @@ function FFE ()
 	end
 end
 
-function FGE ()
+function FGE()
 	TriggerExecute(NT)
 	ForForce(ZI, ref_function_FFE)
 end
 
-function FHE ()
+function FHE()
 	PE = KV[1 + GetPlayerId(GetEnumPlayer())]
 	JN[1 + GetPlayerId(GetEnumPlayer())] = "ReplaceableTextures\\CommandButtons\\BTNSelectHeroOn.blp"
 	if GetUnitTypeId(PE) == $75303031 then
@@ -10307,7 +10307,7 @@ function FHE ()
 	end
 end
 
-function FIE ()
+function FIE()
 	if modeMM and YD == false then
 		if IsPlayerAlly(GetEnumPlayer(), Player(8)) then
 			if IsPlayerAlly(GetLocalPlayer(), Player(8)) or IsPlayerObserver(GetLocalPlayer()) then
@@ -10328,11 +10328,11 @@ function FIE ()
 	end
 end
 
-function FJE ()
+function FJE()
 	ForForce(ZI, ref_function_FHE)
 end
 
-function FKE ()
+function FKE()
 	SetPlayerTechResearchedSwap($52303034, 15, Player(10))
 	SetPlayerTechResearchedSwap($52303034, 15, Player(11))
 	SetPlayerTechResearchedSwap($52303034, 15, Player(14))
@@ -10343,7 +10343,7 @@ function FKE ()
 	DisableTrigger(GetTriggeringTrigger())
 end
 
-function FLE ()
+function FLE()
 	if Now_Level < 10 then
 		EE = 1 + GetPlayerId(GetEnumPlayer())
 		QO = I2R(GB[EE]) / S2R(QC[Now_Level])
@@ -10366,11 +10366,11 @@ function FLE ()
 	end
 end
 
-function FME ()
+function FME()
 	ForForce(ZI, ref_function_FLE)
 end
 
-function FNE ()
+function FNE()
 	EE = GetPlayerTechCountSimple($52303033, GetEnumPlayer()) + GetPlayerTechCountSimple($52303048, GetEnumPlayer()) + GetPlayerTechCountSimple($52393937, GetEnumPlayer()) - GetPlayerTechCountSimple($52393936, GetEnumPlayer())
 	UO = I2S(CN[1 + GetPlayerId(GetEnumPlayer())]) .. "/" .. I2S(EE)
 	if modeMM and YD == false then
@@ -10393,7 +10393,7 @@ function FNE ()
 	end
 end
 
-function FOE ()
+function FOE()
 	if modeMM and YD == false then
 		if IsPlayerAlly(GetEnumPlayer(), Player(8)) then
 			if IsPlayerAlly(GetLocalPlayer(), Player(8)) or IsPlayerObserver(GetLocalPlayer()) then
@@ -10414,7 +10414,7 @@ function FOE ()
 	end
 end
 
-function FOX ()
+function FOX()
 	if RJ[21] then
 		A4V(QE)
 		QE = IRE(bj_mapInitialPlayableArea, Condition(ref_function_Corrupt_Aura))
@@ -10534,11 +10534,11 @@ function FOX ()
 end
 
 ---@return boolean
-function FQE ()
+function FQE()
 	return GetOwningPlayer(GetTriggerUnit()) == Player(10) or GetOwningPlayer(GetTriggerUnit()) == Player(11) or GetOwningPlayer(GetTriggerUnit()) == Player(14) or GetOwningPlayer(GetTriggerUnit()) == Player(15)
 end
 
-function FRE ()
+function FRE()
 	ForForce(ZI, ref_function_FOE)
 end
 
@@ -10548,7 +10548,7 @@ end
 ---@param IXE number real
 ---@param N1E number real
 ---@param RSE player
-function N3E (NVE, ATE, IEE, IXE, N1E, RSE)
+function N3E(NVE, ATE, IEE, IXE, N1E, RSE)
 	local N2E ---@type texttag
 	local IVE ---@type location
 	if NVE == nil then
@@ -10577,7 +10577,7 @@ end
 ---@param IXE number real
 ---@param N1E number real
 ---@param RSE player
-function N0E (NVE, ATE, IEE, IXE, N1E, RSE)
+function N0E(NVE, ATE, IEE, IXE, N1E, RSE)
 	local N2E ---@type texttag
 	local IVE ---@type location
 	if NVE == nil then
@@ -10600,7 +10600,7 @@ function N0E (NVE, ATE, IEE, IXE, N1E, RSE)
 	IVE = nil
 end
 
-function FWE ()
+function FWE()
 	local NVE = GetTriggerUnit() ---@type unit
 	local FYE = GetKillingUnit() ---@type unit
 	local IQE = GetUnitUserData(FYE) ---@type number integer
@@ -10788,7 +10788,7 @@ function FWE ()
 	FYE = nil
 end
 
-function FXE ()
+function FXE()
 	local iii = CountUnitsInGroup(VF) ---@type number integer
 	local uuu = CountUnitsInGroup(ZD) ---@type number integer
 	if iii == 0 then
@@ -10812,12 +10812,12 @@ function FXE ()
 end
 
 ---@return boolean
-function FZE ()
+function FZE()
 	return AE == false and YD == false and UI == false
 end
 
 ---@return boolean
-function F6E ()
+function F6E()
 	local b = false ---@type boolean
 	if CountPlayersInForceBJ(WestLudi) > 0 then
 		b = true
@@ -10826,7 +10826,7 @@ function F6E ()
 end
 
 ---@return boolean
-function F9E ()
+function F9E()
 	local b = false ---@type boolean
 	if CountPlayersInForceBJ(EastLudi) > 0 then
 		b = true
@@ -10834,7 +10834,7 @@ function F9E ()
 	return b
 end
 
-function G1E ()
+function G1E()
 	local i_1 = 1 ---@type number integer
 	while(true) do
 		if (i_1 > 8) then break end
@@ -10843,13 +10843,13 @@ function G1E ()
 	end
 end
 
-function GDE ()
+function GDE()
 	if Now_Level <= 30 then
 		ForGroup(XA, ref_function_GCE)
 	end
 end
 
-function ODE ()
+function ODE()
 	local i_1 = 1 ---@type number integer
 	while(true) do
 		if (i_1 > 8) then break end
@@ -10859,7 +10859,7 @@ function ODE ()
 	end
 end
 
-function Champion_Streak_Gold ()
+function Champion_Streak_Gold()
 	if State_INT == 1 then
 		DisplayTimedTextToPlayer(Player(1), 0., 0., 7., "::: Дополнительно получено |cffFFcc00" .. I2S((Challenge_Champions_Streak[State_INT] - 1) * 5) .. "|r за командный чемпион-стрик. ")
 		SetPlayerState(Player(1), PLAYER_STATE_RESOURCE_GOLD, GetPlayerState(Player(1), PLAYER_STATE_RESOURCE_GOLD) + ((Challenge_Champions_Streak[State_INT] - 1) * 5))
@@ -10919,7 +10919,7 @@ function Champion_Streak_Gold ()
 	end
 end
 
-function G2E ()
+function G2E()
 	local i_1 = 0 ---@type number integer
 	DisableTrigger(GetTriggeringTrigger())
 	if modeCC then
@@ -11071,11 +11071,11 @@ function G2E ()
 	end
 end
 
-function G3E ()
+function G3E()
 	TriggerExecute(AZ)
 end
 
-function G4E ()
+function G4E()
 	if Now_Level >= 30 or UI then
 		if true then
 			if UI == false then
@@ -11092,20 +11092,20 @@ function G4E ()
 	end
 end
 
-function G5E ()
+function G5E()
 	RemoveUnit(GetEnumUnit())
 end
 
-function G6E ()
+function G6E()
 	bj_lastCreatedUnit = CreateUnit(GetEnumPlayer(), $75303034, GetLocationX(CX), GetLocationY(CX), bj_UNIT_FACING)
 	GroupAddUnit(FO, bj_lastCreatedUnit)
 end
 
-function G7E ()
+function G7E()
 	ShowUnitHide(GetEnumUnit())
 end
 
-function G8E ()
+function G8E()
 	ForGroup(FO, ref_function_G5E)
 	GroupClear(FO)
 	ForForce(ZI, ref_function_G6E)
@@ -11113,15 +11113,15 @@ function G8E ()
 	GroupClear(RB)
 end
 
-function G9E ()
+function G9E()
 	RemoveUnit(GetEnumUnit())
 end
 
-function GCE ()
+function GCE()
 	KillUnit(GetEnumUnit())
 end
 
-function GEE ()
+function GEE()
 	local p = GetEnumPlayer() ---@type player
 	if IsPlayerAlly(p, Player(8)) then
 		AX = EE
@@ -11142,7 +11142,7 @@ function GEE ()
 	p = nil
 end
 
-function GNE ()
+function GNE()
 	local p = GetEnumPlayer() ---@type player
 	EE = 0
 	EE = GetPlayerTechCountSimple($52303033, p) + GetPlayerTechCountSimple($52303048, p) + GetPlayerTechCountSimple($52393937, p) - GetPlayerTechCountSimple($52393936, p)
@@ -11161,7 +11161,7 @@ function GNE ()
 	p = nil
 end
 
-function GRE ()
+function GRE()
 	local p = GetEnumPlayer() ---@type player
 	SetPlayerState(p, PLAYER_STATE_RESOURCE_GOLD, GetPlayerState(p, PLAYER_STATE_RESOURCE_GOLD) + BI[1 + GetPlayerId(p)])
 	BN[1 + GetPlayerId(p)] = BN[1 + GetPlayerId(p)] + BI[1 + GetPlayerId(p)]
@@ -11179,11 +11179,11 @@ function GRE ()
 end
 
 ---@return boolean
-function GSE ()
+function GSE()
 	return IsUnitType(GetConstructingStructure(), UNIT_TYPE_ANCIENT) ~= false ~= false ~= false
 end
 
-function H2E ()
+function H2E()
 	ShowUnitShow(GetEnumUnit())
 	UnitResetCooldown(GetEnumUnit())
 	SetUnitManaPercentBJ(GetEnumUnit(), 100.)
@@ -11254,7 +11254,7 @@ function H2E ()
 	end
 end
 
-function H0E ()
+function H0E()
 	ShowUnitShow(GetEnumUnit())
 	UnitResetCooldown(GetEnumUnit())
 	SetUnitManaPercentBJ(GetEnumUnit(), 100.)
@@ -11269,39 +11269,39 @@ function H0E ()
 	end
 end
 
-function H1E ()
+function H1E()
 	GroupClear(AI)
 	ForGroup(SE, ref_function_H0E)
 end
 
-function H3E ()
+function H3E()
 	GroupClear(AI)
 	ForGroup(SE, ref_function_H2E)
 end
 
-function H5E ()
+function H5E()
 	SetUnitMoveSpeed(GetEnumUnit(), GetUnitDefaultMoveSpeed(GetEnumUnit()))
 end
 
-function H6E ()
+function H6E()
 	QE = IPE(WV[Now_Level])
 	ForGroup(QE, ref_function_H5E)
 	A4V(QE)
 end
 
-function HBE ()
+function HBE()
 	UnitSetConstructionProgress(GetEnumUnit(), 99)
 end
 
-function HDE ()
+function HDE()
 	UnitSetUpgradeProgress(GetEnumUnit(), 99)
 end
 
-function HEE ()
+function HEE()
 	ShowUnitShow(GetEnumUnit())
 end
 
-function HTE ()
+function HTE()
 	ForGroup(FO, ref_function_G9E)
 	GroupClear(FO)
 	ForForce(ZI, ref_function_HVE)
@@ -11311,28 +11311,28 @@ function HTE ()
 end
 
 ---@return boolean
-function HUE ()
+function HUE()
 	return IsUnitType(GetFilterUnit(), UNIT_TYPE_GIANT) ~= false ~= false ~= false
 end
 
-function HVE ()
+function HVE()
 	bj_lastCreatedUnit = CreateUnit(GetEnumPlayer(), $75303044, GetLocationX(CX), GetLocationY(CX), bj_UNIT_FACING)
 	GroupAddUnit(FO, bj_lastCreatedUnit)
 end
 
-function HZE ()
+function HZE()
 	if GetEnumUnit() ~= RKing and GetEnumUnit() ~= LKing then
 		RemoveUnit(GetEnumUnit())
 	end
 end
 
-function H_E ()
+function H_E()
 	QE = IRE(bj_mapInitialPlayableArea, Condition(ref_function_HUE))
 	ForGroup(QE, ref_function_HZE)
 	A4V(QE)
 end
 
-function I0X ()
+function I0X()
 	SetPlayerTechMaxAllowedSwap($68304442, 0, GetTriggerPlayer())
 	SetPlayerTechMaxAllowedSwap($52303044, 0, GetTriggerPlayer())
 	SetPlayerTechMaxAllowedSwap($52303047, 0, GetTriggerPlayer())
@@ -11340,18 +11340,18 @@ function I0X ()
 	DisplayTimedTextToPlayer(GetTriggerPlayer(), 0., 0., 12., "|cff33AA33Tip:|r Change builder is disabled after you built Altar of Heroes !!")
 end
 
-function I1X ()
+function I1X()
 	SetPlayerTechMaxAllowedSwap($68393936, 0, GetTriggerPlayer())
 	SV[1 + GetPlayerId(GetTriggerPlayer())] = 0
 	FAE()
 end
 
 ---@return boolean
-function I2X ()
+function I2X()
 	return GetUnitTypeId(GetTriggerUnit()) == $75303031 or GetUnitTypeId(GetTriggerUnit()) == $75303043 or GetUnitTypeId(GetTriggerUnit()) == $75303030 or GetUnitTypeId(GetTriggerUnit()) == $75303033 or GetUnitTypeId(GetTriggerUnit()) == $75303032 or GetUnitTypeId(GetTriggerUnit()) == $75303047 or GetUnitTypeId(GetTriggerUnit()) == $75303048 or GetUnitTypeId(GetTriggerUnit()) == $75303049 or GetUnitTypeId(GetTriggerUnit()) == $7530304A or GetUnitTypeId(GetTriggerUnit()) == $7530304C or GetUnitTypeId(GetTriggerUnit()) == $7530304F or GetUnitTypeId(GetTriggerUnit()) == $7530304D or GetUnitTypeId(GetTriggerUnit()) == $7530304B or GetUnitTypeId(GetTriggerUnit()) == $75303050 or GetUnitTypeId(GetTriggerUnit()) == $75303055 or GetUnitTypeId(GetTriggerUnit()) == $7530305A
 end
 
-function I3X ()
+function I3X()
 	ReplaceUnitBJ_FIX(GetTriggerUnit(), GetUnitTypeId(GetTriggerUnit()), 3)
 	SelectUnitForPlayerSingle(bj_lastReplacedUnit, GetOwningPlayer(bj_lastReplacedUnit))
 	KV[1 + GetPlayerId(GetOwningPlayer(bj_lastReplacedUnit))] = bj_lastReplacedUnit
@@ -11412,23 +11412,23 @@ function I3X ()
 end
 
 ---@return boolean
-function I4X ()
+function I4X()
 	return GetUnitTypeId(GetTriggerUnit()) == $75303054 or GetUnitTypeId(GetTriggerUnit()) == $75313154 or GetUnitTypeId(GetTriggerUnit()) == $75313254 or GetUnitTypeId(GetTriggerUnit()) == $75313354 or GetUnitTypeId(GetTriggerUnit()) == $75313454 or GetUnitTypeId(GetTriggerUnit()) == $75313554 or GetUnitTypeId(GetTriggerUnit()) == $75313654 or GetUnitTypeId(GetTriggerUnit()) == $75313754 or GetUnitTypeId(GetTriggerUnit()) == $75313854 or GetUnitTypeId(GetTriggerUnit()) == $75313954 or GetUnitTypeId(GetTriggerUnit()) == $75323054 or GetUnitTypeId(GetTriggerUnit()) == $75323154 or GetUnitTypeId(GetTriggerUnit()) == $75323254 or GetUnitTypeId(GetTriggerUnit()) == $75323354 or GetUnitTypeId(GetTriggerUnit()) == $75323454 or GetUnitTypeId(GetTriggerUnit()) == $75323554 or GetUnitTypeId(GetTriggerUnit()) == $75323654 or GetUnitTypeId(GetTriggerUnit()) == $75323754 or GetUnitTypeId(GetTriggerUnit()) == $75323854 or GetUnitTypeId(GetTriggerUnit()) == $75323954 or GetUnitTypeId(GetTriggerUnit()) == $75333054 or GetUnitTypeId(GetTriggerUnit()) == $75333154 or GetUnitTypeId(GetTriggerUnit()) == $75333254 or GetUnitTypeId(GetTriggerUnit()) == $75333354 or GetUnitTypeId(GetTriggerUnit()) == $75333454 or GetUnitTypeId(GetTriggerUnit()) == $75333554 or GetUnitTypeId(GetTriggerUnit()) == $75333654 or GetUnitTypeId(GetTriggerUnit()) == $75333754 or GetUnitTypeId(GetTriggerUnit()) == $75333854 or GetUnitTypeId(GetTriggerUnit()) == $75333954 or GetUnitTypeId(GetTriggerUnit()) == $75343054 or GetUnitTypeId(GetTriggerUnit()) == $75343154 or GetUnitTypeId(GetTriggerUnit()) == $75343254 or GetUnitTypeId(GetTriggerUnit()) == $75343354 or GetUnitTypeId(GetTriggerUnit()) == $75343454 or GetUnitTypeId(GetTriggerUnit()) == $75343554 or GetUnitTypeId(GetTriggerUnit()) == $75343754 or GetUnitTypeId(GetTriggerUnit()) == $75343854 or GetUnitTypeId(GetTriggerUnit()) == $75343954 or GetUnitTypeId(GetTriggerUnit()) == $75353054 or GetUnitTypeId(GetTriggerUnit()) == $75353154 or GetUnitTypeId(GetTriggerUnit()) == $75353254 or GetUnitTypeId(GetTriggerUnit()) == $75353354 or GetUnitTypeId(GetTriggerUnit()) == $75353454 or GetUnitTypeId(GetTriggerUnit()) == $75353554 or GetUnitTypeId(GetTriggerUnit()) == $75353654 or GetUnitTypeId(GetTriggerUnit()) == $75353754 or GetUnitTypeId(GetTriggerUnit()) == $75353854 or GetUnitTypeId(GetTriggerUnit()) == $75353954 or GetUnitTypeId(GetTriggerUnit()) == $75363054 or GetUnitTypeId(GetTriggerUnit()) == $75363154 or GetUnitTypeId(GetTriggerUnit()) == $75363254 or GetUnitTypeId(GetTriggerUnit()) == $75363354 or GetUnitTypeId(GetTriggerUnit()) == $75363454 or GetUnitTypeId(GetTriggerUnit()) == $75363554 or GetUnitTypeId(GetTriggerUnit()) == $75363654 or GetUnitTypeId(GetTriggerUnit()) == $75363754 or GetUnitTypeId(GetTriggerUnit()) == $75363854 or GetUnitTypeId(GetTriggerUnit()) == $75363954 or GetUnitTypeId(GetTriggerUnit()) == $75373054 or GetUnitTypeId(GetTriggerUnit()) == $75373154 or GetUnitTypeId(GetTriggerUnit()) == $75373254 or GetUnitTypeId(GetTriggerUnit()) == $75373354 or GetUnitTypeId(GetTriggerUnit()) == $75373454 or GetUnitTypeId(GetTriggerUnit()) == $75373554 or GetUnitTypeId(GetTriggerUnit()) == FourCC('u76T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u77T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u78T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u79T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u80T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u81T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u82T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u83T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u84T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u85T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u86T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u87T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u88T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u89T') or GetUnitTypeId(GetTriggerUnit()) == FourCC('u90T')
 end
 
 ---@return boolean
-function IAX ()
+function IAX()
 	return modeNC == false
 end
 
-function IBX ()
+function IBX()
 	DisableTrigger(GetTriggeringTrigger())
 	modeCB = true
 	ForForce(ZI, ref_function_INX)
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 10., "|cff3333AAChange Builder|r: Player can change builder.")
 end
 
-function OIE ()
+function OIE()
 	local i_1 = 1 ---@type number integer
 	while(true) do
 		if (i_1 > 8) then break end
@@ -11438,47 +11438,47 @@ function OIE ()
 	end
 end
 
-function ICX ()
+function ICX()
 	DisableTrigger(GetTriggeringTrigger())
 	modeCC = true
 	OIE()
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 10., "|cff3333AAChallenge Champions|r: Champions can be manually challenged.")
 end
 
-function IDX ()
+function IDX()
 	DisableTrigger(GetTriggeringTrigger())
 	modeAC = true
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 10., "|cff3333AAAll Champions|r: Champions will spawn in all normal waves above level 5")
 end
 
 ---@return boolean
-function IEX ()
+function IEX()
 	return modeNM == false
 end
 
-function IFX ()
+function IFX()
 	DisableTrigger(GetTriggeringTrigger())
 	modeNC = true
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 10., "|cff3333AANo Champions|r: Champions won't spawn at all")
 end
 
 ---@return boolean
-function IGX ()
+function IGX()
 	return modeEQ == false
 end
 
-function IHX ()
+function IHX()
 	modeEQ = true
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 10., "|cff3333AAEQ mode|r: 10 time on creep spawn.")
 	DisableTrigger(GetTriggeringTrigger())
 end
 
 ---@return boolean
-function IIX ()
+function IIX()
 	return modeAC == false
 end
 
-function IJX ()
+function IJX()
 	local bK ---@type trigger
 	MN = false
 	bj_forLoopBIndex = 1
@@ -11666,7 +11666,7 @@ function IJX ()
 	bK = nil
 end
 
-function IKX ()
+function IKX()
 	UO = SubStringBJ(BE, 2, 3)
 	if UO == "ap" then
 		ConditionalTriggerExecute(P2)
@@ -11721,11 +11721,11 @@ function IKX ()
 end
 
 ---@return boolean
-function ILX ()
+function ILX()
 	return RN or GetTriggerPlayer() == Player(0)
 end
 
-function IMX ()
+function IMX()
 	BE = GetEventPlayerChatString()
 	if SD then
 		if StringLength(BE) == 3 then
@@ -11740,7 +11740,7 @@ function IMX ()
 	end
 end
 
-function INX ()
+function INX()
 	SetPlayerTechMaxAllowedSwap($52303044, 5, GetEnumPlayer())
 	SetPlayerTechMaxAllowedSwap($52303047, 6, GetEnumPlayer())
 	if modeLI == false then
@@ -11749,18 +11749,18 @@ function INX ()
 end
 
 ---@return boolean
-function IOE ()
+function IOE()
 	local IEE = GetDestructableX(GetFilterDestructable()) - D8 ---@type number real
 	local IXE = GetDestructableY(GetFilterDestructable()) - F8 ---@type number real
 	return IEE * IEE + IXE * IXE <= bj_enumDestructableRadius
 end
 
 ---@return boolean
-function IOX ()
+function IOX()
 	return modeCB == false
 end
 
-function IPX ()
+function IPX()
 	if NF == "" then
 		return
 	elseif NF == "" then
@@ -11785,7 +11785,7 @@ function IPX ()
 	end
 end
 
-function PickMode ()
+function PickMode()
 	DisableTrigger(GetTriggeringTrigger())
 	LN = ""
 	if modeAP then
@@ -11859,22 +11859,22 @@ function PickMode ()
 end
 
 ---@return boolean
-function IRX ()
+function IRX()
 	return modeCC == false
 end
 
-function ISX ()
+function ISX()
 	local x_1 = GetRectCenterX(ZK) ---@type number real
 	local y_1 = GetRectCenterY(ZK) ---@type number real
 	CreateUnit(GetEnumPlayer(), $75303046, x_1, y_1, bj_UNIT_FACING)
 end
 
 ---@return boolean
-function RQX ()
+function RQX()
 	return EC == false
 end
 
-function ITX ()
+function ITX()
 	DestroyTextTag(CC)
 	DestroyTextTag(BC)
 	if RQX() then
@@ -11909,7 +11909,7 @@ function ITX ()
 	DisableTrigger(GetTriggeringTrigger())
 end
 
-function IUX ()
+function IUX()
 	TriggerExecute(J3)
 	TriggerExecute(NS)
 	EnableTrigger(Q4)
@@ -11918,13 +11918,13 @@ function IUX ()
 	TriggerExecute(N4)
 end
 
-function IVX ()
+function IVX()
 	DisableTrigger(GetTriggeringTrigger())
 	modeGG = true
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 10., "|cff3333AAGood Game|r: You receive gold for ally leaks.")
 end
 
-function IWX ()
+function IWX()
 	if CountPlayersInForceBJ(ZI) == 1 then
 		RN = true
 		DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 11., "|cffFFcc00Single Player Mode Enabled|r
@@ -11940,33 +11940,33 @@ You can now use the-start command to start the next level.")
 	end
 end
 
-function IXX ()
+function IXX()
 	DisableTrigger(GetTriggeringTrigger())
 	modeNM = true
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 10., "|cff3333AANo Middle|r: Enemies that reach the middle (Dark Grass) give no gold when killed.")
 end
 
-function IYX ()
+function IYX()
 	DisableTrigger(I5)
 	DisableTrigger(L3)
 end
 
 ---@return boolean
-function IZX ()
+function IZX()
 	return GetUnitTypeId(GetTriggerUnit()) == $68304442
 end
 
 ---@return boolean
-function I_X ()
+function I_X()
 	return GetUnitTypeId(GetTriggerUnit()) == $68393936
 end
 
 ---@return boolean
-function J0E ()
+function J0E()
 	return IsUnitInGroup(GetFilterUnit(), ZE)
 end
 
-function J2E ()
+function J2E()
 	SetUnitPosition(GetEnumUnit(), GetLocationX(CI), GetLocationY(CI))
 	IssueImmediateOrderById(GetEnumUnit(), 851972)
 	GroupRemoveUnit(OA[GetUnitUserData(GetEnumUnit())], GetEnumUnit())
@@ -11974,18 +11974,18 @@ function J2E ()
 end
 
 ---@return boolean
-function J3E ()
+function J3E()
 	return IsUnitInGroup(GetFilterUnit(), ZE)
 end
 
-function J4E ()
+function J4E()
 	SetUnitPosition(GetEnumUnit(), GetLocationX(DI), GetLocationY(DI))
 	IssueImmediateOrderById(GetEnumUnit(), 851972)
 	GroupRemoveUnit(OA[GetUnitUserData(GetEnumUnit())], GetEnumUnit())
 	GroupRemoveUnit(RG[GetUnitUserData(GetEnumUnit())], GetEnumUnit())
 end
 
-function J5E ()
+function J5E()
 	local g1 = nil ---@type group
 	local g2 = nil ---@type group
 	DA = false
@@ -12001,7 +12001,7 @@ function J5E ()
 	g2 = nil
 end
 
-function J6E ()
+function J6E()
 	EE = 1 + GetPlayerId(GetEnumPlayer())
 	if GetUnitTypeId(KV[EE]) == $75303050 then
 		if GB[1 + GetPlayerId(GetEnumPlayer())] + PD[1 + GetPlayerId(GetEnumPlayer())] < IX - 500 then
@@ -12034,7 +12034,7 @@ function J6E ()
 	end
 end
 
-function J7E ()
+function J7E()
 	IX = S2I(QC[Now_Level + 1]) + Now_Level * Now_Level
 	if YD then
 		IX = S2I(QC[Now_Level + 0]) + Now_Level * Now_Level
@@ -12045,7 +12045,7 @@ function J7E ()
 	ForForce(ZI, ref_function_J6E)
 end
 
-function J8E ()
+function J8E()
 	EE = 1 + GetPlayerId(GetEnumPlayer())
 	if GetUnitTypeId(KV[EE]) == $75303050 then
 		UnitRemoveAbility(KV[EE], $41303945)
@@ -12059,11 +12059,11 @@ function J8E ()
 	end
 end
 
-function J9E ()
+function J9E()
 	ForForce(ZI, ref_function_J8E)
 end
 
-function JFE ()
+function JFE()
 	local p = GetEnumPlayer() ---@type player
 	if IsPlayerAlly(p, Player(8)) then
 		AX = EE
@@ -12084,7 +12084,7 @@ function JFE ()
 	p = nil
 end
 
-function JHE ()
+function JHE()
 	local p = GetEnumPlayer() ---@type player
 	BN[1 + GetPlayerId(p)] = BN[1 + GetPlayerId(p)] + BI[1 + GetPlayerId(p)]
 	SetPlayerState(p, PLAYER_STATE_RESOURCE_GOLD, GetPlayerState(p, PLAYER_STATE_RESOURCE_GOLD) + BI[1 + GetPlayerId(p)])
@@ -12101,7 +12101,7 @@ function JHE ()
 	p = nil
 end
 
-function JPE ()
+function JPE()
 	if GetUnitTypeId(KV[EE]) == $75303050 then
 		if true then
 			UnitRemoveAbility(KV[EE], $41303956)
@@ -12117,7 +12117,7 @@ function JPE ()
 end
 
 ---@return boolean
-function JIE ()
+function JIE()
 	local b = false ---@type boolean
 	if CountPlayersInForceBJ(EastLudi) > 0 then
 		b = true
@@ -12126,7 +12126,7 @@ function JIE ()
 end
 
 ---@return boolean
-function JXE ()
+function JXE()
 	local b = false ---@type boolean
 	if CountPlayersInForceBJ(WestLudi) > 0 then
 		b = true
@@ -12134,7 +12134,7 @@ function JXE ()
 	return b
 end
 
-function JWE ()
+function JWE()
 	modeMM = false
 	TriggerExecute(OT)
 	TriggerExecute(XT)
@@ -12177,11 +12177,11 @@ function JWE ()
 end
 
 ---@return boolean
-function JYE ()
+function JYE()
 	return UI and AE == false
 end
 
-function J_E ()
+function J_E()
 	ConditionalTriggerExecute(YU)
 	DisableTrigger(YU)
 	DestroyTrigger(YU)
@@ -12211,7 +12211,7 @@ function J_E ()
 	end
 end
 
-function K0E ()
+function K0E()
 	local u_1 = GetEnumUnit() ---@type unit
 	local x_1 = GetUnitX(u_1) ---@type number real
 	local y_1 = GetUnitY(u_1) ---@type number real
@@ -12235,7 +12235,7 @@ function K0E ()
 	u_1 = nil
 end
 
-function K1E ()
+function K1E()
 	local u_1 = GetEnumUnit() ---@type unit
 	local x_1 = GetUnitX(u_1) ---@type number real
 	local y_1 = GetUnitY(u_1) ---@type number real
@@ -12259,7 +12259,7 @@ function K1E ()
 	u_1 = nil
 end
 
-function K2E ()
+function K2E()
 	ForForce(ZI, ref_function_KPE)
 	ForForce(ZI, ref_function_KSE)
 	A_V(.5)
@@ -12270,7 +12270,7 @@ function K2E ()
 	ForGroup(ZD, ref_function_K1E)
 end
 
-function K3E ()
+function K3E()
 	local x_1 = GetRandomReal(GetRectMinX(OM), GetRectMaxX(OM)) ---@type number real
 	local y_1 = GetRandomReal(GetRectMinY(OM), GetRectMaxY(OM)) ---@type number real
 	GroupAddUnit(VF, GetEnumUnit())
@@ -12279,7 +12279,7 @@ function K3E ()
 	IssueImmediateOrderById(GetEnumUnit(), 851993)
 end
 
-function K4E ()
+function K4E()
 	local x_1 = GetRandomReal(GetRectMinX(RM), GetRectMaxX(RM)) ---@type number real
 	local y_1 = GetRandomReal(GetRectMinY(RM), GetRectMaxY(RM)) ---@type number real
 	GroupAddUnit(ZD, GetEnumUnit())
@@ -12290,7 +12290,7 @@ end
 
 ---@param p player
 ---@param count number integer
-function CreateIncomeTexttag (p, count)
+function CreateIncomeTexttag(p, count)
 	local i_1 = GetPlayerId(p) ---@type number integer
 	local f ---@type force
 	local f2 ---@type force
@@ -12324,7 +12324,7 @@ end
 
 ---@param p player
 ---@param count number integer
-function CreateIncomeTexttagTrash (p, count)
+function CreateIncomeTexttagTrash(p, count)
 	local i_1 = GetPlayerId(p) ---@type number integer
 	local f ---@type force
 	local f2 ---@type force
@@ -12360,14 +12360,14 @@ end
 ---@param IIE rect
 ---@param RSE player
 ---@return group
-function IGE (IIE, RSE)
+function IGE(IIE, RSE)
 	G8 = A5V()
 	bj_groupEnumOwningPlayer = RSE
 	GroupEnumUnitsInRect(G8, IIE, filterGetUnitsInRectOfPlayer)
 	return G8
 end
 
-function K5E ()
+function K5E()
 	LIncomeTrashCounter = 0
 	RIncomeTrashCounter = 0
 	CreateIncomeTexttagTrash(Player(0), 0)
@@ -12391,25 +12391,25 @@ function K5E ()
 end
 
 ---@return boolean
-function K6E ()
+function K6E()
 	return PA
 end
 
-function K7E ()
+function K7E()
 	local x_1 = GetRectCenterX(KM) ---@type number real
 	local y_1 = GetRectCenterY(KM) ---@type number real
 	SetUnitMoveSpeed(GetEnumUnit(), GetUnitDefaultMoveSpeed(GetEnumUnit()))
 	IssuePointOrderById(GetEnumUnit(), 851983, x_1, y_1)
 end
 
-function K8E ()
+function K8E()
 	local x_1 = GetRectCenterX(JM) ---@type number real
 	local y_1 = GetRectCenterY(JM) ---@type number real
 	SetUnitMoveSpeed(GetEnumUnit(), GetUnitDefaultMoveSpeed(GetEnumUnit()))
 	IssuePointOrderById(GetEnumUnit(), 851983, x_1, y_1)
 end
 
-function K9E ()
+function K9E()
 	A_V(.5)
 	ClearTextMessagesBJ(bj_FORCE_ALL_PLAYERS)
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 1., HR[1] .. "GET READY FOR ARENA BATTLE!|r")
@@ -12431,7 +12431,7 @@ function K9E ()
 	EnableTrigger(AU)
 end
 
-function KHE ()
+function KHE()
 	local g_2 ---@type group
 	local dr_1 ---@type group
 	local dr_2 ---@type group
@@ -12498,13 +12498,13 @@ function KHE ()
 	ConditionalTriggerExecute(W4)
 end
 
-function KIE ()
+function KIE()
 	FogModifierStart(CF[1 + GetPlayerId(GetEnumPlayer())])
 	FogModifierStart(DF[1 + GetPlayerId(GetEnumPlayer())])
 	FogModifierStart(BF[1 + GetPlayerId(GetEnumPlayer())])
 end
 
-function KJE ()
+function KJE()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	local tx ---@type number real
@@ -12579,18 +12579,18 @@ function KJE ()
 	end
 end
 
-function KME ()
+function KME()
 	TriggerSleepAction(.5)
 	ForGroup(SE, ref_function_KJE)
 	TriggerExecute(VZ)
 	TriggerExecute(V9)
 end
 
-function KOE ()
+function KOE()
 	ForForce(ZI, ref_function_KVE)
 end
 
-function KPE ()
+function KPE()
 	local KQE = GetPlayerId(GetEnumPlayer()) + 1 ---@type number integer
 	local x_1 = GetLocationX(EF[KQE]) ---@type number real
 	local y_1 = GetLocationY(EF[KQE]) ---@type number real
@@ -12601,15 +12601,15 @@ function KPE ()
 end
 
 ---@return boolean
-function KRE ()
+function KRE()
 	return YD
 end
 
-function KSE ()
+function KSE()
 	PanCameraToTimedForPlayer(GetEnumPlayer(), GetUnitX(KV[1 + GetPlayerId(GetEnumPlayer())]), GetUnitY(KV[1 + GetPlayerId(GetEnumPlayer())]), 1.)
 end
 
-function KVE ()
+function KVE()
 	EE = 1 + GetPlayerId(GetEnumPlayer())
 	if GetUnitTypeId(KV[EE]) == $75303050 then
 		UnitRemoveAbility(KV[EE], $41303956)
@@ -12628,11 +12628,11 @@ end
 ---@param N1E number real
 ---@param N7E number real
 ---@return number real
-function KTE (IEE, IXE, N1E, N7E)
+function KTE(IEE, IXE, N1E, N7E)
 	return bj_RADTODEG * Atan2(N7E - IXE, N1E - IEE)
 end
 
-function KYE ()
+function KYE()
 	local u_1 = GetEnumUnit() ---@type unit
 	local x_1 = GetUnitX(u_1) ---@type number real
 	local y_1 = GetUnitY(u_1) ---@type number real
@@ -12663,11 +12663,11 @@ function KYE ()
 end
 
 ---@return boolean
-function L1E ()
+function L1E()
 	return IsUnitInGroup(GetTriggerUnit(), AF) and YD
 end
 
-function L4E ()
+function L4E()
 	local x_1 = GetPlayerStartLocationX(GetOwningPlayer(GetEnteringUnit())) ---@type number real
 	local y_1 = GetPlayerStartLocationY(GetOwningPlayer(GetEnteringUnit())) ---@type number real
 	if GetUnitTypeId(GetEnteringUnit()) == $75303050 then
@@ -12678,7 +12678,7 @@ function L4E ()
 	end
 end
 
-function L5E ()
+function L5E()
 	local x_1 = GetRectCenterX(JM) ---@type number real
 	local y_1 = GetRectCenterY(JM) ---@type number real
 	IssuePointOrderById(GetTriggerUnit(), 851986, x_1, y_1)
@@ -12687,11 +12687,11 @@ function L5E ()
 end
 
 ---@return boolean
-function L7E ()
+function L7E()
 	return IsUnitInGroup(GetTriggerUnit(), IF) and YD
 end
 
-function LBE ()
+function LBE()
 	local x_1 = GetRectCenterX(JM) ---@type number real
 	local y_1 = GetRectCenterY(JM) ---@type number real
 	SetUnitMoveSpeed(GetEnumUnit(), 500.)
@@ -12699,7 +12699,7 @@ function LBE ()
 	GroupAddUnit(IF, GetEnumUnit())
 end
 
-function LCE ()
+function LCE()
 	local x_1 = GetPlayerStartLocationX(GetEnumPlayer()) ---@type number real
 	local y_1 = GetPlayerStartLocationY(GetEnumPlayer()) ---@type number real
 	SetUnitMoveSpeed(KV[1 + GetPlayerId(GetEnumPlayer())], GetUnitDefaultMoveSpeed(KV[1 + GetPlayerId(GetEnumPlayer())]))
@@ -12711,7 +12711,7 @@ function LCE ()
 	end
 end
 
-function LDE ()
+function LDE()
 	FogModifierStop(CF[1 + GetPlayerId(GetEnumPlayer())])
 	CreateFogModifierRectBJ(true, GetEnumPlayer(), FOG_OF_WAR_MASKED, KL)
 	CreateFogModifierRectBJ(true, GetEnumPlayer(), FOG_OF_WAR_FOGGED, KL)
@@ -12720,7 +12720,7 @@ function LDE ()
 	CreateFogModifierRectBJ(true, GetEnumPlayer(), FOG_OF_WAR_FOGGED, XM)
 end
 
-function LFE ()
+function LFE()
 	FogModifierStop(BF[1 + GetPlayerId(GetEnumPlayer())])
 	CreateFogModifierRectBJ(true, GetEnumPlayer(), FOG_OF_WAR_MASKED, JL)
 	CreateFogModifierRectBJ(true, GetEnumPlayer(), FOG_OF_WAR_FOGGED, JL)
@@ -12729,7 +12729,7 @@ function LFE ()
 	CreateFogModifierRectBJ(true, GetEnumPlayer(), FOG_OF_WAR_FOGGED, XM)
 end
 
-function LHE ()
+function LHE()
 	local x_1 = GetPlayerStartLocationX(GetEnumPlayer()) ---@type number real
 	local y_1 = GetPlayerStartLocationY(GetEnumPlayer()) ---@type number real
 	SetUnitPosition(KV[1 + GetPlayerId(GetEnumPlayer())], x_1, y_1)
@@ -12741,7 +12741,7 @@ function LHE ()
 	end
 end
 
-function LJE ()
+function LJE()
 	A_V(2.)
 	onArena = false
 	if CountUnitsInGroup(ZD) == 0 and CountUnitsInGroup(VF) ~= 0 then
@@ -12793,18 +12793,18 @@ function LJE ()
 end
 
 ---@return boolean
-function LKE ()
+function LKE()
 	return YD and CG == false
 end
 
-function LLE ()
+function LLE()
 	local x_1 = GetRectCenterX(IM) ---@type number real
 	local y_1 = GetRectCenterY(IM) ---@type number real
 	GroupPointOrderById(ZD, 851983, x_1, y_1)
 	GroupPointOrderById(VF, 851983, x_1, y_1)
 end
 
-function LME ()
+function LME()
 	if IsPlayerAlly(GetEnumPlayer(), Player(8)) then
 		OF = OF + 1
 	else
@@ -12812,7 +12812,7 @@ function LME ()
 	end
 end
 
-function LNE ()
+function LNE()
 	local x_1 = GetPlayerStartLocationX(GetEnumPlayer()) ---@type number real
 	local y_1 = GetPlayerStartLocationY(GetEnumPlayer()) ---@type number real
 	SetUnitMoveSpeed(KV[1 + GetPlayerId(GetEnumPlayer())], GetUnitDefaultMoveSpeed(KV[1 + GetPlayerId(GetEnumPlayer())]))
@@ -12824,7 +12824,7 @@ function LNE ()
 	end
 end
 
-function LOE ()
+function LOE()
 	SetUnitMoveSpeed(KV[1 + GetPlayerId(GetEnumPlayer())], GetUnitDefaultMoveSpeed(KV[1 + GetPlayerId(GetEnumPlayer())]))
 	if true then
 		SetPlayerState(GetEnumPlayer(), PLAYER_STATE_RESOURCE_GOLD, GetPlayerState(GetEnumPlayer(), PLAYER_STATE_RESOURCE_GOLD) + Now_Level * 20)
@@ -12832,7 +12832,7 @@ function LOE ()
 	end
 end
 
-function LPE ()
+function LPE()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	OF = 0
@@ -12988,7 +12988,7 @@ function LPE ()
 	end
 end
 
-function LRE ()
+function LRE()
 	local x_1 = GetRectCenterX(KM) ---@type number real
 	local y_1 = GetRectCenterY(KM) ---@type number real
 	SetUnitMoveSpeed(GetEnumUnit(), 500.)
@@ -12997,19 +12997,19 @@ function LRE ()
 end
 
 ---@return boolean
-function LSE ()
+function LSE()
 	return YD and PA == false
 end
 
-function LTE ()
+function LTE()
 	IssuePointOrderById(GetEnumUnit(), 851983, xg, yg)
 end
 
-function LUE ()
+function LUE()
 	IssuePointOrderById(GetEnumUnit(), 851983, xg, yg)
 end
 
-function LZE ()
+function LZE()
 	xg = GetRectCenterX(JM)
 	yg = GetRectCenterY(JM)
 	ForGroup(IF, ref_function_LTE)
@@ -13018,20 +13018,20 @@ function LZE ()
 	ForGroup(AF, ref_function_LUE)
 end
 
-function M0E ()
+function M0E()
 	CinematicFadeBJ(2, 3., "ReplaceableTextures\\CameraMasks\\DreamFilter_Mask.blp", 0., 0., 0., 0.)
 	SetUnitAnimation(LKing, "Stand Victory")
 	CameraSetupApplyForPlayer(true, SP, GetEnumPlayer(), 0.)
 	CameraSetupApplyForPlayer(true, UP, GetEnumPlayer(), 11.)
 end
 
-function M1E ()
+function M1E()
 	CinematicFadeBJ(2, 3., "ReplaceableTextures\\CameraMasks\\DiagonalSlash_mask.blp", 0., 0., 0., 0.)
 	CameraSetupApplyForPlayer(true, TP, GetEnumPlayer(), 0.)
 	CameraSetupApplyForPlayer(true, WP, GetEnumPlayer(), 11.)
 end
 
-function M2E ()
+function M2E()
 	local i_1 = 0 ---@type number integer
 	local ttime = PR * 3600 + FN * 60 + GN ---@type number integer
 	HN = Player(8)
@@ -13092,7 +13092,7 @@ function M2E ()
 	CustomDefeatBJ(Player(7), "Поражение")
 end
 
-function M3E ()
+function M3E()
 	if GetPlayerState(GetEnumPlayer(), PLAYER_STATE_LUMBER_GATHERED) > GetPlayerState(LI, PLAYER_STATE_LUMBER_GATHERED) then
 		LI = GetEnumPlayer()
 	end
@@ -13116,7 +13116,7 @@ function M3E ()
 	end
 end
 
-function M4E ()
+function M4E()
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 60., " ")
 	JD = Player(0)
 	QI = Player(0)
@@ -13138,7 +13138,7 @@ function M4E ()
 	TriggerExecute(PU)
 end
 
-function M5E ()
+function M5E()
 	AN = CountPlayersInForceBJ(YI) + 1
 	CreateMultiboardBJ(AN, 20, MultiboardGetTitleText(JR))
 	VA = bj_lastCreatedMultiboard
@@ -13253,7 +13253,7 @@ function M5E ()
 	MultiboardMinimize(VA, false)
 end
 
-function M6E ()
+function M6E()
 	EA = HR[1 + GetPlayerId(Player(8))] .. GetPlayerName(Player(8))
 	bj_forLoopAIndex = 1
 	bj_forLoopAIndexEnd = 8
@@ -13266,11 +13266,11 @@ function M6E ()
 end
 
 ---@return boolean
-function M7E ()
+function M7E()
 	return AE == false
 end
 
-function M8E ()
+function M8E()
 	local i_1 = 0 ---@type number integer
 	while(true) do
 		if not (AfkCounter[i_1] == -1) then
@@ -13306,11 +13306,11 @@ function M8E ()
 end
 
 ---@return boolean
-function M9E ()
+function M9E()
 	return AE
 end
 
-function MCE ()
+function MCE()
 	if GetEnumUnit() ~= RKing and GetEnumUnit() ~= LKing then
 		if IsUnitType(GetEnumUnit(), UNIT_TYPE_GIANT) or IsUnitType(GetEnumUnit(), UNIT_TYPE_SUMMONED) then
 			RemoveUnit(GetEnumUnit())
@@ -13318,39 +13318,39 @@ function MCE ()
 	end
 end
 
-function MFE ()
+function MFE()
 	ForGroup(VF, ref_function_MCE)
 	GroupClear(VF)
 	ForGroup(ZD, ref_function_MCE)
 	GroupClear(ZD)
 end
 
-function MHE ()
+function MHE()
 	ShowUnitShow(GetEnumUnit())
 end
 
-function MJE ()
+function MJE()
 	ConditionalTriggerExecute(WT)
 	ForGroup(MD, ref_function_MHE)
 end
 
 ---@return boolean
-function MKE ()
+function MKE()
 	return AE == false
 end
 
-function MLE ()
+function MLE()
 	SetUnitTimeScalePercent(GetEnumUnit(), 20.)
 end
 
-function MME ()
+function MME()
 	CinematicFadeBJ(2, 3., "ReplaceableTextures\\CameraMasks\\DreamFilter_Mask.blp", 0., 0., 0., 0.)
 	SetUnitAnimation(LKing, "Stand Victory")
 	CameraSetupApplyForPlayer(true, SP, GetEnumPlayer(), 0.)
 	CameraSetupApplyForPlayer(true, UP, GetEnumPlayer(), 10.)
 end
 
-function MNE ()
+function MNE()
 	GroupAddUnit(ZE, GetTriggerUnit())
 	if GetUnitTypeId(GetTriggerUnit()) == $6E303037 or GetUnitTypeId(GetTriggerUnit()) == $68313131 then
 		return
@@ -13363,14 +13363,14 @@ function MNE ()
 	end
 end
 
-function MPE ()
+function MPE()
 	CinematicFadeBJ(2, 3., "ReplaceableTextures\\CameraMasks\\DreamFilter_Mask.blp", 0., 0., 0., 0.)
 	SetUnitAnimation(RKing, "Stand Victory")
 	CameraSetupApplyForPlayer(true, TP, GetEnumPlayer(), 0.)
 	CameraSetupApplyForPlayer(true, WP, GetEnumPlayer(), 10.)
 end
 
-function MQE ()
+function MQE()
 	DestroyTimerDialog(EX)
 	MultiboardDisplay(JR, false)
 	DestroyLeaderboard(VX)
@@ -13405,21 +13405,21 @@ function MQE ()
 end
 
 ---@return boolean
-function MSE ()
+function MSE()
 	return AE == false
 end
 
-function MTE ()
+function MTE()
 	SetUnitTimeScalePercent(GetEnumUnit(), 20.)
 end
 
-function MUE ()
+function MUE()
 	CinematicFadeBJ(2, 3., "ReplaceableTextures\\CameraMasks\\DiagonalSlash_mask.blp", 0., 0., 0., 0.)
 	CameraSetupApplyForPlayer(true, SP, GetEnumPlayer(), 0.)
 	CameraSetupApplyForPlayer(true, UP, GetEnumPlayer(), 10.)
 end
 
-function MVE ()
+function MVE()
 	local x_1 = GetRectCenterX(KM) ---@type number real
 	local y_1 = GetRectCenterY(KM) ---@type number real
 	IssuePointOrderById(GetTriggerUnit(), 851986, x_1, y_1)
@@ -13427,7 +13427,7 @@ function MVE ()
 	GroupAddUnit(AF, GetTriggerUnit())
 end
 
-function MWE ()
+function MWE()
 	CinematicFadeBJ(2, 3., "ReplaceableTextures\\CameraMasks\\DreamFilter_Mask.blp", 0., 0., 0., 0.)
 	SetUnitAnimation(RKing, "Stand Victory")
 	CameraSetupApplyForPlayer(true, TP, GetEnumPlayer(), 0.)
@@ -13435,16 +13435,16 @@ function MWE ()
 end
 
 ---@return boolean
-function MEE ()
+function MEE()
 	return (IsUnitType(GetTriggerUnit(), UNIT_TYPE_SUMMONED) or IsUnitType(GetTriggerUnit(), UNIT_TYPE_GIANT)) ~= false ~= false ~= false
 end
 
 ---@return boolean
-function MXE ()
+function MXE()
 	return not (YD == false) and MEE()
 end
 
-function MYE ()
+function MYE()
 	local i_1 = 0 ---@type number integer
 	local ttime = PR * 3600 + FN * 60 + GN ---@type number integer
 	HN = Player(9)
@@ -13506,16 +13506,16 @@ function MYE ()
 end
 
 ---@return boolean
-function MZE ()
+function MZE()
 	return AE == false
 end
 
-function M_E ()
+function M_E()
 	SetUnitTimeScalePercent(GetEnumUnit(), 20.)
 end
 
 ---@return boolean
-function NBV ()
+function NBV()
 	local t = GetTriggeringTrigger() ---@type trigger
 	local h = GetHandleId(t) ---@type number integer
 	local u_1 = LoadUnitHandle(HY, h, 17) ---@type unit
@@ -13545,7 +13545,7 @@ end
 ---@param r rect
 ---@param id_1 number integer
 ---@param NCE number integer
-function NBE (r, id_1, NCE)
+function NBE(r, id_1, NCE)
 	local h = GetHandleId(r) ---@type number integer
 	local NDE = LoadReal(HY, h, 0) ---@type number real
 	local NGE = LoadReal(HY, h, 1) ---@type number real
@@ -13596,7 +13596,7 @@ function NBE (r, id_1, NCE)
 	p = nil
 end
 
-function NYE ()
+function NYE()
 	local t = GetExpiredTimer() ---@type timer
 	local c = QX[Now_Level] ---@type number integer
 	local AHE = 1 ---@type number integer
@@ -13661,14 +13661,14 @@ function NYE ()
 	t = nil
 end
 
-function Nahuy ()
+function Nahuy()
 	local p = GetOwningPlayer(GetEnumUnit()) ---@type player
 	if p == Keek then
 	end
 	p = nil
 end
 
-function O0X ()
+function O0X()
 	UnitAddAbility(LKing, $41303531)
 	UnitAddAbility(RKing, $41303531)
 	ForForce(bj_FORCE_ALL_PLAYERS, ref_function_O_X)
@@ -13677,11 +13677,11 @@ end
 ---@param r rect
 ---@param u_1 unit
 ---@return boolean
-function XME (r, u_1)
+function XME(r, u_1)
 	return GetUnitX(u_1) > GetRectMinX(r) - 32. and GetUnitX(u_1) < GetRectMaxX(r) + 32. and GetUnitY(u_1) > GetRectMinY(r) - 32. and GetUnitY(u_1) < GetRectMaxY(r) + 32.
 end
 
-function O1X ()
+function O1X()
 	if not IsPlayerInForce(GetEnumPlayer(), BD) then
 		EE = 1 + GetPlayerId(GetEnumPlayer())
 		DialogAddButtonBJ(JF, HR[EE] .. GetPlayerName(GetEnumPlayer()) .. "|r")
@@ -13689,7 +13689,7 @@ function O1X ()
 	end
 end
 
-function O2X ()
+function O2X()
 	if YF then
 		DisplayTimedTextToPlayer(GetTriggerPlayer(), 0., 0., 5., "Someone is open vote menu or vote already start, please try again later.")
 	end
@@ -13720,16 +13720,16 @@ function O2X ()
 end
 
 ---@return boolean
-function O3X ()
+function O3X()
 	return GetClickedButton() == KF[1] or GetClickedButton() == KF[2] or GetClickedButton() == KF[3] or GetClickedButton() == KF[4] or GetClickedButton() == KF[5] or GetClickedButton() == KF[6] or GetClickedButton() == KF[7] or GetClickedButton() == KF[8]
 end
 
 ---@return boolean
-function O4X ()
+function O4X()
 	return YF and O3X()
 end
 
-function O5X ()
+function O5X()
 	DialogDisplayBJ(false, JF, GetEnumPlayer())
 	EE = 1 + GetPlayerId(GetEnumPlayer())
 	if GetClickedButton() == KF[EE] then
@@ -13737,11 +13737,11 @@ function O5X ()
 	end
 end
 
-function O6X ()
+function O6X()
 	DialogDisplayBJ(true, LF, GetEnumPlayer())
 end
 
-function O7X ()
+function O7X()
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 10., HR[1 + GetPlayerId(GetTriggerPlayer())] .. GetPlayerName(GetTriggerPlayer()) .. "|r start a vote kick ! (vote will expired in 20 seconds)")
 	ForForce(ZI, ref_function_O5X)
 	DialogClear(LF)
@@ -13763,41 +13763,41 @@ function O7X ()
 end
 
 ---@return boolean
-function O8E ()
+function O8E()
 	return (GetOwningPlayer(GetLeavingUnit()) == Player(1) and IsUnitType(GetLeavingUnit(), UNIT_TYPE_UNDEAD) and OB == false) ~= false ~= false ~= false
 end
 
 ---@return boolean
-function O8X ()
+function O8X()
 	return GetClickedButton() == GH
 end
 
-function O9X ()
+function O9X()
 	YF = false
 	MultiboardDisplay(JR, true)
 end
 
 ---@return boolean
-function OIX ()
+function OIX()
 	return IsUnitSelected(LKing, GetOwningPlayer(LKing)) == false or IsPlayerInForce(GetOwningPlayer(LKing), ZI) == false
 end
 
 ---@return boolean
-function OAX ()
+function OAX()
 	return GetTriggerUnit() == LKing and OIX()
 end
 
 ---@return boolean
-function OBX ()
+function OBX()
 	return IsUnitSelected(RKing, GetOwningPlayer(RKing)) == false or IsPlayerInForce(GetOwningPlayer(RKing), ZI) == false
 end
 
 ---@return boolean
-function OCX ()
+function OCX()
 	return GetTriggerUnit() == RKing and OBX()
 end
 
-function ODX ()
+function ODX()
 	SetUnitOwner(RKing, GetTriggerPlayer(), false)
 	SetUnitColor(RKing, GetPlayerColor(GetTriggerPlayer()))
 end
@@ -13808,7 +13808,7 @@ end
 ---@param r number integer
 ---@param g number integer
 ---@param b number integer
-function TextUp (s, u, size, r, g, b)
+function TextUp(s, u, size, r, g, b)
 	local x1 = 0.0355 * Cos(90. * bj_DEGTORAD) ---@type number real
 	local y1 = 0.0355 * Sin(90. * bj_DEGTORAD) ---@type number real
 	bj_lastCreatedTextTag = CreateTextTag()
@@ -13821,7 +13821,7 @@ function TextUp (s, u, size, r, g, b)
 	SetTextTagFadepoint(bj_lastCreatedTextTag, 0)
 end
 
-function TimeAbility ()
+function TimeAbility()
 	local NVE ---@type unit
 	local u1 ---@type unit
 	local u2 ---@type unit
@@ -13921,11 +13921,11 @@ function TimeAbility ()
 end
 
 ---@return boolean
-function Q8E ()
+function Q8E()
 	return CountUnitsInGroup(QE) > 0
 end
 
-function OEX ()
+function OEX()
 	QE = IRE(CJ, Condition(ref_function_OVX))
 	if Q8E() then
 		IssuePointOrderByIdLoc(GetEnteringUnit(), 851983, HI)
@@ -13933,12 +13933,12 @@ function OEX ()
 	A4V(QE)
 end
 
-function O10X ()
+function O10X()
 	SetUnitPathing(GetEnteringUnit(), true)
 	IssuePointOrderByIdLoc(GetEnteringUnit(), 851983, GO)
 end
 
-function OGE ()
+function OGE()
 	local t = GetExpiredTimer() ---@type timer
 	IssueImmediateOrderById(GetTriggerUnit(), 851972)
 	PauseTimer(t)
@@ -13948,41 +13948,41 @@ function OGE ()
 end
 
 ---@return boolean
-function OJE ()
+function OJE()
 	return (IsUnitType(GetTriggerUnit(), UNIT_TYPE_SAPPER) == false and GetUnitAbilityLevel(GetTriggerUnit(), $416C6F63) == 0) ~= false ~= false
 end
 
 ---@return boolean
-function OKE ()
+function OKE()
 	return (IsUnitType(GetTriggerUnit(), UNIT_TYPE_SAPPER) == false and GetUnitAbilityLevel(GetTriggerUnit(), $416C6F63) == 0 and IsUnitInGroup(GetTriggerUnit(), M8) == false) ~= false ~= false
 end
 
 ---@return boolean
-function OLE ()
+function OLE()
 	return (IsUnitType(GetTriggerUnit(), UNIT_TYPE_SAPPER) == false and GetUnitAbilityLevel(GetTriggerUnit(), $416C6F63) == 0 and IsUnitInGroup(GetTriggerUnit(), P8) == false) ~= false ~= false
 end
 
-function ONX ()
+function ONX()
 	SetUnitOwner(LKing, GetTriggerPlayer(), false)
 	SetUnitColor(LKing, GetPlayerColor(GetTriggerPlayer()))
 end
 
 ---@return boolean
-function OOX ()
+function OOX()
 	return IsUnitInGroup(GetFilterUnit(), XA)
 end
 
 ---@return boolean
-function OPE ()
+function OPE()
 	return (IsUnitType(GetTriggerUnit(), UNIT_TYPE_MELEE_ATTACKER) and IsUnitType(GetTriggerUnit(), UNIT_TYPE_SAPPER) == false and GetUnitTypeId(GetTriggerUnit()) == $68304137 == false and GetUnitTypeId(GetTriggerUnit()) == $68304156 == false and GetUnitTypeId(GetTriggerUnit()) == $68304157 == false) ~= false ~= false
 end
 
 ---@return boolean
-function OQE ()
+function OQE()
 	return (IsUnitType(GetTriggerUnit(), UNIT_TYPE_RANGED_ATTACKER) and IsUnitType(GetTriggerUnit(), UNIT_TYPE_SAPPER) == false and GetUnitTypeId(GetTriggerUnit()) == $68304137 == false and GetUnitTypeId(GetTriggerUnit()) == $68304156 == false and GetUnitTypeId(GetTriggerUnit()) == $68304157 == false) ~= false ~= false
 end
 
-function ORX ()
+function ORX()
 	QE = IRE(MJ, Condition(ref_function_OOX))
 	if Q8E() then
 		IssuePointOrderByIdLoc(GetEnteringUnit(), 851983, GO)
@@ -13991,26 +13991,26 @@ function ORX ()
 end
 
 ---@return boolean
-function OME ()
+function OME()
 	return GetUnitTypeId(GetTriggerUnit()) == $68304137 or GetUnitTypeId(GetTriggerUnit()) == $68304156 or GetUnitTypeId(GetTriggerUnit()) == $68304157
 end
 
 ---@return boolean
-function OSE ()
+function OSE()
 	return (IsUnitType(GetTriggerUnit(), UNIT_TYPE_PEON) == false and OME() == false and GetUnitTypeId(GetTriggerUnit()) == $68303854 == false and GetUnitTypeId(GetTriggerUnit()) == $68313135 == false and GetUnitTypeId(GetTriggerUnit()) == $68313137 == false and GetUnitTypeId(GetTriggerUnit()) == $68313139 == false and GetUnitTypeId(GetTriggerUnit()) == $68313133 == false and IsUnitIllusion(GetTriggerUnit()) == false and GetUnitTypeId(GetFilterUnit()) == $6E303039 == false and GetUnitTypeId(GetFilterUnit()) == $68303832 == false and GetUnitTypeId(GetFilterUnit()) == $68303833 == false) ~= false ~= false
 end
 
 ---@return boolean
-function OVX ()
+function OVX()
 	return IsUnitInGroup(GetFilterUnit(), XA)
 end
 
 ---@return boolean
-function OXX ()
+function OXX()
 	return GetOwningPlayer(GetEnteringUnit()) == Player(9)
 end
 
-function OZX ()
+function OZX()
 	PE = RKing
 	EE = CountPlayersInForceBJ(WestLudi)
 	if EE == 2 then
@@ -14077,11 +14077,11 @@ function OZX ()
 	end
 end
 
-function O_X ()
+function O_X()
 	SetPlayerAbilityAvailableBJ(false, $41303531, GetEnumPlayer())
 end
 
-function P2E ()
+function P2E()
 	local player_id = GetUnitUserData(GetEnumUnit()) - 1 ---@type number integer
 	local iter = 0 ---@type number integer
 	local randi = 0 ---@type number integer
@@ -14112,7 +14112,7 @@ function P2E ()
 	IssuePointOrderByIdLoc(GetEnumUnit(), 851983, CO[1 + player_id])
 end
 
-function P2E_OLD ()
+function P2E_OLD()
 	local P9 = GetPlayerId(VN[SO]) ---@type number integer
 	if P9 == 0 or P9 == 1 then
 		SetUnitOwner(GetEnumUnit(), Player(10), false)
@@ -14132,7 +14132,7 @@ function P2E_OLD ()
 end
 
 ---@return number integer
-function Check_Players_In_Game ()
+function Check_Players_In_Game()
 	local flag_loc = 0 ---@type number integer
 	if IsPlayerInForce(Player(0), ZI) then
 		flag_loc = flag_loc + 1
@@ -14161,7 +14161,7 @@ function Check_Players_In_Game ()
 	return flag_loc
 end
 
-function P3E ()
+function P3E()
 	local LteamSend = LIncomeTrashCounter + LIncomeCounter ---@type number integer
 	local RteamSend = RIncomeTrashCounter + RIncomeCounter ---@type number integer
 	local flag_loc = Check_Players_In_Game() ---@type number integer
@@ -14260,33 +14260,33 @@ function P3E ()
 end
 
 ---@return boolean
-function P4E ()
+function P4E()
 	return VB and IN and HO == false
 end
 
-function P5E ()
+function P5E()
 	local x_1 = GetRandomReal(GetRectMinX(IK), GetRectMaxX(IK)) ---@type number real
 	local y_1 = GetRandomReal(GetRectMinY(IK), GetRectMaxY(IK)) ---@type number real
 	CreateUnit(Player(10), GetUnitTypeId(GetEnteringUnit()), x_1, y_1, bj_UNIT_FACING)
 end
 
 ---@return boolean
-function P6E ()
+function P6E()
 	return VB and IN == false and HO
 end
 
-function P7E ()
+function P7E()
 	local x_1 = GetRandomReal(GetRectMinX(RK), GetRectMaxX(RK)) ---@type number real
 	local y_1 = GetRandomReal(GetRectMinY(RK), GetRectMaxY(RK)) ---@type number real
 	CreateUnit(Player(11), GetUnitTypeId(GetEnteringUnit()), x_1, y_1, bj_UNIT_FACING)
 end
 
 ---@return boolean
-function P8E ()
+function P8E()
 	return (IsUnitType(GetTriggerUnit(), UNIT_TYPE_ANCIENT) and IsUnitType(GetTriggerUnit(), UNIT_TYPE_UNDEAD) == false) ~= false ~= false ~= false
 end
 
-function P9E ()
+function P9E()
 	if GetUnitTypeId(KV[1 + GetPlayerId(GetOwningPlayer(GetTriggerUnit()))]) ~= $75303049 then
 		GroupAddUnit(AI, GetTriggerUnit())
 	end
@@ -14294,11 +14294,11 @@ function P9E ()
 	TriggerExecute(WU)
 end
 
-function PAE ()
+function PAE()
 	PD[GetUnitUserData(GetEnumUnit())] = PD[GetUnitUserData(GetEnumUnit())] + GetUnitPointValue(GetEnumUnit())
 end
 
-function PBE ()
+function PBE()
 	local IQE = GetPlayerId(GetEnumPlayer()) + 1 ---@type number integer
 	local AHE = 0 ---@type number integer
 	local AKE = Now_Level ---@type number integer
@@ -14321,12 +14321,12 @@ function PBE ()
 	JH[IQE] = JH[IQE] + R2I(IEE) + R2I(IXE)
 end
 
-function PCE ()
+function PCE()
 	ForForce(ZI, ref_function_PBE)
 	TriggerExecute(IT)
 end
 
-function PDE ()
+function PDE()
 	local NVE = GetTriggerUnit() ---@type unit
 	local IQE = GetUnitUserData(NVE) ---@type number integer
 	if IsUnitType(NVE, UNIT_TYPE_SUMMONED) == false and IsUnitIllusion(NVE) == false then
@@ -14365,7 +14365,7 @@ function PDE ()
 	NVE = nil
 end
 
-function PEE ()
+function PEE()
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 5., " ")
 	A_V(5.)
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 5., "Game will end in |cffff000020|r seconds")
@@ -14385,7 +14385,7 @@ function PEE ()
 	ForForce(ZI, ref_function_PVE)
 end
 
-function PFE ()
+function PFE()
 	if GetEnumUnit() ~= RKing and GetEnumUnit() ~= LKing then
 		if IsUnitType(GetEnumUnit(), UNIT_TYPE_GIANT) or IsUnitType(GetEnumUnit(), UNIT_TYPE_SUMMONED) then
 			RemoveUnit(GetEnumUnit())
@@ -14393,20 +14393,20 @@ function PFE ()
 	end
 end
 
-function PGE ()
+function PGE()
 	RemoveUnit(GetEnumUnit())
 end
 
 ---@return boolean
-function PHE ()
+function PHE()
 	return GetUnitTypeId(GetFilterUnit()) == $75303036
 end
 
-function PIE ()
+function PIE()
 	GB[1 + GetPlayerId(GetOwningPlayer(GetEnumUnit()))] = GB[1 + GetPlayerId(GetOwningPlayer(GetEnumUnit()))] + GetUnitPointValue(GetEnumUnit())
 end
 
-function PJE ()
+function PJE()
 	ForGroup(ZE, ref_function_PFE)
 	GroupClear(ZE)
 	ForGroup(MD, ref_function_PFE)
@@ -14429,11 +14429,11 @@ function PJE ()
 end
 
 ---@return boolean
-function PKE ()
+function PKE()
 	return IsUnitType(GetFilterUnit(), UNIT_TYPE_GIANT) ~= false ~= false ~= false
 end
 
-function PLE ()
+function PLE()
 	if GetUnitTypeId(GetEnumUnit()) == FourCC('h066') or GetUnitTypeId(GetEnumUnit()) == FourCC('h067') or GetUnitTypeId(GetEnumUnit()) == FourCC('h068') or GetUnitTypeId(GetEnumUnit()) == FourCC('h0D3') then
 		SetUnitVertexColorBJ(GetEnumUnit(), 100., 100., 100., 35.)
 	end
@@ -14442,13 +14442,13 @@ function PLE ()
 	end
 end
 
-function PME ()
+function PME()
 	QE = IRE(bj_mapInitialPlayableArea, Condition(ref_function_PKE))
 	ForGroup(QE, ref_function_PLE)
 	A4V(QE)
 end
 
-function PNE ()
+function PNE()
 	ForForce(ZI, ref_function_PRE)
 	ForGroup(SE, ref_function_PIE)
 	ForGroup(MD, ref_function_PAE)
@@ -14456,7 +14456,7 @@ function PNE ()
 end
 
 ---@param ability_level number integer
-function Change_King_Abilities_level (ability_level)
+function Change_King_Abilities_level(ability_level)
 	SetUnitAbilityLevel(LKing, FourCC('A022'), ability_level)
 	SetUnitAbilityLevel(RKing, FourCC('A022'), ability_level)
 	SetUnitAbilityLevel(LKing, $41303154, ability_level)
@@ -14469,7 +14469,7 @@ end
 ---@param NEW_Barrack2 number integer
 ---@param NEW_Barrack3 number integer
 ---@param Check_Income number integer
-function Change_ALL_Barracks (NEW_Barrack1, NEW_Barrack2, NEW_Barrack3, Check_Income)
+function Change_ALL_Barracks(NEW_Barrack1, NEW_Barrack2, NEW_Barrack3, Check_Income)
 	local cycle_index = 1 ---@type number integer
 	if NEW_Barrack1 ~= 0 then
 		while(true) do
@@ -14521,7 +14521,7 @@ function Change_ALL_Barracks (NEW_Barrack1, NEW_Barrack2, NEW_Barrack3, Check_In
 	cycle_index = 1
 end
 
-function ChangeBarrackTime ()
+function ChangeBarrackTime()
 	local t ---@type timer
 	t = GetExpiredTimer()
 	if Now_Level == 9 then
@@ -14538,7 +14538,7 @@ function ChangeBarrackTime ()
 	t = nil
 end
 
-function After_Wave_Change_Barrack_and_King_States ()
+function After_Wave_Change_Barrack_and_King_States()
 	local t ---@type timer
 	if Now_Level < 5 then
 		Change_King_Abilities_level(1)
@@ -14579,11 +14579,11 @@ function After_Wave_Change_Barrack_and_King_States ()
 	t = nil
 end
 
-function POE ()
+function POE()
 	ForGroup(SE, ref_function_PXE)
 end
 
-function PPE ()
+function PPE()
 	local RSE ---@type player
 	local i_1 ---@type number integer
 	ForForce(ZI, ref_function_Vala)
@@ -14696,18 +14696,18 @@ function PPE ()
 end
 
 ---@return boolean
-function PQE ()
+function PQE()
 	return (IsUnitType(GetEnteringUnit(), UNIT_TYPE_SUMMONED) and IsUnitType(GetEnteringUnit(), UNIT_TYPE_GIANT) == false and IsUnitType(GetEnteringUnit(), UNIT_TYPE_UNDEAD) == false and GetOwningPlayer(GetEnteringUnit()) ~= Player(8) and GetOwningPlayer(GetEnteringUnit()) ~= Player(9) and GetOwningPlayer(GetEnteringUnit()) ~= Player(10) and GetOwningPlayer(GetEnteringUnit()) ~= Player(11) and GetOwningPlayer(GetEnteringUnit()) ~= Player(14) and GetOwningPlayer(GetEnteringUnit()) ~= Player(15)) ~= false ~= false ~= false
 end
 
-function PRE ()
+function PRE()
 	GB[1 + GetPlayerId(GetEnumPlayer())] = 0
 	PD[1 + GetPlayerId(GetEnumPlayer())] = 0
 end
 
 ---@param u_1 unit
 ---@param p player
-function CreateBothIncomeTexttags (u_1, p)
+function CreateBothIncomeTexttags(u_1, p)
 	local result_1 = 0 ---@type number integer
 	local resultTrash = 0 ---@type number integer
 	local id_1 = GetUnitTypeId(u_1) ---@type number integer
@@ -14754,7 +14754,7 @@ function CreateBothIncomeTexttags (u_1, p)
 	end
 end
 
-function PSE ()
+function PSE()
 	local u2 = GetEnteringUnit() ---@type unit
 	local RSE = GetOwningPlayer(u2) ---@type player
 	local IQE = GetPlayerId(RSE) + 1 ---@type number integer
@@ -14797,16 +14797,16 @@ function PSE ()
 	u_1 = nil
 end
 
-function PUE ()
+function PUE()
 	AX = AX + 1
 	ZA[AX] = GetEnumPlayer()
 end
 
-function PVE ()
+function PVE()
 	EndGame(true)
 end
 
-function PXE ()
+function PXE()
 	local NVE = GetEnumUnit() ---@type unit
 	local x_1 = GetUnitX(NVE) ---@type number real
 	local y_1 = GetUnitY(NVE) ---@type number real
@@ -14843,12 +14843,12 @@ function PXE ()
 	RSE = nil
 end
 
-function PYE ()
+function PYE()
 	EO = EO + 1
 	VN[EO] = GetEnumPlayer()
 end
 
-function PZE ()
+function PZE()
 	local player_id = GetUnitUserData(GetEnumUnit()) - 1 ---@type number integer
 	local iter = 0 ---@type number integer
 	local randi = 0 ---@type number integer
@@ -14879,7 +14879,7 @@ function PZE ()
 	IssuePointOrderByIdLoc(GetEnumUnit(), 851983, CO[1 + player_id])
 end
 
-function PZE_OLD ()
+function PZE_OLD()
 	local P9 = GetPlayerId(ZA[YA]) ---@type number integer
 	if P9 == 4 or P9 == 5 then
 		SetUnitOwner(GetEnumUnit(), Player(11), false)
@@ -14898,7 +14898,7 @@ function PZE_OLD ()
 	end
 end
 
-function Q0E ()
+function Q0E()
 	local NVE = GetTriggerUnit() ---@type unit
 	local x_1 = GetUnitX(NVE) ---@type number real
 	local y_1 = GetUnitY(NVE) ---@type number real
@@ -14952,60 +14952,60 @@ function Q0E ()
 	NVE = nil
 end
 
-function Q1E ()
+function Q1E()
 	SetUnitVertexColorBJ(GetTriggerUnit(), 100., 100., 100., 100.)
 end
 
 ---@return boolean
-function Q2E ()
+function Q2E()
 	return GetUnitTypeId(GetTriggerUnit()) == $75303049
 end
 
 ---@return boolean
-function Q5E ()
+function Q5E()
 	return GetUnitTypeId(GetTriggerUnit()) == $75303049
 end
 
 ---@return boolean
-function Q6E ()
+function Q6E()
 	return RX
 end
 
-function Q7E ()
+function Q7E()
 	SetUnitFlyHeight(GetTriggerUnit(), GetUnitDefaultFlyHeight(GetTriggerUnit()), 0.)
 	DisplayTimedTextToPlayer(GetTriggerPlayer(), 0., 0., 11., "|cffBB3333Hybrid|r towers always sell for 50%, even if newly built.")
 end
 
 ---@return boolean
-function Q9E ()
+function Q9E()
 	return GetBooleanOr(GetUnitTypeId(GetFilterUnit()) == $68303656, GetUnitTypeId(GetFilterUnit()) == $6830365A)
 end
 
 ---@return boolean
-function QAE ()
+function QAE()
 	return (IsUnitType(GetTriggerUnit(), UNIT_TYPE_STRUCTURE) and GetOwningPlayer(GetTriggerUnit()) == GetTriggerPlayer()) ~= false ~= false ~= false
 end
 
 ---@return boolean
-function QBE ()
+function QBE()
 	return IsUnitInGroup(GetTriggerUnit(), RE[1 + GetPlayerId(GetTriggerPlayer())])
 end
 
-function QCE ()
+function QCE()
 	GroupRemoveUnit(RE[1 + GetPlayerId(GetTriggerPlayer())], GetTriggerUnit())
 end
 
 ---@return boolean
-function QDE ()
+function QDE()
 	return (GetOwningPlayer(GetLeavingUnit()) == Player(0) and IsUnitType(GetLeavingUnit(), UNIT_TYPE_UNDEAD) and OB == false) ~= false ~= false ~= false
 end
 
-function QEE ()
+function QEE()
 	GroupRemoveUnit(TN, GetTriggerUnit())
 	TriggerExecute(WU)
 end
 
-function QFE ()
+function QFE()
 	local x_1 = GetPlayerStartLocationX(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	local y_1 = GetPlayerStartLocationY(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	DestroyEffect(AddSpecialEffect("Abilities\\Spells\\Other\\Charm\\CharmTarget.mdl", x_1, y_1))
@@ -15014,7 +15014,7 @@ function QFE ()
 	PanCameraToTimedForPlayer(GetOwningPlayer(GetLeavingUnit()), x_1, y_1, 0.)
 end
 
-function QGE ()
+function QGE()
 	local x_1 = GetPlayerStartLocationX(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	local y_1 = GetPlayerStartLocationY(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	DestroyEffect(AddSpecialEffect("Abilities\\Spells\\Other\\Charm\\CharmTarget.mdl", x_1, y_1))
@@ -15024,18 +15024,18 @@ function QGE ()
 end
 
 ---@return boolean
-function QHE ()
+function QHE()
 	return (GetOwningPlayer(GetLeavingUnit()) == Player(2) and IsUnitType(GetLeavingUnit(), UNIT_TYPE_UNDEAD) and OB == false) ~= false ~= false ~= false
 end
 
-function QIE ()
+function QIE()
 	PE = GetCancelledStructure()
 	GroupRemoveUnit(SE, PE)
 	GroupRemoveUnit(SN, PE)
 	TriggerExecute(WU)
 end
 
-function QJE ()
+function QJE()
 	local x_1 = GetPlayerStartLocationX(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	local y_1 = GetPlayerStartLocationY(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	DestroyEffect(AddSpecialEffect("Abilities\\Spells\\Other\\Charm\\CharmTarget.mdl", x_1, y_1))
@@ -15045,11 +15045,11 @@ function QJE ()
 end
 
 ---@return boolean
-function QKE ()
+function QKE()
 	return (GetOwningPlayer(GetLeavingUnit()) == Player(3) and IsUnitType(GetLeavingUnit(), UNIT_TYPE_UNDEAD) and OB == false) ~= false ~= false ~= false
 end
 
-function QLE ()
+function QLE()
 	local x_1 = GetPlayerStartLocationX(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	local y_1 = GetPlayerStartLocationY(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	DestroyEffect(AddSpecialEffect("Abilities\\Spells\\Other\\Charm\\CharmTarget.mdl", x_1, y_1))
@@ -15059,15 +15059,15 @@ function QLE ()
 end
 
 ---@return boolean
-function QME ()
+function QME()
 	return (GetOwningPlayer(GetLeavingUnit()) == Player(4) and IsUnitType(GetLeavingUnit(), UNIT_TYPE_UNDEAD) and OB == false) ~= false ~= false ~= false
 end
 
-function QNE ()
+function QNE()
 	GroupAddUnit(RE[1 + GetPlayerId(GetTriggerPlayer())], GetTriggerUnit())
 end
 
-function QOE ()
+function QOE()
 	PE = GetTriggerUnit()
 	SetUnitVertexColorBJ(PE, 100., 100., 100., 50.)
 	SetUnitTimeScalePercent(PE, 0.)
@@ -15089,7 +15089,7 @@ function QOE ()
 	end
 end
 
-function QPE ()
+function QPE()
 	local x_1 = GetPlayerStartLocationX(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	local y_1 = GetPlayerStartLocationY(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	DestroyEffect(AddSpecialEffect("Abilities\\Spells\\Other\\Charm\\CharmTarget.mdl", x_1, y_1))
@@ -15099,16 +15099,16 @@ function QPE ()
 end
 
 ---@return boolean
-function QQE ()
+function QQE()
 	return (GetOwningPlayer(GetLeavingUnit()) == Player(5) and IsUnitType(GetLeavingUnit(), UNIT_TYPE_UNDEAD) and OB == false) ~= false ~= false ~= false
 end
 
 ---@return boolean
-function QRE ()
+function QRE()
 	return IsUnitType(GetCancelledStructure(), UNIT_TYPE_ANCIENT) ~= false ~= false ~= false
 end
 
-function QSE ()
+function QSE()
 	local x_1 = GetPlayerStartLocationX(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	local y_1 = GetPlayerStartLocationY(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	DestroyEffect(AddSpecialEffect("Abilities\\Spells\\Other\\Charm\\CharmTarget.mdl", x_1, y_1))
@@ -15118,11 +15118,11 @@ function QSE ()
 end
 
 ---@return boolean
-function QTE ()
+function QTE()
 	return (GetOwningPlayer(GetLeavingUnit()) == Player(6) and IsUnitType(GetLeavingUnit(), UNIT_TYPE_UNDEAD) and OB == false) ~= false ~= false ~= false
 end
 
-function QUE ()
+function QUE()
 	local x_1 = GetPlayerStartLocationX(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	local y_1 = GetPlayerStartLocationY(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	DestroyEffect(AddSpecialEffect("Abilities\\Spells\\Other\\Charm\\CharmTarget.mdl", x_1, y_1))
@@ -15132,16 +15132,16 @@ function QUE ()
 end
 
 ---@return boolean
-function QVE ()
+function QVE()
 	return IsUnitType(GetTriggerUnit(), UNIT_TYPE_ANCIENT) ~= false ~= false ~= false
 end
 
 ---@return boolean
-function QWE ()
+function QWE()
 	return (GetOwningPlayer(GetLeavingUnit()) == Player(7) and IsUnitType(GetLeavingUnit(), UNIT_TYPE_UNDEAD) and OB == false) ~= false ~= false ~= false
 end
 
-function QXE ()
+function QXE()
 	local p ---@type player
 	local id_1 ---@type number integer
 	local x_1 ---@type number real
@@ -15173,7 +15173,7 @@ function QXE ()
 	p = nil
 end
 
-function QYE ()
+function QYE()
 	local x_1 = GetPlayerStartLocationX(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	local y_1 = GetPlayerStartLocationY(GetOwningPlayer(GetLeavingUnit())) ---@type number real
 	DestroyEffect(AddSpecialEffect("Abilities\\Spells\\Other\\Charm\\CharmTarget.mdl", x_1, y_1))
@@ -15182,7 +15182,7 @@ function QYE ()
 	PanCameraToTimedForPlayer(GetOwningPlayer(GetLeavingUnit()), x_1, y_1, 0.)
 end
 
-function QZE ()
+function QZE()
 	local i_1 ---@type number integer
 	EE = 0
 	EE = EE + 1
@@ -15381,38 +15381,38 @@ function QZE ()
 end
 
 ---@return boolean
-function Q_E ()
+function Q_E()
 	return GetUnitTypeId(GetTriggerUnit()) == $68303744 or GetUnitTypeId(GetTriggerUnit()) == $68303745 or GetUnitTypeId(GetTriggerUnit()) == $68303747 or GetUnitTypeId(GetTriggerUnit()) == $68303746 or GetUnitTypeId(GetTriggerUnit()) == $68303748 or GetUnitTypeId(GetTriggerUnit()) == $68303749
 end
 
 ---@return boolean
-function RBE ()
+function RBE()
 	return GetUnitTypeId(GetFilterUnit()) == $68304157 or GetUnitTypeId(GetFilterUnit()) == $68304137 or GetUnitTypeId(GetFilterUnit()) == $68304156 and NVV(GetFilterUnit()) == false
 end
 
-function R0E ()
+function R0E()
 	if RBE() == false and OME() == false then
 		GroupAddUnit(P8, GetTriggerUnit())
 	end
 end
 
-function R0X ()
+function R0X()
 	SetPlayerTechMaxAllowedSwap($75303050, 0, GetEnumPlayer())
 	SetPlayerTechMaxAllowedSwap($52303049, 0, GetEnumPlayer())
 end
 
-function R1X ()
+function R1X()
 	DisableTrigger(GetTriggeringTrigger())
 	modeLI = true
 	ForForce(ZI, ref_function_R0X)
 end
 
 ---@return boolean
-function R2X ()
+function R2X()
 	return YN == false
 end
 
-function R3X ()
+function R3X()
 	DisableTrigger(GetTriggeringTrigger())
 	YN = true
 	bj_forLoopAIndex = 1
@@ -15436,11 +15436,11 @@ function R3X ()
 end
 
 ---@return boolean
-function R4X ()
+function R4X()
 	return modeMM == false
 end
 
-function R5X ()
+function R5X()
 	EE = 1 + GetPlayerId(GetEnumPlayer())
 	if IsPlayerAlly(GetEnumPlayer(), Player(8)) then
 		FogModifierStop(CF[EE])
@@ -15455,7 +15455,7 @@ function R5X ()
 	end
 end
 
-function R6X ()
+function R6X()
 	DisableTrigger(GetTriggeringTrigger())
 	modeMM = true
 	FogEnableOn()
@@ -15464,49 +15464,49 @@ function R6X ()
 end
 
 ---@return boolean
-function R7X ()
+function R7X()
 	return modeHG == false
 end
 
-function OHE ()
+function OHE()
 	local t = CreateTimer() ---@type timer
 	TimerStart(t, 1., false, ref_function_OGE)
 	t = nil
 end
 
-function R8E ()
+function R8E()
 	PauseUnit(GetTriggerUnit(), true)
 	IssueImmediateOrderById(GetTriggerUnit(), 851972)
 	PauseUnit(GetTriggerUnit(), false)
 	OHE()
 end
 
-function R8X ()
+function R8X()
 	DisableTrigger(GetTriggeringTrigger())
 	modeHG = true
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 10., "|cffFF8C00Карта существует на пожертвованиях. Если хотите поддержать карту, то обращайтесь в наш дискорд-канал:|r |cff9ACD32https://discord.gg/VyMDE8vZ4P|r, или телеграмм: |cff9ACD32https://t.me/+ciHUEHiatbgyYWNi|r")
 end
 
 ---@return boolean
-function R9X ()
+function R9X()
 	return modeGG == false
 end
 
-function RAX ()
+function RAX()
 	if GetUnitTypeId(GetEnumUnit()) ~= $6830304B and GetUnitTypeId(GetEnumUnit()) ~= $68303648 then
 		ExplodeUnitBJ(GetEnumUnit())
 		GroupRemoveUnit(SE, GetEnumUnit())
 	end
 end
 
-function RCE ()
+function RCE()
 	if RBE() == false and GetUnitTypeId(GetFilterUnit()) == $68303854 == false and GetUnitTypeId(GetFilterUnit()) == $68313133 == false and GetUnitTypeId(GetFilterUnit()) == $68313135 == false and GetUnitTypeId(GetFilterUnit()) == $68313137 == false and GetUnitTypeId(GetFilterUnit()) == $68313139 == false and IsUnitIllusion(GetFilterUnit()) == false and IsUnitIllusion(GetSummonedUnit()) == false and GetUnitTypeId(GetFilterUnit()) == $6E303039 == false and GetUnitTypeId(GetFilterUnit()) == $68303832 == false and GetUnitTypeId(GetFilterUnit()) == $68303833 == false then
 		UnitApplyTimedLifeBJ(150., $42544C46, GetTriggerUnit())
 	end
 end
 
 ---@return boolean
-function RBX ()
+function RBX()
 	local b = false ---@type boolean
 	if CountPlayersInForceBJ(EastLudi) == 0 then
 		b = true
@@ -15515,7 +15515,7 @@ function RBX ()
 end
 
 ---@return boolean
-function RNX ()
+function RNX()
 	local b = false ---@type boolean
 	if CountPlayersInForceBJ(WestLudi) == 0 then
 		b = true
@@ -15523,7 +15523,7 @@ function RNX ()
 	return b
 end
 
-function RCX ()
+function RCX()
 	OX = Player(-1 + SF)
 	MultiboardSetItemValueBJ(JR, 1, DC[1 + GetPlayerId(OX)], "|cff888888" .. GetPlayerName(Player(-1 + 1 + GetPlayerId(OX))) .. "|r")
 	ForceRemovePlayer(ZI, OX)
@@ -15587,7 +15587,7 @@ function RCX ()
 end
 
 ---@return boolean
-function RDE ()
+function RDE()
 	return IsUnitType(GetTriggerUnit(), UNIT_TYPE_SAPPER) ~= false ~= false
 end
 
@@ -15595,11 +15595,11 @@ end
 ---@param IEE number real
 ---@param IXE number real
 ---@return location
-function R9E (IVE, IEE, IXE)
+function R9E(IVE, IEE, IXE)
 	return Location(GetLocationX(IVE) + IEE * Cos(IXE * bj_DEGTORAD), GetLocationY(IVE) + IEE * Sin(IXE * bj_DEGTORAD))
 end
 
-function RDX ()
+function RDX()
 	FE = GetUnitLoc(KV[1 + GetPlayerId(Player(0))])
 	NX = R9E(FE, -400., 0.)
 	CreateTextTagLocBJ("Primary Mode (pick 1 only)
@@ -15631,7 +15631,7 @@ function RDX ()
 	RemoveLocation(NX)
 end
 
-function REX ()
+function REX()
 	EE = CountPlayersInForceBJ(ZI)
 	if GetClickedButton() == MF then
 		TF = TF + 1
@@ -15671,7 +15671,7 @@ function REX ()
 	MultiboardDisplay(JR, true)
 end
 
-function RFE ()
+function RFE()
 	local i_1 = 1 ---@type number integer
 	UnitAddAbility(GetTriggerUnit(), $41657468)
 	if GetUnitAbilityLevel(GetTriggerUnit(), $41393231) > 0 then
@@ -15686,18 +15686,18 @@ function RFE ()
 	end
 end
 
-function RFX ()
+function RFX()
 	DisableTrigger(GetTriggeringTrigger())
 	EC = true
 	modeAP = true
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 3., "|cffFFcc00All Pick (default)|r: pick your race with your Race Picker unit.")
 end
 
-function RGE ()
+function RGE()
 	UnitRemoveAbility(GetTriggerUnit(), $41657468)
 end
 
-function RHX ()
+function RHX()
 	DisableTrigger(GetTriggeringTrigger())
 	EC = true
 	modePH = true
@@ -15707,13 +15707,13 @@ function RHX ()
 	DisplayTimedTextToPlayer(GetTriggerPlayer(), 0., 0., 11., "|cffBB3333Hybrid|r towers always sell for 50%, even if newly built.")
 end
 
-function RIX ()
+function RIX()
 	YF = false
 	ForForce(ZI, ref_function_RRX)
 	MultiboardDisplay(JR, true)
 end
 
-function RJX ()
+function RJX()
 	local p = GetEnumPlayer() ---@type player
 	SetPlayerTechMaxAllowedSwap($52303047, 1, p)
 	if GetPlayerName(p) == "G0mez" then
@@ -15911,56 +15911,56 @@ function RJX ()
 	p = nil
 end
 
-function CreateUnitAndGetShadoTelegramRight ()
+function CreateUnitAndGetShadoTelegramRight()
 	local whichImage = CreateImage("QRTelegaLTD.blp", 512, 512, 0, 4415, 2755, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function CreateUnitAndGetShadoTelegramLeft ()
+function CreateUnitAndGetShadoTelegramLeft()
 	local whichImage = CreateImage("QRTelegaLTD.blp", 512, 512, 0, -4735, 2755, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function CreateUnitAndGetShadoVUDIAGRight ()
+function CreateUnitAndGetShadoVUDIAGRight()
 	local whichImage = CreateImage("VudiagBLP.blp", 512, 512, 0, 4415, 4350, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function CreateUnitAndGetShadoVUDIAGLeft ()
+function CreateUnitAndGetShadoVUDIAGLeft()
 	local whichImage = CreateImage("VudiagBLP.blp", 512, 512, 0, -4735, 4285, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function CreateUnitAndGetShadoDisRight ()
+function CreateUnitAndGetShadoDisRight()
 	local whichImage = CreateImage("T-BankBLP.blp", 512, 512, 0, 3200.00, -895.00, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function CreateUnitAndGetShadoDisLeft ()
+function CreateUnitAndGetShadoDisLeft()
 	local whichImage = CreateImage("T-BankBLP.blp", 512, 512, 0, -5887.00, -895.00, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function CreateUnitAndGetShadoTBankRight ()
+function CreateUnitAndGetShadoTBankRight()
 	local whichImage = CreateImage("DiscordBLP.blp", 512, 512, 0, 5504, -895, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function CreateUnitAndGetShadoTBankLeft ()
+function CreateUnitAndGetShadoTBankLeft()
 	local whichImage = CreateImage("DiscordBLP.blp", 512, 512, 0, -3584, -895, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
 ---@return boolean
-function Trig_TreePick_Func001Func001C ()
+function Trig_TreePick_Func001Func001C()
 	if (not (GetPlayerName(Player(0)) == "G0mez")) then
 		return false
 	end
@@ -15970,7 +15970,7 @@ function Trig_TreePick_Func001Func001C ()
 	return true
 end
 
-function Trig_TreePick_Func001A ()
+function Trig_TreePick_Func001A()
 	if (Trig_TreePick_Func001Func001C()) then
 		CreateDestructableLoc(FourCC('YTft'), GetDestructableLoc(GetEnumDestructable()), GetRandomDirectionDeg(), 1, 0)
 		RemoveDestructable(GetEnumDestructable())
@@ -15979,7 +15979,7 @@ function Trig_TreePick_Func001A ()
 end
 
 ---@return boolean
-function Trig_TreePick_Func002Func001C ()
+function Trig_TreePick_Func002Func001C()
 	if (not (GetPlayerName(Player(1)) == "G0mez")) then
 		return false
 	end
@@ -15989,7 +15989,7 @@ function Trig_TreePick_Func002Func001C ()
 	return true
 end
 
-function Trig_TreePick_Func002A ()
+function Trig_TreePick_Func002A()
 	if (Trig_TreePick_Func002Func001C()) then
 		CreateDestructableLoc(FourCC('YTft'), GetDestructableLoc(GetEnumDestructable()), GetRandomDirectionDeg(), 1, 0)
 		RemoveDestructable(GetEnumDestructable())
@@ -15998,7 +15998,7 @@ function Trig_TreePick_Func002A ()
 end
 
 ---@return boolean
-function Trig_TreePick_Func003Func001C ()
+function Trig_TreePick_Func003Func001C()
 	if (not (GetPlayerName(Player(2)) == "G0mez")) then
 		return false
 	end
@@ -16008,7 +16008,7 @@ function Trig_TreePick_Func003Func001C ()
 	return true
 end
 
-function Trig_TreePick_Func003A ()
+function Trig_TreePick_Func003A()
 	if (Trig_TreePick_Func003Func001C()) then
 		CreateDestructableLoc(FourCC('YTft'), GetDestructableLoc(GetEnumDestructable()), GetRandomDirectionDeg(), 1, 0)
 		RemoveDestructable(GetEnumDestructable())
@@ -16017,7 +16017,7 @@ function Trig_TreePick_Func003A ()
 end
 
 ---@return boolean
-function Trig_TreePick_Func004Func001C ()
+function Trig_TreePick_Func004Func001C()
 	if (not (GetPlayerName(Player(3)) == "G0mez")) then
 		return false
 	end
@@ -16027,7 +16027,7 @@ function Trig_TreePick_Func004Func001C ()
 	return true
 end
 
-function Trig_TreePick_Func004A ()
+function Trig_TreePick_Func004A()
 	if (Trig_TreePick_Func004Func001C()) then
 		CreateDestructableLoc(FourCC('YTft'), GetDestructableLoc(GetEnumDestructable()), GetRandomDirectionDeg(), 1, 0)
 		RemoveDestructable(GetEnumDestructable())
@@ -16036,7 +16036,7 @@ function Trig_TreePick_Func004A ()
 end
 
 ---@return boolean
-function Trig_TreePick_Func005Func001C ()
+function Trig_TreePick_Func005Func001C()
 	if (not (GetPlayerName(Player(4)) == "G0mez")) then
 		return false
 	end
@@ -16046,7 +16046,7 @@ function Trig_TreePick_Func005Func001C ()
 	return true
 end
 
-function Trig_TreePick_Func005A ()
+function Trig_TreePick_Func005A()
 	if (Trig_TreePick_Func005Func001C()) then
 		CreateDestructableLoc(FourCC('YTft'), GetDestructableLoc(GetEnumDestructable()), GetRandomDirectionDeg(), 1, 0)
 		RemoveDestructable(GetEnumDestructable())
@@ -16055,7 +16055,7 @@ function Trig_TreePick_Func005A ()
 end
 
 ---@return boolean
-function Trig_TreePick_Func006Func001C ()
+function Trig_TreePick_Func006Func001C()
 	if (not (GetPlayerName(Player(5)) == "G0mez")) then
 		return false
 	end
@@ -16065,7 +16065,7 @@ function Trig_TreePick_Func006Func001C ()
 	return true
 end
 
-function Trig_TreePick_Func006A ()
+function Trig_TreePick_Func006A()
 	if (Trig_TreePick_Func006Func001C()) then
 		CreateDestructableLoc(FourCC('YTft'), GetDestructableLoc(GetEnumDestructable()), GetRandomDirectionDeg(), 1, 0)
 		RemoveDestructable(GetEnumDestructable())
@@ -16074,7 +16074,7 @@ function Trig_TreePick_Func006A ()
 end
 
 ---@return boolean
-function Trig_TreePick_Func007Func001C ()
+function Trig_TreePick_Func007Func001C()
 	if (not (GetPlayerName(Player(6)) == "G0mez")) then
 		return false
 	end
@@ -16084,7 +16084,7 @@ function Trig_TreePick_Func007Func001C ()
 	return true
 end
 
-function Trig_TreePick_Func007A ()
+function Trig_TreePick_Func007A()
 	if (Trig_TreePick_Func007Func001C()) then
 		CreateDestructableLoc(FourCC('YTft'), GetDestructableLoc(GetEnumDestructable()), GetRandomDirectionDeg(), 1, 0)
 		RemoveDestructable(GetEnumDestructable())
@@ -16093,7 +16093,7 @@ function Trig_TreePick_Func007A ()
 end
 
 ---@return boolean
-function Trig_TreePick_Func008Func001C ()
+function Trig_TreePick_Func008Func001C()
 	if (not (GetPlayerName(Player(7)) == "G0mez")) then
 		return false
 	end
@@ -16103,7 +16103,7 @@ function Trig_TreePick_Func008Func001C ()
 	return true
 end
 
-function Trig_TreePick_Func008A ()
+function Trig_TreePick_Func008A()
 	if (Trig_TreePick_Func008Func001C()) then
 		CreateDestructableLoc(FourCC('YTft'), GetDestructableLoc(GetEnumDestructable()), GetRandomDirectionDeg(), 1, 0)
 		RemoveDestructable(GetEnumDestructable())
@@ -16111,7 +16111,7 @@ function Trig_TreePick_Func008A ()
 	end
 end
 
-function Trig_TreePick_Actions ()
+function Trig_TreePick_Actions()
 	EnumDestructablesInCircleBJ(500.00, Location(-5700.00, 5500.00), Trig_TreePick_Func001A)
 	EnumDestructablesInCircleBJ(500.00, Location(-5700.00, 1600.00), Trig_TreePick_Func002A)
 	EnumDestructablesInCircleBJ(500.00, Location(-3400.00, 5500.00), Trig_TreePick_Func003A)
@@ -16122,551 +16122,551 @@ function Trig_TreePick_Actions ()
 	EnumDestructablesInCircleBJ(500.00, Location(5700.00, 1600.00), Trig_TreePick_Func008A)
 end
 
-function InitTrig_TreePick ()
+function InitTrig_TreePick()
 	gg_trg_TreePick = CreateTrigger()
 	TriggerRegisterTimerEventSingle(gg_trg_TreePick, 1.00)
 	TriggerAddAction(gg_trg_TreePick, Trig_TreePick_Actions)
 end
 
-function SpawnImageSweetR ()
+function SpawnImageSweetR()
 	local whichImage = CreateImage("SweetKiSsBLP.blp", 512, 512, 0, -7610, 4480, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 	whichImage = nil
 end
 
-function SpawnImageSweetB ()
+function SpawnImageSweetB()
 	local whichImage = CreateImage("SweetKiSsBLP.blp", 512, 512, 0, -7610, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSweetBR ()
+function SpawnImageSweetBR()
 	local whichImage = CreateImage("SweetKiSsBLP.blp", 512, 512, 0, -2490, 4480, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSweetP ()
+function SpawnImageSweetP()
 	local whichImage = CreateImage("SweetKiSsBLP.blp", 512, 512, 0, -2490, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSweetY ()
+function SpawnImageSweetY()
 	local whichImage = CreateImage("SweetKiSsBLP.blp", 512, 512, 0, 1478, 4480, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSweetYY ()
+function SpawnImageSweetYY()
 	local whichImage = CreateImage("SweetKiSsBLP.blp", 512, 512, 0, 1478, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSweetG ()
+function SpawnImageSweetG()
 	local whichImage = CreateImage("SweetKiSsBLP.blp", 512, 512, 0, 6596, 4480, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSweetPI ()
+function SpawnImageSweetPI()
 	local whichImage = CreateImage("SweetKiSsBLP.blp", 512, 512, 0, 6596, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSweet ()
+function SpawnImageSweet()
 	local whichImage = CreateImage("SweetBLP2.blp", 512, 512, 0, -6975, 4480, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSweetB1 ()
+function SpawnImageSweetB1()
 	local whichImage = CreateImage("SweetBLP2.blp", 512, 512, 0, -6975, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSweetBR1 ()
+function SpawnImageSweetBR1()
 	local whichImage = CreateImage("SweetBLP2.blp", 512, 512, 0, -1855, 4480, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSweetP1 ()
+function SpawnImageSweetP1()
 	local whichImage = CreateImage("SweetBLP2.blp", 512, 512, 0, -1855, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSweetY1 ()
+function SpawnImageSweetY1()
 	local whichImage = CreateImage("SweetBLP2.blp", 512, 512, 0, 2113, 4480, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSweetYY1 ()
+function SpawnImageSweetYY1()
 	local whichImage = CreateImage("SweetBLP2.blp", 512, 512, 0, 2113, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSweetG1 ()
+function SpawnImageSweetG1()
 	local whichImage = CreateImage("SweetBLP2.blp", 512, 512, 0, 7230, 4480, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSweetPI1 ()
+function SpawnImageSweetPI1()
 	local whichImage = CreateImage("SweetBLP2.blp", 512, 512, 0, 7230, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageG0mezR ()
+function SpawnImageG0mezR()
 	local whichImage = CreateImage("GutsBLP.blp", 896, 512, 0, -7488, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageG0mezB ()
+function SpawnImageG0mezB()
 	local whichImage = CreateImage("GutsBLP.blp", 896, 512, 0, -7488, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageG0mezBR ()
+function SpawnImageG0mezBR()
 	local whichImage = CreateImage("GutsBLP.blp", 896, 512, 0, -2368, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageG0mezP ()
+function SpawnImageG0mezP()
 	local whichImage = CreateImage("GutsBLP.blp", 896, 512, 0, -2368, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageG0mezY ()
+function SpawnImageG0mezY()
 	local whichImage = CreateImage("GutsBLP.blp", 896, 512, 0, 1600, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageG0mezYY ()
+function SpawnImageG0mezYY()
 	local whichImage = CreateImage("GutsBLP.blp", 896, 512, 0, 1600, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageG0mezG ()
+function SpawnImageG0mezG()
 	local whichImage = CreateImage("GutsBLP.blp", 896, 512, 0, 6718, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageG0mezPI ()
+function SpawnImageG0mezPI()
 	local whichImage = CreateImage("GutsBLP.blp", 896, 512, 0, 6718, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageSEGAR ()
+function SpawnImageSEGAR()
 	local whichImage = CreateImage("SegaBLP.blp", 640, 384, 0, -7488, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 	CreateTextTagLocBJ("|c000000FFSEGA 2.0", Location(-7750, 4875), 0, 15, 100, 100, 100, 0)
 end
 
-function SpawnImageSEGAB ()
+function SpawnImageSEGAB()
 	local whichImage = CreateImage("SegaBLP.blp", 640, 384, 0, -7488, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 	CreateTextTagLocBJ("|c000000FFSEGA 2.0", Location(-7750, 775), 0, 15, 100, 100, 100, 0)
 end
 
-function SpawnImageSEGABR ()
+function SpawnImageSEGABR()
 	local whichImage = CreateImage("SegaBLP.blp", 640, 384, 0, -2368, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 	CreateTextTagLocBJ("|c000000FFSEGA 2.0", Location(-2630, 4875), 0, 15, 100, 100, 100, 0)
 end
 
-function SpawnImageSEGAP ()
+function SpawnImageSEGAP()
 	local whichImage = CreateImage("SegaBLP.blp", 640, 384, 0, -2368, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 	CreateTextTagLocBJ("|c000000FFSEGA 2.0", Location(-2630, 775), 0, 15, 100, 100, 100, 0)
 end
 
-function SpawnImageSEGAY ()
+function SpawnImageSEGAY()
 	local whichImage = CreateImage("SegaBLP.blp", 640, 384, 0, 1600, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 	CreateTextTagLocBJ("|c000000FFSEGA 2.0", Location(1350, 4875), 0, 15, 100, 100, 100, 0)
 end
 
-function SpawnImageSEGAYY ()
+function SpawnImageSEGAYY()
 	local whichImage = CreateImage("SegaBLP.blp", 640, 384, 0, 1600, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 	CreateTextTagLocBJ("|c000000FFSEGA 2.0", Location(1350, 775), 0, 15, 100, 100, 100, 0)
 end
 
-function SpawnImageSEGAG ()
+function SpawnImageSEGAG()
 	local whichImage = CreateImage("SegaBLP.blp", 640, 384, 0, 6718, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 	CreateTextTagLocBJ("|c000000FFSEGA 2.0", Location(6450, 4875), 0, 15, 100, 100, 100, 0)
 end
 
-function SpawnImageSEGAPI ()
+function SpawnImageSEGAPI()
 	local whichImage = CreateImage("SegaBLP.blp", 640, 512, 0, 6718, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 	CreateTextTagLocBJ("|c000000FFSEGA 2.0", Location(6450, 775), 0, 15, 100, 100, 100, 0)
 end
 
-function SpawnImagee6aTbR ()
+function SpawnImagee6aTbR()
 	local whichImage = CreateImage("ee6aTb.blp", 896, 512, 0, -7488, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagee6aTbB ()
+function SpawnImagee6aTbB()
 	local whichImage = CreateImage("ee6aTb.blp", 896, 512, 0, -7488, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagee6aTbBR ()
+function SpawnImagee6aTbBR()
 	local whichImage = CreateImage("ee6aTb.blp", 896, 512, 0, -2368, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagee6aTbP ()
+function SpawnImagee6aTbP()
 	local whichImage = CreateImage("ee6aTb.blp", 896, 512, 0, -2368, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagee6aTbY ()
+function SpawnImagee6aTbY()
 	local whichImage = CreateImage("ee6aTb.blp", 896, 512, 0, 1600, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagee6aTbYY ()
+function SpawnImagee6aTbYY()
 	local whichImage = CreateImage("ee6aTb.blp", 896, 512, 0, 1600, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagee6aTbG ()
+function SpawnImagee6aTbG()
 	local whichImage = CreateImage("ee6aTb.blp", 896, 512, 0, 6718, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagee6aTbPI ()
+function SpawnImagee6aTbPI()
 	local whichImage = CreateImage("ee6aTb.blp", 896, 512, 0, 6718, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagemissR ()
+function SpawnImagemissR()
 	local whichImage = CreateImage("miss.blp", 896, 512, 0, -7488, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagemissB ()
+function SpawnImagemissB()
 	local whichImage = CreateImage("miss.blp", 896, 512, 0, -7488, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagemissBR ()
+function SpawnImagemissBR()
 	local whichImage = CreateImage("miss.blp", 896, 512, 0, -2368, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagemissP ()
+function SpawnImagemissP()
 	local whichImage = CreateImage("miss.blp", 896, 512, 0, -2368, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagemissY ()
+function SpawnImagemissY()
 	local whichImage = CreateImage("miss.blp", 896, 512, 0, 1600, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagemissYY ()
+function SpawnImagemissYY()
 	local whichImage = CreateImage("miss.blp", 896, 512, 0, 1600, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagemissG ()
+function SpawnImagemissG()
 	local whichImage = CreateImage("miss.blp", 896, 512, 0, 6718, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagemissPI ()
+function SpawnImagemissPI()
 	local whichImage = CreateImage("miss.blp", 896, 512, 0, 6718, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageGustavosR ()
+function SpawnImageGustavosR()
 	local whichImage = CreateImage("GustaBLP.blp", 896, 512, 0, -7488, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageGustavosB ()
+function SpawnImageGustavosB()
 	local whichImage = CreateImage("GustaBLP.blp", 896, 512, 0, -7488, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageGustavosBR ()
+function SpawnImageGustavosBR()
 	local whichImage = CreateImage("GustaBLP.blp", 896, 512, 0, -2368, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageGustavosP ()
+function SpawnImageGustavosP()
 	local whichImage = CreateImage("GustaBLP.blp", 896, 512, 0, -2368, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageGustavosY ()
+function SpawnImageGustavosY()
 	local whichImage = CreateImage("GustaBLP.blp", 896, 512, 0, 1600, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageGustavosYY ()
+function SpawnImageGustavosYY()
 	local whichImage = CreateImage("GustaBLP.blp", 896, 512, 0, 1600, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageGustavosG ()
+function SpawnImageGustavosG()
 	local whichImage = CreateImage("GustaBLP.blp", 896, 512, 0, 6718, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageGustavosPI ()
+function SpawnImageGustavosPI()
 	local whichImage = CreateImage("GustaBLP.blp", 896, 512, 0, 6718, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageRyanTR ()
+function SpawnImageRyanTR()
 	local whichImage = CreateImage("RyanBLP1.blp", 896, 512, 0, -7488, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageRyanTB ()
+function SpawnImageRyanTB()
 	local whichImage = CreateImage("RyanBLP1.blp", 896, 512, 0, -7488, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageRyanTBR ()
+function SpawnImageRyanTBR()
 	local whichImage = CreateImage("RyanBLP1.blp", 896, 512, 0, -2368, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageRyanTP ()
+function SpawnImageRyanTP()
 	local whichImage = CreateImage("RyanBLP1.blp", 896, 512, 0, -2368, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageRyanTY ()
+function SpawnImageRyanTY()
 	local whichImage = CreateImage("RyanBLP1.blp", 896, 512, 0, 1600, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageRyanTYY ()
+function SpawnImageRyanTYY()
 	local whichImage = CreateImage("RyanBLP1.blp", 896, 512, 0, 1600, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageRyanTG ()
+function SpawnImageRyanTG()
 	local whichImage = CreateImage("RyanBLP1.blp", 896, 512, 0, 6718, 4608, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageRyanTPI ()
+function SpawnImageRyanTPI()
 	local whichImage = CreateImage("RyanBLP1.blp", 896, 512, 0, 6718, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageDrTemaR ()
+function SpawnImageDrTemaR()
 	local whichImage = CreateImage("DrTemaBLP.blp", 640, 640, 0, -7360, 4470, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageDrTemaB ()
+function SpawnImageDrTemaB()
 	local whichImage = CreateImage("DrTemaBLP.blp", 640, 640, 0, -7360, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageDrTemaBR ()
+function SpawnImageDrTemaBR()
 	local whichImage = CreateImage("DrTemaBLP.blp", 640, 640, 0, -2240, 4470, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageDrTemaP ()
+function SpawnImageDrTemaP()
 	local whichImage = CreateImage("DrTemaBLP.blp", 640, 640, 0, -2240, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageDrTemaY ()
+function SpawnImageDrTemaY()
 	local whichImage = CreateImage("DrTemaBLP.blp", 640, 640, 0, 1728, 4470, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageDrTemaYY ()
+function SpawnImageDrTemaYY()
 	local whichImage = CreateImage("DrTemaBLP.blp", 640, 640, 0, 1728, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageDrTemaG ()
+function SpawnImageDrTemaG()
 	local whichImage = CreateImage("DrTemaBLP.blp", 640, 640, 0, 6846, 4470, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageDrTemaPI ()
+function SpawnImageDrTemaPI()
 	local whichImage = CreateImage("DrTemaBLP.blp", 640, 640, 0, 6846, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageNahMneNickR ()
+function SpawnImageNahMneNickR()
 	local whichImage = CreateImage("IchigoNah.blp", 640, 640, 0, -7360, 4470, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageNahMneNickB ()
+function SpawnImageNahMneNickB()
 	local whichImage = CreateImage("IchigoNah.blp", 640, 640, 0, -7360, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageNahMneNickBR ()
+function SpawnImageNahMneNickBR()
 	local whichImage = CreateImage("IchigoNah.blp", 640, 640, 0, -2240, 4470, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageNahMneNickP ()
+function SpawnImageNahMneNickP()
 	local whichImage = CreateImage("IchigoNah.blp", 640, 640, 0, -2240, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageNahMneNickY ()
+function SpawnImageNahMneNickY()
 	local whichImage = CreateImage("IchigoNah.blp", 640, 640, 0, 1728, 4470, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageNahMneNickYY ()
+function SpawnImageNahMneNickYY()
 	local whichImage = CreateImage("IchigoNah.blp", 640, 640, 0, 1728, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageNahMneNickG ()
+function SpawnImageNahMneNickG()
 	local whichImage = CreateImage("IchigoNah.blp", 640, 640, 0, 6846, 4470, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImageNahMneNickPI ()
+function SpawnImageNahMneNickPI()
 	local whichImage = CreateImage("IchigoNah.blp", 640, 640, 0, 6846, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagenasvaiR ()
+function SpawnImagenasvaiR()
 	local whichImage = CreateImage("AprauJl.blp", 640, 640, 0, -7360, 4470, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagenasvaiB ()
+function SpawnImagenasvaiB()
 	local whichImage = CreateImage("AprauJl.blp", 640, 640, 0, -7360, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagenasvaiBR ()
+function SpawnImagenasvaiBR()
 	local whichImage = CreateImage("AprauJl.blp", 640, 640, 0, -2240, 4470, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagenasvaiP ()
+function SpawnImagenasvaiP()
 	local whichImage = CreateImage("AprauJl.blp", 640, 640, 0, -2240, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagenasvaiY ()
+function SpawnImagenasvaiY()
 	local whichImage = CreateImage("AprauJl.blp", 640, 640, 0, 1728, 4470, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagenasvaiYY ()
+function SpawnImagenasvaiYY()
 	local whichImage = CreateImage("AprauJl.blp", 640, 640, 0, 1728, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagenasvaiG ()
+function SpawnImagenasvaiG()
 	local whichImage = CreateImage("AprauJl.blp", 640, 640, 0, 6846, 4470, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
-function SpawnImagenasvaiPI ()
+function SpawnImagenasvaiPI()
 	local whichImage = CreateImage("AprauJl.blp", 640, 640, 0, 6846, 642, 0, 128 / 2, 128 / 2, 0, 3) ---@type image
 	SetImageRenderAlways(whichImage, true)
 	ShowImage(whichImage, true)
 end
 
 ---@return boolean
-function Trig_SpawnImagee6aTb_Func001Func001C ()
+function Trig_SpawnImagee6aTb_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -16677,7 +16677,7 @@ function Trig_SpawnImagee6aTb_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagee6aTb_Func001Func002C ()
+function Trig_SpawnImagee6aTb_Func001Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -16688,7 +16688,7 @@ function Trig_SpawnImagee6aTb_Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagee6aTb_Func001Func003C ()
+function Trig_SpawnImagee6aTb_Func001Func003C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -16699,7 +16699,7 @@ function Trig_SpawnImagee6aTb_Func001Func003C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagee6aTb_Func001Func004C ()
+function Trig_SpawnImagee6aTb_Func001Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -16710,7 +16710,7 @@ function Trig_SpawnImagee6aTb_Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagee6aTb_Func001Func005C ()
+function Trig_SpawnImagee6aTb_Func001Func005C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -16721,7 +16721,7 @@ function Trig_SpawnImagee6aTb_Func001Func005C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagee6aTb_Func001Func006C ()
+function Trig_SpawnImagee6aTb_Func001Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -16732,7 +16732,7 @@ function Trig_SpawnImagee6aTb_Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagee6aTb_Func001Func007C ()
+function Trig_SpawnImagee6aTb_Func001Func007C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -16743,7 +16743,7 @@ function Trig_SpawnImagee6aTb_Func001Func007C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagee6aTb_Func001Func008C ()
+function Trig_SpawnImagee6aTb_Func001Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -16754,7 +16754,7 @@ function Trig_SpawnImagee6aTb_Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageG0mez_Func001Func001C ()
+function Trig_SpawnImageG0mez_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u14T'))) then
 		return false
 	end
@@ -16765,7 +16765,7 @@ function Trig_SpawnImageG0mez_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageG0mez_Func001Func002C ()
+function Trig_SpawnImageG0mez_Func001Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u14T'))) then
 		return false
 	end
@@ -16776,7 +16776,7 @@ function Trig_SpawnImageG0mez_Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageG0mez_Func001Func003C ()
+function Trig_SpawnImageG0mez_Func001Func003C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u14T'))) then
 		return false
 	end
@@ -16787,7 +16787,7 @@ function Trig_SpawnImageG0mez_Func001Func003C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageG0mez_Func001Func004C ()
+function Trig_SpawnImageG0mez_Func001Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u14T'))) then
 		return false
 	end
@@ -16798,7 +16798,7 @@ function Trig_SpawnImageG0mez_Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageG0mez_Func001Func005C ()
+function Trig_SpawnImageG0mez_Func001Func005C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u14T'))) then
 		return false
 	end
@@ -16809,7 +16809,7 @@ function Trig_SpawnImageG0mez_Func001Func005C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageG0mez_Func001Func006C ()
+function Trig_SpawnImageG0mez_Func001Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u14T'))) then
 		return false
 	end
@@ -16820,7 +16820,7 @@ function Trig_SpawnImageG0mez_Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageG0mez_Func001Func007C ()
+function Trig_SpawnImageG0mez_Func001Func007C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u14T'))) then
 		return false
 	end
@@ -16831,7 +16831,7 @@ function Trig_SpawnImageG0mez_Func001Func007C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageG0mez_Func001Func008C ()
+function Trig_SpawnImageG0mez_Func001Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u14T'))) then
 		return false
 	end
@@ -16842,7 +16842,7 @@ function Trig_SpawnImageG0mez_Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSEGA_Func001Func001C ()
+function Trig_SpawnImageSEGA_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u45T'))) then
 		return false
 	end
@@ -16853,7 +16853,7 @@ function Trig_SpawnImageSEGA_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSEGA_Func001Func002C ()
+function Trig_SpawnImageSEGA_Func001Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u45T'))) then
 		return false
 	end
@@ -16864,7 +16864,7 @@ function Trig_SpawnImageSEGA_Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSEGA_Func001Func003C ()
+function Trig_SpawnImageSEGA_Func001Func003C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u45T'))) then
 		return false
 	end
@@ -16875,7 +16875,7 @@ function Trig_SpawnImageSEGA_Func001Func003C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSEGA_Func001Func004C ()
+function Trig_SpawnImageSEGA_Func001Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u45T'))) then
 		return false
 	end
@@ -16886,7 +16886,7 @@ function Trig_SpawnImageSEGA_Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSEGA_Func001Func005C ()
+function Trig_SpawnImageSEGA_Func001Func005C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u45T'))) then
 		return false
 	end
@@ -16897,7 +16897,7 @@ function Trig_SpawnImageSEGA_Func001Func005C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSEGA_Func001Func006C ()
+function Trig_SpawnImageSEGA_Func001Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u45T'))) then
 		return false
 	end
@@ -16908,7 +16908,7 @@ function Trig_SpawnImageSEGA_Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSEGA_Func001Func007C ()
+function Trig_SpawnImageSEGA_Func001Func007C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u45T'))) then
 		return false
 	end
@@ -16919,7 +16919,7 @@ function Trig_SpawnImageSEGA_Func001Func007C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSEGA_Func001Func008C ()
+function Trig_SpawnImageSEGA_Func001Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u45T'))) then
 		return false
 	end
@@ -16930,7 +16930,7 @@ function Trig_SpawnImageSEGA_Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagemiss_Func001Func001C ()
+function Trig_SpawnImagemiss_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -16941,7 +16941,7 @@ function Trig_SpawnImagemiss_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagemiss_Func001Func002C ()
+function Trig_SpawnImagemiss_Func001Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -16952,7 +16952,7 @@ function Trig_SpawnImagemiss_Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagemiss_Func001Func003C ()
+function Trig_SpawnImagemiss_Func001Func003C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -16963,7 +16963,7 @@ function Trig_SpawnImagemiss_Func001Func003C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagemiss_Func001Func004C ()
+function Trig_SpawnImagemiss_Func001Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -16974,7 +16974,7 @@ function Trig_SpawnImagemiss_Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagemiss_Func001Func005C ()
+function Trig_SpawnImagemiss_Func001Func005C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -16985,7 +16985,7 @@ function Trig_SpawnImagemiss_Func001Func005C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagemiss_Func001Func006C ()
+function Trig_SpawnImagemiss_Func001Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -16996,7 +16996,7 @@ function Trig_SpawnImagemiss_Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagemiss_Func001Func007C ()
+function Trig_SpawnImagemiss_Func001Func007C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -17007,7 +17007,7 @@ function Trig_SpawnImagemiss_Func001Func007C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagemiss_Func001Func008C ()
+function Trig_SpawnImagemiss_Func001Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -17018,7 +17018,7 @@ function Trig_SpawnImagemiss_Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func001Func001C ()
+function Trig_SpawnImageSweet_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -17029,7 +17029,7 @@ function Trig_SpawnImageSweet_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func001Func002C ()
+function Trig_SpawnImageSweet_Func001Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -17040,7 +17040,7 @@ function Trig_SpawnImageSweet_Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func001Func003C ()
+function Trig_SpawnImageSweet_Func001Func003C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -17051,7 +17051,7 @@ function Trig_SpawnImageSweet_Func001Func003C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func001Func004C ()
+function Trig_SpawnImageSweet_Func001Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -17062,7 +17062,7 @@ function Trig_SpawnImageSweet_Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func001Func005C ()
+function Trig_SpawnImageSweet_Func001Func005C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -17073,7 +17073,7 @@ function Trig_SpawnImageSweet_Func001Func005C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func001Func006C ()
+function Trig_SpawnImageSweet_Func001Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -17084,7 +17084,7 @@ function Trig_SpawnImageSweet_Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func001Func007C ()
+function Trig_SpawnImageSweet_Func001Func007C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -17095,7 +17095,7 @@ function Trig_SpawnImageSweet_Func001Func007C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func001Func008C ()
+function Trig_SpawnImageSweet_Func001Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -17106,7 +17106,7 @@ function Trig_SpawnImageSweet_Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageGustavos_Func001Func001C ()
+function Trig_SpawnImageGustavos_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u36T'))) then
 		return false
 	end
@@ -17117,7 +17117,7 @@ function Trig_SpawnImageGustavos_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageGustavos_Func001Func002C ()
+function Trig_SpawnImageGustavos_Func001Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u36T'))) then
 		return false
 	end
@@ -17128,7 +17128,7 @@ function Trig_SpawnImageGustavos_Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageGustavos_Func001Func003C ()
+function Trig_SpawnImageGustavos_Func001Func003C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u36T'))) then
 		return false
 	end
@@ -17139,7 +17139,7 @@ function Trig_SpawnImageGustavos_Func001Func003C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageGustavos_Func001Func004C ()
+function Trig_SpawnImageGustavos_Func001Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u36T'))) then
 		return false
 	end
@@ -17150,7 +17150,7 @@ function Trig_SpawnImageGustavos_Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageGustavos_Func001Func005C ()
+function Trig_SpawnImageGustavos_Func001Func005C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u36T'))) then
 		return false
 	end
@@ -17161,7 +17161,7 @@ function Trig_SpawnImageGustavos_Func001Func005C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageGustavos_Func001Func006C ()
+function Trig_SpawnImageGustavos_Func001Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u36T'))) then
 		return false
 	end
@@ -17172,7 +17172,7 @@ function Trig_SpawnImageGustavos_Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageGustavos_Func001Func007C ()
+function Trig_SpawnImageGustavos_Func001Func007C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u36T'))) then
 		return false
 	end
@@ -17183,7 +17183,7 @@ function Trig_SpawnImageGustavos_Func001Func007C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageGustavos_Func001Func008C ()
+function Trig_SpawnImageGustavos_Func001Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u36T'))) then
 		return false
 	end
@@ -17194,7 +17194,7 @@ function Trig_SpawnImageGustavos_Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageRyanT_Func001Func001C ()
+function Trig_SpawnImageRyanT_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u75T'))) then
 		return false
 	end
@@ -17205,7 +17205,7 @@ function Trig_SpawnImageRyanT_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageRyanT_Func001Func002C ()
+function Trig_SpawnImageRyanT_Func001Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u75T'))) then
 		return false
 	end
@@ -17216,7 +17216,7 @@ function Trig_SpawnImageRyanT_Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageRyanT_Func001Func003C ()
+function Trig_SpawnImageRyanT_Func001Func003C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u75T'))) then
 		return false
 	end
@@ -17227,7 +17227,7 @@ function Trig_SpawnImageRyanT_Func001Func003C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageRyanT_Func001Func004C ()
+function Trig_SpawnImageRyanT_Func001Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u75T'))) then
 		return false
 	end
@@ -17238,7 +17238,7 @@ function Trig_SpawnImageRyanT_Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageRyanT_Func001Func005C ()
+function Trig_SpawnImageRyanT_Func001Func005C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u75T'))) then
 		return false
 	end
@@ -17249,7 +17249,7 @@ function Trig_SpawnImageRyanT_Func001Func005C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageRyanT_Func001Func006C ()
+function Trig_SpawnImageRyanT_Func001Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u75T'))) then
 		return false
 	end
@@ -17260,7 +17260,7 @@ function Trig_SpawnImageRyanT_Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageRyanT_Func001Func007C ()
+function Trig_SpawnImageRyanT_Func001Func007C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u75T'))) then
 		return false
 	end
@@ -17271,7 +17271,7 @@ function Trig_SpawnImageRyanT_Func001Func007C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageRyanT_Func001Func008C ()
+function Trig_SpawnImageRyanT_Func001Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u75T'))) then
 		return false
 	end
@@ -17282,7 +17282,7 @@ function Trig_SpawnImageRyanT_Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageMitras_Func001Func001C ()
+function Trig_SpawnImageMitras_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u17T'))) then
 		return false
 	end
@@ -17293,7 +17293,7 @@ function Trig_SpawnImageMitras_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageMitras_Func001Func002C ()
+function Trig_SpawnImageMitras_Func001Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u17T'))) then
 		return false
 	end
@@ -17304,7 +17304,7 @@ function Trig_SpawnImageMitras_Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageMitras_Func001Func003C ()
+function Trig_SpawnImageMitras_Func001Func003C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u17T'))) then
 		return false
 	end
@@ -17315,7 +17315,7 @@ function Trig_SpawnImageMitras_Func001Func003C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageMitras_Func001Func004C ()
+function Trig_SpawnImageMitras_Func001Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u17T'))) then
 		return false
 	end
@@ -17326,7 +17326,7 @@ function Trig_SpawnImageMitras_Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageMitras_Func001Func005C ()
+function Trig_SpawnImageMitras_Func001Func005C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u17T'))) then
 		return false
 	end
@@ -17337,7 +17337,7 @@ function Trig_SpawnImageMitras_Func001Func005C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageMitras_Func001Func006C ()
+function Trig_SpawnImageMitras_Func001Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u17T'))) then
 		return false
 	end
@@ -17348,7 +17348,7 @@ function Trig_SpawnImageMitras_Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageMitras_Func001Func007C ()
+function Trig_SpawnImageMitras_Func001Func007C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u17T'))) then
 		return false
 	end
@@ -17359,7 +17359,7 @@ function Trig_SpawnImageMitras_Func001Func007C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageMitras_Func001Func008C ()
+function Trig_SpawnImageMitras_Func001Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u17T'))) then
 		return false
 	end
@@ -17370,7 +17370,7 @@ function Trig_SpawnImageMitras_Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageCrim1310_Func001Func001C ()
+function Trig_SpawnImageCrim1310_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u22T'))) then
 		return false
 	end
@@ -17381,7 +17381,7 @@ function Trig_SpawnImageCrim1310_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageCrim1310_Func001Func002C ()
+function Trig_SpawnImageCrim1310_Func001Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u22T'))) then
 		return false
 	end
@@ -17392,7 +17392,7 @@ function Trig_SpawnImageCrim1310_Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageCrim1310_Func001Func003C ()
+function Trig_SpawnImageCrim1310_Func001Func003C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u22T'))) then
 		return false
 	end
@@ -17403,7 +17403,7 @@ function Trig_SpawnImageCrim1310_Func001Func003C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageCrim1310_Func001Func004C ()
+function Trig_SpawnImageCrim1310_Func001Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u22T'))) then
 		return false
 	end
@@ -17414,7 +17414,7 @@ function Trig_SpawnImageCrim1310_Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageCrim1310_Func001Func005C ()
+function Trig_SpawnImageCrim1310_Func001Func005C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u22T'))) then
 		return false
 	end
@@ -17425,7 +17425,7 @@ function Trig_SpawnImageCrim1310_Func001Func005C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageCrim1310_Func001Func006C ()
+function Trig_SpawnImageCrim1310_Func001Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u22T'))) then
 		return false
 	end
@@ -17436,7 +17436,7 @@ function Trig_SpawnImageCrim1310_Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageCrim1310_Func001Func007C ()
+function Trig_SpawnImageCrim1310_Func001Func007C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u22T'))) then
 		return false
 	end
@@ -17447,7 +17447,7 @@ function Trig_SpawnImageCrim1310_Func001Func007C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageCrim1310_Func001Func008C ()
+function Trig_SpawnImageCrim1310_Func001Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u22T'))) then
 		return false
 	end
@@ -17458,7 +17458,7 @@ function Trig_SpawnImageCrim1310_Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagem9ico_Func001Func001C ()
+function Trig_SpawnImagem9ico_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u27T'))) then
 		return false
 	end
@@ -17469,7 +17469,7 @@ function Trig_SpawnImagem9ico_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagem9ico_Func001Func002C ()
+function Trig_SpawnImagem9ico_Func001Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u27T'))) then
 		return false
 	end
@@ -17480,7 +17480,7 @@ function Trig_SpawnImagem9ico_Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagem9ico_Func001Func003C ()
+function Trig_SpawnImagem9ico_Func001Func003C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u27T'))) then
 		return false
 	end
@@ -17491,7 +17491,7 @@ function Trig_SpawnImagem9ico_Func001Func003C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagem9ico_Func001Func004C ()
+function Trig_SpawnImagem9ico_Func001Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u27T'))) then
 		return false
 	end
@@ -17502,7 +17502,7 @@ function Trig_SpawnImagem9ico_Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagem9ico_Func001Func005C ()
+function Trig_SpawnImagem9ico_Func001Func005C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u27T'))) then
 		return false
 	end
@@ -17513,7 +17513,7 @@ function Trig_SpawnImagem9ico_Func001Func005C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagem9ico_Func001Func006C ()
+function Trig_SpawnImagem9ico_Func001Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u27T'))) then
 		return false
 	end
@@ -17524,7 +17524,7 @@ function Trig_SpawnImagem9ico_Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagem9ico_Func001Func007C ()
+function Trig_SpawnImagem9ico_Func001Func007C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u27T'))) then
 		return false
 	end
@@ -17535,7 +17535,7 @@ function Trig_SpawnImagem9ico_Func001Func007C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagem9ico_Func001Func008C ()
+function Trig_SpawnImagem9ico_Func001Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u27T'))) then
 		return false
 	end
@@ -17546,7 +17546,7 @@ function Trig_SpawnImagem9ico_Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageDrTema_Func001Func001C ()
+function Trig_SpawnImageDrTema_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u31T'))) then
 		return false
 	end
@@ -17557,7 +17557,7 @@ function Trig_SpawnImageDrTema_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageDrTema_Func001Func002C ()
+function Trig_SpawnImageDrTema_Func001Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u31T'))) then
 		return false
 	end
@@ -17568,7 +17568,7 @@ function Trig_SpawnImageDrTema_Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageDrTema_Func001Func003C ()
+function Trig_SpawnImageDrTema_Func001Func003C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u31T'))) then
 		return false
 	end
@@ -17579,7 +17579,7 @@ function Trig_SpawnImageDrTema_Func001Func003C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageDrTema_Func001Func004C ()
+function Trig_SpawnImageDrTema_Func001Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u31T'))) then
 		return false
 	end
@@ -17590,7 +17590,7 @@ function Trig_SpawnImageDrTema_Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageDrTema_Func001Func005C ()
+function Trig_SpawnImageDrTema_Func001Func005C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u31T'))) then
 		return false
 	end
@@ -17601,7 +17601,7 @@ function Trig_SpawnImageDrTema_Func001Func005C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageDrTema_Func001Func006C ()
+function Trig_SpawnImageDrTema_Func001Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u31T'))) then
 		return false
 	end
@@ -17612,7 +17612,7 @@ function Trig_SpawnImageDrTema_Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageDrTema_Func001Func007C ()
+function Trig_SpawnImageDrTema_Func001Func007C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u31T'))) then
 		return false
 	end
@@ -17623,7 +17623,7 @@ function Trig_SpawnImageDrTema_Func001Func007C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageDrTema_Func001Func008C ()
+function Trig_SpawnImageDrTema_Func001Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u31T'))) then
 		return false
 	end
@@ -17634,7 +17634,7 @@ function Trig_SpawnImageDrTema_Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageNahMneNick_Func001Func001C ()
+function Trig_SpawnImageNahMneNick_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u43T'))) then
 		return false
 	end
@@ -17645,7 +17645,7 @@ function Trig_SpawnImageNahMneNick_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageNahMneNick_Func001Func002C ()
+function Trig_SpawnImageNahMneNick_Func001Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u43T'))) then
 		return false
 	end
@@ -17656,7 +17656,7 @@ function Trig_SpawnImageNahMneNick_Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageNahMneNick_Func001Func003C ()
+function Trig_SpawnImageNahMneNick_Func001Func003C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u43T'))) then
 		return false
 	end
@@ -17667,7 +17667,7 @@ function Trig_SpawnImageNahMneNick_Func001Func003C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageNahMneNick_Func001Func004C ()
+function Trig_SpawnImageNahMneNick_Func001Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u43T'))) then
 		return false
 	end
@@ -17678,7 +17678,7 @@ function Trig_SpawnImageNahMneNick_Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageNahMneNick_Func001Func005C ()
+function Trig_SpawnImageNahMneNick_Func001Func005C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u43T'))) then
 		return false
 	end
@@ -17689,7 +17689,7 @@ function Trig_SpawnImageNahMneNick_Func001Func005C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageNahMneNick_Func001Func006C ()
+function Trig_SpawnImageNahMneNick_Func001Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u43T'))) then
 		return false
 	end
@@ -17700,7 +17700,7 @@ function Trig_SpawnImageNahMneNick_Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageNahMneNick_Func001Func007C ()
+function Trig_SpawnImageNahMneNick_Func001Func007C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u43T'))) then
 		return false
 	end
@@ -17711,7 +17711,7 @@ function Trig_SpawnImageNahMneNick_Func001Func007C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageNahMneNick_Func001Func008C ()
+function Trig_SpawnImageNahMneNick_Func001Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u43T'))) then
 		return false
 	end
@@ -17722,7 +17722,7 @@ function Trig_SpawnImageNahMneNick_Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagenasvai_Func001Func001C ()
+function Trig_SpawnImagenasvai_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u51T'))) then
 		return false
 	end
@@ -17733,7 +17733,7 @@ function Trig_SpawnImagenasvai_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagenasvai_Func001Func002C ()
+function Trig_SpawnImagenasvai_Func001Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u51T'))) then
 		return false
 	end
@@ -17744,7 +17744,7 @@ function Trig_SpawnImagenasvai_Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagenasvai_Func001Func003C ()
+function Trig_SpawnImagenasvai_Func001Func003C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u51T'))) then
 		return false
 	end
@@ -17755,7 +17755,7 @@ function Trig_SpawnImagenasvai_Func001Func003C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagenasvai_Func001Func004C ()
+function Trig_SpawnImagenasvai_Func001Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u51T'))) then
 		return false
 	end
@@ -17766,7 +17766,7 @@ function Trig_SpawnImagenasvai_Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagenasvai_Func001Func005C ()
+function Trig_SpawnImagenasvai_Func001Func005C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u51T'))) then
 		return false
 	end
@@ -17777,7 +17777,7 @@ function Trig_SpawnImagenasvai_Func001Func005C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagenasvai_Func001Func006C ()
+function Trig_SpawnImagenasvai_Func001Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u51T'))) then
 		return false
 	end
@@ -17788,7 +17788,7 @@ function Trig_SpawnImagenasvai_Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagenasvai_Func001Func007C ()
+function Trig_SpawnImagenasvai_Func001Func007C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u51T'))) then
 		return false
 	end
@@ -17799,7 +17799,7 @@ function Trig_SpawnImagenasvai_Func001Func007C ()
 end
 
 ---@return boolean
-function Trig_SpawnImagenasvai_Func001Func008C ()
+function Trig_SpawnImagenasvai_Func001Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u51T'))) then
 		return false
 	end
@@ -17809,7 +17809,7 @@ function Trig_SpawnImagenasvai_Func001Func008C ()
 	return true
 end
 
-function Trig_SpawnImageG0mez_Func001A ()
+function Trig_SpawnImageG0mez_Func001A()
 	if (Trig_SpawnImageG0mez_Func001Func001C()) then
 		SpawnImageG0mezR()
 	else
@@ -18228,18 +18228,18 @@ function Trig_SpawnImageG0mez_Func001A ()
 	end
 end
 
-function Trig_SpawnImageG0mez_Actions ()
+function Trig_SpawnImageG0mez_Actions()
 	ForGroupBJ(GetUnitsInRectAll(GetEntireMapRect()), Trig_SpawnImageG0mez_Func001A)
 end
 
-function InitTrig_SpawnImageG0mez ()
+function InitTrig_SpawnImageG0mez()
 	gg_trg_SpawnImageG0mez = CreateTrigger()
 	TriggerRegisterTimerEventSingle(gg_trg_SpawnImageG0mez, 20)
 	TriggerAddAction(gg_trg_SpawnImageG0mez, Trig_SpawnImageG0mez_Actions)
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func002Func001C ()
+function Trig_SpawnImageSweet_Func002Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -18250,7 +18250,7 @@ function Trig_SpawnImageSweet_Func002Func001C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func002Func002C ()
+function Trig_SpawnImageSweet_Func002Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -18261,7 +18261,7 @@ function Trig_SpawnImageSweet_Func002Func002C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func002Func003C ()
+function Trig_SpawnImageSweet_Func002Func003C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -18272,7 +18272,7 @@ function Trig_SpawnImageSweet_Func002Func003C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func002Func004C ()
+function Trig_SpawnImageSweet_Func002Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -18283,7 +18283,7 @@ function Trig_SpawnImageSweet_Func002Func004C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func002Func005C ()
+function Trig_SpawnImageSweet_Func002Func005C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -18294,7 +18294,7 @@ function Trig_SpawnImageSweet_Func002Func005C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func002Func006C ()
+function Trig_SpawnImageSweet_Func002Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -18305,7 +18305,7 @@ function Trig_SpawnImageSweet_Func002Func006C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func002Func007C ()
+function Trig_SpawnImageSweet_Func002Func007C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -18316,7 +18316,7 @@ function Trig_SpawnImageSweet_Func002Func007C ()
 end
 
 ---@return boolean
-function Trig_SpawnImageSweet_Func002Func008C ()
+function Trig_SpawnImageSweet_Func002Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -18326,7 +18326,7 @@ function Trig_SpawnImageSweet_Func002Func008C ()
 	return true
 end
 
-function Trig_SpawnImageSweet_Func002A ()
+function Trig_SpawnImageSweet_Func002A()
 	if (Trig_SpawnImageSweet_Func002Func001C()) then
 		SpawnImageSweet()
 	else
@@ -18361,17 +18361,17 @@ function Trig_SpawnImageSweet_Func002A ()
 	end
 end
 
-function Trig_SpawnImageSweet_Actions ()
+function Trig_SpawnImageSweet_Actions()
 	ForGroupBJ(GetUnitsInRectAll(GetEntireMapRect()), Trig_SpawnImageSweet_Func002A)
 end
 
-function InitTrig_SpawnImageSweet ()
+function InitTrig_SpawnImageSweet()
 	gg_trg_SpawnImageSweet = CreateTrigger()
 	TriggerRegisterTimerEventSingle(gg_trg_SpawnImageSweet, 21)
 	TriggerAddAction(gg_trg_SpawnImageSweet, Trig_SpawnImageSweet_Actions)
 end
 
-function Trig_SpawnImage_Actions ()
+function Trig_SpawnImage_Actions()
 	CreateUnitAndGetShadoTelegramLeft()
 	CreateUnitAndGetShadoTelegramRight()
 	CreateUnitAndGetShadoVUDIAGLeft()
@@ -18382,31 +18382,31 @@ function Trig_SpawnImage_Actions ()
 	CreateUnitAndGetShadoTBankLeft()
 end
 
-function InitTrig_SpawnImage ()
+function InitTrig_SpawnImage()
 	gg_trg_SpawnImage = CreateTrigger()
 	TriggerRegisterTimerEventSingle(gg_trg_SpawnImage, 2)
 	TriggerAddAction(gg_trg_SpawnImage, Trig_SpawnImage_Actions)
 end
 
-function Trig_Timer_Actions ()
+function Trig_Timer_Actions()
 	DisplayTimedTextToForce(GetPlayersAll(), 10.00, "Приглашаем Вас на наш Discord: https://discord.gg/VyMDE8vZ4P Там вы можете узнать все новости по поводу LTD, все обновления, пообщаться с другими игроками.")
 end
 
-function InitTrig_Timer ()
+function InitTrig_Timer()
 	gg_trg_Timer = CreateTrigger()
 	TriggerRegisterTimerEventPeriodic(gg_trg_Timer, 150.00)
 	TriggerAddAction(gg_trg_Timer, Trig_Timer_Actions)
 end
 
 ---@return boolean
-function Trig_MH_Func001Func001C ()
+function Trig_MH_Func001Func001C()
 	if (not (GetPlayerName(GetEnumPlayer()) == "G0mez")) then
 		return false
 	end
 	return true
 end
 
-function Trig_MH_Func001A ()
+function Trig_MH_Func001A()
 	if (Trig_MH_Func001Func001C()) then
 		CreateFogModifierRectBJ(true, GetEnumPlayer(), FOG_OF_WAR_VISIBLE, GetEntireMapRect())
 		FogModifierStart(GetLastCreatedFogModifier())
@@ -18415,37 +18415,37 @@ function Trig_MH_Func001A ()
 	end
 end
 
-function Trig_MH_Actions ()
+function Trig_MH_Actions()
 	ForForce(GetPlayersAll(), Trig_MH_Func001A)
 end
 
-function InitTrig_MH ()
+function InitTrig_MH()
 	gg_trg_MH = CreateTrigger()
 	TriggerRegisterTimerEventSingle(gg_trg_MH, 5)
 	TriggerAddAction(gg_trg_MH, Trig_MH_Actions)
 end
 
 ---@return boolean
-function Trig_ZamenaAction_Conditions ()
+function Trig_ZamenaAction_Conditions()
 	if (not (GetSpellAbilityId() == FourCC('A55T'))) then
 		return false
 	end
 	return true
 end
 
-function Trig_ZamenaAction_Actions ()
+function Trig_ZamenaAction_Actions()
 	ConditionalTriggerExecute(gg_trg_ZamenaLand)
 	DisableTrigger(gg_trg_ZamenaLand)
 end
 
-function InitTrig_ZamenaAction ()
+function InitTrig_ZamenaAction()
 	gg_trg_ZamenaAction = CreateTrigger()
 	TriggerRegisterAnyUnitEventBJ(gg_trg_ZamenaAction, EVENT_PLAYER_UNIT_SPELL_FINISH)
 	TriggerAddCondition(gg_trg_ZamenaAction, Condition(Trig_ZamenaAction_Conditions))
 	TriggerAddAction(gg_trg_ZamenaAction, Trig_ZamenaAction_Actions)
 end
 
-function Trig_MusicNahMneNick_Actions ()
+function Trig_MusicNahMneNick_Actions()
 	if GetSpellAbilityId() == FourCC('A02H') and GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u43T') then
 		StopMusicBJ(false)
 		PlayThematicMusicBJ("compress.mp3")
@@ -18456,14 +18456,14 @@ function Trig_MusicNahMneNick_Actions ()
 	end
 end
 
-function InitTrig_MusicNahMneNick ()
+function InitTrig_MusicNahMneNick()
 	gg_trg_MusicNahMneNick = CreateTrigger()
 	TriggerRegisterAnyUnitEventBJ(gg_trg_MusicNahMneNick, EVENT_PLAYER_UNIT_SPELL_CAST)
 	TriggerAddAction(gg_trg_MusicNahMneNick, Trig_MusicNahMneNick_Actions)
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func001Func002C ()
+function Trig_ZamenaLand_Func003Func001Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u28T'))) then
 		return false
 	end
@@ -18471,7 +18471,7 @@ function Trig_ZamenaLand_Func003Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func001Func014C ()
+function Trig_ZamenaLand_Func003Func001Func014C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u43T'))) then
 		return true
 	end
@@ -18482,7 +18482,7 @@ function Trig_ZamenaLand_Func003Func001Func014C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func001Func018C ()
+function Trig_ZamenaLand_Func003Func001Func018C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u26T'))) then
 		return false
 	end
@@ -18490,7 +18490,7 @@ function Trig_ZamenaLand_Func003Func001Func018C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func001Func024C ()
+function Trig_ZamenaLand_Func003Func001Func024C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u52T'))) then
 		return false
 	end
@@ -18498,7 +18498,7 @@ function Trig_ZamenaLand_Func003Func001Func024C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func001Func004C ()
+function Trig_ZamenaLand_Func003Func001Func004C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u15T'))) then
 		return false
 	end
@@ -18506,7 +18506,7 @@ function Trig_ZamenaLand_Func003Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func001Func008C ()
+function Trig_ZamenaLand_Func003Func001Func008C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -18514,7 +18514,7 @@ function Trig_ZamenaLand_Func003Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func001Func026C ()
+function Trig_ZamenaLand_Func003Func001Func026C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return true
 	end
@@ -18522,7 +18522,7 @@ function Trig_ZamenaLand_Func003Func001Func026C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func001Func010C ()
+function Trig_ZamenaLand_Func003Func001Func010C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u42T'))) then
 		return true
 	end
@@ -18530,7 +18530,7 @@ function Trig_ZamenaLand_Func003Func001Func010C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func001Func012C ()
+function Trig_ZamenaLand_Func003Func001Func012C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -18538,7 +18538,7 @@ function Trig_ZamenaLand_Func003Func001Func012C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func001Func016C ()
+function Trig_ZamenaLand_Func003Func001Func016C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u16T'))) then
 		return false
 	end
@@ -18546,7 +18546,7 @@ function Trig_ZamenaLand_Func003Func001Func016C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func001Func006Func001C ()
+function Trig_ZamenaLand_Func003Func001Func006Func001C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u33T'))) then
 		return true
 	end
@@ -18578,7 +18578,7 @@ function Trig_ZamenaLand_Func003Func001Func006Func001C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func001Func006C ()
+function Trig_ZamenaLand_Func003Func001Func006C()
 	if (not Trig_ZamenaLand_Func003Func001Func006Func001C()) then
 		return false
 	end
@@ -18586,7 +18586,7 @@ function Trig_ZamenaLand_Func003Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func001C ()
+function Trig_ZamenaLand_Func003Func001C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(0))) then
 		return false
 	end
@@ -18594,7 +18594,7 @@ function Trig_ZamenaLand_Func003Func001C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func002Func002C ()
+function Trig_ZamenaLand_Func003Func002Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u28T'))) then
 		return false
 	end
@@ -18602,7 +18602,7 @@ function Trig_ZamenaLand_Func003Func002Func002C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func002Func014C ()
+function Trig_ZamenaLand_Func003Func002Func014C()
 	if GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u43T') then
 		return true
 	end
@@ -18613,7 +18613,7 @@ function Trig_ZamenaLand_Func003Func002Func014C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func002Func018C ()
+function Trig_ZamenaLand_Func003Func002Func018C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u26T'))) then
 		return false
 	end
@@ -18621,7 +18621,7 @@ function Trig_ZamenaLand_Func003Func002Func018C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func002Func024C ()
+function Trig_ZamenaLand_Func003Func002Func024C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u52T'))) then
 		return false
 	end
@@ -18629,7 +18629,7 @@ function Trig_ZamenaLand_Func003Func002Func024C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func002Func004C ()
+function Trig_ZamenaLand_Func003Func002Func004C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u15T'))) then
 		return false
 	end
@@ -18637,7 +18637,7 @@ function Trig_ZamenaLand_Func003Func002Func004C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func002Func008C ()
+function Trig_ZamenaLand_Func003Func002Func008C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -18645,7 +18645,7 @@ function Trig_ZamenaLand_Func003Func002Func008C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func002Func026C ()
+function Trig_ZamenaLand_Func003Func002Func026C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return true
 	end
@@ -18653,7 +18653,7 @@ function Trig_ZamenaLand_Func003Func002Func026C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func002Func010C ()
+function Trig_ZamenaLand_Func003Func002Func010C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u42T'))) then
 		return true
 	end
@@ -18661,7 +18661,7 @@ function Trig_ZamenaLand_Func003Func002Func010C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func002Func012C ()
+function Trig_ZamenaLand_Func003Func002Func012C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -18669,7 +18669,7 @@ function Trig_ZamenaLand_Func003Func002Func012C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func002Func016C ()
+function Trig_ZamenaLand_Func003Func002Func016C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u16T'))) then
 		return false
 	end
@@ -18677,7 +18677,7 @@ function Trig_ZamenaLand_Func003Func002Func016C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func002Func006Func001C ()
+function Trig_ZamenaLand_Func003Func002Func006Func001C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u33T'))) then
 		return true
 	end
@@ -18709,7 +18709,7 @@ function Trig_ZamenaLand_Func003Func002Func006Func001C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func002Func006C ()
+function Trig_ZamenaLand_Func003Func002Func006C()
 	if (not Trig_ZamenaLand_Func003Func002Func006Func001C()) then
 		return false
 	end
@@ -18717,7 +18717,7 @@ function Trig_ZamenaLand_Func003Func002Func006C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func002C ()
+function Trig_ZamenaLand_Func003Func002C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(1))) then
 		return false
 	end
@@ -18725,7 +18725,7 @@ function Trig_ZamenaLand_Func003Func002C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func003Func002C ()
+function Trig_ZamenaLand_Func003Func003Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u28T'))) then
 		return false
 	end
@@ -18733,7 +18733,7 @@ function Trig_ZamenaLand_Func003Func003Func002C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func003Func014C ()
+function Trig_ZamenaLand_Func003Func003Func014C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u43T'))) then
 		return true
 	end
@@ -18744,7 +18744,7 @@ function Trig_ZamenaLand_Func003Func003Func014C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func003Func018C ()
+function Trig_ZamenaLand_Func003Func003Func018C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u26T'))) then
 		return false
 	end
@@ -18752,7 +18752,7 @@ function Trig_ZamenaLand_Func003Func003Func018C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func003Func024C ()
+function Trig_ZamenaLand_Func003Func003Func024C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u52T'))) then
 		return false
 	end
@@ -18760,7 +18760,7 @@ function Trig_ZamenaLand_Func003Func003Func024C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func003Func004C ()
+function Trig_ZamenaLand_Func003Func003Func004C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u15T'))) then
 		return false
 	end
@@ -18768,7 +18768,7 @@ function Trig_ZamenaLand_Func003Func003Func004C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func003Func008C ()
+function Trig_ZamenaLand_Func003Func003Func008C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -18776,7 +18776,7 @@ function Trig_ZamenaLand_Func003Func003Func008C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func003Func026C ()
+function Trig_ZamenaLand_Func003Func003Func026C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return true
 	end
@@ -18784,7 +18784,7 @@ function Trig_ZamenaLand_Func003Func003Func026C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func003Func010C ()
+function Trig_ZamenaLand_Func003Func003Func010C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u42T'))) then
 		return true
 	end
@@ -18792,7 +18792,7 @@ function Trig_ZamenaLand_Func003Func003Func010C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func003Func012C ()
+function Trig_ZamenaLand_Func003Func003Func012C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -18800,7 +18800,7 @@ function Trig_ZamenaLand_Func003Func003Func012C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func003Func016C ()
+function Trig_ZamenaLand_Func003Func003Func016C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u16T'))) then
 		return false
 	end
@@ -18808,7 +18808,7 @@ function Trig_ZamenaLand_Func003Func003Func016C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func003Func006Func001C ()
+function Trig_ZamenaLand_Func003Func003Func006Func001C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u33T'))) then
 		return true
 	end
@@ -18840,7 +18840,7 @@ function Trig_ZamenaLand_Func003Func003Func006Func001C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func003Func006C ()
+function Trig_ZamenaLand_Func003Func003Func006C()
 	if (not Trig_ZamenaLand_Func003Func003Func006Func001C()) then
 		return false
 	end
@@ -18848,7 +18848,7 @@ function Trig_ZamenaLand_Func003Func003Func006C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func003C ()
+function Trig_ZamenaLand_Func003Func003C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(2))) then
 		return false
 	end
@@ -18856,7 +18856,7 @@ function Trig_ZamenaLand_Func003Func003C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func004Func002C ()
+function Trig_ZamenaLand_Func003Func004Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u28T'))) then
 		return false
 	end
@@ -18864,7 +18864,7 @@ function Trig_ZamenaLand_Func003Func004Func002C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func004Func014C ()
+function Trig_ZamenaLand_Func003Func004Func014C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u43T'))) then
 		return true
 	end
@@ -18875,7 +18875,7 @@ function Trig_ZamenaLand_Func003Func004Func014C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func004Func018C ()
+function Trig_ZamenaLand_Func003Func004Func018C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u26T'))) then
 		return false
 	end
@@ -18883,7 +18883,7 @@ function Trig_ZamenaLand_Func003Func004Func018C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func004Func024C ()
+function Trig_ZamenaLand_Func003Func004Func024C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u52T'))) then
 		return false
 	end
@@ -18891,7 +18891,7 @@ function Trig_ZamenaLand_Func003Func004Func024C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func004Func004C ()
+function Trig_ZamenaLand_Func003Func004Func004C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u15T'))) then
 		return false
 	end
@@ -18899,7 +18899,7 @@ function Trig_ZamenaLand_Func003Func004Func004C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func004Func008C ()
+function Trig_ZamenaLand_Func003Func004Func008C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -18907,7 +18907,7 @@ function Trig_ZamenaLand_Func003Func004Func008C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func004Func026C ()
+function Trig_ZamenaLand_Func003Func004Func026C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return true
 	end
@@ -18915,7 +18915,7 @@ function Trig_ZamenaLand_Func003Func004Func026C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func004Func010C ()
+function Trig_ZamenaLand_Func003Func004Func010C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u42T'))) then
 		return true
 	end
@@ -18923,7 +18923,7 @@ function Trig_ZamenaLand_Func003Func004Func010C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func004Func012C ()
+function Trig_ZamenaLand_Func003Func004Func012C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -18931,7 +18931,7 @@ function Trig_ZamenaLand_Func003Func004Func012C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func004Func016C ()
+function Trig_ZamenaLand_Func003Func004Func016C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u16T'))) then
 		return false
 	end
@@ -18939,7 +18939,7 @@ function Trig_ZamenaLand_Func003Func004Func016C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func004Func006Func001C ()
+function Trig_ZamenaLand_Func003Func004Func006Func001C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u33T'))) then
 		return true
 	end
@@ -18971,7 +18971,7 @@ function Trig_ZamenaLand_Func003Func004Func006Func001C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func004Func006C ()
+function Trig_ZamenaLand_Func003Func004Func006C()
 	if (not Trig_ZamenaLand_Func003Func004Func006Func001C()) then
 		return false
 	end
@@ -18979,7 +18979,7 @@ function Trig_ZamenaLand_Func003Func004Func006C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func004C ()
+function Trig_ZamenaLand_Func003Func004C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(3))) then
 		return false
 	end
@@ -18987,7 +18987,7 @@ function Trig_ZamenaLand_Func003Func004C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func005Func002C ()
+function Trig_ZamenaLand_Func003Func005Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u28T'))) then
 		return false
 	end
@@ -18995,7 +18995,7 @@ function Trig_ZamenaLand_Func003Func005Func002C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func005Func014C ()
+function Trig_ZamenaLand_Func003Func005Func014C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u43T'))) then
 		return true
 	end
@@ -19006,7 +19006,7 @@ function Trig_ZamenaLand_Func003Func005Func014C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func005Func018C ()
+function Trig_ZamenaLand_Func003Func005Func018C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u26T'))) then
 		return false
 	end
@@ -19014,7 +19014,7 @@ function Trig_ZamenaLand_Func003Func005Func018C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func005Func024C ()
+function Trig_ZamenaLand_Func003Func005Func024C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u52T'))) then
 		return false
 	end
@@ -19022,7 +19022,7 @@ function Trig_ZamenaLand_Func003Func005Func024C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func005Func004C ()
+function Trig_ZamenaLand_Func003Func005Func004C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u15T'))) then
 		return false
 	end
@@ -19030,7 +19030,7 @@ function Trig_ZamenaLand_Func003Func005Func004C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func005Func008C ()
+function Trig_ZamenaLand_Func003Func005Func008C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -19038,7 +19038,7 @@ function Trig_ZamenaLand_Func003Func005Func008C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func005Func026C ()
+function Trig_ZamenaLand_Func003Func005Func026C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return true
 	end
@@ -19046,7 +19046,7 @@ function Trig_ZamenaLand_Func003Func005Func026C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func005Func010C ()
+function Trig_ZamenaLand_Func003Func005Func010C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u42T'))) then
 		return true
 	end
@@ -19054,7 +19054,7 @@ function Trig_ZamenaLand_Func003Func005Func010C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func005Func012C ()
+function Trig_ZamenaLand_Func003Func005Func012C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -19062,7 +19062,7 @@ function Trig_ZamenaLand_Func003Func005Func012C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func005Func016C ()
+function Trig_ZamenaLand_Func003Func005Func016C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u16T'))) then
 		return false
 	end
@@ -19070,7 +19070,7 @@ function Trig_ZamenaLand_Func003Func005Func016C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func005Func006Func001C ()
+function Trig_ZamenaLand_Func003Func005Func006Func001C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u33T'))) then
 		return true
 	end
@@ -19102,7 +19102,7 @@ function Trig_ZamenaLand_Func003Func005Func006Func001C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func005Func006C ()
+function Trig_ZamenaLand_Func003Func005Func006C()
 	if (not Trig_ZamenaLand_Func003Func005Func006Func001C()) then
 		return false
 	end
@@ -19110,7 +19110,7 @@ function Trig_ZamenaLand_Func003Func005Func006C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func005C ()
+function Trig_ZamenaLand_Func003Func005C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(4))) then
 		return false
 	end
@@ -19118,7 +19118,7 @@ function Trig_ZamenaLand_Func003Func005C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func006Func002C ()
+function Trig_ZamenaLand_Func003Func006Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u28T'))) then
 		return false
 	end
@@ -19126,7 +19126,7 @@ function Trig_ZamenaLand_Func003Func006Func002C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func006Func014C ()
+function Trig_ZamenaLand_Func003Func006Func014C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u43T'))) then
 		return true
 	end
@@ -19137,7 +19137,7 @@ function Trig_ZamenaLand_Func003Func006Func014C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func006Func018C ()
+function Trig_ZamenaLand_Func003Func006Func018C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u26T'))) then
 		return false
 	end
@@ -19145,7 +19145,7 @@ function Trig_ZamenaLand_Func003Func006Func018C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func006Func024C ()
+function Trig_ZamenaLand_Func003Func006Func024C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u52T'))) then
 		return false
 	end
@@ -19153,7 +19153,7 @@ function Trig_ZamenaLand_Func003Func006Func024C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func006Func004C ()
+function Trig_ZamenaLand_Func003Func006Func004C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u15T'))) then
 		return false
 	end
@@ -19161,7 +19161,7 @@ function Trig_ZamenaLand_Func003Func006Func004C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func006Func008C ()
+function Trig_ZamenaLand_Func003Func006Func008C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -19169,7 +19169,7 @@ function Trig_ZamenaLand_Func003Func006Func008C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func006Func026C ()
+function Trig_ZamenaLand_Func003Func006Func026C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return true
 	end
@@ -19177,7 +19177,7 @@ function Trig_ZamenaLand_Func003Func006Func026C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func006Func010C ()
+function Trig_ZamenaLand_Func003Func006Func010C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u42T'))) then
 		return true
 	end
@@ -19185,7 +19185,7 @@ function Trig_ZamenaLand_Func003Func006Func010C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func006Func012C ()
+function Trig_ZamenaLand_Func003Func006Func012C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -19193,7 +19193,7 @@ function Trig_ZamenaLand_Func003Func006Func012C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func006Func016C ()
+function Trig_ZamenaLand_Func003Func006Func016C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u16T'))) then
 		return false
 	end
@@ -19201,7 +19201,7 @@ function Trig_ZamenaLand_Func003Func006Func016C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func006Func006Func001C ()
+function Trig_ZamenaLand_Func003Func006Func006Func001C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u33T'))) then
 		return true
 	end
@@ -19233,7 +19233,7 @@ function Trig_ZamenaLand_Func003Func006Func006Func001C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func006Func006C ()
+function Trig_ZamenaLand_Func003Func006Func006C()
 	if (not Trig_ZamenaLand_Func003Func006Func006Func001C()) then
 		return false
 	end
@@ -19241,7 +19241,7 @@ function Trig_ZamenaLand_Func003Func006Func006C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func006C ()
+function Trig_ZamenaLand_Func003Func006C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(5))) then
 		return false
 	end
@@ -19249,7 +19249,7 @@ function Trig_ZamenaLand_Func003Func006C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func007Func002C ()
+function Trig_ZamenaLand_Func003Func007Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u28T'))) then
 		return false
 	end
@@ -19257,7 +19257,7 @@ function Trig_ZamenaLand_Func003Func007Func002C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func007Func014C ()
+function Trig_ZamenaLand_Func003Func007Func014C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u43T'))) then
 		return true
 	end
@@ -19268,7 +19268,7 @@ function Trig_ZamenaLand_Func003Func007Func014C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func007Func018C ()
+function Trig_ZamenaLand_Func003Func007Func018C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u26T'))) then
 		return false
 	end
@@ -19276,7 +19276,7 @@ function Trig_ZamenaLand_Func003Func007Func018C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func007Func024C ()
+function Trig_ZamenaLand_Func003Func007Func024C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u52T'))) then
 		return false
 	end
@@ -19284,7 +19284,7 @@ function Trig_ZamenaLand_Func003Func007Func024C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func007Func004C ()
+function Trig_ZamenaLand_Func003Func007Func004C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u15T'))) then
 		return false
 	end
@@ -19292,7 +19292,7 @@ function Trig_ZamenaLand_Func003Func007Func004C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func007Func008C ()
+function Trig_ZamenaLand_Func003Func007Func008C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -19300,7 +19300,7 @@ function Trig_ZamenaLand_Func003Func007Func008C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func007Func010C ()
+function Trig_ZamenaLand_Func003Func007Func010C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u42T'))) then
 		return true
 	end
@@ -19308,7 +19308,7 @@ function Trig_ZamenaLand_Func003Func007Func010C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func007Func026C ()
+function Trig_ZamenaLand_Func003Func007Func026C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return true
 	end
@@ -19316,7 +19316,7 @@ function Trig_ZamenaLand_Func003Func007Func026C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func007Func012C ()
+function Trig_ZamenaLand_Func003Func007Func012C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -19324,7 +19324,7 @@ function Trig_ZamenaLand_Func003Func007Func012C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func007Func016C ()
+function Trig_ZamenaLand_Func003Func007Func016C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u16T'))) then
 		return false
 	end
@@ -19332,7 +19332,7 @@ function Trig_ZamenaLand_Func003Func007Func016C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func007Func006Func001C ()
+function Trig_ZamenaLand_Func003Func007Func006Func001C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u33T'))) then
 		return true
 	end
@@ -19364,7 +19364,7 @@ function Trig_ZamenaLand_Func003Func007Func006Func001C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func007Func006C ()
+function Trig_ZamenaLand_Func003Func007Func006C()
 	if (not Trig_ZamenaLand_Func003Func007Func006Func001C()) then
 		return false
 	end
@@ -19372,7 +19372,7 @@ function Trig_ZamenaLand_Func003Func007Func006C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func007C ()
+function Trig_ZamenaLand_Func003Func007C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(6))) then
 		return false
 	end
@@ -19380,7 +19380,7 @@ function Trig_ZamenaLand_Func003Func007C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func008Func002C ()
+function Trig_ZamenaLand_Func003Func008Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u28T'))) then
 		return false
 	end
@@ -19388,7 +19388,7 @@ function Trig_ZamenaLand_Func003Func008Func002C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func008Func014C ()
+function Trig_ZamenaLand_Func003Func008Func014C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u43T'))) then
 		return true
 	end
@@ -19399,7 +19399,7 @@ function Trig_ZamenaLand_Func003Func008Func014C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func008Func018C ()
+function Trig_ZamenaLand_Func003Func008Func018C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u26T'))) then
 		return false
 	end
@@ -19407,7 +19407,7 @@ function Trig_ZamenaLand_Func003Func008Func018C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func008Func024C ()
+function Trig_ZamenaLand_Func003Func008Func024C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u52T'))) then
 		return false
 	end
@@ -19415,7 +19415,7 @@ function Trig_ZamenaLand_Func003Func008Func024C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func008Func004C ()
+function Trig_ZamenaLand_Func003Func008Func004C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u15T'))) then
 		return false
 	end
@@ -19423,7 +19423,7 @@ function Trig_ZamenaLand_Func003Func008Func004C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func008Func008C ()
+function Trig_ZamenaLand_Func003Func008Func008C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u35T'))) then
 		return false
 	end
@@ -19431,7 +19431,7 @@ function Trig_ZamenaLand_Func003Func008Func008C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func008Func026C ()
+function Trig_ZamenaLand_Func003Func008Func026C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return true
 	end
@@ -19439,7 +19439,7 @@ function Trig_ZamenaLand_Func003Func008Func026C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func008Func010C ()
+function Trig_ZamenaLand_Func003Func008Func010C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u42T'))) then
 		return true
 	end
@@ -19447,7 +19447,7 @@ function Trig_ZamenaLand_Func003Func008Func010C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func008Func012C ()
+function Trig_ZamenaLand_Func003Func008Func012C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u46T'))) then
 		return false
 	end
@@ -19455,7 +19455,7 @@ function Trig_ZamenaLand_Func003Func008Func012C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func008Func016C ()
+function Trig_ZamenaLand_Func003Func008Func016C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u16T'))) then
 		return false
 	end
@@ -19463,7 +19463,7 @@ function Trig_ZamenaLand_Func003Func008Func016C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func008Func006Func001C ()
+function Trig_ZamenaLand_Func003Func008Func006Func001C()
 	if ((GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u33T'))) then
 		return true
 	end
@@ -19495,7 +19495,7 @@ function Trig_ZamenaLand_Func003Func008Func006Func001C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func008Func006C ()
+function Trig_ZamenaLand_Func003Func008Func006C()
 	if (not Trig_ZamenaLand_Func003Func008Func006Func001C()) then
 		return false
 	end
@@ -19503,7 +19503,7 @@ function Trig_ZamenaLand_Func003Func008Func006C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003Func008C ()
+function Trig_ZamenaLand_Func003Func008C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(7))) then
 		return false
 	end
@@ -19511,11 +19511,11 @@ function Trig_ZamenaLand_Func003Func008C ()
 end
 
 ---@return boolean
-function Trig_ZamenaLand_Func003C ()
+function Trig_ZamenaLand_Func003C()
 	return true
 end
 
-function Trig_ZamenaLand_Actions ()
+function Trig_ZamenaLand_Actions()
 	if (Trig_ZamenaLand_Func003C()) then
 		if (Trig_ZamenaLand_Func003Func001C()) then
 			if (Trig_ZamenaLand_Func003Func001Func002C()) then
@@ -20113,14 +20113,14 @@ function Trig_ZamenaLand_Actions ()
 	end
 end
 
-function InitTrig_ZamenaLand ()
+function InitTrig_ZamenaLand()
 	gg_trg_ZamenaLand = CreateTrigger()
 	DisableTrigger(gg_trg_ZamenaLand)
 	TriggerAddAction(gg_trg_ZamenaLand, Trig_ZamenaLand_Actions)
 end
 
 ---@return boolean
-function Trig_ZamenaNadpis_Func001Func002C ()
+function Trig_ZamenaNadpis_Func001Func002C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u99T'))) then
 		return false
 	end
@@ -20128,7 +20128,7 @@ function Trig_ZamenaNadpis_Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_ZamenaNadpis_Func001Func004C ()
+function Trig_ZamenaNadpis_Func001Func004C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u33T'))) then
 		return false
 	end
@@ -20136,7 +20136,7 @@ function Trig_ZamenaNadpis_Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_ZamenaNadpis_Func001Func006C ()
+function Trig_ZamenaNadpis_Func001Func006C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -20144,7 +20144,7 @@ function Trig_ZamenaNadpis_Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_ZamenaNadpis_Func001Func008C ()
+function Trig_ZamenaNadpis_Func001Func008C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u39T'))) then
 		return false
 	end
@@ -20155,7 +20155,7 @@ function Trig_ZamenaNadpis_Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_ZamenaNadpis_Func001Func010C ()
+function Trig_ZamenaNadpis_Func001Func010C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u36T'))) then
 		return false
 	end
@@ -20163,7 +20163,7 @@ function Trig_ZamenaNadpis_Func001Func010C ()
 end
 
 ---@return boolean
-function Trig_ZamenaNadpis_Func001Func012C ()
+function Trig_ZamenaNadpis_Func001Func012C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u27T'))) then
 		return false
 	end
@@ -20171,7 +20171,7 @@ function Trig_ZamenaNadpis_Func001Func012C ()
 end
 
 ---@return boolean
-function Trig_ZamenaNadpis_Func001Func018C ()
+function Trig_ZamenaNadpis_Func001Func018C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u55T'))) then
 		return false
 	end
@@ -20179,7 +20179,7 @@ function Trig_ZamenaNadpis_Func001Func018C ()
 end
 
 ---@return boolean
-function Trig_ZamenaNadpis_Func001Func020C ()
+function Trig_ZamenaNadpis_Func001Func020C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u56T'))) then
 		return false
 	end
@@ -20187,7 +20187,7 @@ function Trig_ZamenaNadpis_Func001Func020C ()
 end
 
 ---@return boolean
-function Trig_ZamenaNadpis_Func001Func022C ()
+function Trig_ZamenaNadpis_Func001Func022C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u57T'))) then
 		return false
 	end
@@ -20195,7 +20195,7 @@ function Trig_ZamenaNadpis_Func001Func022C ()
 end
 
 ---@return boolean
-function Trig_ZamenaNadpis_Func001Func024C ()
+function Trig_ZamenaNadpis_Func001Func024C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u58T'))) then
 		return false
 	end
@@ -20203,7 +20203,7 @@ function Trig_ZamenaNadpis_Func001Func024C ()
 end
 
 ---@return boolean
-function Trig_ZamenaNadpis_Func001Func028C ()
+function Trig_ZamenaNadpis_Func001Func028C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u29T'))) then
 		return false
 	end
@@ -20211,14 +20211,14 @@ function Trig_ZamenaNadpis_Func001Func028C ()
 end
 
 ---@return boolean
-function Trig_ZamenaNadpis_Func001Func026C ()
+function Trig_ZamenaNadpis_Func001Func026C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('u43T'))) then
 		return false
 	end
 	return true
 end
 
-function Trig_ZamenaNadpis_Func001A ()
+function Trig_ZamenaNadpis_Func001A()
 	if (Trig_ZamenaNadpis_Func001Func002C()) then
 		CreateTextTagLocBJ("Admin
 Map developer", GetUnitLoc(GetEnumUnit()), 200, 30.00, 30.00, 45.00, 66.00, 0)
@@ -20271,18 +20271,18 @@ Map developer", GetUnitLoc(GetEnumUnit()), 200, 30.00, 30.00, 45.00, 66.00, 0)
 	end
 end
 
-function Trig_ZamenaNadpis_Actions ()
+function Trig_ZamenaNadpis_Actions()
 	ForGroupBJ(GetUnitsInRectAll(GetEntireMapRect()), Trig_ZamenaNadpis_Func001A)
 end
 
-function InitTrig_ZamenaNadpis ()
+function InitTrig_ZamenaNadpis()
 	gg_trg_ZamenaNadpis = CreateTrigger()
 	TriggerRegisterTimerEventSingle(gg_trg_ZamenaNadpis, 5.00)
 	TriggerAddAction(gg_trg_ZamenaNadpis, Trig_ZamenaNadpis_Actions)
 end
 
 ---@return boolean
-function Trig_Magazin_Func001Func001Func001C ()
+function Trig_Magazin_Func001Func001Func001C()
 	if (not (GetOwningPlayer(GetEnumUnit()) == Player(0))) then
 		return false
 	end
@@ -20290,7 +20290,7 @@ function Trig_Magazin_Func001Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_Magazin_Func001Func001Func002C ()
+function Trig_Magazin_Func001Func001Func002C()
 	if (not (GetOwningPlayer(GetEnumUnit()) == Player(1))) then
 		return false
 	end
@@ -20298,7 +20298,7 @@ function Trig_Magazin_Func001Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_Magazin_Func001Func001Func003C ()
+function Trig_Magazin_Func001Func001Func003C()
 	if (not (GetOwningPlayer(GetEnumUnit()) == Player(2))) then
 		return false
 	end
@@ -20306,7 +20306,7 @@ function Trig_Magazin_Func001Func001Func003C ()
 end
 
 ---@return boolean
-function Trig_Magazin_Func001Func001Func004C ()
+function Trig_Magazin_Func001Func001Func004C()
 	if (not (GetOwningPlayer(GetEnumUnit()) == Player(3))) then
 		return false
 	end
@@ -20314,7 +20314,7 @@ function Trig_Magazin_Func001Func001Func004C ()
 end
 
 ---@return boolean
-function Trig_Magazin_Func001Func001Func005C ()
+function Trig_Magazin_Func001Func001Func005C()
 	if (not (GetOwningPlayer(GetEnumUnit()) == Player(4))) then
 		return false
 	end
@@ -20322,7 +20322,7 @@ function Trig_Magazin_Func001Func001Func005C ()
 end
 
 ---@return boolean
-function Trig_Magazin_Func001Func001Func006C ()
+function Trig_Magazin_Func001Func001Func006C()
 	if (not (GetOwningPlayer(GetEnumUnit()) == Player(5))) then
 		return false
 	end
@@ -20330,7 +20330,7 @@ function Trig_Magazin_Func001Func001Func006C ()
 end
 
 ---@return boolean
-function Trig_Magazin_Func001Func001Func007C ()
+function Trig_Magazin_Func001Func001Func007C()
 	if (not (GetOwningPlayer(GetEnumUnit()) == Player(6))) then
 		return false
 	end
@@ -20338,7 +20338,7 @@ function Trig_Magazin_Func001Func001Func007C ()
 end
 
 ---@return boolean
-function Trig_Magazin_Func001Func001Func008C ()
+function Trig_Magazin_Func001Func001Func008C()
 	if (not (GetOwningPlayer(GetEnumUnit()) == Player(7))) then
 		return false
 	end
@@ -20346,14 +20346,14 @@ function Trig_Magazin_Func001Func001Func008C ()
 end
 
 ---@return boolean
-function Trig_Magazin_Func001Func001C ()
+function Trig_Magazin_Func001Func001C()
 	if GetUnitTypeId(GetEnumUnit()) == $68303233 or GetUnitTypeId(GetEnumUnit()) == FourCC('h123') or GetUnitTypeId(GetEnumUnit()) == FourCC('h129') or GetUnitTypeId(GetEnumUnit()) == FourCC('h233') or GetUnitTypeId(GetEnumUnit()) == FourCC('h225') or GetUnitTypeId(GetEnumUnit()) == FourCC('h130') or GetUnitTypeId(GetEnumUnit()) == FourCC('h126') or GetUnitTypeId(GetEnumUnit()) == FourCC('h131') or GetUnitTypeId(GetEnumUnit()) == FourCC('h129') or GetUnitTypeId(GetEnumUnit()) == FourCC('h132') or GetUnitTypeId(GetEnumUnit()) == FourCC('h133') or GetUnitTypeId(GetEnumUnit()) == FourCC('h139') then
 		return true
 	end
 	return false
 end
 
-function Trig_Magazin_Func001A ()
+function Trig_Magazin_Func001A()
 	if (Trig_Magazin_Func001Func001C()) then
 		if (Trig_Magazin_Func001Func001Func001C()) then
 			CreateNUnitsAtLoc(1, FourCC('h1CU'), Player(bj_PLAYER_NEUTRAL_VICTIM), Location(-1400.00, -3000), bj_UNIT_FACING)
@@ -20479,42 +20479,42 @@ function Trig_Magazin_Func001A ()
 	end
 end
 
-function Trig_Magazin_Actions ()
+function Trig_Magazin_Actions()
 	ForGroupBJ(GetUnitsInRectAll(GetEntireMapRect()), Trig_Magazin_Func001A)
 end
 
-function InitTrig_Magazin ()
+function InitTrig_Magazin()
 	gg_trg_Magazin = CreateTrigger()
 	TriggerRegisterTimerEventSingle(gg_trg_Magazin, 30.00)
 	TriggerAddAction(gg_trg_Magazin, Trig_Magazin_Actions)
 end
 
 ---@return boolean
-function Trig_AntiMHCheck_Func001Func001C ()
+function Trig_AntiMHCheck_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('h1CU'))) then
 		return false
 	end
 	return true
 end
 
-function Trig_AntiMHCheck_Func001A ()
+function Trig_AntiMHCheck_Func001A()
 	if (Trig_AntiMHCheck_Func001Func001C()) then
 		RemoveUnit(GetEnumUnit())
 	else
 	end
 end
 
-function Trig_AntiMHCheck_Actions ()
+function Trig_AntiMHCheck_Actions()
 	ForGroupBJ(GetUnitsInRectAll(GetEntireMapRect()), Trig_AntiMHCheck_Func001A)
 end
 
-function InitTrig_AntiMHCheck ()
+function InitTrig_AntiMHCheck()
 	gg_trg_AntiMHCheck = CreateTrigger()
 	DisableTrigger(gg_trg_AntiMHCheck)
 	TriggerAddAction(gg_trg_AntiMHCheck, Trig_AntiMHCheck_Actions)
 end
 
-function C9X ()
+function C9X()
 	local u_1 = GetTriggerUnit() ---@type unit
 	local uu_1 = GetAttacker() ---@type unit
 	local r = GetUnitState(u_1, UNIT_STATE_LIFE) ---@type number real
@@ -20578,7 +20578,7 @@ end
 ---@param u_1 unit
 ---@param id_1 number integer
 ---@param NAV number integer
-function NIV (u_1, id_1, NAV)
+function NIV(u_1, id_1, NAV)
 	if GetUnitAbilityLevel(u_1, id_1) == 0 then
 		UnitAddAbility(u_1, id_1)
 		UnitMakeAbilityPermanent(u_1, true, id_1)
@@ -20591,7 +20591,7 @@ end
 ---@param NAV number integer
 ---@param NJV number real
 ---@param NDV number integer
-function NFV (u_1, NCV, NAV, NJV, NDV)
+function NFV(u_1, NCV, NAV, NJV, NDV)
 	local t ---@type trigger
 	local h ---@type number integer
 	local NKV ---@type number real
@@ -20634,7 +20634,7 @@ end
 
 ---@param UnitID number integer
 ---@return boolean
-function Condition_Unit_Attacked (UnitID)
+function Condition_Unit_Attacked(UnitID)
 	if GetUnitTypeId(GetAttackedUnitBJ()) == UnitID then
 		return true
 	else
@@ -20642,7 +20642,7 @@ function Condition_Unit_Attacked (UnitID)
 	end
 end
 
-function Unit_Attacked_function ()
+function Unit_Attacked_function()
 	local NVE ---@type unit
 	local t ---@type timer
 	local u1 = GetTriggerUnit() ---@type unit
@@ -21069,13 +21069,13 @@ function Unit_Attacked_function ()
 	NVE = nil
 end
 
-function Init_Register_Unit_Attacked ()
+function Init_Register_Unit_Attacked()
 	trg_unit_attacked = CreateTrigger()
 	TriggerRegisterAnyUnitEventBJ(trg_unit_attacked, EVENT_PLAYER_UNIT_ATTACKED)
 	TriggerAddAction(trg_unit_attacked, Unit_Attacked_function)
 end
 
-function Unit_SpellCast_function ()
+function Unit_SpellCast_function()
 	local u1 = GetTriggerUnit() ---@type unit
 	local u2 = GetSpellAbilityUnit() ---@type unit
 	local x_1 = GetUnitX(GetSpellAbilityUnit()) ---@type number real
@@ -21093,13 +21093,13 @@ function Unit_SpellCast_function ()
 	NVE = nil
 end
 
-function Init_Register_Unit_SpellCast ()
+function Init_Register_Unit_SpellCast()
 	trg_unit_SpellCast = CreateTrigger()
 	TriggerRegisterAnyUnitEventBJ(trg_unit_SpellCast, EVENT_PLAYER_UNIT_SPELL_EFFECT)
 	TriggerAddAction(trg_unit_SpellCast, Unit_SpellCast_function)
 end
 
-function TimeSpellAbility ()
+function TimeSpellAbility()
 	local u1 = GetTriggerUnit() ---@type unit
 	local u2 = GetSpellAbilityUnit() ---@type unit
 	local x_1 = GetUnitX(GetSpellAbilityUnit()) ---@type number real
@@ -21116,14 +21116,14 @@ function TimeSpellAbility ()
 	u2 = nil
 end
 
-function Init_Register_Unit_SpellCast1 ()
+function Init_Register_Unit_SpellCast1()
 	trg_unit_SpellCast1 = CreateTrigger()
 	TriggerRegisterAnyUnitEventBJ(trg_unit_SpellCast1, EVENT_PLAYER_UNIT_SPELL_EFFECT)
 	TriggerAddAction(trg_unit_SpellCast1, TimeSpellAbility)
 end
 
 ---@return boolean
-function Trig_Nickname1_Func001Func001C ()
+function Trig_Nickname1_Func001Func001C()
 	if ((GetPlayerName(GetTriggerPlayer()) == "G0mez")) then
 		return true
 	end
@@ -21134,7 +21134,7 @@ function Trig_Nickname1_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname1_Func001C ()
+function Trig_Nickname1_Func001C()
 	if (not Trig_Nickname1_Func001Func001C()) then
 		return false
 	end
@@ -21142,7 +21142,7 @@ function Trig_Nickname1_Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname1_Func002Func001C ()
+function Trig_Nickname1_Func002Func001C()
 	if ((GetPlayerName(GetTriggerPlayer()) == "Innocent")) then
 		return true
 	end
@@ -21162,14 +21162,14 @@ function Trig_Nickname1_Func002Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname1_Func002C ()
+function Trig_Nickname1_Func002C()
 	if (not Trig_Nickname1_Func002Func001C()) then
 		return false
 	end
 	return true
 end
 
-function Trig_Nickname1_Actions ()
+function Trig_Nickname1_Actions()
 	if (Trig_Nickname1_Func001C()) then
 		SetPlayerName(GetTriggerPlayer(), "|cff00CED1G|cff40E0D00|cff00FFFFm|cffAFEEEEe|cff7FFFD4z")
 	else
@@ -21181,7 +21181,7 @@ function Trig_Nickname1_Actions ()
 	DoNothing()
 end
 
-function InitTrig_Nickname1 ()
+function InitTrig_Nickname1()
 	gg_trg_Nickname1 = CreateTrigger()
 	TriggerRegisterPlayerChatEvent(gg_trg_Nickname1, Player(0), "!Nick1", true)
 	TriggerRegisterPlayerChatEvent(gg_trg_Nickname1, Player(1), "!Nick1", true)
@@ -21195,7 +21195,7 @@ function InitTrig_Nickname1 ()
 end
 
 ---@return boolean
-function Trig_Nickname2_Func001Func001C ()
+function Trig_Nickname2_Func001Func001C()
 	if ((GetPlayerName(GetTriggerPlayer()) == "G0mez")) then
 		return true
 	end
@@ -21206,7 +21206,7 @@ function Trig_Nickname2_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname2_Func001C ()
+function Trig_Nickname2_Func001C()
 	if (not Trig_Nickname2_Func001Func001C()) then
 		return false
 	end
@@ -21214,7 +21214,7 @@ function Trig_Nickname2_Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname2_Func002Func001C ()
+function Trig_Nickname2_Func002Func001C()
 	if ((GetPlayerName(GetTriggerPlayer()) == "Innocent")) then
 		return true
 	end
@@ -21234,14 +21234,14 @@ function Trig_Nickname2_Func002Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname2_Func002C ()
+function Trig_Nickname2_Func002C()
 	if (not Trig_Nickname2_Func002Func001C()) then
 		return false
 	end
 	return true
 end
 
-function Trig_Nickname2_Actions ()
+function Trig_Nickname2_Actions()
 	if (Trig_Nickname2_Func001C()) then
 		SetPlayerName(GetTriggerPlayer(), "|cff191970G|cff0000CD0|cff0000FFm|cff4169E1e|cff1E90FFz")
 	else
@@ -21253,7 +21253,7 @@ function Trig_Nickname2_Actions ()
 	DoNothing()
 end
 
-function InitTrig_Nickname2 ()
+function InitTrig_Nickname2()
 	gg_trg_Nickname2 = CreateTrigger()
 	TriggerRegisterPlayerChatEvent(gg_trg_Nickname2, Player(0), "!Nick2", true)
 	TriggerRegisterPlayerChatEvent(gg_trg_Nickname2, Player(1), "!Nick2", true)
@@ -21267,7 +21267,7 @@ function InitTrig_Nickname2 ()
 end
 
 ---@return boolean
-function Trig_Nickname3_Func001Func001C ()
+function Trig_Nickname3_Func001Func001C()
 	if ((GetPlayerName(GetTriggerPlayer()) == "G0mez")) then
 		return true
 	end
@@ -21278,7 +21278,7 @@ function Trig_Nickname3_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname3_Func001C ()
+function Trig_Nickname3_Func001C()
 	if (not Trig_Nickname3_Func001Func001C()) then
 		return false
 	end
@@ -21286,7 +21286,7 @@ function Trig_Nickname3_Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname3_Func002Func001C ()
+function Trig_Nickname3_Func002Func001C()
 	if ((GetPlayerName(GetTriggerPlayer()) == "Innocent")) then
 		return true
 	end
@@ -21306,14 +21306,14 @@ function Trig_Nickname3_Func002Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname3_Func002C ()
+function Trig_Nickname3_Func002C()
 	if (not Trig_Nickname3_Func002Func001C()) then
 		return false
 	end
 	return true
 end
 
-function Trig_Nickname3_Actions ()
+function Trig_Nickname3_Actions()
 	if (Trig_Nickname3_Func001C()) then
 		SetPlayerName(GetTriggerPlayer(), "|cff8B0000G|cffB222220|cffDC143Cm|cffFF0000e|cffFF4500z")
 	else
@@ -21325,7 +21325,7 @@ function Trig_Nickname3_Actions ()
 	DoNothing()
 end
 
-function InitTrig_Nickname3 ()
+function InitTrig_Nickname3()
 	gg_trg_Nickname3 = CreateTrigger()
 	TriggerRegisterPlayerChatEvent(gg_trg_Nickname3, Player(0), "!Nick3", true)
 	TriggerRegisterPlayerChatEvent(gg_trg_Nickname3, Player(1), "!Nick3", true)
@@ -21339,7 +21339,7 @@ function InitTrig_Nickname3 ()
 end
 
 ---@return boolean
-function Trig_Nickname4_Func001Func001C ()
+function Trig_Nickname4_Func001Func001C()
 	if ((GetPlayerName(GetTriggerPlayer()) == "G0mez")) then
 		return true
 	end
@@ -21350,7 +21350,7 @@ function Trig_Nickname4_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname4_Func001C ()
+function Trig_Nickname4_Func001C()
 	if (not Trig_Nickname4_Func001Func001C()) then
 		return false
 	end
@@ -21358,7 +21358,7 @@ function Trig_Nickname4_Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname4_Func002Func001C ()
+function Trig_Nickname4_Func002Func001C()
 	if ((GetPlayerName(GetTriggerPlayer()) == "Innocent")) then
 		return true
 	end
@@ -21378,14 +21378,14 @@ function Trig_Nickname4_Func002Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname4_Func002C ()
+function Trig_Nickname4_Func002C()
 	if (not Trig_Nickname4_Func002Func001C()) then
 		return false
 	end
 	return true
 end
 
-function Trig_Nickname4_Actions ()
+function Trig_Nickname4_Actions()
 	if (Trig_Nickname4_Func001C()) then
 		SetPlayerName(GetTriggerPlayer(), "|cff8B0000G|cffB222220|cffDC143Cm|cffFF0000e|cffFF4500z")
 	else
@@ -21397,7 +21397,7 @@ function Trig_Nickname4_Actions ()
 	DoNothing()
 end
 
-function InitTrig_Nickname4 ()
+function InitTrig_Nickname4()
 	gg_trg_Nickname4 = CreateTrigger()
 	TriggerRegisterPlayerChatEvent(gg_trg_Nickname4, Player(0), "!Nick4", true)
 	TriggerRegisterPlayerChatEvent(gg_trg_Nickname4, Player(1), "!Nick4", true)
@@ -21411,7 +21411,7 @@ function InitTrig_Nickname4 ()
 end
 
 ---@return boolean
-function Trig_Nickname5_Func001Func001C ()
+function Trig_Nickname5_Func001Func001C()
 	if ((GetPlayerName(GetTriggerPlayer()) == "G0mez")) then
 		return true
 	end
@@ -21422,7 +21422,7 @@ function Trig_Nickname5_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname5_Func001C ()
+function Trig_Nickname5_Func001C()
 	if (not Trig_Nickname5_Func001Func001C()) then
 		return false
 	end
@@ -21430,7 +21430,7 @@ function Trig_Nickname5_Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname5_Func002Func001C ()
+function Trig_Nickname5_Func002Func001C()
 	if ((GetPlayerName(GetTriggerPlayer()) == "Innocent")) then
 		return true
 	end
@@ -21450,14 +21450,14 @@ function Trig_Nickname5_Func002Func001C ()
 end
 
 ---@return boolean
-function Trig_Nickname5_Func002C ()
+function Trig_Nickname5_Func002C()
 	if (not Trig_Nickname5_Func002Func001C()) then
 		return false
 	end
 	return true
 end
 
-function Trig_Nickname5_Actions ()
+function Trig_Nickname5_Actions()
 	if (Trig_Nickname5_Func001C()) then
 		SetPlayerName(GetTriggerPlayer(), "|cff8B0000G|cffB222220|cffDC143Cm|cffFF0000e|cffFF4500z")
 	else
@@ -21469,7 +21469,7 @@ function Trig_Nickname5_Actions ()
 	DoNothing()
 end
 
-function InitTrig_Nickname5 ()
+function InitTrig_Nickname5()
 	gg_trg_Nickname5 = CreateTrigger()
 	TriggerRegisterPlayerChatEvent(gg_trg_Nickname5, Player(0), "!Nick5", true)
 	TriggerRegisterPlayerChatEvent(gg_trg_Nickname5, Player(1), "!Nick5", true)
@@ -21483,7 +21483,7 @@ function InitTrig_Nickname5 ()
 end
 
 ---@return boolean
-function Trig_Decoration_Conditions ()
+function Trig_Decoration_Conditions()
 	if (not (GetSpellAbilityId() == FourCC('A65T'))) then
 		return false
 	end
@@ -21491,7 +21491,7 @@ function Trig_Decoration_Conditions ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func001Func001Func002C ()
+function Trig_Decoration_Func001Func001Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -21499,12 +21499,12 @@ function Trig_Decoration_Func001Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func001Func001C ()
+function Trig_Decoration_Func001Func001C()
 	return true
 end
 
 ---@return boolean
-function Trig_Decoration_Func001C ()
+function Trig_Decoration_Func001C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(0))) then
 		return false
 	end
@@ -21512,7 +21512,7 @@ function Trig_Decoration_Func001C ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func002Func001Func002C ()
+function Trig_Decoration_Func002Func001Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -21520,12 +21520,12 @@ function Trig_Decoration_Func002Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func002Func001C ()
+function Trig_Decoration_Func002Func001C()
 	return true
 end
 
 ---@return boolean
-function Trig_Decoration_Func002C ()
+function Trig_Decoration_Func002C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(1))) then
 		return false
 	end
@@ -21533,7 +21533,7 @@ function Trig_Decoration_Func002C ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func003Func001Func002C ()
+function Trig_Decoration_Func003Func001Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -21541,12 +21541,12 @@ function Trig_Decoration_Func003Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func003Func001C ()
+function Trig_Decoration_Func003Func001C()
 	return true
 end
 
 ---@return boolean
-function Trig_Decoration_Func003C ()
+function Trig_Decoration_Func003C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(2))) then
 		return false
 	end
@@ -21554,7 +21554,7 @@ function Trig_Decoration_Func003C ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func004Func001Func002C ()
+function Trig_Decoration_Func004Func001Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -21562,12 +21562,12 @@ function Trig_Decoration_Func004Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func004Func001C ()
+function Trig_Decoration_Func004Func001C()
 	return true
 end
 
 ---@return boolean
-function Trig_Decoration_Func004C ()
+function Trig_Decoration_Func004C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(3))) then
 		return false
 	end
@@ -21575,7 +21575,7 @@ function Trig_Decoration_Func004C ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func005Func001Func002C ()
+function Trig_Decoration_Func005Func001Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -21583,12 +21583,12 @@ function Trig_Decoration_Func005Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func005Func001C ()
+function Trig_Decoration_Func005Func001C()
 	return true
 end
 
 ---@return boolean
-function Trig_Decoration_Func005C ()
+function Trig_Decoration_Func005C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(4))) then
 		return false
 	end
@@ -21596,7 +21596,7 @@ function Trig_Decoration_Func005C ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func006Func001Func002C ()
+function Trig_Decoration_Func006Func001Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -21604,12 +21604,12 @@ function Trig_Decoration_Func006Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func006Func001C ()
+function Trig_Decoration_Func006Func001C()
 	return true
 end
 
 ---@return boolean
-function Trig_Decoration_Func006C ()
+function Trig_Decoration_Func006C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(5))) then
 		return false
 	end
@@ -21617,25 +21617,25 @@ function Trig_Decoration_Func006C ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func007Func001Func002C ()
+function Trig_Decoration_Func007Func001Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return false
 	end
 	return true
 end
 
-function O1EX ()
+function O1EX()
 	SetUnitPathing(GetEnteringUnit(), true)
 	IssuePointOrderByIdLoc(GetEnteringUnit(), 851983, HI)
 end
 
 ---@return boolean
-function Trig_Decoration_Func007Func001C ()
+function Trig_Decoration_Func007Func001C()
 	return true
 end
 
 ---@return boolean
-function Trig_Decoration_Func007C ()
+function Trig_Decoration_Func007C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(6))) then
 		return false
 	end
@@ -21643,7 +21643,7 @@ function Trig_Decoration_Func007C ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func008Func001Func002C ()
+function Trig_Decoration_Func008Func001Func002C()
 	if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('u32T'))) then
 		return false
 	end
@@ -21651,19 +21651,19 @@ function Trig_Decoration_Func008Func001Func002C ()
 end
 
 ---@return boolean
-function Trig_Decoration_Func008Func001C ()
+function Trig_Decoration_Func008Func001C()
 	return true
 end
 
 ---@return boolean
-function Trig_Decoration_Func008C ()
+function Trig_Decoration_Func008C()
 	if (not (GetOwningPlayer(GetSpellAbilityUnit()) == Player(7))) then
 		return false
 	end
 	return true
 end
 
-function Trig_Decoration_Actions ()
+function Trig_Decoration_Actions()
 	if (Trig_Decoration_Func001C()) then
 		if (Trig_Decoration_Func001Func001C()) then
 			if (Trig_Decoration_Func001Func001Func002C()) then
@@ -21779,7 +21779,7 @@ function Trig_Decoration_Actions ()
 	end
 end
 
-function InitTrig_Decoration ()
+function InitTrig_Decoration()
 	gg_trg_Decoration = CreateTrigger()
 	TriggerRegisterAnyUnitEventBJ(gg_trg_Decoration, EVENT_PLAYER_UNIT_SPELL_CAST)
 	TriggerAddCondition(gg_trg_Decoration, Condition(Trig_Decoration_Conditions))
@@ -21787,17 +21787,17 @@ function InitTrig_Decoration ()
 end
 
 ---@return boolean
-function Trig_King_Func001001 ()
+function Trig_King_Func001001()
 	return (GetUnitTypeId(GetTriggerUnit()) == FourCC('h00K')) and (GetPlayerColor(GetTriggerPlayer()) == PLAYER_COLOR_RED or GetPlayerColor(GetTriggerPlayer()) == PLAYER_COLOR_BLUE or GetPlayerColor(GetTriggerPlayer()) == PLAYER_COLOR_CYAN or GetPlayerColor(GetTriggerPlayer()) == PLAYER_COLOR_PURPLE)
 end
 
 ---@return boolean
-function Trig_King_Func001002 ()
+function Trig_King_Func001002()
 	return (GetUnitTypeId(GetTriggerUnit()) == FourCC('h06H')) and (GetPlayerColor(GetTriggerPlayer()) == PLAYER_COLOR_YELLOW or GetPlayerColor(GetTriggerPlayer()) == PLAYER_COLOR_ORANGE or GetPlayerColor(GetTriggerPlayer()) == PLAYER_COLOR_GREEN or GetPlayerColor(GetTriggerPlayer()) == PLAYER_COLOR_PINK)
 end
 
 ---@return boolean
-function Trig_King_Conditions ()
+function Trig_King_Conditions()
 	if (not GetBooleanOr(Trig_King_Func001001(), Trig_King_Func001002())) then
 		return false
 	end
@@ -21807,11 +21807,11 @@ function Trig_King_Conditions ()
 	return true
 end
 
-function Trig_King_Actions ()
+function Trig_King_Actions()
 	SetUnitOwner(GetTriggerUnit(), GetTriggerPlayer(), true)
 end
 
-function InitTrig_King ()
+function InitTrig_King()
 	gg_trg_King = CreateTrigger()
 	TriggerRegisterPlayerSelectionEventBJ(gg_trg_King, Player(0), true)
 	TriggerRegisterPlayerSelectionEventBJ(gg_trg_King, Player(1), true)
@@ -21826,31 +21826,31 @@ function InitTrig_King ()
 end
 
 ---@return boolean
-function Trig_MHAnimation_Func001Func001C ()
+function Trig_MHAnimation_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('h2CU'))) then
 		return false
 	end
 	return true
 end
 
-function Trig_MHAnimation_Func001A ()
+function Trig_MHAnimation_Func001A()
 	if (Trig_MHAnimation_Func001Func001C()) then
 		SetUnitAnimation(GetEnumUnit(), "death")
 	else
 	end
 end
 
-function Trig_MHAnimation_Actions ()
+function Trig_MHAnimation_Actions()
 	ForGroupBJ(GetUnitsInRectAll(GetEntireMapRect()), Trig_MHAnimation_Func001A)
 end
 
-function InitTrig_MHAnimation ()
+function InitTrig_MHAnimation()
 	gg_trg_MHAnimation = CreateTrigger()
 	TriggerAddAction(gg_trg_MHAnimation, Trig_MHAnimation_Actions)
 end
 
 ---@return boolean
-function Trig_ZamenaHydra_Func001Func001C ()
+function Trig_ZamenaHydra_Func001Func001C()
 	if ((GetPlayerName(GetOwningPlayer(GetConstructingStructure())) == "Wishmaster")) then
 		return true
 	end
@@ -21900,7 +21900,7 @@ function Trig_ZamenaHydra_Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_ZamenaHydra_Func001Func003Func001Func001C ()
+function Trig_ZamenaHydra_Func001Func003Func001Func001C()
 	if ((GetUnitTypeId(GetEnumUnit()) == FourCC('u00J'))) then
 		return true
 	end
@@ -21920,14 +21920,14 @@ function Trig_ZamenaHydra_Func001Func003Func001Func001C ()
 end
 
 ---@return boolean
-function Trig_ZamenaHydra_Func001Func003Func001C ()
+function Trig_ZamenaHydra_Func001Func003Func001C()
 	if (not Trig_ZamenaHydra_Func001Func003Func001Func001C()) then
 		return false
 	end
 	return true
 end
 
-function Trig_ZamenaHydra_Func001Func003A ()
+function Trig_ZamenaHydra_Func001Func003A()
 	if (Trig_ZamenaHydra_Func001Func003Func001C()) then
 		PauseUnitBJ(true, GetEnumUnit())
 		PauseUnitBJ(false, GetEnumUnit())
@@ -21937,7 +21937,7 @@ function Trig_ZamenaHydra_Func001Func003A ()
 end
 
 ---@return boolean
-function Trig_ZamenaHydra_Func001C ()
+function Trig_ZamenaHydra_Func001C()
 	if (not Trig_ZamenaHydra_Func001Func001C()) then
 		return false
 	end
@@ -21947,7 +21947,7 @@ function Trig_ZamenaHydra_Func001C ()
 	return true
 end
 
-function Trig_ZamenaHydra_Actions ()
+function Trig_ZamenaHydra_Actions()
 	if (Trig_ZamenaHydra_Func001C()) then
 		KillUnit(GetConstructingStructure())
 		ForGroupBJ(GetUnitsInRangeOfLocAll(200.00, GetUnitLoc(GetConstructingStructure())), Trig_ZamenaHydra_Func001Func003A)
@@ -21955,21 +21955,21 @@ function Trig_ZamenaHydra_Actions ()
 	end
 end
 
-function InitTrig_ZamenaHydra ()
+function InitTrig_ZamenaHydra()
 	gg_trg_ZamenaHydra = CreateTrigger()
 	TriggerRegisterAnyUnitEventBJ(gg_trg_ZamenaHydra, EVENT_PLAYER_UNIT_CONSTRUCT_START)
 	TriggerAddAction(gg_trg_ZamenaHydra, Trig_ZamenaHydra_Actions)
 end
 
 ---@return boolean
-function Trig_OtmenaChampa_Conditions ()
+function Trig_OtmenaChampa_Conditions()
 	if (not (GetSpellAbilityId() == FourCC('A908'))) then
 		return false
 	end
 	return true
 end
 
-function Trig_OtmenaChampa_Actions ()
+function Trig_OtmenaChampa_Actions()
 	local p = GetTriggerPlayer() ---@type player
 	local id_1 = GetPlayerId(p) ---@type number integer
 	local f ---@type force
@@ -21986,7 +21986,7 @@ function Trig_OtmenaChampa_Actions ()
 	p = nil
 end
 
-function InitTrig_OtmenaChampa ()
+function InitTrig_OtmenaChampa()
 	gg_trg_OtmenaChampa = CreateTrigger()
 	TriggerRegisterAnyUnitEventBJ(gg_trg_OtmenaChampa, EVENT_PLAYER_UNIT_SPELL_EFFECT)
 	TriggerAddCondition(gg_trg_OtmenaChampa, Condition(Trig_OtmenaChampa_Conditions))
@@ -21994,7 +21994,7 @@ function InitTrig_OtmenaChampa ()
 end
 
 ---@return boolean
-function Trig_OtmenaChampaAdd_Conditions ()
+function Trig_OtmenaChampaAdd_Conditions()
 	if (not (GetSpellAbilityId() == FourCC('A911'))) then
 		if (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('h127'))) or (not (GetUnitTypeId(GetSpellAbilityUnit()) == FourCC('h124'))) then
 			return false
@@ -22003,23 +22003,23 @@ function Trig_OtmenaChampaAdd_Conditions ()
 	return true
 end
 
-function Trig_OtmenaChampaAdd_Actions ()
+function Trig_OtmenaChampaAdd_Actions()
 	UnitAddAbilityBJ(FourCC('A908'), GetSpellAbilityUnit())
 	UnitRemoveAbilityBJ(FourCC('A911'), GetSpellAbilityUnit())
 end
 
-function InitTrig_OtmenaChampaAdd ()
+function InitTrig_OtmenaChampaAdd()
 	gg_trg_OtmenaChampaAdd = CreateTrigger()
 	TriggerAddCondition(gg_trg_OtmenaChampaAdd, Condition(Trig_OtmenaChampaAdd_Conditions))
 	TriggerAddAction(gg_trg_OtmenaChampaAdd, Trig_OtmenaChampaAdd_Actions)
 end
 
 ---@return boolean
-function Trig_ZamenaSEGA_Func001Func001001 ()
+function Trig_ZamenaSEGA_Func001Func001001()
 	return (GetUnitTypeId(GetEnumUnit()) == FourCC('u45T'))
 end
 
-function Trig_ZamenaSEGA_Func001A ()
+function Trig_ZamenaSEGA_Func001A()
 	if (Trig_ZamenaSEGA_Func001Func001001()) then
 		SetUnitColor(GetEnumUnit(), PLAYER_COLOR_GREEN)
 	else
@@ -22027,17 +22027,17 @@ function Trig_ZamenaSEGA_Func001A ()
 	end
 end
 
-function Trig_ZamenaSEGA_Actions ()
+function Trig_ZamenaSEGA_Actions()
 	ForGroupBJ(GetUnitsInRectAll(GetEntireMapRect()), Trig_ZamenaSEGA_Func001A)
 end
 
-function InitTrig_ZamenaSEGA ()
+function InitTrig_ZamenaSEGA()
 	gg_trg_ZamenaSEGA = CreateTrigger()
 	TriggerRegisterTimerEventSingle(gg_trg_ZamenaSEGA, 5)
 	TriggerAddAction(gg_trg_ZamenaSEGA, Trig_ZamenaSEGA_Actions)
 end
 
-function Trig_DiscordText_Actions ()
+function Trig_DiscordText_Actions()
 	CreateTextTagLocBJ("|cff9ACD32Поддержка через Тинькофф", Location(3113.00, -400.00), 0, 12.00, 100, 100.00, 100.00, 0)
 	CreateTextTagLocBJ("|cff9ACD32Поддержка через Тинькофф", Location(-5975.00, -400.00), 0, 12.00, 100, 100, 100, 0)
 	CreateTextTagLocBJ("|cff9ACD32Discord проекта:", Location(5566.00, -400.00), 0, 12.00, 100, 100.00, 100.00, 0)
@@ -22048,31 +22048,31 @@ function Trig_DiscordText_Actions ()
 Подписывайся и развивайся", Location(4225.00, 4030.00), 0, 12.00, 100, 100, 100, 0)
 end
 
-function InitTrig_DiscordText ()
+function InitTrig_DiscordText()
 	gg_trg_DiscordText = CreateTrigger()
 	TriggerRegisterTimerEventSingle(gg_trg_DiscordText, 1.00)
 	TriggerAddAction(gg_trg_DiscordText, Trig_DiscordText_Actions)
 end
 
-function Trig_INFA_Actions ()
+function Trig_INFA_Actions()
 	DisplayTimedTextToForce(GetPlayersAll(), 30, "Приглашаем всех желающих на командный |cff7B68EETeam-Cup Турнир ЛТД|r. Чтобы подать заявку писать либо в дискорде карты - |cff1E90FFhttps://discord.gg/VyMDE8vZ4P|r, либо в личном сообщении моего дискорда: |cff4682B4@g6mez|r или на мой телеграм: |cff4169E1@Ullaman0v|r")
 end
 
-function InitTrig_INFA ()
+function InitTrig_INFA()
 	gg_trg_INFA = CreateTrigger()
 	TriggerRegisterTimerEventPeriodic(gg_trg_INFA, 9999.00)
 	TriggerAddAction(gg_trg_INFA, Trig_INFA_Actions)
 end
 
 ---@return boolean
-function Trig_KingCheck_Func001Func001C ()
+function Trig_KingCheck_Func001Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('h00K'))) then
 		return false
 	end
 	return true
 end
 
-function Trig_KingCheck_Func001A ()
+function Trig_KingCheck_Func001A()
 	if (Trig_KingCheck_Func001Func001C()) then
 		SetUnitOwner(GetEnumUnit(), Player(0), true)
 	else
@@ -22080,40 +22080,40 @@ function Trig_KingCheck_Func001A ()
 end
 
 ---@return boolean
-function Trig_KingCheck_Func002Func001C ()
+function Trig_KingCheck_Func002Func001C()
 	if (not (GetUnitTypeId(GetEnumUnit()) == FourCC('h06H'))) then
 		return false
 	end
 	return true
 end
 
-function Trig_KingCheck_Func002A ()
+function Trig_KingCheck_Func002A()
 	if (Trig_KingCheck_Func002Func001C()) then
 		SetUnitOwner(GetEnumUnit(), Player(4), true)
 	else
 	end
 end
 
-function Trig_KingCheck_Actions ()
+function Trig_KingCheck_Actions()
 	ForGroupBJ(GetUnitsInRectAll(RectFromLoc(Location(-5000.00, -2900.00), Location(-4100.00, -3600.00))), Trig_KingCheck_Func001A)
 	ForGroupBJ(GetUnitsInRectAll(RectFromLoc(Location(5000.00, -2900.00), Location(4100.00, -3600.00))), Trig_KingCheck_Func002A)
 end
 
-function InitTrig_KingCheck ()
+function InitTrig_KingCheck()
 	gg_trg_KingCheck = CreateTrigger()
 	TriggerRegisterTimerEventSingle(gg_trg_KingCheck, 5)
 	TriggerAddAction(gg_trg_KingCheck, Trig_KingCheck_Actions)
 end
 
 ---@return boolean
-function Trig_ForsakenArmor_Conditions ()
+function Trig_ForsakenArmor_Conditions()
 	if (not (GetUnitTypeId(GetKillingUnitBJ()) == FourCC('h06C'))) then
 		return false
 	end
 	return true
 end
 
-function Trig_ForsakenArmor_Actions ()
+function Trig_ForsakenArmor_Actions()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	x_1 = GetUnitX(GetKillingUnitBJ())
@@ -22122,14 +22122,14 @@ function Trig_ForsakenArmor_Actions ()
 	DestroyEffect(AddSpecialEffect("Abilities\\Spells\\Undead\\AnimateDead\\AnimateDeadTarget.mdl", x_1, y_1))
 end
 
-function InitTrig_ForsakenArmor ()
+function InitTrig_ForsakenArmor()
 	gg_trg_ForsakenArmor = CreateTrigger()
 	TriggerRegisterAnyUnitEventBJ(gg_trg_ForsakenArmor, EVENT_PLAYER_UNIT_DEATH)
 	TriggerAddCondition(gg_trg_ForsakenArmor, Condition(Trig_ForsakenArmor_Conditions))
 	TriggerAddAction(gg_trg_ForsakenArmor, Trig_ForsakenArmor_Actions)
 end
 
-function InitCustomTriggers ()
+function InitCustomTriggers()
 	InitTrig_KingCheck()
 	InitTrig_Magazin()
 	InitTrig_ZamenaLand()
@@ -22161,7 +22161,7 @@ function InitCustomTriggers ()
 	InitTrig_TreePick()
 end
 
-function RKX ()
+function RKX()
 	DisableTrigger(GetTriggeringTrigger())
 	EC = true
 	modePR = true
@@ -22205,7 +22205,7 @@ function RKX ()
 	ForForce(ZI, ref_function_RJX)
 end
 
-function RLX ()
+function RLX()
 	SetPlayerTechMaxAllowedSwap($75303045, 0, GetEnumPlayer())
 	SetPlayerTechMaxAllowedSwap($75303050, 0, GetEnumPlayer())
 	bj_forLoopAIndex = 0
@@ -22217,7 +22217,7 @@ function RLX ()
 	end
 end
 
-function RMX ()
+function RMX()
 	EE = GetRandomInt(0, ER)
 	IX = BAE(0, ER, EE)
 	SetPlayerTechMaxAllowedSwap(OC[EE], 1, GetEnumPlayer())
@@ -22233,7 +22233,7 @@ function RMX ()
 	SelectUnitForPlayerSingle(bj_lastReplacedUnit, GetOwningPlayer(bj_lastReplacedUnit))
 end
 
-function ROX ()
+function ROX()
 	EE = CountPlayersInForceBJ(ZI)
 	BE = "Positive Votes : " .. I2S(TF - UF) .. "\t(Require:" .. R2SW(I2R(EE) * .5, 1, 1) .. ")"
 	ForForce(ZI, ref_function_RXX)
@@ -22260,7 +22260,7 @@ function ROX ()
 	MultiboardDisplay(JR, true)
 end
 
-function RPX ()
+function RPX()
 	DisableTrigger(GetTriggeringTrigger())
 	EC = true
 	modeSD = true
@@ -22270,11 +22270,11 @@ function RPX ()
 	ForForce(ZI, ref_function_RMX)
 end
 
-function RRX ()
+function RRX()
 	DialogDisplayBJ(false, JF, GetEnumPlayer())
 end
 
-function RSX ()
+function RSX()
 	SetPlayerTechMaxAllowedSwap($75303050, 0, GetEnumPlayer())
 	bj_forLoopAIndex = 0
 	bj_forLoopAIndexEnd = ER
@@ -22285,7 +22285,7 @@ function RSX ()
 	end
 end
 
-function RTE ()
+function RTE()
 	local u_1 = GetEnumUnit() ---@type unit
 	local tx ---@type number real
 	local ty ---@type number real
@@ -22300,7 +22300,7 @@ function RTE ()
 	u_1 = nil
 end
 
-function RUE ()
+function RUE()
 	local u_1 = GetEnumUnit() ---@type unit
 	local tx ---@type number real
 	local ty ---@type number real
@@ -22320,11 +22320,11 @@ function RUE ()
 end
 
 ---@return boolean
-function RTX ()
+function RTX()
 	return bj_forLoopAIndex == EE
 end
 
-function RUX ()
+function RUX()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	EE = GetRandomInt(1, ER)
@@ -22418,11 +22418,11 @@ function RUX ()
 end
 
 ---@return boolean
-function RVX ()
+function RVX()
 	return GetClickedButton() == PF or GetClickedButton() == QF or GetClickedButton() == MF
 end
 
-function RWX ()
+function RWX()
 	EC = true
 	modeAR = true
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 5., "|cffFFcc00All Random|r: you will be given a random builder in a moment.")
@@ -22433,12 +22433,12 @@ function RWX ()
 	DisableTrigger(GetTriggeringTrigger())
 end
 
-function RXX ()
+function RXX()
 	DialogDisplayBJ(false, LF, GetEnumPlayer())
 end
 
 ---@param AOV string
-function AXV (AOV)
+function AXV(AOV)
 	local APV = CreateSound(AOV, false, false, true, 12700, 12700, "") ---@type sound
 	StartSound(APV)
 	KillSoundWhenDone(APV)
@@ -22448,7 +22448,7 @@ end
 
 ---@param x_1 number real
 ---@param y_1 number real
-function RWE (x_1, y_1)
+function RWE(x_1, y_1)
 	local u_1 = CreateUnit(Player(13), $75303036, x_1, y_1, 0.) ---@type unit
 	SetUnitScale(u_1, 4., 4., 4.)
 	DestroyEffect(AddSpecialEffectTarget("Abilities\\Spells\\Human\\MassTeleport\\MassTeleportTarget.mdl", u_1, "origin"))
@@ -22456,7 +22456,7 @@ function RWE (x_1, y_1)
 	u_1 = nil
 end
 
-function RYE ()
+function RYE()
 	local id_1 ---@type number integer
 	local f ---@type force
 	GetOwningPlayer(GetTriggerUnit())
@@ -22504,7 +22504,7 @@ function RYE ()
 	f = nil
 end
 
-function RYX ()
+function RYX()
 	if GetEnumPlayer() ~= Player(0) then
 		bj_forLoopAIndex = 0
 		bj_forLoopAIndexEnd = 15
@@ -22519,7 +22519,7 @@ function RYX ()
 	end
 end
 
-function RZE ()
+function RZE()
 	local id_1 ---@type number integer
 	local f ---@type force
 	GetOwningPlayer(GetTriggerUnit())
@@ -22567,7 +22567,7 @@ function RZE ()
 	f = nil
 end
 
-function RZX ()
+function RZX()
 	EC = true
 	modeHP = true
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 5., "|cffFFcc00Host Pick|r: host will pick same builder for everyone. ")
@@ -22576,23 +22576,23 @@ function RZX ()
 	DisableTrigger(GetTriggeringTrigger())
 end
 
-function R_E ()
+function R_E()
 	if RBE() == false and OME() == false then
 		GroupAddUnit(M8, GetTriggerUnit())
 	end
 end
 
 ---@return boolean
-function R_X ()
+function R_X()
 	return modeLI == false
 end
 
 ---@return boolean
-function SEE ()
+function SEE()
 	return GetSpellAbilityId() == $41303038
 end
 
-function SVE ()
+function SVE()
 	A4V(QE)
 	QE = IPE(FourCC('h0CU'))
 	if Q8E() then
@@ -22768,7 +22768,7 @@ function SVE ()
 	A4V(QE)
 end
 
-function SXE ()
+function SXE()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if RX == false then
@@ -22812,21 +22812,21 @@ function SXE ()
 end
 
 ---@return boolean
-function T9E ()
+function T9E()
 	return GetSpellAbilityId() == $41303650
 end
 
 ---@return boolean
-function TAE ()
+function TAE()
 	return GetSpellAbilityId() == $41303947
 end
 
 ---@return boolean
-function TBE ()
+function TBE()
 	return GetSpellAbilityId() == $41303948
 end
 
-function TCE ()
+function TCE()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if true then
@@ -22891,16 +22891,16 @@ function TCE ()
 end
 
 ---@return boolean
-function TEE ()
+function TEE()
 	return GetSpellAbilityId() == $41303945
 end
 
 ---@return boolean
-function THE ()
+function THE()
 	return GetUnitTypeId(GetKillingUnit()) == $68303342
 end
 
-function TJE ()
+function TJE()
 	local x_1 = GetUnitX(GetKillingUnit()) ---@type number real
 	local y_1 = GetUnitY(GetKillingUnit()) ---@type number real
 	bj_lastCreatedUnit = CreateUnit(Player(-1 + GetUnitUserData(GetKillingUnit())), $75303036, x_1, y_1, bj_UNIT_FACING)
@@ -22911,11 +22911,11 @@ function TJE ()
 end
 
 ---@return boolean
-function TME ()
+function TME()
 	return GetSpellAbilityId() == $41303658
 end
 
-function TNE ()
+function TNE()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if true then
@@ -22980,11 +22980,11 @@ function TNE ()
 end
 
 ---@return boolean
-function TOE ()
+function TOE()
 	return GetSpellAbilityId() == $41303946
 end
 
-function TPE ()
+function TPE()
 	local x_1 = GetUnitX(GetSpellAbilityUnit()) ---@type number real
 	local y_1 = GetUnitY(GetSpellAbilityUnit()) ---@type number real
 	bj_lastCreatedUnit = CreateUnit(Player(-1 + GetUnitUserData(GetSpellAbilityUnit())), $75303036, x_1, y_1, bj_UNIT_FACING)
@@ -22994,7 +22994,7 @@ function TPE ()
 	UnitApplyTimedLifeBJ(4., $42544C46, PE)
 end
 
-function TRE ()
+function TRE()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if true then
@@ -23059,16 +23059,16 @@ function TRE ()
 end
 
 ---@return boolean
-function TUE ()
+function TUE()
 	return (GetUnitTypeId(GetDyingUnit()) == $68303841 or GetUnitTypeId(GetDyingUnit()) == $68313941 or GetUnitTypeId(GetDyingUnit()) == $68313841) and (IsUnitType(GetDyingUnit(), UNIT_TYPE_UNDEAD) ~= true)
 end
 
 ---@return boolean
-function TUD ()
+function TUD()
 	return GetUnitTypeId(GetDyingUnit()) == $68313841 and IsUnitType(GetDyingUnit(), UNIT_TYPE_UNDEAD) ~= true
 end
 
-function TXE ()
+function TXE()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if true then
@@ -23133,7 +23133,7 @@ function TXE ()
 	end
 end
 
-function TYE ()
+function TYE()
 	local x_1 = GetUnitX(GetDyingUnit()) ---@type number real
 	local y_1 = GetUnitY(GetDyingUnit()) ---@type number real
 	EE = GetUnitUserData(GetDyingUnit())
@@ -23157,7 +23157,7 @@ function TYE ()
 	DestroyEffect(AddSpecialEffect("Objects\\Spawnmodels\\Human\\HumanBlood\\HumanBloodKnight.mdl", x_1, y_1))
 end
 
-function TYD ()
+function TYD()
 	local x_1 = GetUnitX(GetDyingUnit()) ---@type number real
 	local y_1 = GetUnitY(GetDyingUnit()) ---@type number real
 	EE = GetUnitUserData(GetDyingUnit())
@@ -23176,11 +23176,11 @@ function TYD ()
 end
 
 ---@return boolean
-function U3E ()
+function U3E()
 	return GetSpellAbilityId() == $41303533
 end
 
-function U4E ()
+function U4E()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if RX == false then
@@ -23204,16 +23204,16 @@ function U4E ()
 end
 
 ---@return boolean
-function U5E ()
+function U5E()
 	return GetBooleanAnd(GetUnitUserData(GetFilterUnit()) == 1 + GetPlayerId(GetEnumPlayer()), GetBooleanAnd(IsUnitAliveBJ(GetFilterUnit()), GetUnitTypeId(GetFilterUnit()) == $68303659))
 end
 
 ---@return boolean
-function U7E ()
+function U7E()
 	return GetBooleanAnd(GetUnitUserData(GetFilterUnit()) == 1 + GetPlayerId(GetEnumPlayer()), GetBooleanAnd(IsUnitAliveBJ(GetFilterUnit()), GetUnitTypeId(GetFilterUnit()) == $68303658))
 end
 
-function U8E ()
+function U8E()
 	local p = GetEnumPlayer() ---@type player
 	QE = GetPlayerUnitGroupHelper(CA[1 + GetPlayerId(p)], Condition(ref_function_U5E))
 	NA = GetPlayerUnitGroupHelper(CA[1 + GetPlayerId(p)], Condition(ref_function_U7E))
@@ -23250,7 +23250,7 @@ function U8E ()
 	p = nil
 end
 
-function UBE ()
+function UBE()
 	local x_1 = GetUnitX(GetDyingUnit()) ---@type number real
 	local y_1 = GetUnitY(GetDyingUnit()) ---@type number real
 	bj_lastCreatedUnit = CreateUnit(GetOwningPlayer(GetDyingUnit()), $75303036, x_1, y_1, bj_UNIT_FACING)
@@ -23261,11 +23261,11 @@ function UBE ()
 end
 
 ---@return boolean
-function UCE ()
+function UCE()
 	return GetUnitTypeId(GetDyingUnit()) == $68303339 and IsUnitType(GetDyingUnit(), UNIT_TYPE_UNDEAD) ~= true
 end
 
-function UDE ()
+function UDE()
 	local x_1 = GetUnitX(GetDyingUnit()) ---@type number real
 	local y_1 = GetUnitY(GetDyingUnit()) ---@type number real
 	bj_lastCreatedUnit = CreateUnit(GetOwningPlayer(GetDyingUnit()), $75303036, x_1, y_1, bj_UNIT_FACING)
@@ -23276,19 +23276,19 @@ function UDE ()
 	UnitApplyTimedLifeBJ(3., $42544C46, UE)
 end
 
-function UJE ()
+function UJE()
 	UnitResetCooldown(GetEnumUnit())
 	IssueImmediateOrderById(GetEnumUnit(), 852526)
 	IssueImmediateOrderById(GetEnumUnit(), 851972)
 end
 
-function UJ1 ()
+function UJ1()
 	UnitResetCooldown(GetEnumUnit())
 	IssueImmediateOrderById(GetEnumUnit(), 852526)
 	IssueImmediateOrderById(GetEnumUnit(), 851972)
 end
 
-function UKE ()
+function UKE()
 	QE = IPE($68303731)
 	ForGroup(QE, ref_function_UJE)
 	A4V(QE)
@@ -23297,18 +23297,18 @@ function UKE ()
 	A4V(QE)
 end
 
-function UK1 ()
+function UK1()
 	QE = IPE($68313344)
 	ForGroup(QE, ref_function_UJ1)
 	A4V(QE)
 end
 
 ---@return boolean
-function DAY ()
+function DAY()
 	return GetUnitTypeId(GetFilterUnit()) ~= FourCC('h170') and not UnitHasBuffBJ(GetFilterUnit(), $4273706c)
 end
 
-function UJE2 ()
+function UJE2()
 	local x_1 = GetUnitX(GetEnumUnit()) ---@type number real
 	local y_1 = GetUnitY(GetEnumUnit()) ---@type number real
 	UnitResetCooldown(GetEnumUnit())
@@ -23332,45 +23332,45 @@ function UJE2 ()
 end
 
 ---@return boolean
-function ULE ()
+function ULE()
 	return GetSpellAbilityId() == $41303631
 end
 
 ---@return boolean
-function UL1 ()
+function UL1()
 	return GetSpellAbilityId() == $41323631
 end
 
 ---@return boolean
-function UME ()
+function UME()
 	return GetBooleanAnd(GetOwningPlayer(GetFilterUnit()) == GetOwningPlayer(GetSpellAbilityUnit()), GetFilterUnit() ~= GetSpellAbilityUnit())
 end
 
 ---@return boolean
-function UM1 ()
+function UM1()
 	return GetBooleanAnd(GetOwningPlayer(GetFilterUnit()) == GetOwningPlayer(GetSpellAbilityUnit()), GetFilterUnit() ~= GetSpellAbilityUnit())
 end
 
 ---@return boolean
-function UNE ()
+function UNE()
 	return GetUnitTypeId(GetDyingUnit()) == $68303338 and IsUnitType(GetDyingUnit(), UNIT_TYPE_UNDEAD) ~= true
 end
 
-function UQE ()
+function UQE()
 	if GetUnitAbilityLevelSwapped($41303630, GetEnumUnit()) == 0 then
 		UnitAddAbility(GetEnumUnit(), $41303630)
 		UnitAddAbility(GetEnumUnit(), $41303635)
 	end
 end
 
-function UQ1 ()
+function UQ1()
 	if GetUnitAbilityLevelSwapped($41323630, GetEnumUnit()) == 0 then
 		UnitAddAbility(GetEnumUnit(), $41323630)
 		UnitAddAbility(GetEnumUnit(), $41323635)
 	end
 end
 
-function USE ()
+function USE()
 	local x_1 = GetUnitX(GetSpellAbilityUnit()) ---@type number real
 	local y_1 = GetUnitY(GetSpellAbilityUnit()) ---@type number real
 	NA = IHE(160., x_1, y_1, Condition(ref_function_UME))
@@ -23379,7 +23379,7 @@ function USE ()
 	A4V(QE)
 end
 
-function US1 ()
+function US1()
 	local x_1 = GetUnitX(GetSpellAbilityUnit()) ---@type number real
 	local y_1 = GetUnitY(GetSpellAbilityUnit()) ---@type number real
 	NA = IHE(160., x_1, y_1, Condition(ref_function_UM1))
@@ -23388,7 +23388,7 @@ function US1 ()
 	A4V(QE)
 end
 
-function UVE ()
+function UVE()
 	local u_1 = GetSpellAbilityUnit() ---@type unit
 	local x_1 = GetUnitX(u_1) ---@type number real
 	local y_1 = GetUnitY(u_1) ---@type number real
@@ -23406,64 +23406,64 @@ function UVE ()
 	uu_1 = nil
 end
 
-function V0X ()
+function V0X()
 	IssuePointOrderByIdLoc(GetEnteringUnit(), 851983, HI)
 end
 
-function V1X ()
+function V1X()
 	EE = GetUnitUserData(GetEnteringUnit())
 	GroupRemoveUnit(IG[EE], GetEnteringUnit())
 end
 
 ---@return boolean
-function V2X ()
+function V2X()
 	return GetOwningPlayer(GetEnteringUnit()) == Player(11) or GetOwningPlayer(GetEnteringUnit()) == Player(15)
 end
 
-function V3X ()
+function V3X()
 	IssuePointOrderByIdLoc(GetEnteringUnit(), 851983, UD)
 end
 
-function V4X ()
+function V4X()
 	IssuePointOrderByIdLoc(GetEnteringUnit(), 851983, GO)
 end
 
-function V5X ()
+function V5X()
 	EE = GetUnitUserData(GetEnteringUnit())
 	GroupRemoveUnit(IG[EE], GetEnteringUnit())
 end
 
-function V6X ()
+function V6X()
 	IssuePointOrderByIdLoc(GetEnteringUnit(), 851983, TD)
 end
 
-function V7X ()
+function V7X()
 	IssuePointOrderById(GetEnumUnit(), 851983, -4535, -3500)
 end
 
-function V8X ()
+function V8X()
 	IssuePointOrderByIdLoc(GetEnteringUnit(), 851983, UD)
 end
 
-function V9X ()
+function V9X()
 	IssuePointOrderById(GetEnumUnit(), 851983, 4535, -3500)
 end
 
-function VAX ()
+function VAX()
 	SetPlayerAbilityAvailableBJ(false, $41393634, GetEnumPlayer())
 end
 
 ---@return boolean
-function Z6E ()
+function Z6E()
 	return IsUnitInGroup(GetEnumUnit(), ZD) or IsUnitInGroup(GetEnumUnit(), VF)
 end
 
 ---@return boolean
-function Z7E ()
+function Z7E()
 	return YD == false and Z6E()
 end
 
-function VDX ()
+function VDX()
 	local x_1 = GetRectCenterX(IM) ---@type number real
 	local y_1 = GetRectCenterY(IM) ---@type number real
 	PE = GetEnumUnit()
@@ -23499,20 +23499,20 @@ end
 ---@param IEE number real
 ---@param IVE location
 ---@return group
-function IJE (IEE, IVE)
+function IJE(IEE, IVE)
 	G8 = A5V()
 	GroupEnumUnitsInRangeOfLoc(G8, IVE, IEE, T8)
 	return G8
 end
 
-function VVX ()
+function VVX()
 	if U8 ~= nil then
 	end
 	ForGroup(W8, ref_function_Z8E)
 	U8 = nil
 end
 
-function VFX ()
+function VFX()
 	local g ---@type group
 	local id_1 ---@type number integer
 	local r ---@type rect
@@ -23544,7 +23544,7 @@ function VFX ()
 	r = nil
 end
 
-function VGX ()
+function VGX()
 	local g2 = nil ---@type group
 	FE = GetSpellTargetLoc()
 	g2 = IJE(240., FE)
@@ -23558,11 +23558,11 @@ function VGX ()
 end
 
 ---@return boolean
-function VHX ()
+function VHX()
 	return PA and YD == false
 end
 
-function VIX ()
+function VIX()
 	UnitAddAbility(GetTriggerUnit(), $41393635)
 	UnitAddAbility(GetTriggerUnit(), FourCC('AA8X'))
 	ForForce(bj_FORCE_ALL_PLAYERS, ref_function_VRX)
@@ -23573,7 +23573,7 @@ function VIX ()
 	RJ[18] = false
 end
 
-function VJX ()
+function VJX()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	if IsUnitInGroup(GetEnumUnit(), FG) then
@@ -23604,7 +23604,7 @@ function VJX ()
 	end
 end
 
-function VKX ()
+function VKX()
 	local vopros ---@type boolean
 	EE = 1 + GetPlayerId(GetEnumPlayer())
 	if EE / 5 == 0 then
@@ -23617,29 +23617,29 @@ function VKX ()
 	end
 end
 
-function VLX ()
+function VLX()
 	if GetUnitCurrentOrder(GetEnumUnit()) ~= 851983 then
 		IssuePointOrderById(GetEnumUnit(), 851983, -4535, -3500)
 	end
 end
 
-function VMX ()
+function VMX()
 	if GetUnitCurrentOrder(GetEnumUnit()) ~= 851983 then
 		IssuePointOrderById(GetEnumUnit(), 851983, 4535, -3500)
 	end
 end
 
 ---@return boolean
-function VEX ()
+function VEX()
 	return XME(RP, GetEnumUnit()) == false
 end
 
 ---@return boolean
-function VXX ()
+function VXX()
 	return XME(IP, GetEnumUnit()) == false
 end
 
-function VOX ()
+function VOX()
 	local id_1 = GetUnitUserData(GetEnumUnit()) ---@type number integer
 	EE = 1 + GetPlayerId(GetTriggerPlayer())
 	PE = GetEnumUnit()
@@ -23652,34 +23652,34 @@ function VOX ()
 	end
 end
 
-function VPX ()
+function VPX()
 	if true then
 		IssuePointOrderByIdLoc(GetEnumUnit(), 851983, CI)
 	end
 end
 
-function VQX ()
+function VQX()
 	if true then
 		IssuePointOrderByIdLoc(GetEnumUnit(), 851983, DI)
 	end
 end
 
-function VRX ()
+function VRX()
 	SetPlayerAbilityAvailableBJ(false, $41393635, GetEnumPlayer())
 end
 
 ---@return boolean
-function VSX ()
+function VSX()
 	return GetUnitCurrentOrder(GetEnumUnit()) ~= 851983 and XME(RP, GetEnumUnit()) == false and XME(IP, GetEnumUnit()) == false
 end
 
-function VTX ()
+function VTX()
 	if VSX() and VEX() and VXX() then
 		IssuePointOrderByIdLoc(GetEnumUnit(), 851983, EN[EE])
 	end
 end
 
-function VUX ()
+function VUX()
 	if GetUnitCurrentOrder(GetEnumUnit()) ~= 851983 then
 		if EE <= 4 then
 			IssuePointOrderByIdLoc(GetEnumUnit(), 851983, HI)
@@ -23689,7 +23689,7 @@ function VUX ()
 	end
 end
 
-function VWX ()
+function VWX()
 	EE = 1 + GetPlayerId(GetEnumPlayer())
 	if CountUnitsInGroup(IG[EE]) == 0 then
 		ForGroup(RG[EE], ref_function_VTX)
@@ -23699,7 +23699,7 @@ function VWX ()
 	end
 end
 
-function VYX ()
+function VYX()
 	if BG then
 		ForForce(YI, ref_function_VKX)
 		ForGroup(MA[1], ref_function_VLX)
@@ -23713,15 +23713,15 @@ function VYX ()
 end
 
 ---@return boolean
-function VZX ()
+function VZX()
 	return GetOwningPlayer(GetEnteringUnit()) == Player(10) or GetOwningPlayer(GetEnteringUnit()) == Player(14)
 end
 
-function V_X ()
+function V_X()
 	IssuePointOrderByIdLoc(GetEnteringUnit(), 851983, TD)
 end
 
-function Vala ()
+function Vala()
 	if Now_Level < WAVE_KICK_DISABLE_AT and GB[1 + GetPlayerId(GetEnumPlayer())] < WAVE_KICK_VALUE[Now_Level] then
 		DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 4., "" .. GetPlayerName(GetEnumPlayer()) .. " |cffff0000 Не сумел справиться даже с мин.валом и был вышвырнут!|r Как глупо...")
 		PlaySoundBJ_FIX(Glupo)
@@ -23733,33 +23733,33 @@ function Vala ()
 end
 
 ---@return boolean
-function W0E ()
+function W0E()
 	return RX
 end
 
 ---@return boolean
-function W2E ()
+function W2E()
 	return GetBooleanAnd(IsUnitInGroup(GetFilterUnit(), XA), UnitHasBuffBJ(GetFilterUnit(), $42303159))
 end
 
-function W3E ()
+function W3E()
 	A4V(ON)
 	ON = IRE(bj_mapInitialPlayableArea, Condition(ref_function_W2E))
 end
 
 ---@return boolean
-function W4E ()
+function W4E()
 	return GetSpellAbilityId() == $41303439
 end
 
-function W5E ()
+function W5E()
 	local x_1 = GetUnitX(GetSpellAbilityUnit()) ---@type number real
 	local y_1 = GetUnitY(GetSpellAbilityUnit()) ---@type number real
 	DestroyEffect(AddSpecialEffect("Abilities\\Spells\\Items\\AIam\\AIamTarget.mdl", x_1, y_1))
 	SetUnitVertexColorBJ(GetSpellAbilityUnit(), 100., 100., 100., 65.)
 end
 
-function WAE ()
+function WAE()
 	local x_1 = GetRandomReal(GetRectMinX(IM), GetRectMaxX(IM)) ---@type number real
 	local y_1 = GetRandomReal(GetRectMinY(IM), GetRectMaxY(IM)) ---@type number real
 	if OME() then
@@ -23769,11 +23769,11 @@ function WAE ()
 end
 
 ---@return boolean
-function WBE ()
+function WBE()
 	return (GetUnitTypeId(GetDyingUnit()) == $68304150 or GetUnitTypeId(GetDyingUnit()) == FourCC('h5AP')) and (IsUnitType(GetDyingUnit(), UNIT_TYPE_UNDEAD) ~= true)
 end
 
-function WCE ()
+function WCE()
 	local x_1 = GetUnitX(GetDyingUnit()) ---@type number real
 	local y_1 = GetUnitY(GetDyingUnit()) ---@type number real
 	bj_lastCreatedUnit = CreateUnit(GetOwningPlayer(GetDyingUnit()), $68304158, x_1, y_1, bj_UNIT_FACING)
@@ -23786,11 +23786,11 @@ function WCE ()
 end
 
 ---@return boolean
-function WFE ()
+function WFE()
 	return GetUnitTypeId(GetDyingUnit()) == $68304153 and IsUnitType(GetDyingUnit(), UNIT_TYPE_UNDEAD) ~= true
 end
 
-function WHE ()
+function WHE()
 	local x_1 = GetUnitX(GetDyingUnit()) ---@type number real
 	local y_1 = GetUnitY(GetDyingUnit()) ---@type number real
 	bj_lastCreatedUnit = CreateUnit(GetOwningPlayer(GetDyingUnit()), $68304435, x_1, y_1, bj_UNIT_FACING)
@@ -23803,11 +23803,11 @@ function WHE ()
 end
 
 ---@return boolean
-function WJE ()
+function WJE()
 	return GetUnitTypeId(GetTriggerUnit()) == $68304435 and false
 end
 
-function WKE ()
+function WKE()
 	local x_1 = GetUnitX(GetDyingUnit()) ---@type number real
 	local y_1 = GetUnitY(GetDyingUnit()) ---@type number real
 	bj_lastCreatedUnit = CreateUnit(GetOwningPlayer(GetDyingUnit()), $68304137, x_1, y_1, bj_UNIT_FACING)
@@ -23819,11 +23819,11 @@ function WKE ()
 end
 
 ---@return boolean
-function WLE ()
+function WLE()
 	return GetUnitTypeId(GetDyingUnit()) == $68304158 and IsUnitType(GetDyingUnit(), UNIT_TYPE_UNDEAD) ~= true
 end
 
-function WME ()
+function WME()
 	local x_1 = GetUnitX(GetDyingUnit()) ---@type number real
 	local y_1 = GetUnitY(GetDyingUnit()) ---@type number real
 	bj_lastCreatedUnit = CreateUnit(GetOwningPlayer(GetDyingUnit()), $68304156, x_1, y_1, bj_UNIT_FACING)
@@ -23834,16 +23834,16 @@ function WME ()
 	SetUnitUserData(PE, GetUnitUserData(GetDyingUnit()))
 end
 
-function WVE ()
+function WVE()
 	ForForce(ZI, ref_function_U8E)
 end
 
 ---@return boolean
-function WYE ()
+function WYE()
 	return IsUnitInGroup(GetDyingUnit(), ON)
 end
 
-function WZE ()
+function WZE()
 	local x_1 = GetUnitX(GetDyingUnit()) ---@type number real
 	local y_1 = GetUnitY(GetDyingUnit()) ---@type number real
 	bj_lastCreatedUnit = CreateUnit(GetOwningPlayer(GetKillingUnit()), $75303036, x_1, y_1, bj_UNIT_FACING)
@@ -23855,7 +23855,7 @@ function WZE ()
 end
 
 ---@return boolean
-function WestForceBool ()
+function WestForceBool()
 	local p = GetFilterPlayer() ---@type player
 	local WestForceBooltempReturn = GetBooleanAnd(GetBooleanOr(p == Player(0), p == Player(1)) or GetBooleanOr(p == Player(2), p == Player(3)), GetPlayerSlotState(p) == PLAYER_SLOT_STATE_PLAYING) or IsPlayerObserver(p) or p == Player(8) ---@type boolean
 	p = nil
@@ -23863,7 +23863,7 @@ function WestForceBool ()
 end
 
 ---@return boolean
-function WestForceBoolWithoutObs ()
+function WestForceBoolWithoutObs()
 	local p = GetFilterPlayer() ---@type player
 	local WestForceBoolWithoutObstempReturn = GetBooleanAnd(GetBooleanOr(p == Player(0), p == Player(1)) or GetBooleanOr(p == Player(2), p == Player(3)), GetPlayerSlotState(p) == PLAYER_SLOT_STATE_PLAYING) or p == Player(8) ---@type boolean
 	p = nil
@@ -23871,24 +23871,24 @@ function WestForceBoolWithoutObs ()
 end
 
 ---@return boolean
-function WestLudiBool ()
+function WestLudiBool()
 	local p = GetFilterPlayer() ---@type player
 	local WestLudiBooltempReturn = GetBooleanAnd(GetBooleanOr(p == Player(0), p == Player(1)) or GetBooleanOr(p == Player(2), p == Player(3)), GetPlayerSlotState(p) == PLAYER_SLOT_STATE_PLAYING) and GetPlayerController(p) == MAP_CONTROL_USER ---@type boolean
 	p = nil
 	return WestLudiBooltempReturn
 end
 
-function X1X ()
+function X1X()
 	SetPlayerTechResearchedSwap($52303036, GetPlayerTechCountSimple($52303036, GetEnumPlayer()) + 2, GetEnumPlayer())
 	SetPlayerTechResearchedSwap($52303037, GetPlayerTechCountSimple($52303037, GetEnumPlayer()) + 2, GetEnumPlayer())
 end
 
-function X2X ()
+function X2X()
 	ForForce(bj_FORCE_ALL_PLAYERS, ref_function_X1X)
 	DisplayTimedTextToForce(bj_FORCE_ALL_PLAYERS, 4., "Your King received +2 armor and +10% increased attack speed.")
 end
 
-function X4X ()
+function X4X()
 	local img ---@type image
 	PE = LKing
 	if Now_Level == 4 and (GetUnitAbilityLevel(LKing, FourCC('A022')) == 1 or GetUnitAbilityLevel(LKing, FourCC('A01T')) == 1 or GetUnitAbilityLevel(LKing, FourCC('A982')) == 1) then
@@ -23950,7 +23950,7 @@ function X4X ()
 	end
 end
 
-function X6X ()
+function X6X()
 	local img ---@type image
 	PE = RKing
 	if Now_Level == 4 and (GetUnitAbilityLevel(RKing, FourCC('A022')) == 1 or GetUnitAbilityLevel(RKing, FourCC('A01T')) == 1 or GetUnitAbilityLevel(RKing, FourCC('A982')) == 1) then
@@ -24013,7 +24013,7 @@ function X6X ()
 end
 
 ---@return boolean
-function X7X ()
+function X7X()
 	return AE == false
 end
 
@@ -24021,7 +24021,7 @@ end
 ---@param maxValue number integer
 ---@param barLength number integer
 ---@return string
-function CreateProgressBar (currentValue, maxValue, barLength)
+function CreateProgressBar(currentValue, maxValue, barLength)
 	local progress = currentValue * 1.00 / maxValue ---@type number real
 	local filledLength = R2I(progress * barLength) ---@type number integer
 	local ibar = 0 ---@type number integer
@@ -24045,7 +24045,7 @@ end
 ---@param str string
 ---@param length number integer
 ---@return string
-function PadStringRight (str, length)
+function PadStringRight(str, length)
 	local strLength = StringLength(str) ---@type number integer
 	local paddedString = str ---@type string
 	local padLength ---@type number integer
@@ -24062,7 +24062,7 @@ function PadStringRight (str, length)
 	return paddedString
 end
 
-function X8X ()
+function X8X()
 	local westStatus = I2S(R2I(GetUnitStateSwap(UNIT_STATE_LIFE, LKing))) ---@type string
 	local eastStatus = I2S(R2I(GetUnitStateSwap(UNIT_STATE_LIFE, RKing))) ---@type string
 	local westProgressBar = "" ---@type string
@@ -24092,21 +24092,21 @@ function X8X ()
 end
 
 ---@return boolean
-function X9X ()
+function X9X()
 	return GetOwningPlayer(GetEnteringUnit()) == Player(8)
 end
 
 ---@return boolean
-function X119X ()
+function X119X()
 	return GetOwningPlayer(GetEnteringUnit()) == Player(10) or GetOwningPlayer(GetEnteringUnit()) == Player(14)
 end
 
 ---@return boolean
-function X10X ()
+function X10X()
 	return GetOwningPlayer(GetEnteringUnit()) == Player(11) or GetOwningPlayer(GetEnteringUnit()) == Player(15)
 end
 
-function XAX ()
+function XAX()
 	BG = true
 	HB[GetUnitUserData(GetTriggerUnit())] = HB[GetUnitUserData(GetTriggerUnit())] + 1
 	UnitAddAbility(GetTriggerUnit(), $41303744)
@@ -24142,15 +24142,15 @@ function XAX ()
 	end
 end
 
-function BBV ()
+function BBV()
 	RecycleGuardPosition(GetTriggerUnit())
 end
 
-function XBX ()
+function XBX()
 	UnitShareVisionBJ(true, GetEnteringUnit(), GetEnumPlayer())
 end
 
-function XCX ()
+function XCX()
 	local data = GetPlayerId(GetOwningPlayer(GetEnteringUnit())) ---@type number integer
 	local f ---@type force
 	if modeMM then
@@ -24166,21 +24166,21 @@ function XCX ()
 end
 
 ---@return boolean
-function XDX ()
+function XDX()
 	return GetUnitTypeId(GetEnteringUnit()) == WV[Now_Level] and QX[Now_Level] ~= 1
 end
 
 ---@return boolean
-function X1EX ()
+function X1EX()
 	return GetOwningPlayer(GetEnteringUnit()) == Player(10) or GetOwningPlayer(GetEnteringUnit()) == Player(11) or GetOwningPlayer(GetEnteringUnit()) == Player(14) or GetOwningPlayer(GetEnteringUnit()) == Player(15)
 end
 
 ---@return boolean
-function XEX ()
+function XEX()
 	return GetOwningPlayer(GetEnteringUnit()) == Player(10) or GetOwningPlayer(GetEnteringUnit()) == Player(11) or GetOwningPlayer(GetEnteringUnit()) == Player(14) or GetOwningPlayer(GetEnteringUnit()) == Player(15)
 end
 
-function XFX ()
+function XFX()
 	local x_1 = GetRectCenterX(PL) ---@type number real
 	local y_1 = GetRectCenterY(PL) ---@type number real
 	if modeGG then
@@ -24194,11 +24194,11 @@ function XFX ()
 end
 
 ---@return boolean
-function XGX ()
+function XGX()
 	return GetUnitTypeId(GetEnteringUnit()) == WV[Now_Level] and QX[Now_Level] ~= 1
 end
 
-function XHX ()
+function XHX()
 	local x_1 = GetRectCenterX(LK) ---@type number real
 	local y_1 = GetRectCenterY(LK) ---@type number real
 	if modeGG then
@@ -24212,54 +24212,54 @@ function XHX ()
 end
 
 ---@return boolean
-function XIX ()
+function XIX()
 	return GetUnitTypeId(GetEnteringUnit()) == WV[Now_Level] and QX[Now_Level] ~= 1 and Now_Level ~= 10 and Now_Level ~= 20 and Now_Level ~= 30 and Now_Level < 30
 end
 
 ---@return boolean
-function XJX ()
+function XJX()
 	return GetUnitTypeId(GetSoldUnit()) == $75303038 or GetUnitTypeId(GetSoldUnit()) == $75303039 or GetUnitTypeId(GetSoldUnit()) == $75303041 or GetUnitTypeId(GetSoldUnit()) == $75393938 or GetUnitTypeId(GetSoldUnit()) == $75393939 or GetUnitTypeId(GetSoldUnit()) == $75393941 or GetUnitTypeId(GetSoldUnit()) == FourCC('u99d') or GetUnitTypeId(GetSoldUnit()) == FourCC('uu9d') or GetUnitTypeId(GetSoldUnit()) == FourCC('uu1d') or GetUnitTypeId(GetSoldUnit()) == FourCC('u99r') or GetUnitTypeId(GetSoldUnit()) == FourCC('u997') or GetUnitTypeId(GetSoldUnit()) == FourCC('uu9r') or GetUnitTypeId(GetSoldUnit()) == FourCC('uu1r')
 end
 
 ---@return boolean
-function BBe ()
+function BBe()
 	return GetOwningPlayer(GetEnteringUnit()) == Player(10) or GetOwningPlayer(GetEnteringUnit()) == Player(11) or GetOwningPlayer(GetEnteringUnit()) == Player(14) or GetOwningPlayer(GetEnteringUnit()) == Player(15)
 end
 
-function XKX ()
+function XKX()
 	SetPlayerTechResearchedSwap($52303030, GetPlayerTechCountSimple($52303030, GetEnumPlayer()) + 1, GetEnumPlayer())
 end
 
-function XLX ()
+function XLX()
 	SetPlayerTechResearchedSwap($52303031, GetPlayerTechCountSimple($52303031, GetEnumPlayer()) + 1, GetEnumPlayer())
 end
 
-function XMX ()
+function XMX()
 	SetPlayerTechResearchedSwap($52303031, GetPlayerTechCountSimple($52303031, GetEnumPlayer()) + 5, GetEnumPlayer())
 end
 
 ---@return boolean
-function XNX ()
+function XNX()
 	return GetOwningPlayer(GetEnteringUnit()) == Player(10) or GetOwningPlayer(GetEnteringUnit()) == Player(11) or GetOwningPlayer(GetEnteringUnit()) == Player(14) or GetOwningPlayer(GetEnteringUnit()) == Player(15)
 end
 
 ---@return boolean
-function XOX ()
+function XOX()
 	return GetOwningPlayer(GetLeavingUnit()) == Player(10) or GetOwningPlayer(GetLeavingUnit()) == Player(11) or GetOwningPlayer(GetLeavingUnit()) == Player(14) or GetOwningPlayer(GetLeavingUnit()) == Player(15)
 end
 
-function XPX ()
+function XPX()
 	SetPlayerTechResearchedSwap($52303032, GetPlayerTechCountSimple($52303032, GetEnumPlayer()) + 1, GetEnumPlayer())
 end
 
-function XQX ()
+function XQX()
 	SetPlayerTechResearchedSwap($52303032, GetPlayerTechCountSimple($52303032, GetEnumPlayer()) + 5, GetEnumPlayer())
 end
 
-function XRX ()
+function XRX()
 end
 
-function XSE ()
+function XSE()
 	local i_1 = 0 ---@type number integer
 	local XZE = .6 ---@type number real
 	local X1E = 30000. ---@type number real
@@ -24353,35 +24353,35 @@ function XSE ()
 	end
 end
 
-function XSX ()
+function XSX()
 	SetPlayerTechResearchedSwap(FourCC('R999'), GetPlayerTechCountSimple(FourCC('R999'), GetEnumPlayer()) + 1, GetEnumPlayer())
 end
 
-function X11 ()
+function X11()
 	SetPlayerTechResearchedSwap(FourCC('RR98'), GetPlayerTechCountSimple(FourCC('RR98'), GetEnumPlayer()) + 1, GetEnumPlayer())
 end
 
-function X12 ()
+function X12()
 	SetPlayerTechResearchedSwap(FourCC('RR99'), GetPlayerTechCountSimple(FourCC('RR99'), GetEnumPlayer()) + 1, GetEnumPlayer())
 end
 
-function X13 ()
+function X13()
 	SetPlayerTechResearchedSwap(FourCC('RR01'), GetPlayerTechCountSimple(FourCC('RR01'), GetEnumPlayer()) + 1, GetEnumPlayer())
 end
 
-function X14 ()
+function X14()
 	SetPlayerTechResearchedSwap(FourCC('RR02'), GetPlayerTechCountSimple(FourCC('RR02'), GetEnumPlayer()) + 1, GetEnumPlayer())
 end
 
-function XTX ()
+function XTX()
 	SetPlayerTechResearchedSwap(FourCC('R998'), GetPlayerTechCountSimple(FourCC('R998'), GetEnumPlayer()) + 1, GetEnumPlayer())
 end
 
-function XUX ()
+function XUX()
 	SetPlayerTechResearchedSwap($52393935, GetPlayerTechCountSimple($52393935, GetEnumPlayer()) + 1, GetEnumPlayer())
 end
 
-function XVX ()
+function XVX()
 	local x_1 = GetUnitX(GetTriggerUnit()) ---@type number real
 	local y_1 = GetUnitY(GetTriggerUnit()) ---@type number real
 	DestroyEffect(AddSpecialEffect("Abilities\\Spells\\Human\\MassTeleport\\MassTeleportTarget.mdl", x_1, y_1))
@@ -24391,22 +24391,22 @@ function XVX ()
 	DestroyEffect(AddSpecialEffect("Abilities\\Spells\\Human\\MassTeleport\\MassTeleportTarget.mdl", x_1, y_1))
 end
 
-function XWX ()
+function XWX()
 	SetPlayerAbilityAvailableBJ(false, FourCC('A966'), GetEnumPlayer())
 end
 
-function X1XX ()
+function X1XX()
 	if Now_Level ~= 10 and Now_Level ~= 4 and Now_Level ~= 8 and Now_Level ~= 12 and Now_Level ~= 16 and Now_Level < 20 then
 		SetUnitPathing(GetEnteringUnit(), false)
 	end
 end
 
-function XXX ()
+function XXX()
 	UnitAddAbility(GetEnteringUnit(), $41303637)
 	UnitAddAbility(GetEnteringUnit(), $41303638)
 end
 
-function XYX ()
+function XYX()
 	local f ---@type force
 	if IsPlayerAlly(GetOwningPlayer(GetSellingUnit()), Player(8)) then
 		OX = Player(8)
@@ -24741,7 +24741,7 @@ function XYX ()
 	f = nil
 end
 
-function XZX ()
+function XZX()
 	EE = 0
 	EE = EE + 1
 	OR[EE] = FourCC('A022')
@@ -24762,7 +24762,7 @@ function XZX ()
 	XR = EE
 end
 
-function Y0E ()
+function Y0E()
 	if IsPlayerAlly(GetOwningPlayer(GetEnumUnit()), Player(8)) and GetUnitCurrentOrder(GetEnumUnit()) == 0 then
 		IssuePointOrderByIdLoc(GetEnumUnit(), 851983, NX)
 	elseif IsPlayerAlly(GetOwningPlayer(GetEnumUnit()), Player(8)) and GetUnitCurrentOrder(GetEnumUnit()) == 0 then
@@ -24770,7 +24770,7 @@ function Y0E ()
 	end
 end
 
-function Y1E ()
+function Y1E()
 	ForGroup(IG[1], ref_function_Y_E)
 	ForGroup(IG[2], ref_function_Y_E)
 	ForGroup(IG[3], ref_function_Y_E)
@@ -24781,17 +24781,17 @@ function Y1E ()
 	ForGroup(IG[8], ref_function_Y_E)
 end
 
-function Y2E ()
+function Y2E()
 	ForGroup(VF, ref_function_Y0E)
 	ForGroup(IF, ref_function_Y0E)
 end
 
 ---@return boolean
-function Y3E ()
+function Y3E()
 	return IsUnitType(GetSummonedUnit(), UNIT_TYPE_SUMMONED) ~= false ~= false ~= false
 end
 
-function Y4E ()
+function Y4E()
 	local x_1 ---@type number real
 	local y_1 ---@type number real
 	PE = GetSummonedUnit()
@@ -24809,11 +24809,11 @@ function Y4E ()
 end
 
 ---@return boolean
-function Y8E ()
+function Y8E()
 	return GetUnitTypeId(GetDyingUnit()) == $48303855 and IsUnitType(GetDyingUnit(), UNIT_TYPE_UNDEAD) ~= true
 end
 
-function Y9E ()
+function Y9E()
 	local x_1 = GetUnitX(GetDyingUnit()) ---@type number real
 	local y_1 = GetUnitY(GetDyingUnit()) ---@type number real
 	EE = GetUnitUserData(GetDyingUnit())
@@ -24831,11 +24831,11 @@ function Y9E ()
 end
 
 ---@return boolean
-function YHE ()
+function YHE()
 	return IsUnitIllusion(GetSummonedUnit())
 end
 
-function YJE ()
+function YJE()
 	PE = GetSummonedUnit()
 	EE = GetUnitUserData(GetSummoningUnit())
 	SetUnitUserData(PE, EE)
@@ -24845,11 +24845,11 @@ function YJE ()
 end
 
 ---@return boolean
-function YWE ()
+function YWE()
 	return GetBooleanAnd(IsPlayerEnemy(GetOwningPlayer(GetFilterUnit()), GetOwningPlayer(GetEnumUnit())), IsUnitType(GetFilterUnit(), UNIT_TYPE_GIANT)) ~= false ~= false ~= false
 end
 
-function YYE ()
+function YYE()
 	local x_1 = GetUnitX(GetEnumUnit()) ---@type number real
 	local y_1 = GetUnitY(GetEnumUnit()) ---@type number real
 	local xx ---@type number real
@@ -24871,13 +24871,13 @@ function YYE ()
 	A4V(NA)
 end
 
-function YZE ()
+function YZE()
 	QE = IPE($4830354B)
 	ForGroup(QE, ref_function_YYE)
 	A4V(QE)
 end
 
-function Y_E ()
+function Y_E()
 	if IsPlayerAlly(GetOwningPlayer(GetEnumUnit()), Player(10)) or IsPlayerAlly(GetOwningPlayer(GetEnumUnit()), Player(14)) and GetUnitCurrentOrder(GetEnumUnit()) == 0 then
 		IssuePointOrderByIdLoc(GetEnumUnit(), 851983, HI)
 	elseif IsPlayerAlly(GetOwningPlayer(GetEnumUnit()), Player(10)) or IsPlayerAlly(GetOwningPlayer(GetEnumUnit()), Player(14)) and GetUnitCurrentOrder(GetEnumUnit()) == 0 then
@@ -24885,7 +24885,7 @@ function Y_E ()
 	end
 end
 
-function Z0E ()
+function Z0E()
 	local g = nil ---@type group
 	local i_1 = 0 ---@type number integer
 	local u_1 ---@type unit
@@ -24923,7 +24923,7 @@ function Z0E ()
 	u_1 = nil
 end
 
-function Z1E ()
+function Z1E()
 	local g = nil ---@type group
 	local x_1 = GetUnitX(GetTriggerUnit()) ---@type number real
 	local y_1 = GetUnitY(GetTriggerUnit()) ---@type number real
@@ -24977,12 +24977,12 @@ function Z1E ()
 end
 
 ---@return boolean
-function Z2E ()
+function Z2E()
 	return GetSpellAbilityId() == $41393535
 end
 
 ---@return boolean
-function Z3E ()
+function Z3E()
 	local p = GetTriggerPlayer() ---@type player
 	local id_1 = GetPlayerId(p) ---@type number integer
 	local b = false ---@type boolean
@@ -25029,61 +25029,61 @@ function Z3E ()
 	return b
 end
 
-function Z8E ()
+function Z8E()
 	GroupRemoveUnit(W8, GetEnumUnit())
 end
 
 ---@return boolean
-function ZAE ()
+function ZAE()
 	return GetPlayerSlotState(Player(1)) == PLAYER_SLOT_STATE_EMPTY or GetPlayerSlotState(Player(1)) == PLAYER_SLOT_STATE_LEFT
 end
 
 ---@return boolean
-function ZBE ()
+function ZBE()
 	return GetPlayerSlotState(Player(3)) == PLAYER_SLOT_STATE_EMPTY or GetPlayerSlotState(Player(3)) == PLAYER_SLOT_STATE_LEFT
 end
 
 ---@return boolean
-function ZCE ()
+function ZCE()
 	return GetPlayerSlotState(Player(4)) == PLAYER_SLOT_STATE_EMPTY or GetPlayerSlotState(Player(4)) == PLAYER_SLOT_STATE_LEFT
 end
 
 ---@return boolean
-function ZDE ()
+function ZDE()
 	return GetPlayerSlotState(Player(5)) == PLAYER_SLOT_STATE_EMPTY or GetPlayerSlotState(Player(5)) == PLAYER_SLOT_STATE_LEFT
 end
 
 ---@return boolean
-function ZFE ()
+function ZFE()
 	return GetPlayerSlotState(Player(6)) == PLAYER_SLOT_STATE_EMPTY or GetPlayerSlotState(Player(6)) == PLAYER_SLOT_STATE_LEFT
 end
 
 ---@return boolean
-function ZGE ()
+function ZGE()
 	return GetPlayerSlotState(Player(7)) == PLAYER_SLOT_STATE_EMPTY or GetPlayerSlotState(Player(7)) == PLAYER_SLOT_STATE_LEFT
 end
 
 ---@return boolean
-function ZHE ()
+function ZHE()
 	return JO == false and KO == false and LO == false and MO == false
 end
 
 ---@return boolean
-function ZIE ()
+function ZIE()
 	return GetPlayerSlotState(Player(0)) == PLAYER_SLOT_STATE_EMPTY or GetPlayerSlotState(Player(0)) == PLAYER_SLOT_STATE_LEFT
 end
 
 ---@return boolean
-function ZJE ()
+function ZJE()
 	return SR == false and TR == false and UR == false and WR == false
 end
 
 ---@return boolean
-function ZNE ()
+function ZNE()
 	return GetPlayerSlotState(Player(2)) == PLAYER_SLOT_STATE_EMPTY or GetPlayerSlotState(Player(2)) == PLAYER_SLOT_STATE_LEFT
 end
 
-function ZKE ()
+function ZKE()
 	if ZIE() then
 		JO = false
 	end
@@ -25121,67 +25121,67 @@ function ZKE ()
 end
 
 ---@return boolean
-function ZLE ()
+function ZLE()
 	return GetSpellAbilityId() == FourCC('A050') or GetSpellAbilityId() == $41333454 or GetSpellAbilityId() == FourCC('A150') or GetSpellAbilityId() == FourCC('A151') or GetSpellAbilityId() == FourCC('A152') or GetSpellAbilityId() == FourCC('A153') or GetSpellAbilityId() == FourCC('A154') or GetSpellAbilityId() == FourCC('A155') or GetSpellAbilityId() == FourCC('A156') or GetSpellAbilityId() == FourCC('A157')
 end
 
 ---@return boolean
-function ZME ()
+function ZME()
 	return GetSpellAbilityId() == FourCC('A981') or GetSpellAbilityId() == FourCC('AA01') and IsUnitInRegion(DO[1 + GetPlayerId(GetTriggerPlayer())], GetTriggerUnit())
 end
 
 ---@return boolean
-function ZOE ()
+function ZOE()
 	return (IsUnitType(GetEnteringUnit(), UNIT_TYPE_GROUND) and GetUnitDefaultFlyHeight(GetEnteringUnit()) > 25.) ~= false ~= false ~= false
 end
 
 ---@return boolean
-function ZPE ()
+function ZPE()
 	return GetSpellAbilityId() == FourCC('A971')
 end
 
-function ZQE ()
+function ZQE()
 	SetPlayerAbilityAvailableBJ(false, $41393533, GetEnumPlayer())
 end
 
-function ZRE ()
+function ZRE()
 	UnitAddAbility(GetEnteringUnit(), $41726176)
 	SetUnitFlyHeight(GetEnteringUnit(), GetUnitDefaultFlyHeight(GetEnteringUnit()), 0.)
 	UnitRemoveAbility(GetEnteringUnit(), $41726176)
 end
 
 ---@return boolean
-function ZSE ()
+function ZSE()
 	return GetUnitTypeId(GetFilterUnit()) == $75303035 and IsPlayerAlly(GetOwningPlayer(GetTriggerUnit()), GetOwningPlayer(GetFilterUnit()))
 end
 
 ---@return boolean
-function ZTE ()
+function ZTE()
 	return GetUnitTypeId(GetFilterUnit()) == $75303131 and IsPlayerAlly(GetOwningPlayer(GetTriggerUnit()), GetOwningPlayer(GetFilterUnit()))
 end
 
 ---@return boolean
-function ZUE ()
+function ZUE()
 	return GetSpellAbilityId() == $41303135 and T > 0
 end
 
 ---@return boolean
-function ZVE ()
+function ZVE()
 	return IsUnitType(GetSpellAbilityUnit(), UNIT_TYPE_GIANT) ~= false ~= false ~= false
 end
 
 ---@return boolean
-function ZWE ()
+function ZWE()
 	return GetSpellAbilityId() == $41304242 and U > 0
 end
 
 ---@param NVE unit
 ---@return boolean
-function ZEE (NVE)
+function ZEE(NVE)
 	return GetUnitAbilityLevelSwapped($41303137, NVE) > 0 and RectContainsUnit(RL, NVE) == false and RectContainsUnit(IL, NVE) == false
 end
 
-function ZXE ()
+function ZXE()
 	local NVE = GetSpellAbilityUnit() ---@type unit
 	A_V(1.)
 	if ZEE(NVE) then
@@ -25192,11 +25192,11 @@ function ZXE ()
 end
 
 ---@return boolean
-function ZYE ()
+function ZYE()
 	return GetSpellAbilityId() == $41304243 and W > 0
 end
 
-function ZZE ()
+function ZZE()
 	local g = nil ---@type group
 	local u_1 ---@type unit
 	local x_1 ---@type number real
@@ -25219,7 +25219,7 @@ function ZZE ()
 	u_1 = nil
 end
 
-function Z_E ()
+function Z_E()
 	local g = nil ---@type group
 	local u_1 ---@type unit
 	local x_1 ---@type number real
@@ -25243,20 +25243,20 @@ end
 
 ---@param this number integer
 ---@return string
-function int_toString (this)
+function int_toString(this)
 	return I2S(this)
 end
 
 ---@param msg string
 ---@param duration number real
 ---@param p player
-function printTimedToPlayer (msg, duration, p)
+function printTimedToPlayer(msg, duration, p)
 	DisplayTimedTextToPlayer(p, 0., 0., duration, msg)
 end
 
 ---@param this string
 ---@return number integer
-function string_length (this)
+function string_length(this)
 	return StringLength(this)
 end
 
@@ -25264,13 +25264,13 @@ end
 ---@param start number integer
 ---@param stop number integer
 ---@return string
-function string_substring (this, start, stop)
+function string_substring(this, start, stop)
 	return SubString(this, start, stop)
 end
 
 ---@param this string
 ---@return number integer
-function string_toInt (this)
+function string_toInt(this)
 	return S2I(this)
 end
 
@@ -25278,7 +25278,7 @@ end
 ---@param arrayIndex number integer
 ---@param value unit
 ---@param stackPos string
-function ArrayQueue_units_set (instanceId, arrayIndex, value, stackPos)
+function ArrayQueue_units_set(instanceId, arrayIndex, value, stackPos)
 	if arrayIndex < 0 or arrayIndex >= 6 then
 		error("Index out of Bounds", stackPos)
 	elseif arrayIndex < 0 or arrayIndex >= 6 then
@@ -25295,7 +25295,7 @@ end
 ---@param this number integer
 ---@param u_1 unit
 ---@param w__wurst_stackPos string
-function ArrayQueue_enqueue (this, u_1, w__wurst_stackPos)
+function ArrayQueue_enqueue(this, u_1, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if ArrayQueue_size[this] < DummyRecycler_SAVED_UNITS_PER_ANGLE then
@@ -25311,7 +25311,7 @@ end
 ---@param this number integer
 ---@param u_1 unit
 ---@param w__wurst_stackPos string
-function dispatch_ArrayQueue_DummyRecycler_ArrayQueue_enqueue (this, u_1, w__wurst_stackPos)
+function dispatch_ArrayQueue_DummyRecycler_ArrayQueue_enqueue(this, u_1, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if ArrayQueue_typeId[this] == 0 then
@@ -25327,36 +25327,36 @@ end
 
 ---@param this number real
 ---@return number real
-function real_asAngleDegrees (this)
+function real_asAngleDegrees(this)
 	real_asAngleDegrees_return_radians = this * Angle_DEGTORAD
 	return real_asAngleDegrees_return_radians
 end
 
 ---@param this unit
-function unit_pause (this)
+function unit_pause(this)
 	PauseUnit(this, true)
 end
 
 ---@param this unit
-function unit_remove (this)
+function unit_remove(this)
 	RemoveUnit(this)
 end
 
 ---@param this_radians number real
 ---@return number real
-function angle_degrees (this_radians)
+function angle_degrees(this_radians)
 	return this_radians * Angle_RADTODEG
 end
 
 ---@param this unit
 ---@param a_radians number real
-function unit_setFacing (this, a_radians)
+function unit_setFacing(this, a_radians)
 	SetUnitFacing(this, angle_degrees(a_radians))
 end
 
 ---@param this unit
 ---@param scale number real
-function unit_setScale (this, scale)
+function unit_setScale(this, scale)
 	SetUnitScale(this, scale, scale, scale)
 end
 
@@ -25365,26 +25365,26 @@ end
 ---@param col_green number integer
 ---@param col_blue number integer
 ---@param col_alpha number integer
-function unit_setVertexColor (this, col_red, col_green, col_blue, col_alpha)
+function unit_setVertexColor(this, col_red, col_green, col_blue, col_alpha)
 	SetUnitVertexColor(this, col_red, col_green, col_blue, col_alpha)
 end
 
 ---@param this unit
 ---@param x_1 number real
-function unit_setX (this, x_1)
+function unit_setX(this, x_1)
 	SetUnitX(this, x_1)
 end
 
 ---@param this unit
 ---@param y_1 number real
-function unit_setY (this, y_1)
+function unit_setY(this, y_1)
 	SetUnitY(this, y_1)
 end
 
 ---@param this unit
 ---@param pos_x number real
 ---@param pos_y number real
-function unit_setXY (this, pos_x, pos_y)
+function unit_setXY(this, pos_x, pos_y)
 	local receiver = this ---@type unit
 	local receiver_1 ---@type unit
 	unit_setX(receiver, pos_x)
@@ -25396,7 +25396,7 @@ end
 
 ---@param u_1 unit
 ---@param w__wurst_stackPos string
-function DummyRecycler_recycle (u_1, w__wurst_stackPos)
+function DummyRecycler_recycle(u_1, w__wurst_stackPos)
 	local smallestQueue ---@type number integer
 	local i_1 ---@type number integer
 	local temp ---@type number integer
@@ -25441,12 +25441,12 @@ function DummyRecycler_recycle (u_1, w__wurst_stackPos)
 end
 
 ---@param this number integer
-function DelayNode_onDestroy (this)
+function DelayNode_onDestroy(this)
 end
 
 ---@param obj number integer
 ---@param w__wurst_stackPos string
-function dealloc_DelayNode (obj, w__wurst_stackPos)
+function dealloc_DelayNode(obj, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if DelayNode_typeId[obj] == 0 then
@@ -25460,7 +25460,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function destroyDelayNode (this, w__wurst_stackPos)
+function destroyDelayNode(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	DelayNode_onDestroy(this)
@@ -25470,7 +25470,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function dispatch_DelayNode_destroyDelayNode (this, w__wurst_stackPos)
+function dispatch_DelayNode_destroyDelayNode(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if DelayNode_typeId[this] == 0 then
@@ -25486,24 +25486,24 @@ end
 
 ---@param this timer
 ---@return number real
-function timer_getElapsed (this)
+function timer_getElapsed(this)
 	return TimerGetElapsed(this)
 end
 
 ---@return number real
-function getElapsedGameTime ()
+function getElapsedGameTime()
 	return timer_getElapsed(GameTimer_gameTimer)
 end
 
 ---@param this timer
 ---@param time number real
 ---@param timerCallBack function
-function timer_start (this, time, timerCallBack)
+function timer_start(this, time, timerCallBack)
 	TimerStart(this, time, false, timerCallBack)
 end
 
 ---@param w__wurst_stackPos string
-function DelayNode_recycle (w__wurst_stackPos)
+function DelayNode_recycle(w__wurst_stackPos)
 	local tmp ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -25519,19 +25519,19 @@ function DelayNode_recycle (w__wurst_stackPos)
 	wurst_stack_depth = wurst_stack_depth - 1
 end
 
-function bridge_DelayNode_recycle ()
+function bridge_DelayNode_recycle()
 	wurst_stack_depth = 0
 	DelayNode_recycle("via function reference DummyRecycler, line 128")
 end
 
 ---@return number integer
-function currentCallback ()
+function currentCallback()
 	return ClosureForGroups_tempCallbacks[ClosureForGroups_tempCallbacksCount - 1]
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_LLEntry (w__wurst_stackPos)
+function alloc_LLEntry(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -25552,14 +25552,14 @@ function alloc_LLEntry (w__wurst_stackPos)
 end
 
 ---@param this number integer
-function LLEntry_init (this)
+function LLEntry_init(this)
 end
 
 ---@param this number integer
 ---@param elem number integer
 ---@param prev number integer
 ---@param next number integer
-function construct_LLEntry (this, elem, prev, next)
+function construct_LLEntry(this, elem, prev, next)
 	LLEntry_init(this)
 	LLEntry_elem[this] = elem
 	LLEntry_prev[this] = prev
@@ -25571,7 +25571,7 @@ end
 ---@param next number integer
 ---@param w__wurst_stackPos string
 ---@return number integer
-function new_LLEntry (elem, prev, next, w__wurst_stackPos)
+function new_LLEntry(elem, prev, next, w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -25584,7 +25584,7 @@ end
 ---@param this number integer
 ---@param elems_0 number integer
 ---@param w__wurst_stackPos string
-function LinkedList_add_1 (this, elems_0, w__wurst_stackPos)
+function LinkedList_add_1(this, elems_0, w__wurst_stackPos)
 	local entry ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -25598,7 +25598,7 @@ end
 ---@param this number integer
 ---@param elems_0 number integer
 ---@param w__wurst_stackPos string
-function dispatch_LinkedList_LinkedList_LinkedList_add_1 (this, elems_0, w__wurst_stackPos)
+function dispatch_LinkedList_LinkedList_LinkedList_add_1(this, elems_0, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if LinkedList_typeId[this] == 0 then
@@ -25614,20 +25614,20 @@ end
 
 ---@param this handle
 ---@return number integer
-function handle_getHandleId (this)
+function handle_getHandleId(this)
 	return GetHandleId(this)
 end
 
 ---@param object unit
 ---@return number integer
-function unitToIndex (object)
+function unitToIndex(object)
 	return handle_getHandleId(object)
 end
 
 ---@param this number integer
 ---@param u_1 unit
 ---@param w__wurst_stackPos string
-function callback_forEachFrom_LinkedList (this, u_1, w__wurst_stackPos)
+function callback_forEachFrom_LinkedList(this, u_1, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	dispatch_LinkedList_LinkedList_LinkedList_add_1(result[this], unitToIndex(u_1), "when calling add in LinkedList, line 515")
@@ -25636,13 +25636,13 @@ end
 
 ---@param this number integer
 ---@param u_1 unit
-function callback_forEachFrom_Preloader (this, u_1)
+function callback_forEachFrom_Preloader(this, u_1)
 	unit_remove(u_1)
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -25665,18 +25665,18 @@ function alloc_CallbackSingle_doAfter_forNearestUnit_doAfter_doAfter_doAfter_reg
 end
 
 ---@param this number integer
-function CallbackSingle_init (this)
+function CallbackSingle_init(this)
 end
 
 ---@param this number integer
-function construct_CallbackSingle (this)
+function construct_CallbackSingle(this)
 	CallbackSingle_init(this)
 end
 
 ---@param this number integer
 ---@param parentKey number integer
 ---@param value number integer
-function Table_saveInt (this, parentKey, value)
+function Table_saveInt(this, parentKey, value)
 	hashtable_saveInt(Table_ht, this, parentKey, value)
 end
 
@@ -25684,7 +25684,7 @@ end
 ---@param parentKey number integer
 ---@param value number integer
 ---@param w__wurst_stackPos string
-function dispatch_Table_Table_Table_saveInt (this, parentKey, value, w__wurst_stackPos)
+function dispatch_Table_Table_Table_saveInt(this, parentKey, value, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if Table_typeId[this] == 0 then
@@ -25700,14 +25700,14 @@ end
 
 ---@param this timer
 ---@return number integer
-function timer_getHandleId (this)
+function timer_getHandleId(this)
 	return GetHandleId(this)
 end
 
 ---@param this timer
 ---@param data number integer
 ---@param w__wurst_stackPos string
-function timer_setData (this, data, w__wurst_stackPos)
+function timer_setData(this, data, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	dispatch_Table_Table_Table_saveInt(TimerUtils_timerData, timer_getHandleId(this), data, "when calling saveInt in TimerUtils, line 17")
@@ -25716,7 +25716,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return timer
-function getTimer (w__wurst_stackPos)
+function getTimer(w__wurst_stackPos)
 	local receiver ---@type timer
 	local stackTrace_tempReturn ---@type timer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
@@ -25744,7 +25744,7 @@ end
 ---@param whichTimer timer
 ---@param time number real
 ---@param w__wurst_stackPos string
-function CallbackSingle_start (this, whichTimer, time, w__wurst_stackPos)
+function CallbackSingle_start(this, whichTimer, time, w__wurst_stackPos)
 	local receiver ---@type timer
 	local receiver_1 ---@type timer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
@@ -25763,7 +25763,7 @@ end
 ---@param whichTimer timer
 ---@param time number real
 ---@param w__wurst_stackPos string
-function dispatch_CallbackSingle_ClosureTimers_CallbackSingle_start (this, whichTimer, time, w__wurst_stackPos)
+function dispatch_CallbackSingle_ClosureTimers_CallbackSingle_start(this, whichTimer, time, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if CallbackSingle_typeId[this] == 0 then
@@ -25782,7 +25782,7 @@ end
 ---@param cb number integer
 ---@param w__wurst_stackPos string
 ---@return number integer
-function timer_doAfter (this, timeToWait, cb, w__wurst_stackPos)
+function timer_doAfter(this, timeToWait, cb, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	dispatch_CallbackSingle_ClosureTimers_CallbackSingle_start(cb, this, timeToWait, "when calling start in ClosureTimers, line 16")
@@ -25794,7 +25794,7 @@ end
 ---@param cb number integer
 ---@param w__wurst_stackPos string
 ---@return number integer
-function doAfter (timeToWait, cb, w__wurst_stackPos)
+function doAfter(timeToWait, cb, w__wurst_stackPos)
 	local stackTrace_tempReturn ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -25806,7 +25806,7 @@ end
 ---@param this number integer
 ---@param uu_1 unit
 ---@param w__wurst_stackPos string
-function callback_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence (this, uu_1, w__wurst_stackPos)
+function callback_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence(this, uu_1, w__wurst_stackPos)
 	local clVar ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -25822,7 +25822,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence_1801 (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence_1801(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -25847,7 +25847,7 @@ end
 ---@param this number integer
 ---@param uu_1 unit
 ---@param w__wurst_stackPos string
-function callback_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence_1883 (this, uu_1, w__wurst_stackPos)
+function callback_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence_1883(this, uu_1, w__wurst_stackPos)
 	local clVar ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -25863,7 +25863,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -25888,7 +25888,7 @@ end
 ---@param this number integer
 ---@param uu_1 unit
 ---@param w__wurst_stackPos string
-function callback_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence (this, uu_1, w__wurst_stackPos)
+function callback_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence(this, uu_1, w__wurst_stackPos)
 	local clVar ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -25904,7 +25904,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence_1803 (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence_1803(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -25929,7 +25929,7 @@ end
 ---@param this number integer
 ---@param uu_1 unit
 ---@param w__wurst_stackPos string
-function callback_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence_1885 (this, uu_1, w__wurst_stackPos)
+function callback_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence_1885(this, uu_1, w__wurst_stackPos)
 	local clVar ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -25946,7 +25946,7 @@ end
 ---@param this number integer
 ---@param u_1 unit
 ---@param w__wurst_stackPos string
-function dispatch_ForGroupCallback_ClosureForGroups_ForGroupCallback_callback (this, u_1, w__wurst_stackPos)
+function dispatch_ForGroupCallback_ClosureForGroups_ForGroupCallback_callback(this, u_1, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if ForGroupCallback_typeId[this] == 0 then
@@ -25980,7 +25980,7 @@ end
 
 ---@param filter unit
 ---@param w__wurst_stackPos string
-function filterCallback (filter, w__wurst_stackPos)
+function filterCallback(filter, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if ClosureForGroups_iterCount < ClosureForGroups_maxCount then
@@ -25991,21 +25991,21 @@ function filterCallback (filter, w__wurst_stackPos)
 end
 
 ---@param w__wurst_stackPos string
-function code__Filter_ClosureForGroups (w__wurst_stackPos)
+function code__Filter_ClosureForGroups(w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	filterCallback(GetFilterUnit(), "when calling filterCallback in ClosureForGroups, line 14")
 	wurst_stack_depth = wurst_stack_depth - 1
 end
 
-function bridge_code__Filter_ClosureForGroups ()
+function bridge_code__Filter_ClosureForGroups()
 	wurst_stack_depth = 0
 	code__Filter_ClosureForGroups("via function reference ClosureForGroups, line 14")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_registerPlayerUnitEvent_AbilityInfo (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_registerPlayerUnitEvent_AbilityInfo(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -26029,7 +26029,7 @@ end
 
 ---@param this texttag
 ---@param flag boolean
-function texttag_setPermanent (this, flag)
+function texttag_setPermanent(this, flag)
 	SetTextTagPermanent(this, flag)
 end
 
@@ -26037,20 +26037,20 @@ end
 ---@param pos_x number real
 ---@param pos_y number real
 ---@param pos_z number real
-function texttag_setPos (this, pos_x, pos_y, pos_z)
+function texttag_setPos(this, pos_x, pos_y, pos_z)
 	SetTextTagPos(this, pos_x, pos_y, pos_z)
 end
 
 ---@param this texttag
 ---@param text string
 ---@param size number real
-function texttag_setText (this, text, size)
+function texttag_setText(this, text, size)
 	SetTextTagText(this, text, size * .0023)
 end
 
 ---@param this texttag
 ---@param flag boolean
-function texttag_setVisibility (this, flag)
+function texttag_setVisibility(this, flag)
 	SetTextTagVisibility(this, flag)
 end
 
@@ -26060,7 +26060,7 @@ end
 ---@param message string
 ---@param size number real
 ---@return texttag
-function createTTEx (pos_x, pos_y, pos_z, message, size)
+function createTTEx(pos_x, pos_y, pos_z, message, size)
 	local receiver = CreateTextTag() ---@type texttag
 	local receiver_1 ---@type texttag
 	local receiver_2 ---@type texttag
@@ -26081,25 +26081,25 @@ function createTTEx (pos_x, pos_y, pos_z, message, size)
 end
 
 ---@param this texttag
-function texttag_destr (this)
+function texttag_destr(this)
 	DestroyTextTag(this)
 end
 
 ---@param this unit
 ---@return number real
-function unit_getX (this)
+function unit_getX(this)
 	return GetUnitX(this)
 end
 
 ---@param this unit
 ---@return number real
-function unit_getY (this)
+function unit_getY(this)
 	return GetUnitY(this)
 end
 
 ---@param i_1 number integer
 ---@param message string
-function createAbilityTextTag (i_1, message)
+function createAbilityTextTag(i_1, message)
 	local pos_x ---@type number real
 	local pos_y ---@type number real
 	local pos_z ---@type number real
@@ -26131,7 +26131,7 @@ end
 
 ---@param A number integer
 ---@return boolean
-function isWave (A)
+function isWave(A)
 	if A == $41393832 then
 		return true
 	end
@@ -26139,7 +26139,7 @@ function isWave (A)
 end
 
 ---@param w__wurst_stackPos string
-function code__registerPlayerUnitEvent_AbilityInfo (w__wurst_stackPos)
+function code__registerPlayerUnitEvent_AbilityInfo(w__wurst_stackPos)
 	local A ---@type number integer
 	local i_1 ---@type number integer
 	local cond_result ---@type number integer
@@ -26175,14 +26175,14 @@ function code__registerPlayerUnitEvent_AbilityInfo (w__wurst_stackPos)
 	wurst_stack_depth = wurst_stack_depth - 1
 end
 
-function bridge_code__registerPlayerUnitEvent_AbilityInfo ()
+function bridge_code__registerPlayerUnitEvent_AbilityInfo()
 	wurst_stack_depth = 0
 	code__registerPlayerUnitEvent_AbilityInfo("via function reference AbilityInfo, line 26")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_registerPlayerUnitEvent_DarkPresence (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_registerPlayerUnitEvent_DarkPresence(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -26204,7 +26204,7 @@ function alloc_CallbackSingle_doAfter_registerPlayerUnitEvent_DarkPresence (w__w
 	return this
 end
 
-function Remove_Dark ()
+function Remove_Dark()
 	local ttt = GetExpiredTimer() ---@type timer
 	local u_12 = LoadUnitHandle(udg_Hash, GetHandleId(ttt), 1) ---@type unit
 	UnitRemoveAbility(u_12, FourCC('AA68'))
@@ -26215,7 +26215,7 @@ function Remove_Dark ()
 	u_12 = nil
 end
 
-function Dark_method ()
+function Dark_method()
 	local id_1 ---@type number integer
 	local u_1 ---@type unit
 	local t = CreateTimer() ---@type timer
@@ -26235,7 +26235,7 @@ function Dark_method ()
 end
 
 ---@param w__wurst_stackPos string
-function code__registerPlayerUnitEvent_DarkPresence (w__wurst_stackPos)
+function code__registerPlayerUnitEvent_DarkPresence(w__wurst_stackPos)
 	local id_1 ---@type number integer
 	local u_1 ---@type unit
 	local x_1 ---@type number real
@@ -26265,7 +26265,7 @@ function code__registerPlayerUnitEvent_DarkPresence (w__wurst_stackPos)
 	d_1 = nil
 end
 
-function bridge_code__registerPlayerUnitEvent_DarkPresence ()
+function bridge_code__registerPlayerUnitEvent_DarkPresence()
 	wurst_stack_depth = 0
 	Dark_method()
 end
@@ -26273,7 +26273,7 @@ end
 ---@param this number integer
 ---@param parentKey number integer
 ---@return number integer
-function Table_loadInt (this, parentKey)
+function Table_loadInt(this, parentKey)
 	return hashtable_loadInt(Table_ht, this, parentKey)
 end
 
@@ -26281,7 +26281,7 @@ end
 ---@param parentKey number integer
 ---@param w__wurst_stackPos string
 ---@return number integer
-function dispatch_Table_Table_Table_loadInt (this, parentKey, w__wurst_stackPos)
+function dispatch_Table_Table_Table_loadInt(this, parentKey, w__wurst_stackPos)
 	local Table_Table_loadInt_result ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -26301,7 +26301,7 @@ end
 ---@param key number integer
 ---@param w__wurst_stackPos string
 ---@return number integer
-function HashMap_get (this, key, w__wurst_stackPos)
+function HashMap_get(this, key, w__wurst_stackPos)
 	local stackTrace_tempReturn ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -26314,7 +26314,7 @@ end
 ---@param key number integer
 ---@param w__wurst_stackPos string
 ---@return number integer
-function dispatch_HashMap_HashMap_HashMap_get (this, key, w__wurst_stackPos)
+function dispatch_HashMap_HashMap_HashMap_get(this, key, w__wurst_stackPos)
 	local HashMap_HashMap_get_result ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -26334,14 +26334,14 @@ end
 ---@param parentKey number integer
 ---@param childKey number integer
 ---@return trigger
-function hashtable_loadTriggerHandle (this, parentKey, childKey)
+function hashtable_loadTriggerHandle(this, parentKey, childKey)
 	return LoadTriggerHandle(this, parentKey, childKey)
 end
 
 ---@param this number integer
 ---@param parentKey number integer
 ---@return trigger
-function Table_loadTrigger (this, parentKey)
+function Table_loadTrigger(this, parentKey)
 	return hashtable_loadTriggerHandle(Table_ht, this, parentKey)
 end
 
@@ -26349,7 +26349,7 @@ end
 ---@param parentKey number integer
 ---@param w__wurst_stackPos string
 ---@return trigger
-function dispatch_Table_Table_Table_loadTrigger (this, parentKey, w__wurst_stackPos)
+function dispatch_Table_Table_Table_loadTrigger(this, parentKey, w__wurst_stackPos)
 	local Table_Table_loadTrigger_result ---@type trigger
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -26371,14 +26371,14 @@ end
 ---@param parentKey number integer
 ---@param childKey number integer
 ---@param value fogstate
-function hashtable_saveFogStateHandle (this, parentKey, childKey, value)
+function hashtable_saveFogStateHandle(this, parentKey, childKey, value)
 	SaveFogStateHandle(this, parentKey, childKey, value)
 end
 
 ---@param this number integer
 ---@param parentKey number integer
 ---@param value fogstate
-function Table_saveFogState (this, parentKey, value)
+function Table_saveFogState(this, parentKey, value)
 	hashtable_saveFogStateHandle(Table_ht, this, parentKey, value)
 end
 
@@ -26386,7 +26386,7 @@ end
 ---@param parentKey number integer
 ---@param value fogstate
 ---@param w__wurst_stackPos string
-function dispatch_Table_Table_Table_saveFogState (this, parentKey, value, w__wurst_stackPos)
+function dispatch_Table_Table_Table_saveFogState(this, parentKey, value, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if Table_typeId[this] == 0 then
@@ -26403,7 +26403,7 @@ end
 ---@param index number integer
 ---@param w__wurst_stackPos string
 ---@return trigger
-function triggerFromIndex (index, w__wurst_stackPos)
+function triggerFromIndex(index, w__wurst_stackPos)
 	local stackTrace_tempReturn ---@type trigger
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -26417,13 +26417,13 @@ end
 
 ---@param this trigger
 ---@return boolean
-function trigger_evaluate (this)
+function trigger_evaluate(this)
 	return TriggerEvaluate(this)
 end
 
 ---@param w__wurst_stackPos string
 ---@return boolean
-function code__registerPlayerUnitEvent_RegisterEvents (w__wurst_stackPos)
+function code__registerPlayerUnitEvent_RegisterEvents(w__wurst_stackPos)
 	local stackTrace_tempReturn ---@type boolean
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -26433,14 +26433,14 @@ function code__registerPlayerUnitEvent_RegisterEvents (w__wurst_stackPos)
 end
 
 ---@return boolean
-function bridge_code__registerPlayerUnitEvent_RegisterEvents ()
+function bridge_code__registerPlayerUnitEvent_RegisterEvents()
 	wurst_stack_depth = 0
 	return code__registerPlayerUnitEvent_RegisterEvents("via function reference RegisterEvents, line 58")
 end
 
 ---@param this image
 ---@param w__wurst_stackPos string
-function image_remove (this, w__wurst_stackPos)
+function image_remove(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if this == nil then
@@ -26452,12 +26452,12 @@ end
 
 ---@param this player
 ---@return number integer
-function player_getId (this)
+function player_getId(this)
 	return GetPlayerId(this)
 end
 
 ---@param w__wurst_stackPos string
-function code__registerPlayerUnitEvent_StuckAcces (w__wurst_stackPos)
+function code__registerPlayerUnitEvent_StuckAcces(w__wurst_stackPos)
 	local u_1 ---@type unit
 	local pid ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
@@ -26484,13 +26484,13 @@ function code__registerPlayerUnitEvent_StuckAcces (w__wurst_stackPos)
 	u_1 = nil
 end
 
-function bridge_code__registerPlayerUnitEvent_StuckAcces ()
+function bridge_code__registerPlayerUnitEvent_StuckAcces()
 	wurst_stack_depth = 0
 	code__registerPlayerUnitEvent_StuckAcces("via function reference StuckAcces, line 59")
 end
 
 ---@param w__wurst_stackPos string
-function code__registerPlayerUnitEvent_StuckAcces_1896 (w__wurst_stackPos)
+function code__registerPlayerUnitEvent_StuckAcces_1896(w__wurst_stackPos)
 	local u_1 ---@type unit
 	local pid ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
@@ -26517,14 +26517,14 @@ function code__registerPlayerUnitEvent_StuckAcces_1896 (w__wurst_stackPos)
 	u_1 = nil
 end
 
-function bridge_code__registerPlayerUnitEvent_StuckAcces_1829 ()
+function bridge_code__registerPlayerUnitEvent_StuckAcces_1829()
 	wurst_stack_depth = 0
 	code__registerPlayerUnitEvent_StuckAcces_1896("via function reference StuckAcces, line 75")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_registerPlayerUnitEvent_StuckEffect (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_registerPlayerUnitEvent_StuckEffect(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -26547,7 +26547,7 @@ function alloc_CallbackSingle_doAfter_registerPlayerUnitEvent_StuckEffect (w__wu
 end
 
 ---@param w__wurst_stackPos string
-function code__registerPlayerUnitEvent_StuckEffect_1898 (w__wurst_stackPos)
+function code__registerPlayerUnitEvent_StuckEffect_1898(w__wurst_stackPos)
 	local id_1 ---@type number integer
 	local pid ---@type number integer
 	local x_1 ---@type number real
@@ -26571,13 +26571,13 @@ function code__registerPlayerUnitEvent_StuckEffect_1898 (w__wurst_stackPos)
 	eff_1 = nil
 end
 
-function bridge_code__registerPlayerUnitEvent_StuckEffect ()
+function bridge_code__registerPlayerUnitEvent_StuckEffect()
 	wurst_stack_depth = 0
 	code__registerPlayerUnitEvent_StuckEffect_1898("via function reference StuckEffect, line 69")
 end
 
 ---@param this number integer
-function call_doAfter_AfkMarker (this)
+function call_doAfter_AfkMarker(this)
 	IsInGameWhenQEXP[0] = JO
 	IsInGameWhenQEXP[1] = KO
 	IsInGameWhenQEXP[2] = LO
@@ -26589,35 +26589,35 @@ function call_doAfter_AfkMarker (this)
 end
 
 ---@param this number integer
-function call_doAfter_ClosureTimers (this)
+function call_doAfter_ClosureTimers(this)
 	ClosureTimers_x = ClosureTimers_x + 50
 end
 
 ---@param this number integer
-function call_doAfter_ClosureTimers_1855 (this)
+function call_doAfter_ClosureTimers_1855(this)
 	ClosureTimers_x = ClosureTimers_x * 2
 end
 
 ---@param msg string
-function testFail (msg)
+function testFail(msg)
 end
 
 ---@param this number integer
 ---@param expected number integer
-function int_assertEquals (this, expected)
+function int_assertEquals(this, expected)
 	if this ~= expected then
 		testFail("Expected <" .. int_toString(expected) .. ">, Actual <" .. int_toString(this) .. ">")
 	end
 end
 
 ---@param this number integer
-function call_doAfter_ClosureTimers_1856 (this)
+function call_doAfter_ClosureTimers_1856(this)
 	ClosureTimers_x = ClosureTimers_x / 2
 	int_assertEquals(ClosureTimers_x, 250)
 end
 
 ---@param team_1 number integer
-function FastFinish_reset (team_1)
+function FastFinish_reset(team_1)
 	local teamVariable ---@type number integer
 	local cond_result ---@type number integer
 	local i_1 ---@type number integer
@@ -26639,14 +26639,14 @@ end
 
 ---@param msg string
 ---@param duration number real
-function printTimed (msg, duration)
+function printTimed(msg, duration)
 	DisplayTimedTextToPlayer(Player_localPlayer, 0., 0., duration, msg)
 end
 
 ---@param this string
 ---@param s string
 ---@return number integer
-function string_indexOf (this, s)
+function string_indexOf(this, s)
 	local i_1 = 0 ---@type number integer
 	local temp = string_length(this) - string_length(s) ---@type number integer
 	while(true) do
@@ -26663,7 +26663,7 @@ end
 ---@param s string
 ---@param startpos number integer
 ---@return number integer
-function string_indexOf_2119 (this, s, startpos)
+function string_indexOf_2119(this, s, startpos)
 	local i_1 = startpos ---@type number integer
 	local temp = string_length(this) - string_length(s) ---@type number integer
 	while(true) do
@@ -26680,7 +26680,7 @@ end
 ---@param oldSubstring string
 ---@param newSubstring string
 ---@return string
-function string_replace (this, oldSubstring, newSubstring)
+function string_replace(this, oldSubstring, newSubstring)
 	local s = this ---@type string
 	local i_1 ---@type number integer
 	if string_length(oldSubstring) > 0 then
@@ -26697,7 +26697,7 @@ end
 ---@param this string
 ---@param replacements_0 string
 ---@return string
-function string_format_1 (this, replacements_0)
+function string_format_1(this, replacements_0)
 	local result_1 = this ---@type string
 	local i_1 = 0 ---@type number integer
 	result_1 = string_replace(result_1, "{" .. int_toString(i_1) .. "}", replacements_0)
@@ -26706,7 +26706,7 @@ function string_format_1 (this, replacements_0)
 end
 
 ---@param this number integer
-function call_doAfter_FastFinish_FastFinish (this)
+function call_doAfter_FastFinish_FastFinish(this)
 	if FastFinish_voteActive[team[this]] then
 		FastFinish_reset(team[this])
 		printTimed(string_format_1("Some players in {0} team wanna continue to play. Voting has closed", teamName[this]), 7.)
@@ -26714,28 +26714,28 @@ function call_doAfter_FastFinish_FastFinish (this)
 end
 
 ---@param this unit
-function unit_kill (this)
+function unit_kill(this)
 	KillUnit(this)
 end
 
 ---@param this number integer
-function call_doAfter_FastFinish_FastFinish_1858 (this)
+function call_doAfter_FastFinish_FastFinish_1858(this)
 	unit_kill(LKing)
 end
 
 ---@param this number integer
-function call_doAfter_FastFinish_FastFinish_1859 (this)
+function call_doAfter_FastFinish_FastFinish_1859(this)
 	unit_kill(RKing)
 end
 
 ---@param this number integer
-function call_doAfter_Kickme (this)
+function call_doAfter_Kickme(this)
 	Kickme_isKickOnWest = false
 	DisplayTimedTextToForce(WestForce, 5., "voted for kickme closed")
 end
 
 ---@param this number integer
-function call_doAfter_Kickme_1861 (this)
+function call_doAfter_Kickme_1861(this)
 	Kickme_isKickOnEast = false
 	DisplayTimedTextToForce(EastForce, 5., "voted for kickme closed")
 end
@@ -26743,7 +26743,7 @@ end
 ---@param str string
 ---@param color number integer
 ---@return string
-function Colorizer_colorize (str, color)
+function Colorizer_colorize(str, color)
 	local temp = color ---@type number integer
 	if temp == 0 then
 		return "|c00ff0202" .. str .. "|r"
@@ -26779,65 +26779,65 @@ end
 ---@param str string
 ---@param pid number integer
 ---@return string
-function Colorizer_colorizeByPlayerId (str, pid)
+function Colorizer_colorizeByPlayerId(str, pid)
 	return Colorizer_colorize(str, Colorizer_playerColors[pid])
 end
 
 ---@param this player
 ---@return string
-function player_getName (this)
+function player_getName(this)
 	return GetPlayerName(this)
 end
 
 ---@param this number integer
-function call_doAfter_Kickme_1862 (this)
+function call_doAfter_Kickme_1862(this)
 	unit_remove(u_2323[this])
 	DisplayTimedTextToForce(WestForce, 5., string_format_1("{0} kicked", Colorizer_colorizeByPlayerId(player_getName(p2[this]), id[this])))
 end
 
 ---@param this number integer
-function call_doAfter_Kickme_1863 (this)
+function call_doAfter_Kickme_1863(this)
 	unit_remove(u_2324[this])
 	DisplayTimedTextToForce(EastForce, 5., string_format_1("{0} kicked", Colorizer_colorizeByPlayerId(player_getName(p2_1357[this]), id_1348[this])))
 end
 
 ---@param this number integer
-function call_doAfter_ShowKingInfoForObs (this)
+function call_doAfter_ShowKingInfoForObs(this)
 	texttag_setText(ShowKingInfoForObs_HEALS_TEXT_WEST, string_format_1("Heals : {0}", int_toString(LKingHeal)), 10.)
 end
 
 ---@param this number integer
-function call_doAfter_ShowKingInfoForObs_1865 (this)
+function call_doAfter_ShowKingInfoForObs_1865(this)
 	texttag_setText(ShowKingInfoForObs_HEALS_TEXT_EAST, string_format_1("Heals : {0}", int_toString(RKingHeal)), 10.)
 end
 
 ---@param this number integer
-function call_doAfter_ShowKingInfoForObs_1866 (this)
+function call_doAfter_ShowKingInfoForObs_1866(this)
 	texttag_setText(ShowKingInfoForObs_HEALS_TEXT_WEST, string_format_1("Heals : {0}", int_toString(LKingHeal)), 10.)
 end
 
 ---@param this number integer
-function call_doAfter_ShowKingInfoForObs_1867 (this)
+function call_doAfter_ShowKingInfoForObs_1867(this)
 	texttag_setText(ShowKingInfoForObs_HEALS_TEXT_EAST, string_format_1("Heals : {0}", int_toString(RKingHeal)), 10.)
 end
 
 ---@param this number integer
-function call_doAfter_UnitUnpauser (this)
+function call_doAfter_UnitUnpauser(this)
 	ForGroup(ZE, ref_function_forcrossgroup)
 end
 
-function BCE ()
+function BCE()
 	ForGroup(ZE, ref_function_BBE)
 end
 
 ---@param this number integer
-function call_doAfter_UnitUnpauser_1869 (this)
+function call_doAfter_UnitUnpauser_1869(this)
 	BCE()
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_ForGroupCallback_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence (w__wurst_stackPos)
+function alloc_ForGroupCallback_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -26861,7 +26861,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_ForGroupCallback_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence_1812 (w__wurst_stackPos)
+function alloc_ForGroupCallback_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence_1812(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -26885,13 +26885,13 @@ end
 
 ---@param this group
 ---@return boolean
-function group_hasNext (this)
+function group_hasNext(this)
 	return FirstOfGroup(this) ~= nil
 end
 
 ---@param this group
 ---@return unit
-function group_next (this)
+function group_next(this)
 	local iterUnit = FirstOfGroup(this) ---@type unit
 	GroupRemoveUnit(this, iterUnit)
 	group_nexttempReturn = iterUnit
@@ -26901,7 +26901,7 @@ end
 
 ---@param obj number integer
 ---@param w__wurst_stackPos string
-function dealloc_ForGroupCallback (obj, w__wurst_stackPos)
+function dealloc_ForGroupCallback(obj, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if ForGroupCallback_typeId[obj] == 0 then
@@ -26916,7 +26916,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function destroyForGroupCallback (this, w__wurst_stackPos)
+function destroyForGroupCallback(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	dealloc_ForGroupCallback(this, "when calling dealloc_ForGroupCallback in ClosureForGroups, line 3")
@@ -26925,7 +26925,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function dispatch_ForGroupCallback_destroyForGroupCallback (this, w__wurst_stackPos)
+function dispatch_ForGroupCallback_destroyForGroupCallback(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if ForGroupCallback_typeId[this] == 0 then
@@ -26940,12 +26940,12 @@ function dispatch_ForGroupCallback_destroyForGroupCallback (this, w__wurst_stack
 end
 
 ---@param this group
-function group_clear (this)
+function group_clear(this)
 	GroupClear(this)
 end
 
 ---@param w__wurst_stackPos string
-function popCallback (w__wurst_stackPos)
+function popCallback(w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	group_clear(ClosureForGroups_DUMMY_GROUP)
@@ -26955,7 +26955,7 @@ function popCallback (w__wurst_stackPos)
 end
 
 ---@param c number integer
-function pushCallback (c)
+function pushCallback(c)
 	ClosureForGroups_tempCallbacks[ClosureForGroups_tempCallbacksCount] = c
 	ClosureForGroups_tempCallbacksCount = ClosureForGroups_tempCallbacksCount + 1
 	ClosureForGroups_iterCount = 0
@@ -26964,7 +26964,7 @@ end
 
 ---@param this unit
 ---@return number real
-function unit_getPos (this)
+function unit_getPos(this)
 	unit_getPos_return_x = unit_getX(this)
 	unit_getPos_return_y = unit_getY(this)
 	return unit_getPos_return_x
@@ -26972,7 +26972,7 @@ end
 
 ---@param this number real
 ---@return number real
-function real_squared (this)
+function real_squared(this)
 	return this * this
 end
 
@@ -26981,7 +26981,7 @@ end
 ---@param v_x number real
 ---@param v_y number real
 ---@return number real
-function vec2_distanceToSq (this_x, this_y, v_x, v_y)
+function vec2_distanceToSq(this_x, this_y, v_x, v_y)
 	return real_squared(v_x - this_x) + real_squared(v_y - this_y)
 end
 
@@ -26991,7 +26991,7 @@ end
 ---@param filter filterfunc
 ---@param c number integer
 ---@param w__wurst_stackPos string
-function forNearestUnit (pos_x, pos_y, range, filter, c, w__wurst_stackPos)
+function forNearestUnit(pos_x, pos_y, range, filter, c, w__wurst_stackPos)
 	local nearest ---@type unit
 	local bestDist ---@type number real
 	local u_1 ---@type unit
@@ -27023,7 +27023,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function call_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence (this, w__wurst_stackPos)
+function call_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence(this, w__wurst_stackPos)
 	local clVar ---@type number integer
 	local clVar_1 ---@type number integer
 	local temp_x ---@type number real
@@ -27065,7 +27065,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -27089,7 +27089,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function call_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence (this, w__wurst_stackPos)
+function call_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence(this, w__wurst_stackPos)
 	local d2_1 ---@type destructable
 	local clVar ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
@@ -27108,34 +27108,34 @@ function call_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence (this, w__wur
 end
 
 ---@param this number integer
-function call_doAfter_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence (this)
+function call_doAfter_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence(this)
 	IssueTargetOrderById(LKing, 851983, uu_2330[this])
 end
 
 ---@param this number integer
-function call_doAfter_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence_1873 (this)
+function call_doAfter_forNearestUnit_doAfter_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence_1873(this)
 	IssueTargetOrderById(RKing, 851983, uu_2331[this])
 end
 
 ---@param this number integer
-function call_doAfter_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence (this)
+function call_doAfter_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence(this)
 	IssueTargetOrderById(LKing, 851983, uu[this])
 end
 
 ---@param this number integer
-function call_doAfter_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence_1875 (this)
+function call_doAfter_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence_1875(this)
 	IssueTargetOrderById(RKing, 851983, uu_2329[this])
 end
 
 ---@param this number integer
-function call_doAfter_registerPlayerUnitEvent_AbilityInfo (this)
+function call_doAfter_registerPlayerUnitEvent_AbilityInfo(this)
 	local message2 = "CD: |cff00ff15Ready|r" ---@type string
 	createAbilityTextTag(i[this], message2)
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_doAfter_registerPlayerUnitEvent_DarkPresence(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -27159,7 +27159,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_ForGroupCallback_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence (w__wurst_stackPos)
+function alloc_ForGroupCallback_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -27183,7 +27183,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_ForGroupCallback_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence_1814 (w__wurst_stackPos)
+function alloc_ForGroupCallback_forNearestUnit_doAfter_registerPlayerUnitEvent_DarkPresence_1814(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -27206,19 +27206,19 @@ function alloc_ForGroupCallback_forNearestUnit_doAfter_registerPlayerUnitEvent_D
 end
 
 ---@param this effect
-function effect_destr (this)
+function effect_destr(this)
 	DestroyEffect(this)
 end
 
 ---@param this number integer
-function call_doAfter_registerPlayerUnitEvent_StuckEffect (this)
+function call_doAfter_registerPlayerUnitEvent_StuckEffect(this)
 	effect_destr(eff[this])
 	eff[this] = nil
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_ForGroupCallback_forEachFrom_Preloader (w__wurst_stackPos)
+function alloc_ForGroupCallback_forEachFrom_Preloader(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -27241,14 +27241,14 @@ function alloc_ForGroupCallback_forEachFrom_Preloader (w__wurst_stackPos)
 end
 
 ---@param this group
-function group_destr (this)
+function group_destr(this)
 	DestroyGroup(this)
 end
 
 ---@param this group
 ---@param cb number integer
 ---@param w__wurst_stackPos string
-function group_forEachFrom (this, cb, w__wurst_stackPos)
+function group_forEachFrom(this, cb, w__wurst_stackPos)
 	local u_1 ---@type unit
 	local from ---@type group
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
@@ -27266,7 +27266,7 @@ function group_forEachFrom (this, cb, w__wurst_stackPos)
 end
 
 ---@param w__wurst_stackPos string
-function finishPreload (w__wurst_stackPos)
+function finishPreload(w__wurst_stackPos)
 	local clVar ---@type number integer
 	local temp ---@type group
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
@@ -27283,7 +27283,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function call_nullTimer_Preloader (this, w__wurst_stackPos)
+function call_nullTimer_Preloader(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	finishPreload("when calling finishPreload in Preloader, line 54")
@@ -27292,7 +27292,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function dispatch_CallbackSingle_ClosureTimers_CallbackSingle_call (this, w__wurst_stackPos)
+function dispatch_CallbackSingle_ClosureTimers_CallbackSingle_call(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if CallbackSingle_typeId[this] == 0 then
@@ -27393,7 +27393,7 @@ end
 ---@param this timer
 ---@param w__wurst_stackPos string
 ---@return number integer
-function timer_getData (this, w__wurst_stackPos)
+function timer_getData(this, w__wurst_stackPos)
 	local stackTrace_tempReturn ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -27403,13 +27403,13 @@ function timer_getData (this, w__wurst_stackPos)
 end
 
 ---@param this timer
-function timer_pause (this)
+function timer_pause(this)
 	PauseTimer(this)
 end
 
 ---@param this timer
 ---@param w__wurst_stackPos string
-function timer_release (this, w__wurst_stackPos)
+function timer_release(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if this == nil then
@@ -27431,7 +27431,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function CallbackSingle_onDestroy (this, w__wurst_stackPos)
+function CallbackSingle_onDestroy(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	timer_release(CallbackSingle_t[this], "when calling release in ClosureTimers, line 124")
@@ -27440,7 +27440,7 @@ end
 
 ---@param obj number integer
 ---@param w__wurst_stackPos string
-function dealloc_CallbackSingle (obj, w__wurst_stackPos)
+function dealloc_CallbackSingle(obj, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if CallbackSingle_typeId[obj] == 0 then
@@ -27455,7 +27455,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function destroyCallbackSingle (this, w__wurst_stackPos)
+function destroyCallbackSingle(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	CallbackSingle_onDestroy(this, "when calling CallbackSingle_onDestroy in ClosureTimers, line 123")
@@ -27465,7 +27465,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function dispatch_CallbackSingle_destroyCallbackSingle (this, w__wurst_stackPos)
+function dispatch_CallbackSingle_destroyCallbackSingle(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if CallbackSingle_typeId[this] == 0 then
@@ -27480,7 +27480,7 @@ function dispatch_CallbackSingle_destroyCallbackSingle (this, w__wurst_stackPos)
 end
 
 ---@param w__wurst_stackPos string
-function CallbackSingle_staticCallback (w__wurst_stackPos)
+function CallbackSingle_staticCallback(w__wurst_stackPos)
 	local t ---@type timer
 	local cb ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
@@ -27494,21 +27494,21 @@ function CallbackSingle_staticCallback (w__wurst_stackPos)
 end
 
 ---@param w__wurst_stackPos string
-function code__start_CallbackSingle_ClosureTimers (w__wurst_stackPos)
+function code__start_CallbackSingle_ClosureTimers(w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	CallbackSingle_staticCallback("when calling staticCallback in ClosureTimers, line 114")
 	wurst_stack_depth = wurst_stack_depth - 1
 end
 
-function bridge_code__start_CallbackSingle_ClosureTimers ()
+function bridge_code__start_CallbackSingle_ClosureTimers()
 	wurst_stack_depth = 0
 	code__start_CallbackSingle_ClosureTimers("via function reference ClosureTimers, line 114")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_ShowKingInfoForObs_1793 (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_ShowKingInfoForObs_1793(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -27531,7 +27531,7 @@ function alloc_CallbackSingle_doAfter_ShowKingInfoForObs_1793 (w__wurst_stackPos
 end
 
 ---@param w__wurst_stackPos string
-function eastHeals (w__wurst_stackPos)
+function eastHeals(w__wurst_stackPos)
 	local clVar ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -27543,14 +27543,14 @@ function eastHeals (w__wurst_stackPos)
 	wurst_stack_depth = wurst_stack_depth - 1
 end
 
-function bridge_eastHeals ()
+function bridge_eastHeals()
 	wurst_stack_depth = 0
 	eastHeals("via function reference ShowKingInfoForObs, line 68")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_ShowKingInfoForObs_1795 (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_ShowKingInfoForObs_1795(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -27573,7 +27573,7 @@ function alloc_CallbackSingle_doAfter_ShowKingInfoForObs_1795 (w__wurst_stackPos
 end
 
 ---@param w__wurst_stackPos string
-function eastHealsLeave (w__wurst_stackPos)
+function eastHealsLeave(w__wurst_stackPos)
 	local clVar ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -27583,13 +27583,13 @@ function eastHealsLeave (w__wurst_stackPos)
 	wurst_stack_depth = wurst_stack_depth - 1
 end
 
-function bridge_eastHealsLeave ()
+function bridge_eastHealsLeave()
 	wurst_stack_depth = 0
 	eastHealsLeave("via function reference ShowKingInfoForObs, line 71")
 end
 
 ---@param w__wurst_stackPos string
-function initializeTable (w__wurst_stackPos)
+function initializeTable(w__wurst_stackPos)
 	local i_1 ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -27604,7 +27604,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_Table (w__wurst_stackPos)
+function alloc_Table(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -27627,17 +27627,17 @@ function alloc_Table (w__wurst_stackPos)
 end
 
 ---@param this number integer
-function Table_init (this)
+function Table_init(this)
 end
 
 ---@param this number integer
-function construct_Table (this)
+function construct_Table(this)
 	Table_init(this)
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function new_Table (w__wurst_stackPos)
+function new_Table(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -27649,7 +27649,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return boolean
-function init_Colors (w__wurst_stackPos)
+function init_Colors(w__wurst_stackPos)
 	local tuple_temp ---@type number integer
 	local tuple_temp_1 ---@type number integer
 	local tuple_temp_2 ---@type number integer
@@ -27903,7 +27903,7 @@ function init_Colors (w__wurst_stackPos)
 end
 
 ---@return boolean
-function bridge_init_Colors ()
+function bridge_init_Colors()
 	wurst_stack_depth = 0
 	return init_Colors("via function reference Colors, line 1")
 end
@@ -27914,21 +27914,21 @@ end
 ---@param pos_y number real
 ---@param facing_radians number real
 ---@return unit
-function createUnit (p, unitId, pos_x, pos_y, facing_radians)
+function createUnit(p, unitId, pos_x, pos_y, facing_radians)
 	return CreateUnit(p, unitId, pos_x, pos_y, angle_degrees(facing_radians))
 end
 
 ---@param this unit
 ---@param abil number integer
 ---@return boolean
-function unit_addAbility (this, abil)
+function unit_addAbility(this, abil)
 	return UnitAddAbility(this, abil)
 end
 
 ---@param this unit
 ---@param abil number integer
 ---@return boolean
-function unit_removeAbility (this, abil)
+function unit_removeAbility(this, abil)
 	return UnitRemoveAbility(this, abil)
 end
 
@@ -27937,7 +27937,7 @@ end
 ---@param owner player
 ---@param facing_radians number real
 ---@return unit
-function createDummy (pos_x, pos_y, owner, facing_radians)
+function createDummy(pos_x, pos_y, owner, facing_radians)
 	local u_1 = createUnit(owner, DummyRecycler_DUMMY_UNIT_ID, pos_x, pos_y, facing_radians) ---@type unit
 	local receiver = u_1 ---@type unit
 	local receiver_1 ---@type unit
@@ -27961,7 +27961,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_ArrayQueue (w__wurst_stackPos)
+function alloc_ArrayQueue(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -27984,19 +27984,19 @@ function alloc_ArrayQueue (w__wurst_stackPos)
 end
 
 ---@param this number integer
-function ArrayQueue_init (this)
+function ArrayQueue_init(this)
 	ArrayQueue_rp[this] = 0
 	ArrayQueue_size[this] = 0
 end
 
 ---@param this number integer
-function construct_ArrayQueue (this)
+function construct_ArrayQueue(this)
 	ArrayQueue_init(this)
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function new_ArrayQueue (w__wurst_stackPos)
+function new_ArrayQueue(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28008,7 +28008,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return boolean
-function init_DummyRecycler (w__wurst_stackPos)
+function init_DummyRecycler(w__wurst_stackPos)
 	local i_1 ---@type number integer
 	local temp ---@type number integer
 	local j ---@type number integer
@@ -28040,14 +28040,14 @@ function init_DummyRecycler (w__wurst_stackPos)
 end
 
 ---@return boolean
-function bridge_init_DummyRecycler ()
+function bridge_init_DummyRecycler()
 	wurst_stack_depth = 0
 	return init_DummyRecycler("via function reference DummyRecycler, line 1")
 end
 
 ---@param handicap number integer
 ---@return string
-function HCLDecoder_getCharFromHandicap (handicap)
+function HCLDecoder_getCharFromHandicap(handicap)
 	local h = handicap ---@type number integer
 	local res = "" ---@type string
 	local v ---@type number integer
@@ -28059,7 +28059,7 @@ function HCLDecoder_getCharFromHandicap (handicap)
 	return res
 end
 
-function HCLDecoder_presetBlocking ()
+function HCLDecoder_presetBlocking()
 	local i_1 ---@type number integer
 	HCLDecoder_blocked[0] = true
 	i_1 = 50
@@ -28070,7 +28070,7 @@ function HCLDecoder_presetBlocking ()
 	end
 end
 
-function HCLDecoder_resolveEncodingMap ()
+function HCLDecoder_resolveEncodingMap()
 	local i_1 = 0 ---@type number integer
 	local j = 0 ---@type number integer
 	while(true) do
@@ -28084,7 +28084,7 @@ function HCLDecoder_resolveEncodingMap ()
 	end
 end
 
-function HCLDecoder_initialize ()
+function HCLDecoder_initialize()
 	if not HCLDecoder_initialized then
 		HCLDecoder_presetBlocking()
 		HCLDecoder_resolveEncodingMap()
@@ -28093,12 +28093,12 @@ function HCLDecoder_initialize ()
 end
 
 ---@param this number integer
-function LLIterator_onDestroy (this)
+function LLIterator_onDestroy(this)
 end
 
 ---@param obj number integer
 ---@param w__wurst_stackPos string
-function dealloc_LLIterator (obj, w__wurst_stackPos)
+function dealloc_LLIterator(obj, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if LLIterator_typeId[obj] == 0 then
@@ -28113,7 +28113,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function destroyLLIterator (this, w__wurst_stackPos)
+function destroyLLIterator(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	LLIterator_onDestroy(this)
@@ -28123,7 +28123,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function dispatch_LLIterator_destroyLLIterator (this, w__wurst_stackPos)
+function dispatch_LLIterator_destroyLLIterator(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if LLIterator_typeId[this] == 0 then
@@ -28139,7 +28139,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function LLIterator_close (this, w__wurst_stackPos)
+function LLIterator_close(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if LLIterator_destroyOnClose[this] then
@@ -28150,20 +28150,20 @@ end
 
 ---@param this number integer
 ---@return boolean
-function LLIterator_hasNext (this)
+function LLIterator_hasNext(this)
 	return LLEntry_next[LLIterator_current[this]] ~= LLIterator_dummy[this]
 end
 
 ---@param this number integer
 ---@return number integer
-function LLIterator_next (this)
+function LLIterator_next(this)
 	LLIterator_current[this] = LLEntry_next[LLIterator_current[this]]
 	return LLEntry_elem[LLIterator_current[this]]
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_LLIterator (w__wurst_stackPos)
+function alloc_LLIterator(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28186,20 +28186,20 @@ function alloc_LLIterator (w__wurst_stackPos)
 end
 
 ---@param this number integer
-function LLIterator_init (this)
+function LLIterator_init(this)
 	LLIterator_destroyOnClose[this] = true
 end
 
 ---@param this number integer
 ---@return number integer
-function LinkedList_getDummy (this)
+function LinkedList_getDummy(this)
 	return LinkedList_dummy[this]
 end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
 ---@return number integer
-function dispatch_LinkedList_LinkedList_LinkedList_getDummy (this, w__wurst_stackPos)
+function dispatch_LinkedList_LinkedList_LinkedList_getDummy(this, w__wurst_stackPos)
 	local LinkedList_LinkedList_getDummy_result ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28217,7 +28217,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function LLIterator_reset (this, w__wurst_stackPos)
+function LLIterator_reset(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	LLIterator_dummy[this] = dispatch_LinkedList_LinkedList_LinkedList_getDummy(LLIterator_parent[this], "when calling getDummy in LinkedList, line 422")
@@ -28227,7 +28227,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function dispatch_LLIterator_LinkedList_LLIterator_reset (this, w__wurst_stackPos)
+function dispatch_LLIterator_LinkedList_LLIterator_reset(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if LLIterator_typeId[this] == 0 then
@@ -28244,7 +28244,7 @@ end
 ---@param this number integer
 ---@param parent number integer
 ---@param w__wurst_stackPos string
-function construct_LLIterator (this, parent, w__wurst_stackPos)
+function construct_LLIterator(this, parent, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	LLIterator_init(this)
@@ -28256,7 +28256,7 @@ end
 ---@param parent number integer
 ---@param w__wurst_stackPos string
 ---@return number integer
-function new_LLIterator (parent, w__wurst_stackPos)
+function new_LLIterator(parent, w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28269,7 +28269,7 @@ end
 ---@param this number integer
 ---@param w__wurst_stackPos string
 ---@return number integer
-function LinkedList_iterator (this, w__wurst_stackPos)
+function LinkedList_iterator(this, w__wurst_stackPos)
 	local stackTrace_tempReturn ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28281,7 +28281,7 @@ end
 ---@param handicaps number integer
 ---@param w__wurst_stackPos string
 ---@return string
-function HCLDecoder_getStringFromHandicaps (handicaps, w__wurst_stackPos)
+function HCLDecoder_getStringFromHandicaps(handicaps, w__wurst_stackPos)
 	local res ---@type string
 	local iterator ---@type number integer
 	local handicap ---@type number integer
@@ -28302,7 +28302,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_LinkedList (w__wurst_stackPos)
+function alloc_LinkedList(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28326,7 +28326,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function LinkedList_init (this, w__wurst_stackPos)
+function LinkedList_init(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	LinkedList_dummy[this] = new_LLEntry(0, 0, 0, "when calling new_LLEntry in LinkedList, line 18")
@@ -28336,7 +28336,7 @@ end
 
 ---@param this number integer
 ---@param w__wurst_stackPos string
-function construct_LinkedList2 (this, w__wurst_stackPos)
+function construct_LinkedList2(this, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	LinkedList_init(this, "when calling LinkedList_init in LinkedList, line 31")
@@ -28347,7 +28347,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function new_LinkedList (w__wurst_stackPos)
+function new_LinkedList(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28359,13 +28359,13 @@ end
 
 ---@param this player
 ---@return playerslotstate
-function player_getSlotState (this)
+function player_getSlotState(this)
 	return GetPlayerSlotState(this)
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function Handicaps_get (w__wurst_stackPos)
+function Handicaps_get(w__wurst_stackPos)
 	local handicaps ---@type number integer
 	local i_1 ---@type number integer
 	local temp ---@type number integer
@@ -28389,7 +28389,7 @@ function Handicaps_get (w__wurst_stackPos)
 	return handicaps
 end
 
-function Handicaps_restore ()
+function Handicaps_restore()
 	local i_1 = 0 ---@type number integer
 	local temp = bj_MAX_PLAYERS - 1 ---@type number integer
 	while(true) do
@@ -28401,7 +28401,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function Handicaps_getWithRestore (w__wurst_stackPos)
+function Handicaps_getWithRestore(w__wurst_stackPos)
 	local handicaps ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28413,7 +28413,7 @@ end
 
 ---@param hclStr string
 ---@return string
-function getModeStringFromHcl (hclStr)
+function getModeStringFromHcl(hclStr)
 	if hclStr == "0" then
 		return "ap"
 	end
@@ -28507,7 +28507,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return boolean
-function init_HCL_connector (w__wurst_stackPos)
+function init_HCL_connector(w__wurst_stackPos)
 	local mode ---@type string
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28519,14 +28519,14 @@ function init_HCL_connector (w__wurst_stackPos)
 end
 
 ---@return boolean
-function bridge_init_HCL_connector ()
+function bridge_init_HCL_connector()
 	wurst_stack_depth = 0
 	return init_HCL_connector("via function reference HCL_connector, line 1")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_Comparator_LinkedList (w__wurst_stackPos)
+function alloc_Comparator_LinkedList(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28548,7 +28548,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_Comparator_LinkedList_1809 (w__wurst_stackPos)
+function alloc_Comparator_LinkedList_1809(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28570,13 +28570,13 @@ end
 
 ---@param r number real
 ---@return number integer
-function realToIndex (r)
+function realToIndex(r)
 	return R2I(r * TypeCasting_R2I_PRECISION)
 end
 
 ---@param w__wurst_stackPos string
 ---@return boolean
-function init_LinkedList (w__wurst_stackPos)
+function init_LinkedList(w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	alloc_Comparator_LinkedList("when calling alloc_Comparator_LinkedList in LinkedList, line 504")
@@ -28587,14 +28587,14 @@ function init_LinkedList (w__wurst_stackPos)
 end
 
 ---@return boolean
-function bridge_init_LinkedList ()
+function bridge_init_LinkedList()
 	wurst_stack_depth = 0
 	return init_LinkedList("via function reference LinkedList, line 1")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_IdGenerator (w__wurst_stackPos)
+function alloc_IdGenerator(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28615,19 +28615,19 @@ function alloc_IdGenerator (w__wurst_stackPos)
 end
 
 ---@param this number integer
-function IdGenerator_init (this)
+function IdGenerator_init(this)
 end
 
 ---@param this number integer
 ---@param start number integer
-function construct_IdGenerator (this, start)
+function construct_IdGenerator(this, start)
 	IdGenerator_init(this)
 end
 
 ---@param start number integer
 ---@param w__wurst_stackPos string
 ---@return number integer
-function new_IdGenerator (start, w__wurst_stackPos)
+function new_IdGenerator(start, w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28639,7 +28639,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return boolean
-function init_ObjectIdGenerator (w__wurst_stackPos)
+function init_ObjectIdGenerator(w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	new_IdGenerator($78303030, "when calling new_IdGenerator in ObjectIdGenerator, line 7")
@@ -28653,14 +28653,14 @@ function init_ObjectIdGenerator (w__wurst_stackPos)
 end
 
 ---@return boolean
-function bridge_init_ObjectIdGenerator ()
+function bridge_init_ObjectIdGenerator()
 	wurst_stack_depth = 0
 	return init_ObjectIdGenerator("via function reference ObjectIdGenerator, line 1")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_nullTimer_Preloader (w__wurst_stackPos)
+function alloc_CallbackSingle_nullTimer_Preloader(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28685,13 +28685,13 @@ end
 ---@param this string
 ---@param index number integer
 ---@return string
-function string_charAt (this, index)
+function string_charAt(this, index)
 	return SubString(this, index, index + 1)
 end
 
 ---@param value number integer
 ---@return string
-function toRawCode (value)
+function toRawCode(value)
 	local result_1 = "" ---@type string
 	local remainingValue = value ---@type number integer
 	local byteno = 0 ---@type number integer
@@ -28708,14 +28708,14 @@ end
 
 ---@param this number integer
 ---@return string
-function int_toRawCode (this)
+function int_toRawCode(this)
 	return toRawCode(this)
 end
 
 ---@param cb number integer
 ---@param w__wurst_stackPos string
 ---@return number integer
-function nullTimer (cb, w__wurst_stackPos)
+function nullTimer(cb, w__wurst_stackPos)
 	local stackTrace_tempReturn ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28726,7 +28726,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return boolean
-function init_Preloader (w__wurst_stackPos)
+function init_Preloader(w__wurst_stackPos)
 	local clVar ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28746,14 +28746,14 @@ function init_Preloader (w__wurst_stackPos)
 end
 
 ---@return boolean
-function bridge_init_Preloader ()
+function bridge_init_Preloader()
 	wurst_stack_depth = 0
 	return init_Preloader("via function reference Preloader, line 1")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_HashMap (w__wurst_stackPos)
+function alloc_HashMap(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28776,18 +28776,18 @@ function alloc_HashMap (w__wurst_stackPos)
 end
 
 ---@param this number integer
-function HashMap_init (this)
+function HashMap_init(this)
 end
 
 ---@param this number integer
-function construct_HashMap (this)
+function construct_HashMap(this)
 	construct_Table(this)
 	HashMap_init(this)
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function new_HashMap (w__wurst_stackPos)
+function new_HashMap(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -28799,13 +28799,13 @@ end
 
 ---@param this trigger
 ---@param actionFunc function
-function trigger_addAction (this, actionFunc)
+function trigger_addAction(this, actionFunc)
 	TriggerAddAction(this, actionFunc)
 end
 
 ---@param this trigger
 ---@param condition boolexpr
-function trigger_addCondition (this, condition)
+function trigger_addCondition(this, condition)
 	TriggerAddCondition(this, condition)
 end
 
@@ -28813,7 +28813,7 @@ end
 ---@param whichPlayer player
 ---@param whichPlayerUnitEvent playerunitevent
 ---@param filter boolexpr
-function trigger_registerPlayerUnitEvent (this, whichPlayer, whichPlayerUnitEvent, filter)
+function trigger_registerPlayerUnitEvent(this, whichPlayer, whichPlayerUnitEvent, filter)
 	TriggerRegisterPlayerUnitEvent(this, whichPlayer, whichPlayerUnitEvent, filter)
 end
 
@@ -28821,7 +28821,7 @@ end
 ---@param filter function
 ---@param condition function
 ---@param action function
-function registerPlayerUnitEvent_2108 (p, filter, condition, action)
+function registerPlayerUnitEvent_2108(p, filter, condition, action)
 	local hid = handle_getHandleId(p) ---@type number integer
 	local k ---@type number integer
 	local cond_result ---@type filterfunc
@@ -28859,13 +28859,13 @@ end
 
 ---@param p playerunitevent
 ---@param c function
-function registerPlayerUnitEvent (p, c)
+function registerPlayerUnitEvent(p, c)
 	registerPlayerUnitEvent_2108(p, nil, c, nil)
 end
 
 ---@param w__wurst_stackPos string
 ---@return boolean
-function init_RegisterEvents (w__wurst_stackPos)
+function init_RegisterEvents(w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	RegisterEvents_onCastMap = new_HashMap("when calling new_HashMap in RegisterEvents, line 55")
@@ -28875,12 +28875,12 @@ function init_RegisterEvents (w__wurst_stackPos)
 end
 
 ---@return boolean
-function bridge_init_RegisterEvents ()
+function bridge_init_RegisterEvents()
 	wurst_stack_depth = 0
 	return init_RegisterEvents("via function reference RegisterEvents, line 1")
 end
 
-function c2sInit ()
+function c2sInit()
 	StringUtils_c2s[0] = ""
 	StringUtils_c2s[1] = ""
 	StringUtils_c2s[2] = ""
@@ -29013,11 +29013,11 @@ end
 
 ---@param this string
 ---@return string
-function string_toUpperCase (this)
+function string_toUpperCase(this)
 	return StringCase(this, true)
 end
 
-function s2cInit ()
+function s2cInit()
 	local i_1 = 0 ---@type number integer
 	local temp = StringUtils_MAX_INDEX ---@type number integer
 	while(true) do
@@ -29029,10 +29029,10 @@ function s2cInit ()
 	end
 end
 
-function widthInit ()
+function widthInit()
 end
 
-function initialize ()
+function initialize()
 	c2sInit()
 	s2cInit()
 	widthInit()
@@ -29042,14 +29042,14 @@ end
 ---@param parentKey number integer
 ---@param childKey number integer
 ---@return boolean
-function hashtable_hasString (this, parentKey, childKey)
+function hashtable_hasString(this, parentKey, childKey)
 	return HaveSavedString(this, parentKey, childKey)
 end
 
 ---@param this number integer
 ---@param parentKey number integer
 ---@return boolean
-function Table_hasString (this, parentKey)
+function Table_hasString(this, parentKey)
 	return hashtable_hasString(Table_ht, this, parentKey)
 end
 
@@ -29057,7 +29057,7 @@ end
 ---@param parentKey number integer
 ---@param w__wurst_stackPos string
 ---@return boolean
-function dispatch_Table_Table_Table_hasString (this, parentKey, w__wurst_stackPos)
+function dispatch_Table_Table_Table_hasString(this, parentKey, w__wurst_stackPos)
 	local Table_Table_hasString_result ---@type boolean
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -29077,14 +29077,14 @@ end
 ---@param parentKey number integer
 ---@param childKey number integer
 ---@param value string
-function hashtable_saveString (this, parentKey, childKey, value)
+function hashtable_saveString(this, parentKey, childKey, value)
 	SaveStr(this, parentKey, childKey, value)
 end
 
 ---@param this number integer
 ---@param parentKey number integer
 ---@param value string
-function Table_saveString (this, parentKey, value)
+function Table_saveString(this, parentKey, value)
 	hashtable_saveString(Table_ht, this, parentKey, value)
 end
 
@@ -29092,7 +29092,7 @@ end
 ---@param parentKey number integer
 ---@param value string
 ---@param w__wurst_stackPos string
-function dispatch_Table_Table_Table_saveString (this, parentKey, value, w__wurst_stackPos)
+function dispatch_Table_Table_Table_saveString(this, parentKey, value, w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	if Table_typeId[this] == 0 then
@@ -29109,7 +29109,7 @@ end
 ---@param s string
 ---@param w__wurst_stackPos string
 ---@return number integer
-function stringToIndex (s, w__wurst_stackPos)
+function stringToIndex(s, w__wurst_stackPos)
 	local hash ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -29123,7 +29123,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return boolean
-function init_StringUtils (w__wurst_stackPos)
+function init_StringUtils(w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	StringUtils_MAX_INDEX = 126 + 1
@@ -29134,14 +29134,14 @@ function init_StringUtils (w__wurst_stackPos)
 end
 
 ---@return boolean
-function bridge_init_StringUtils ()
+function bridge_init_StringUtils()
 	wurst_stack_depth = 0
 	return init_StringUtils("via function reference StringUtils, line 1")
 end
 
 ---@param w__wurst_stackPos string
 ---@return boolean
-function init_TimerUtils (w__wurst_stackPos)
+function init_TimerUtils(w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	TimerUtils_freeTimersCount = 0
@@ -29154,13 +29154,13 @@ function init_TimerUtils (w__wurst_stackPos)
 end
 
 ---@return boolean
-function bridge_init_TimerUtils ()
+function bridge_init_TimerUtils()
 	wurst_stack_depth = 0
 	return init_TimerUtils("via function reference TimerUtils, line 1")
 end
 
 ---@param w__wurst_stackPos string
-function initTypecastData (w__wurst_stackPos)
+function initTypecastData(w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	dispatch_Table_Table_Table_saveString(TypeCasting_typecastdata, 0, "", "when calling saveString in TypeCasting, line 11")
@@ -29169,7 +29169,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return boolean
-function init_TypeCasting (w__wurst_stackPos)
+function init_TypeCasting(w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	TypeCasting_typecastdata = new_Table("when calling new_Table in TypeCasting, line 6")
@@ -29180,14 +29180,14 @@ function init_TypeCasting (w__wurst_stackPos)
 end
 
 ---@return boolean
-function bridge_init_TypeCasting ()
+function bridge_init_TypeCasting()
 	wurst_stack_depth = 0
 	return init_TypeCasting("via function reference TypeCasting, line 1")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_AfkMarker (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_AfkMarker(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -29211,25 +29211,25 @@ end
 
 ---@param i number integer
 ---@return number integer
-function ReadOffset (i)
+function ReadOffset(i)
 	return ReadMemory(GameDLL + i)
 end
 
 ---@param i number integer
 ---@return number integer
-function ReadOffsetUnsafe (i)
+function ReadOffsetUnsafe(i)
 	return Memory[(GameDLL + i) / 4]
 end
 
 ---@param byte number integer
 ---@return number integer
-function ReadByte (byte)
+function ReadByte(byte)
 	return GetByteFromInteger(ReadMemory(byte), 4)
 end
 
 ---@param address number integer
 ---@param value number integer
-function WriteUnrealMemory (address, value)
+function WriteUnrealMemory(address, value)
 	if address * 4 < 0x7Fffffff and address > 0x500 then
 		Memory[address] = value
 		return
@@ -29238,7 +29238,7 @@ end
 
 ---@param id number integer
 ---@param k number integer
-function InitBytecode (id, k)
+function InitBytecode(id, k)
 	l__bytecode[0] = 0x0C010900
 	l__bytecode[1] = k
 	l__bytecode[2] = 0x11010000
@@ -29258,12 +29258,12 @@ function InitBytecode (id, k)
 	l__bytecode[18] = 0x27000000
 end
 
-function Typecast ()
+function Typecast()
 	local l__bytecode ---@type number integer
 end
 
 ---@return number integer
-function GetBytecodeAddress ()
+function GetBytecodeAddress()
 	while(true) do
 		return l__bytecode
 	end
@@ -29271,22 +29271,22 @@ function GetBytecodeAddress ()
 end
 
 ---@return number integer
-function NewGlobal ()
+function NewGlobal()
 	return -0x0C5F0704
 	return 0x2700
 end
 
-function SetGlobal ()
+function SetGlobal()
 	local stand = 0x2114D008 ---@type number integer
 end
 
 ---@param id number integer
 ---@param val number integer
-function InitMemoryArray (id, val)
+function InitMemoryArray(id, val)
 	Memory[id] = val
 end
 
-function UnlockMemory ()
+function UnlockMemory()
 	local stand ---@type number integer
 	ForForce(bj_FORCE_PLAYER[0], I2C(0x2 + C2I(NewGlobal)))
 	ForForce(bj_FORCE_PLAYER[0], I2C(0x8 + C2I(SetGlobal)))
@@ -29299,7 +29299,7 @@ end
 
 ---@param bytes number integer
 ---@return number integer
-function malloc (bytes)
+function malloc(bytes)
 	bytecodedata = bytes / 4 + 4
 	ForForce(bj_FORCE_PLAYER[0], I2C(Memory[GetBytecodeAddress() / 4 + 3] + 32))
 	return (Memory[bytecodedata / 4 + 3] + 4) / 4 * 4
@@ -29308,7 +29308,7 @@ end
 ---@param addr number integer
 ---@param offset1 number integer
 ---@return number integer
-function ReadRealPointer1LVL (addr, offset1)
+function ReadRealPointer1LVL(addr, offset1)
 	if addr > 0 then
 		return ReadMemory(ReadMemory(addr) + offset1)
 	end
@@ -29319,7 +29319,7 @@ end
 ---@param offset1 number integer
 ---@param offset2 number integer
 ---@return number integer
-function ReadRealPointer2LVL (addr, offset1, offset2)
+function ReadRealPointer2LVL(addr, offset1, offset2)
 	local retval = ReadRealPointer1LVL(addr, offset1) ---@type number integer
 	if retval > 0 then
 		return ReadMemory(retval + offset2)
@@ -29330,7 +29330,7 @@ end
 ---@param oldaddress number integer
 ---@param newaddress number integer
 ---@return number integer
-function CreateJassNativeHook (oldaddress, newaddress)
+function CreateJassNativeHook(oldaddress, newaddress)
 	local FirstAddress = ReadRealPointer2LVL(pJassEnvAddress * 4, 0x14, 0x20) ---@type number integer
 	local NextAddress = FirstAddress ---@type number integer
 	local i = 0 ---@type number integer
@@ -29369,7 +29369,7 @@ end
 ---@param pFuncStdcallAddr number integer
 ---@param arg1 number integer
 ---@return number integer
-function CallStdcallWith1Args (pFuncStdcallAddr, arg1)
+function CallStdcallWith1Args(pFuncStdcallAddr, arg1)
 	local pOffset1 ---@type number integer
 	WriteMemory(pReservedExecutableMemory2, 0x68C98B51)
 	WriteMemory(pReservedExecutableMemory2 + 4, arg1)
@@ -29390,7 +29390,7 @@ end
 ---@param arg1 number integer
 ---@param arg2 number integer
 ---@return number integer
-function CallStdcallWith2Args (pFuncStdcallAddr, arg1, arg2)
+function CallStdcallWith2Args(pFuncStdcallAddr, arg1, arg2)
 	local pOffset1 ---@type number integer
 	WriteMemory(pReservedExecutableMemory2, 0x68C98B51)
 	WriteMemory(pReservedExecutableMemory2 + 4, arg2)
@@ -29415,7 +29415,7 @@ end
 ---@param arg3 number integer
 ---@param arg4 number integer
 ---@return number integer
-function CallStdcallWith4Args (pFuncStdcallAddr, arg1, arg2, arg3, arg4)
+function CallStdcallWith4Args(pFuncStdcallAddr, arg1, arg2, arg3, arg4)
 	local pOffset1 ---@type number integer
 	WriteMemory(pReservedExecutableMemory2, 0x68C98B51)
 	WriteMemory(pReservedExecutableMemory2 + 4, arg4)
@@ -29442,7 +29442,7 @@ end
 ---@param arg1 number integer
 ---@param arg2 number integer
 ---@return number integer
-function CallFastCallWith2Args (pFuncFastcallAddr, arg1, arg2)
+function CallFastCallWith2Args(pFuncFastcallAddr, arg1, arg2)
 	local pOffset1 ---@type number integer
 	WriteMemory(pReservedExecutableMemory2, 0xBAF68B56)
 	WriteMemory(pReservedExecutableMemory2 + 4, arg2)
@@ -29466,7 +29466,7 @@ end
 ---@param arg2 number integer
 ---@param arg3 number integer
 ---@return number integer
-function CallFastCallWith3Args (pFuncFastcallAddr, arg1, arg2, arg3)
+function CallFastCallWith3Args(pFuncFastcallAddr, arg1, arg2, arg3)
 	local pOffset1 ---@type number integer
 	WriteMemory(pReservedExecutableMemory2, 0x68F68B56)
 	WriteMemory(pReservedExecutableMemory2 + 4, arg3)
@@ -29496,7 +29496,7 @@ end
 ---@param arg6 number integer
 ---@param arg7 number integer
 ---@return number integer
-function CallFastCallWith7Args (pFuncFastcallAddr, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
+function CallFastCallWith7Args(pFuncFastcallAddr, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
 	local pOffset1 ---@type number integer
 	WriteMemory(pReservedExecutableMemory2, 0x68F68B56)
 	WriteMemory(pReservedExecutableMemory2 + 4, arg7)
@@ -29528,7 +29528,7 @@ end
 ---@param pFuncThiscallAddr number integer
 ---@param arg1 number integer
 ---@return number integer
-function CallThisCallWith1Args (pFuncThiscallAddr, arg1)
+function CallThisCallWith1Args(pFuncThiscallAddr, arg1)
 	return CallFastCallWith2Args(pFuncThiscallAddr, arg1, 0)
 end
 
@@ -29536,7 +29536,7 @@ end
 ---@param arg1 number integer
 ---@param arg2 number integer
 ---@return number integer
-function CallThisCallWith2Args (pFuncThiscallAddr, arg1, arg2)
+function CallThisCallWith2Args(pFuncThiscallAddr, arg1, arg2)
 	return CallFastCallWith3Args(pFuncThiscallAddr, arg1, 0, arg2)
 end
 
@@ -29548,45 +29548,45 @@ end
 ---@param arg5 number integer
 ---@param arg6 number integer
 ---@return number integer
-function CallThisCallWith6Args (pFuncThiscallAddr, arg1, arg2, arg3, arg4, arg5, arg6)
+function CallThisCallWith6Args(pFuncThiscallAddr, arg1, arg2, arg3, arg4, arg5, arg6)
 	return CallFastCallWith7Args(pFuncThiscallAddr, arg1, 0, arg2, arg3, arg4, arg5, arg6)
 end
 
 ---@param id number integer
 ---@return number integer
-function GetJassContext (id)
+function GetJassContext(id)
 	return Memory[Memory[Memory[Memory[pJassEnvAddress] / 4 + 5] / 4 + 36] / 4 + id]
 end
 
 ---@param s string
 ---@return number integer
-function GetStringAddress (s)
+function GetStringAddress(s)
 	return Memory[Memory[Memory[Memory[GetJassContext(1) / 4 + 2589] / 4 + 2] / 4 + SH2I(s) * 4 + 2] / 4 + 7]
 end
 
 ---@param s string
 ---@param i_address number integer
-function WriteNullTerminatedString (s, i_address)
+function WriteNullTerminatedString(s, i_address)
 	Memory[i_address / 4] = GetStringAddress(s)
 end
 
 ---@param p player
 ---@return number integer
-function Player2Flag (p)
+function Player2Flag(p)
 	return R2I(Pow(2, GetPlayerId(p)))
 end
 
 ---@param flags number integer
 ---@param bit number integer
 ---@return boolean
-function IsFlagBitSet (flags, bit)
+function IsFlagBitSet(flags, bit)
 	return flags / bit * 2147483648 ~= 0
 end
 
 ---@param arg1 number integer
 ---@param arg2 number integer
 ---@return number integer
-function BitwiseOr (arg1, arg2)
+function BitwiseOr(arg1, arg2)
 	local retval ---@type number integer
 	if NeedInitBitwiseOr then
 		NeedInitBitwiseOr = false
@@ -29610,7 +29610,7 @@ end
 ---@param arg1 number integer
 ---@param arg2 number integer
 ---@return number integer
-function BitwiseXor (arg1, arg2)
+function BitwiseXor(arg1, arg2)
 	if NeedInitBitwiseXor then
 		NeedInitBitwiseXor = false
 		Memory[pBitwiseXOR_ExecutableMemory / 4] = 0x0424448B
@@ -29632,7 +29632,7 @@ end
 ---@param arg1 number integer
 ---@param arg2 number integer
 ---@return number integer
-function BitwiseAnd (arg1, arg2)
+function BitwiseAnd(arg1, arg2)
 	if NeedInitBitwiseAnd then
 		NeedInitBitwiseAnd = false
 		Memory[pBitwiseAND_ExecutableMemory / 4] = 0x0424448B
@@ -29656,7 +29656,7 @@ end
 ---@param first number integer
 ---@param currentOffset number integer
 ---@return number integer
-function GetDefAddr (id, class, first, currentOffset)
+function GetDefAddr(id, class, first, currentOffset)
 	local FirstDataDefEntry = ReadMemory(first) ---@type number integer
 	local CurrentDefAddr = Memory[FirstDataDefEntry / 4 + 2] + currentOffset ---@type number integer
 	local FirstDefAddr = CurrentDefAddr ---@type number integer
@@ -29687,7 +29687,7 @@ end
 ---@param first number integer
 ---@param currentOffset number integer
 ---@return number integer
-function GetDefAddrCaching (id, class, first, currentOffset)
+function GetDefAddrCaching(id, class, first, currentOffset)
 	if HaveSavedInteger(ObjectDataPointersTable, class, id) then
 		return LoadInteger(ObjectDataPointersTable, class, id)
 	end
@@ -29696,38 +29696,38 @@ end
 
 ---@param id number integer
 ---@return number integer
-function GetUnitDataDefAddr (id)
+function GetUnitDataDefAddr(id)
 	return GetDefAddrCaching(id, 2, GameDLL + 0xAB4478, 0xC)
 end
 
 ---@param id number integer
 ---@return number integer
-function GetUnitUIDefAddr (id)
+function GetUnitUIDefAddr(id)
 	return GetDefAddrCaching(id, 3, GameDLL + 0xAB58F0, 0x10)
 end
 
 ---@param id number integer
 ---@return number integer
-function GetAbilityDataDefAddr (id)
+function GetAbilityDataDefAddr(id)
 	return GetDefAddrCaching(id, 0, GameDLL + 0xAB4478, 0xC)
 end
 
 ---@param id number integer
 ---@return number integer
-function GetAbilityUIDefAddr (id)
+function GetAbilityUIDefAddr(id)
 	return GetDefAddrCaching(id, 1, GameDLL + 0xAB5918, 0x10)
 end
 
 ---@param u unit
 ---@return number integer
-function GetUnitAddress (u)
+function GetUnitAddress(u)
 	return CallThisCallWith1Args(GameDLL + 0x3BDCB0, GetHandleId(u))
 end
 
 ---@param pAddr1 number integer
 ---@param pAddr2 number integer
 ---@return number integer
-function GetSomeAddress (pAddr1, pAddr2)
+function GetSomeAddress(pAddr1, pAddr2)
 	local pOff1 = 44 ---@type number integer
 	if BitwiseAnd(pAddr1, pAddr2) == -1 then
 		return 0
@@ -29751,7 +29751,7 @@ end
 ---@param pAddr1 number integer
 ---@param pAddr2 number integer
 ---@return number integer
-function GetSomeAddressForAbility (pAddr1, pAddr2)
+function GetSomeAddressForAbility(pAddr1, pAddr2)
 	local pOff1 = GetSomeAddress(pAddr1, pAddr2) ---@type number integer
 	if pOff1 == 0 or Memory[pOff1 / 4 + 0x20 / 4] ~= 0 then
 		return 0
@@ -29761,27 +29761,27 @@ end
 
 ---@param nDllName string
 ---@return number integer
-function GetModuleHandle (nDllName)
+function GetModuleHandle(nDllName)
 	return CallStdcallWith1Args(Memory[pGetModuleHandle], GetStringAddress(nDllName))
 end
 
 ---@param nDllName string
 ---@param nProcName string
 ---@return number integer
-function GetModuleProcAddress (nDllName, nProcName)
+function GetModuleProcAddress(nDllName, nProcName)
 	return CallStdcallWith2Args(Memory[pGetProcAddress], GetModuleHandle(nDllName), GetStringAddress(nProcName))
 end
 
 ---@param name string
 ---@param id number integer
 ---@return number integer
-function GetFrameItemAddress (name, id)
+function GetFrameItemAddress(name, id)
 	return CallFastCallWith2Args(pGetFrameItemAddress, GetStringAddress(name), id)
 end
 
 ---@param size number integer
 ---@return number integer
-function AllocateExecutableMemory (size)
+function AllocateExecutableMemory(size)
 	local retval = 0 ---@type number integer
 	if pVirtualAlloc ~= 0 then
 		if pReservedExecutableMemory2 == 0 then
@@ -29805,7 +29805,7 @@ end
 
 ---@param offsetaddress number integer
 ---@param offsetdefaultdata number integer
-function AddNewOffsetToRestore (offsetaddress, offsetdefaultdata)
+function AddNewOffsetToRestore(offsetaddress, offsetdefaultdata)
 	local i ---@type number integer
 	if GameIsClosing then
 		return
@@ -29827,7 +29827,7 @@ end
 ---@param pMemSize number integer
 ---@param pProtectFlag number integer
 ---@return number integer
-function ChangeOffsetProtection (pRealOffset, pMemSize, pProtectFlag)
+function ChangeOffsetProtection(pRealOffset, pMemSize, pProtectFlag)
 	local a ---@type number integer
 	local nIndex = 0 ---@type number integer
 	if pVirtualProtect == 0 then
@@ -29855,7 +29855,7 @@ end
 ---@param pMemSize number integer
 ---@param pProtectFlag number integer
 ---@return number integer
-function ChangeOffsetProtectionNoRestore (pRealOffset, pMemSize, pProtectFlag)
+function ChangeOffsetProtectionNoRestore(pRealOffset, pMemSize, pProtectFlag)
 	if pVirtualProtect == 0 then
 		pVirtualProtect = GetModuleProcAddress("Kernel32.dll", "VirtualProtect")
 	end
@@ -29868,13 +29868,13 @@ end
 
 ---@param Addr number integer
 ---@param Value number integer
-function PatchMemory (Addr, Value)
+function PatchMemory(Addr, Value)
 	local oldprotection = ChangeOffsetProtection(Addr, 4, 0x40) ---@type number integer
 	Memory[Addr / 4] = Value
 	ChangeOffsetProtection(Addr, 4, oldprotection)
 end
 
-function RestoreAllMemory ()
+function RestoreAllMemory()
 	local i = OffsetsToRestoreC ---@type number integer
 	local oldprotection ---@type number integer
 	GameIsClosing = true
@@ -29888,7 +29888,7 @@ function RestoreAllMemory ()
 end
 
 ---@param pTriggerHandle number integer
-function InitExtrasPageDisplayOnExit (pTriggerHandle)
+function InitExtrasPageDisplayOnExit(pTriggerHandle)
 	local oldprotection = ChangeOffsetProtectionNoRestore(GameDLL + 0x5C4120, 8, 0x40) ---@type number integer
 	local address = GameDLL + 0x5C4120 ---@type number integer
 	FinalTableHookRealValue1 = ReadMemory(GameDLL + 0x5C4120)
@@ -29905,7 +29905,7 @@ function InitExtrasPageDisplayOnExit (pTriggerHandle)
 	ChangeOffsetProtectionNoRestore(GameDLL + 0x5C4120, 8, oldprotection)
 end
 
-function DisplayExtrasPageDisplayOnExit ()
+function DisplayExtrasPageDisplayOnExit()
 	local oldprotection = ChangeOffsetProtectionNoRestore(GameDLL + 0x5C4120, 8, 0x40) ---@type number integer
 	WriteMemory(GameDLL + 0x5C4120, FinalTableHookRealValue1)
 	WriteMemory(GameDLL + 0x5C4120 + 4, FinalTableHookRealValue2)
@@ -29914,14 +29914,14 @@ function DisplayExtrasPageDisplayOnExit ()
 end
 
 ---@param Trig trigger
-function InitRestoreMemoryOnExit (Trig)
+function InitRestoreMemoryOnExit(Trig)
 	pFinalTableHook = AllocateExecutableMemory(60 * 4)
 	TriggerAddAction(Trig, DisplayExtrasPageDisplayOnExit)
 	InitExtrasPageDisplayOnExit(GetHandleId(Trig))
 end
 
 ---@return number integer
-function GetDamageEventESPData ()
+function GetDamageEventESPData()
 	local Length = ReadMemory(pDamageStack) ---@type number integer
 	if (Length > 0) then
 		return ReadMemory(pDamageStack + 0x04 + 0x04 * (Length - 1))
@@ -29929,7 +29929,7 @@ function GetDamageEventESPData ()
 	return 0
 end
 
-function InitDamageDetectHack ()
+function InitDamageDetectHack()
 	local pSlot72 = GameDLL + 0x931934 + (0x04 * 72) ---@type number integer
 	local OldProtection = ChangeOffsetProtection(pSlot72, 4, 0x04) ---@type number integer
 	local PreviousMethod = ReadMemory(pSlot72) ---@type number integer
@@ -29963,7 +29963,7 @@ function InitDamageDetectHack ()
 	WriteMemory(pDamageHook + 0x5C, 0x0010C2C9)
 end
 
-function Disable_SaveGame_Button ()
+function Disable_SaveGame_Button()
 	local pSaveGameSaveButton = GetFrameItemAddress("SaveGameFileEditBox", 0) ---@type number integer
 	if pSaveGameSaveButton > 0 then
 		Memory[pSaveGameSaveButton / 4 + 0x1D4 / 4] = 0
@@ -29978,7 +29978,7 @@ end
 
 ---@param Input number integer
 ---@param Text string
-function KickForHacks (Input, Text)
+function KickForHacks(Input, Text)
 	if Input == 0xFE or Input == 0xFF or Input == 0xE9 or Input == 0x90 then
 		Kick_Text = Text
 		CustomDefeatBJ(GetLocalPlayer(), "|c00ffff00You have been kicked for using Hacks!|r")
@@ -29988,7 +29988,7 @@ end
 ---@param ID number integer
 ---@param Addr number integer
 ---@param Value number integer
-function IsAddressOk (ID, Addr, Value)
+function IsAddressOk(ID, Addr, Value)
 	if ReadOffset(Addr) ~= Value then
 		if not AntiHackKick then
 			PatchMemory(GameDLL + Addr, Value)
@@ -29998,7 +29998,7 @@ function IsAddressOk (ID, Addr, Value)
 	end
 end
 
-function CheckMHAddr ()
+function CheckMHAddr()
 	IsAddressOk(0, 0x00E7A0, 0xB830EC83)
 	IsAddressOk(1, 0x00E800, 0x008B0874)
 	IsAddressOk(2, 0x00F4E0, 0x50511424)
@@ -30192,7 +30192,7 @@ end
 ---@param ID number integer
 ---@param Addr number integer
 ---@param VAddr number integer
-function IsVtableOk (ID, Addr, VAddr)
+function IsVtableOk(ID, Addr, VAddr)
 	if ReadOffset(Addr) ~= GameDLL + VAddr then
 		if not AntiHackKick then
 			PatchMemory(GameDLL + Addr, GameDLL + VAddr)
@@ -30202,7 +30202,7 @@ function IsVtableOk (ID, Addr, VAddr)
 	end
 end
 
-function CheckVTables ()
+function CheckVTables()
 	IsVtableOk(0, 0x936328, 0x3012E0)
 	IsVtableOk(1, 0x9415A8, 0x39C090)
 	IsVtableOk(2, 0x931AB4, 0x2A5D50)
@@ -30235,12 +30235,12 @@ function CheckVTables ()
 	IsVtableOk(29, 0x8F9A3C, 0x162DC0)
 end
 
-function Check_Hacks ()
+function Check_Hacks()
 	CheckVTables()
 	CheckMHAddr()
 end
 
-function Detect_Injection ()
+function Detect_Injection()
 	local pOff1 = ReadMemory(pW3XGlobalClass) ---@type number integer
 	if pOff1 > 0 then
 		pOff1 = ReadMemory(pOff1 + 0x1C)
@@ -30281,7 +30281,7 @@ function Detect_Injection ()
 	end
 end
 
-function Delayed_Init ()
+function Delayed_Init()
 	Disable_SaveGame_Button()
 	InitRestoreMemoryOnExit(CreateTrigger())
 	TimerStart(CreateTimer(), .5, true, CheckVTables)
@@ -30289,7 +30289,7 @@ function Delayed_Init ()
 	TimerStart(CreateTimer(), 5, true, Detect_Injection)
 end
 
-function Init_AntiHack ()
+function Init_AntiHack()
 	local i = 0 ---@type number integer
 	ForForce(bj_FORCE_PLAYER[0], I2C(8 + C2I(UnlockMemory)))
 	i = Memory[GetBytecodeAddress() / 4]
@@ -30320,7 +30320,7 @@ function Init_AntiHack ()
 end
 
 ---@param w__wurst_stackPos string
-function kewasdfju (w__wurst_stackPos)
+function kewasdfju(w__wurst_stackPos)
 	local clVar ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -30330,14 +30330,14 @@ function kewasdfju (w__wurst_stackPos)
 	wurst_stack_depth = wurst_stack_depth - 1
 end
 
-function bridge_kewasdfju ()
+function bridge_kewasdfju()
 	wurst_stack_depth = 0
 	kewasdfju("via function reference AfkMarker, line 32")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_Kickme_1791 (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_Kickme_1791(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -30361,13 +30361,13 @@ end
 
 ---@param this player
 ---@return mapcontrol
-function player_getController (this)
+function player_getController(this)
 	return GetPlayerController(this)
 end
 
 ---@param this player
 ---@return boolean
-function player_isIngame (this)
+function player_isIngame(this)
 	return player_getSlotState(this) == PLAYER_SLOT_STATE_PLAYING and player_getController(this) == MAP_CONTROL_USER
 end
 
@@ -30375,7 +30375,7 @@ end
 ---@param replacements_0 string
 ---@param replacements_1 string
 ---@return string
-function string_format_2 (this, replacements_0, replacements_1)
+function string_format_2(this, replacements_0, replacements_1)
 	local result_1 = this ---@type string
 	local i_1 = 0 ---@type number integer
 	result_1 = string_replace(result_1, "{" .. int_toString(i_1) .. "}", replacements_0)
@@ -30386,7 +30386,7 @@ function string_format_2 (this, replacements_0, replacements_1)
 end
 
 ---@param w__wurst_stackPos string
-function kickeast (w__wurst_stackPos)
+function kickeast(w__wurst_stackPos)
 	local p ---@type player
 	local id_1 ---@type number integer
 	local u_1 ---@type unit
@@ -30422,14 +30422,14 @@ function kickeast (w__wurst_stackPos)
 	p2_1 = nil
 end
 
-function bridge_kickeast ()
+function bridge_kickeast()
 	wurst_stack_depth = 0
 	kickeast("via function reference Kickme, line 101")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_Kickme (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_Kickme(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -30453,7 +30453,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_Kickme_1789 (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_Kickme_1789(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -30476,7 +30476,7 @@ function alloc_CallbackSingle_doAfter_Kickme_1789 (w__wurst_stackPos)
 end
 
 ---@param w__wurst_stackPos string
-function kickme (w__wurst_stackPos)
+function kickme(w__wurst_stackPos)
 	local p ---@type player
 	local id_1 ---@type number integer
 	local clVar ---@type number integer
@@ -30505,14 +30505,14 @@ function kickme (w__wurst_stackPos)
 	p = nil
 end
 
-function bridge_kickme ()
+function bridge_kickme()
 	wurst_stack_depth = 0
 	kickme("via function reference Kickme, line 92")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_Kickme_1790 (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_Kickme_1790(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -30535,7 +30535,7 @@ function alloc_CallbackSingle_doAfter_Kickme_1790 (w__wurst_stackPos)
 end
 
 ---@param w__wurst_stackPos string
-function kickwest (w__wurst_stackPos)
+function kickwest(w__wurst_stackPos)
 	local p ---@type player
 	local id_1 ---@type number integer
 	local u_1 ---@type unit
@@ -30571,14 +30571,14 @@ function kickwest (w__wurst_stackPos)
 	p2_1 = nil
 end
 
-function bridge_kickwest ()
+function bridge_kickwest()
 	wurst_stack_depth = 0
 	kickwest("via function reference Kickme, line 96")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_UnitUnpauser (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_UnitUnpauser(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -30602,7 +30602,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_UnitUnpauser_1797 (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_UnitUnpauser_1797(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -30625,7 +30625,7 @@ function alloc_CallbackSingle_doAfter_UnitUnpauser_1797 (w__wurst_stackPos)
 end
 
 ---@param w__wurst_stackPos string
-function unPause (w__wurst_stackPos)
+function unPause(w__wurst_stackPos)
 	local clVar ---@type number integer
 	local clVar_1 ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
@@ -30639,12 +30639,12 @@ function unPause (w__wurst_stackPos)
 	wurst_stack_depth = wurst_stack_depth - 1
 end
 
-function bridge_unPause ()
+function bridge_unPause()
 	wurst_stack_depth = 0
 	unPause("via function reference UnitUnpauser, line 103")
 end
 
-function FastFinish_countPlayers ()
+function FastFinish_countPlayers()
 	local i_1 ---@type number integer
 	FastFinish_playersCount[0] = 0
 	FastFinish_playersCount[1] = 0
@@ -30660,7 +30660,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_FastFinish_FastFinish (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_FastFinish_FastFinish(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -30684,7 +30684,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_FastFinish_FastFinish_1786 (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_FastFinish_FastFinish_1786(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -30708,7 +30708,7 @@ end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_FastFinish_FastFinish_1787 (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_FastFinish_FastFinish_1787(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -30732,7 +30732,7 @@ end
 
 ---@param p player
 ---@param w__wurst_stackPos string
-function FastFinish_vote (p, w__wurst_stackPos)
+function FastFinish_vote(p, w__wurst_stackPos)
 	local pid ---@type number integer
 	local team_1 ---@type number integer
 	local teamName_1 ---@type string
@@ -30779,7 +30779,7 @@ function FastFinish_vote (p, w__wurst_stackPos)
 end
 
 ---@param w__wurst_stackPos string
-function voteFF (w__wurst_stackPos)
+function voteFF(w__wurst_stackPos)
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
 	FastFinish_countPlayers()
@@ -30787,14 +30787,14 @@ function voteFF (w__wurst_stackPos)
 	wurst_stack_depth = wurst_stack_depth - 1
 end
 
-function bridge_voteFF ()
+function bridge_voteFF()
 	wurst_stack_depth = 0
 	voteFF("via function reference FastFinish_event, line 21")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_ShowKingInfoForObs (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_ShowKingInfoForObs(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -30817,7 +30817,7 @@ function alloc_CallbackSingle_doAfter_ShowKingInfoForObs (w__wurst_stackPos)
 end
 
 ---@param w__wurst_stackPos string
-function westHeals (w__wurst_stackPos)
+function westHeals(w__wurst_stackPos)
 	local clVar ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -30829,14 +30829,14 @@ function westHeals (w__wurst_stackPos)
 	wurst_stack_depth = wurst_stack_depth - 1
 end
 
-function bridge_westHeals ()
+function bridge_westHeals()
 	wurst_stack_depth = 0
 	westHeals("via function reference ShowKingInfoForObs, line 64")
 end
 
 ---@param w__wurst_stackPos string
 ---@return number integer
-function alloc_CallbackSingle_doAfter_ShowKingInfoForObs_1794 (w__wurst_stackPos)
+function alloc_CallbackSingle_doAfter_ShowKingInfoForObs_1794(w__wurst_stackPos)
 	local this ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -30859,7 +30859,7 @@ function alloc_CallbackSingle_doAfter_ShowKingInfoForObs_1794 (w__wurst_stackPos
 end
 
 ---@param w__wurst_stackPos string
-function westHealsLeave (w__wurst_stackPos)
+function westHealsLeave(w__wurst_stackPos)
 	local clVar ---@type number integer
 	wurst_stack[wurst_stack_depth] = w__wurst_stackPos
 	wurst_stack_depth = wurst_stack_depth + 1
@@ -30869,12 +30869,12 @@ function westHealsLeave (w__wurst_stackPos)
 	wurst_stack_depth = wurst_stack_depth - 1
 end
 
-function bridge_westHealsLeave ()
+function bridge_westHealsLeave()
 	wurst_stack_depth = 0
 	westHealsLeave("via function reference ShowKingInfoForObs, line 70")
 end
 
-function code__registerPlayerUnitEvent_AgrMode ()
+function code__registerPlayerUnitEvent_AgrMode()
 	local p ---@type player
 	local u_1 ---@type unit
 	local pid ---@type number integer
@@ -30893,7 +30893,7 @@ function code__registerPlayerUnitEvent_AgrMode ()
 	u_1 = nil
 end
 
-function code__registerPlayerUnitEvent_AgrMode_1889 ()
+function code__registerPlayerUnitEvent_AgrMode_1889()
 	local p ---@type player
 	local u_1 ---@type unit
 	local pid ---@type number integer
@@ -30914,18 +30914,18 @@ end
 
 ---@param this unit
 ---@return number integer
-function unit_getTypeId (this)
+function unit_getTypeId(this)
 	return GetUnitTypeId(this)
 end
 
 ---@param this unit
 ---@param id_1 number integer
 ---@return boolean
-function unit_issueImmediateOrderById (this, id_1)
+function unit_issueImmediateOrderById(this, id_1)
 	return IssueImmediateOrderById(this, id_1)
 end
 
-function code__registerPlayerUnitEvent_BlackDragonFire ()
+function code__registerPlayerUnitEvent_BlackDragonFire()
 	local u_1 = GetAttacker() ---@type unit
 	local uid = unit_getTypeId(u_1) ---@type number integer
 	if uid == $68304236 or uid == $68303537 then
@@ -30938,11 +30938,11 @@ end
 ---@param pos_x number real
 ---@param pos_y number real
 ---@return effect
-function addEffect (path, pos_x, pos_y)
+function addEffect(path, pos_x, pos_y)
 	return AddSpecialEffect(path, pos_x, pos_y)
 end
 
-function code__registerPlayerUnitEvent_BlackDragonFire_1891 ()
+function code__registerPlayerUnitEvent_BlackDragonFire_1891()
 	local id_1 = GetSpellAbilityId() ---@type number integer
 	local u_1 ---@type unit
 	local eff_1 ---@type effect
@@ -30958,11 +30958,11 @@ end
 ---@param this player
 ---@param p player
 ---@return boolean
-function player_isAllyOf (this, p)
+function player_isAllyOf(this, p)
 	return IsPlayerAlly(this, p)
 end
 
-function code__registerPlayerUnitEvent_ShowKingInfoForObs ()
+function code__registerPlayerUnitEvent_ShowKingInfoForObs()
 	local p = GetTriggerPlayer() ---@type player
 	local owner = nil ---@type player
 	local local_p = GetLocalPlayer() ---@type player
@@ -31020,7 +31020,7 @@ function code__registerPlayerUnitEvent_ShowKingInfoForObs ()
 	tag = nil
 end
 
-function code__registerPlayerUnitEvent_StuckEffect ()
+function code__registerPlayerUnitEvent_StuckEffect()
 	local u_1 ---@type unit
 	local pid ---@type number integer
 	local u_2 ---@type unit
@@ -31047,7 +31047,7 @@ function code__registerPlayerUnitEvent_StuckEffect ()
 	u_2 = nil
 end
 
-function code__startPeriodic_GameTimer ()
+function code__startPeriodic_GameTimer()
 	GameTimer_currentTime = GameTimer_currentTime + Basics_ANIMATION_PERIOD
 end
 
@@ -31055,11 +31055,11 @@ end
 ---@param whichPlayer player
 ---@param chatMessageToDetect string
 ---@param exactMatchOnly boolean
-function trigger_registerPlayerChatEvent (this, whichPlayer, chatMessageToDetect, exactMatchOnly)
+function trigger_registerPlayerChatEvent(this, whichPlayer, chatMessageToDetect, exactMatchOnly)
 	TriggerRegisterPlayerChatEvent(this, whichPlayer, chatMessageToDetect, exactMatchOnly)
 end
 
-function disableStuck ()
+function disableStuck()
 	local i_1 ---@type number integer
 	printTimed("Stuck is disabled for this game!", 3.)
 	i_1 = 1
@@ -31071,7 +31071,7 @@ function disableStuck ()
 	end
 end
 
-function eK ()
+function eK()
 	local wk ---@type number real
 	if GetEventDamage() + 1. >= GetUnitState(LKing, UNIT_STATE_LIFE) then
 		wk = GetUnitState(LKing, UNIT_STATE_MAX_LIFE)
@@ -31096,13 +31096,13 @@ function eK ()
 	end
 end
 
-function eUnpause ()
+function eUnpause()
 	if EastForceUnpause == false then
 		EastForceUnpause = true
 	end
 end
 
-function endRound ()
+function endRound()
 	group_clear(FG)
 	group_clear(ZE)
 	WestForceUnpause = false
@@ -31111,18 +31111,18 @@ end
 
 ---@param this unit
 ---@return player
-function unit_getOwner (this)
+function unit_getOwner(this)
 	return GetOwningPlayer(this)
 end
 
 ---@param this unit
 ---@return boolean
-function unit_isAlive (this)
+function unit_isAlive(this)
 	return UnitAlive(this)
 end
 
 ---@return boolean
-function enemyFilterEast ()
+function enemyFilterEast()
 	local f = GetFilterUnit() ---@type unit
 	local enemyFilterEasttempReturn = IsUnitEnemy(f, Player(9)) and unit_getOwner(f) == Player(11) and unit_isAlive(f) ---@type boolean
 	f = nil
@@ -31130,7 +31130,7 @@ function enemyFilterEast ()
 end
 
 ---@return boolean
-function enemyFilterWest ()
+function enemyFilterWest()
 	local f = GetFilterUnit() ---@type unit
 	local enemyFilterWesttempReturn = IsUnitEnemy(f, Player(8)) and unit_getOwner(f) == Player(10) and unit_isAlive(f) ---@type boolean
 	f = nil
@@ -31139,11 +31139,11 @@ end
 
 ---@param this unit
 ---@return number integer
-function unit_getUserData (this)
+function unit_getUserData(this)
 	return GetUnitUserData(this)
 end
 
-function forActiveGroup ()
+function forActiveGroup()
 	local u_1 = GetEnumUnit() ---@type unit
 	local order = GetUnitCurrentOrder(u_1) ---@type number integer
 	local data ---@type number integer
@@ -31161,7 +31161,7 @@ function forActiveGroup ()
 	loc = nil
 end
 
-function forceUnpause ()
+function forceUnpause()
 	local u_1 ---@type unit
 	local id_1 ---@type number integer
 	local id2 ---@type number integer
@@ -31178,7 +31178,7 @@ function forceUnpause ()
 	u_1 = nil
 end
 
-function forcrossgroup ()
+function forcrossgroup()
 	local u_1 = GetEnumUnit() ---@type unit
 	local id_1 = unit_getUserData(u_1) - 1 ---@type number integer
 	local i_1 = 1 ---@type number integer
@@ -31192,7 +31192,7 @@ function forcrossgroup ()
 	u_1 = nil
 end
 
-function iK ()
+function iK()
 	local wk ---@type number real
 	if GetEventDamage() + 1. >= GetUnitState(RKing, UNIT_STATE_LIFE) then
 		wk = GetUnitState(RKing, UNIT_STATE_MAX_LIFE)
@@ -31218,17 +31218,17 @@ function iK ()
 end
 
 ---@return boolean
-function init_Abilities ()
+function init_Abilities()
 	return true
 end
 
 ---@return boolean
-function init_AbilityIds ()
+function init_AbilityIds()
 	return true
 end
 
 ---@return boolean
-function init_AbilityInfo ()
+function init_AbilityInfo()
 	AbilityInfo_k[0] = LKing
 	AbilityInfo_k[1] = RKing
 	registerPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_CAST, ref_function_bridge_code__registerPlayerUnitEvent_AbilityInfo)
@@ -31236,7 +31236,7 @@ function init_AbilityInfo ()
 end
 
 ---@return boolean
-function init_AfkCounterZerolyser ()
+function init_AfkCounterZerolyser()
 	local t = CreateTrigger() ---@type trigger
 	local i_1 ---@type number integer
 	local i_2 ---@type number integer
@@ -31272,7 +31272,7 @@ function init_AfkCounterZerolyser ()
 end
 
 ---@return boolean
-function init_AfkKicker ()
+function init_AfkKicker()
 	local t = CreateTrigger() ---@type trigger
 	local i_1 ---@type number integer
 	local t2 ---@type trigger
@@ -31299,12 +31299,12 @@ end
 
 ---@param this trigger
 ---@param whichTimer timer
-function trigger_registerTimerExpireEvent (this, whichTimer)
+function trigger_registerTimerExpireEvent(this, whichTimer)
 	TriggerRegisterTimerExpireEvent(this, whichTimer)
 end
 
 ---@return boolean
-function init_AfkMarker ()
+function init_AfkMarker()
 	local t ---@type trigger
 	trigger_addAction(SU, ref_function_marker)
 	t = CreateTrigger()
@@ -31315,7 +31315,7 @@ function init_AfkMarker ()
 end
 
 ---@return boolean
-function init_AgrMode ()
+function init_AgrMode()
 	AgrMode_agrModeFull[0] = true
 	AgrMode_agrModeFull[1] = true
 	AgrMode_agrModeFull[2] = true
@@ -31330,14 +31330,14 @@ function init_AgrMode ()
 end
 
 ---@return boolean
-function init_Angle ()
+function init_Angle()
 	Angle_DEGTORAD = .017453293
 	Angle_RADTODEG = 57.295779513
 	return true
 end
 
 ---@return boolean
-function init_Basics ()
+function init_Basics()
 	Basics_ANIMATION_PERIOD = .03
 	Basics_HEIGHT_ENABLER = $416D7266
 	Basics_LOCUST_ID = $416C6F63
@@ -31346,19 +31346,19 @@ function init_Basics ()
 end
 
 ---@return boolean
-function init_BlackDragonFire ()
+function init_BlackDragonFire()
 	registerPlayerUnitEvent(EVENT_PLAYER_UNIT_ATTACKED, ref_function_code__registerPlayerUnitEvent_BlackDragonFire)
 	registerPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, ref_function_code__registerPlayerUnitEvent_BlackDragonFire_2222)
 	return true
 end
 
 ---@return boolean
-function init_Buildings ()
+function init_Buildings()
 	return true
 end
 
 ---@return boolean
-function init_ClosureForGroups ()
+function init_ClosureForGroups()
 	local tuple_temp ---@type number real
 	local tuple_temp_1 ---@type number real
 	ClosureForGroups_DUMMY_GROUP = CreateGroup()
@@ -31372,13 +31372,13 @@ function init_ClosureForGroups ()
 end
 
 ---@return boolean
-function init_ClosureTimers ()
+function init_ClosureTimers()
 	ClosureTimers_x = 200
 	return true
 end
 
 ---@return boolean
-function init_Colorizer ()
+function init_Colorizer()
 	Colorizer_playerColors[0] = 0
 	Colorizer_playerColors[1] = 1
 	Colorizer_playerColors[2] = 2
@@ -31395,18 +31395,18 @@ function init_Colorizer ()
 end
 
 ---@return boolean
-function init_DarkPresence ()
+function init_DarkPresence()
 	registerPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, ref_function_bridge_code__registerPlayerUnitEvent_DarkPresence)
 	return true
 end
 
 ---@return boolean
-function init_Doodads ()
+function init_Doodads()
 	return true
 end
 
 ---@return boolean
-function init_ErrorHandling ()
+function init_ErrorHandling()
 	ErrorHandling_MUTE_ERROR_DURATION = 60
 	ErrorHandling_PRIMARY_ERROR_KEY = -1
 	ErrorHandling_HT = InitHashtable()
@@ -31415,7 +31415,7 @@ function init_ErrorHandling ()
 end
 
 ---@return boolean
-function init_FastFinish ()
+function init_FastFinish()
 	FastFinish_voted[0] = false
 	FastFinish_voted[1] = false
 	FastFinish_voted[2] = false
@@ -31434,7 +31434,7 @@ function init_FastFinish ()
 end
 
 ---@return boolean
-function init_FastFinish_event ()
+function init_FastFinish_event()
 	local t = CreateTrigger() ---@type trigger
 	local i_1 = 0 ---@type number integer
 	local receiver ---@type trigger
@@ -31464,12 +31464,12 @@ end
 ---@param this timer
 ---@param time number real
 ---@param timerCallBack function
-function timer_startPeriodic (this, time, timerCallBack)
+function timer_startPeriodic(this, time, timerCallBack)
 	TimerStart(this, time, true, timerCallBack)
 end
 
 ---@return boolean
-function init_GameTimer ()
+function init_GameTimer()
 	GameTimer_gameTimer = CreateTimer()
 	timer_start(GameTimer_gameTimer, 100000., nil)
 	timer_startPeriodic(CreateTimer(), Basics_ANIMATION_PERIOD, ref_function_code__startPeriodic_GameTimer)
@@ -31477,38 +31477,38 @@ function init_GameTimer ()
 end
 
 ---@return boolean
-function init_Group ()
+function init_Group()
 	Group_ENUM_GROUP = CreateGroup()
 	return true
 end
 
 ---@return boolean
-function init_HCLDecoder ()
+function init_HCLDecoder()
 	HCLDecoder_chars = "abcdefghijklmnopqrstuvwxyz0123456789 -=,."
 	HCLDecoder_initialized = false
 	return true
 end
 
 ---@return boolean
-function init_HashList ()
+function init_HashList()
 	InitHashtable()
 	InitHashtable()
 	return true
 end
 
 ---@return boolean
-function init_Icons ()
+function init_Icons()
 	return true
 end
 
 ---@return boolean
-function init_Integer ()
+function init_Integer()
 	Integer_INT_MAX = $7FFFFFFF
 	return true
 end
 
 ---@return boolean
-function init_Kickme ()
+function init_Kickme()
 	local t ---@type trigger
 	local i_1 ---@type number integer
 	local t2 ---@type trigger
@@ -31547,24 +31547,24 @@ function init_Kickme ()
 end
 
 ---@param gc gamecache
-function Results_setCache (gc)
+function Results_setCache(gc)
 	Results_cache = gc
 end
 
 ---@param this gamecache
-function gamecache_flush (this)
+function gamecache_flush(this)
 	FlushGameCache(this)
 end
 
 ---@param this trigger
 ---@param timeout number real
 ---@param periodic boolean
-function trigger_registerTimerEvent (this, timeout, periodic)
+function trigger_registerTimerEvent(this, timeout, periodic)
 	TriggerRegisterTimerEvent(this, timeout, periodic)
 end
 
 ---@return boolean
-function init_Ladder_events ()
+function init_Ladder_events()
 	local t ---@type trigger
 	gamecache_flush(InitGameCache("dr.x"))
 	Results_setCache(InitGameCache("dr.x"))
@@ -31577,43 +31577,43 @@ function init_Ladder_events ()
 end
 
 ---@return boolean
-function init_Lightning ()
+function init_Lightning()
 	return true
 end
 
 ---@return boolean
-function init_MagicFunctions ()
+function init_MagicFunctions()
 	MagicFunctions_compiletime = false
 	return true
 end
 
 ---@param this rect
 ---@return number real
-function rect_getMaxX (this)
+function rect_getMaxX(this)
 	return GetRectMaxX(this)
 end
 
 ---@param this rect
 ---@return number real
-function rect_getMaxY (this)
+function rect_getMaxY(this)
 	return GetRectMaxY(this)
 end
 
 ---@param this rect
 ---@return number real
-function rect_getMinX (this)
+function rect_getMinX(this)
 	return GetRectMinX(this)
 end
 
 ---@param this rect
 ---@return number real
-function rect_getMinY (this)
+function rect_getMinY(this)
 	return GetRectMinY(this)
 end
 
 ---@param this region
 ---@param rct rect
-function region_addRect (this, rct)
+function region_addRect(this, rct)
 	RegionAddRect(this, rct)
 end
 
@@ -31621,7 +31621,7 @@ end
 ---@param this_y number real
 ---@param factor number real
 ---@return number real
-function vec2_op_mult (this_x, this_y, factor)
+function vec2_op_mult(this_x, this_y, factor)
 	vec2_op_mult_return_x = this_x * factor
 	vec2_op_mult_return_y = this_y * factor
 	return vec2_op_mult_return_x
@@ -31632,13 +31632,13 @@ end
 ---@param v_x number real
 ---@param v_y number real
 ---@return number real
-function vec2_op_plus (this_x, this_y, v_x, v_y)
+function vec2_op_plus(this_x, this_y, v_x, v_y)
 	vec2_op_plus_return_x = this_x + v_x
 	vec2_op_plus_return_y = this_y + v_y
 	return vec2_op_plus_return_x
 end
 
-function initMapBounds ()
+function initMapBounds()
 	local cond_result ---@type rect
 	local receiver ---@type region
 	local cond_result_1 ---@type rect
@@ -31688,34 +31688,34 @@ function initMapBounds ()
 end
 
 ---@return boolean
-function init_MapBounds ()
+function init_MapBounds()
 	initMapBounds()
 	return true
 end
 
 ---@return boolean
-function init_Maths ()
+function init_Maths()
 	return true
 end
 
 ---@return boolean
-function init_Matrices ()
+function init_Matrices()
 	return true
 end
 
 ---@return boolean
-function init_ObjectIds ()
+function init_ObjectIds()
 	ObjectIds_CHARMAP = ".................................!.#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[.]^_`abcdefghijklmnopqrstuvwxyz{|}~................................................................................................................................."
 	return true
 end
 
 ---@return boolean
-function init_Objects ()
+function init_Objects()
 	return true
 end
 
 ---@return boolean
-function init_Orders ()
+function init_Orders()
 	OrderIds_attack = 851983
 	OrderIds_stomp = 852127
 	OrderIds_stop = 851972
@@ -31723,13 +31723,13 @@ function init_Orders ()
 end
 
 ---@return boolean
-function init_PictureStuck ()
+function init_PictureStuck()
 	ForForce(Ludi, ref_function_risyu)
 	return true
 end
 
 ---@return boolean
-function init_PictureStuckStore ()
+function init_PictureStuckStore()
 	PictureStuckStore_r1b1posX = -5500. - 90. - 90.
 	PictureStuckStore_r2b1posX = -5500. - 90. - 90.
 	PictureStuckStore_r3b1posX = -3200. - 90. - 120.
@@ -31765,7 +31765,7 @@ function init_PictureStuckStore ()
 	return true
 end
 
-function initPlayerArray ()
+function initPlayerArray()
 	local i_1 = 0 ---@type number integer
 	local temp = bj_MAX_PLAYER_SLOTS - 1 ---@type number integer
 	while(true) do
@@ -31776,14 +31776,14 @@ function initPlayerArray ()
 end
 
 ---@return boolean
-function init_Player ()
+function init_Player()
 	Player_localPlayer = GetLocalPlayer()
 	initPlayerArray()
 	return true
 end
 
 ---@return boolean
-function init_Playercolor ()
+function init_Playercolor()
 	ConvertPlayerColor(24)
 	ConvertPlayerColor(25)
 	ConvertPlayerColor(26)
@@ -31792,7 +31792,7 @@ function init_Playercolor ()
 end
 
 ---@return boolean
-function init_PogodaEffects ()
+function init_PogodaEffects()
 	local t ---@type trigger
 	local i_1 ---@type number integer
 	PogodaEffects_allmap = Rect(-8120., -4600., 8120., 4600.)
@@ -31818,7 +31818,7 @@ function init_PogodaEffects ()
 end
 
 ---@return boolean
-function init_PreloadAbilities ()
+function init_PreloadAbilities()
 	local u_1 = CreateUnit(Player(12), $75303036, 0., 0., 180.) ---@type unit
 	unit_addAbility(u_1, $4130354F)
 	unit_addAbility(u_1, $41303550)
@@ -31830,25 +31830,25 @@ function init_PreloadAbilities ()
 end
 
 ---@return boolean
-function init_Printing ()
+function init_Printing()
 	Printing_DEBUG_LEVEL = 2
 	Printing_DEBUG_MSG_DURATION = 45.
 	return true
 end
 
 ---@return boolean
-function init_Quaternion ()
+function init_Quaternion()
 	return true
 end
 
 ---@return boolean
-function init_Real ()
+function init_Real()
 	Real_REAL_MAX = 340282366920938000000000000000000000000.
 	return true
 end
 
 ---@return boolean
-function init_Results ()
+function init_Results()
 	Results_data = 0
 	Results_cache = nil
 	Results_senderOne = nil
@@ -31861,7 +31861,7 @@ end
 ---@param col_green number integer
 ---@param col_blue number integer
 ---@param col_alpha number integer
-function texttag_setColor (this, col_red, col_green, col_blue, col_alpha)
+function texttag_setColor(this, col_red, col_green, col_blue, col_alpha)
 	SetTextTagColor(this, col_red, col_green, col_blue, col_alpha)
 end
 
@@ -31869,7 +31869,7 @@ end
 ---@param this_y number real
 ---@param z number real
 ---@return number real
-function vec2_withZ (this_x, this_y, z)
+function vec2_withZ(this_x, this_y, z)
 	vec2_withZ_return_x = this_x
 	vec2_withZ_return_y = this_y
 	vec2_withZ_return_z = z
@@ -31880,7 +31880,7 @@ end
 ---@param this_y number real
 ---@param this_z number real
 ---@return number real
-function vec3_toVec2 (this_x, this_y, this_z)
+function vec3_toVec2(this_x, this_y, this_z)
 	vec3_toVec2_return_x = this_x
 	vec3_toVec2_return_y = this_y
 	return vec3_toVec2_return_x
@@ -31896,7 +31896,7 @@ end
 ---@param col_blue number integer
 ---@param col_alpha number integer
 ---@return texttag
-function createTT (pos_x, pos_y, pos_z, message, size, col_red, col_green, col_blue, col_alpha)
+function createTT(pos_x, pos_y, pos_z, message, size, col_red, col_green, col_blue, col_alpha)
 	local receiver = CreateTextTag() ---@type texttag
 	local receiver_1 ---@type texttag
 	local receiver_2 ---@type texttag
@@ -31922,7 +31922,7 @@ end
 
 ---@param this texttag
 ---@param p player
-function texttag_showToAllyAndObs (this, p)
+function texttag_showToAllyAndObs(this, p)
 	local receiver = this ---@type texttag
 	texttag_setVisibility(receiver, player_isAllyOf(Player_localPlayer, p) or IsPlayerObserver(p))
 	receiver = nil
@@ -31931,7 +31931,7 @@ end
 ---@param this trigger
 ---@param whichUnit unit
 ---@param whichEvent unitevent
-function trigger_registerUnitEvent (this, whichUnit, whichEvent)
+function trigger_registerUnitEvent(this, whichUnit, whichEvent)
 	TriggerRegisterUnitEvent(this, whichUnit, whichEvent)
 end
 
@@ -31940,7 +31940,7 @@ end
 ---@param x_1 number real
 ---@param y_1 number real
 ---@return number real
-function vec2_add (this_x, this_y, x_1, y_1)
+function vec2_add(this_x, this_y, x_1, y_1)
 	vec2_add_return_x = this_x + x_1
 	vec2_add_return_y = this_y + y_1
 	return vec2_add_return_x
@@ -31949,7 +31949,7 @@ end
 ---@param this_x number real
 ---@param this_y number real
 ---@return number real
-function vec2_toVec3 (this_x, this_y)
+function vec2_toVec3(this_x, this_y)
 	vec2_toVec3_return_x = this_x
 	vec2_toVec3_return_y = this_y
 	vec2_toVec3_return_z = 0.
@@ -31957,7 +31957,7 @@ function vec2_toVec3 (this_x, this_y)
 end
 
 ---@return boolean
-function init_ShowKingInfoForObs ()
+function init_ShowKingInfoForObs()
 	local receiver ---@type texttag
 	local receiver_1 ---@type texttag
 	local receiver_2 ---@type texttag
@@ -32018,17 +32018,17 @@ function init_ShowKingInfoForObs ()
 end
 
 ---@return boolean
-function init_Sounds ()
+function init_Sounds()
 	return true
 end
 
 ---@return boolean
-function init_Soundsets ()
+function init_Soundsets()
 	return true
 end
 
 ---@return boolean
-function init_String ()
+function init_String()
 	String_charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	String_numberset = "0123456789"
 	string_length(String_numberset)
@@ -32037,7 +32037,7 @@ function init_String ()
 end
 
 ---@return boolean
-function init_StuckAcces ()
+function init_StuckAcces()
 	NoStuckTrigger = CreateTrigger()
 	trigger_addAction(NoStuckTrigger, ref_function_disableStuck)
 	registerPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, ref_function_bridge_code__registerPlayerUnitEvent_StuckAcces)
@@ -32046,40 +32046,40 @@ function init_StuckAcces ()
 end
 
 ---@return boolean
-function init_StuckEffect ()
+function init_StuckEffect()
 	registerPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, ref_function_code__registerPlayerUnitEvent_StuckEffect)
 	registerPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, ref_function_bridge_code__registerPlayerUnitEvent_StuckEffect)
 	return true
 end
 
 ---@return boolean
-function init_Table ()
+function init_Table()
 	Table_ht = InitHashtable()
 	return true
 end
 
 ---@return boolean
-function init_TargetsAllowed ()
+function init_TargetsAllowed()
 	return true
 end
 
 ---@return boolean
-function init_Textures ()
+function init_Textures()
 	return true
 end
 
 ---@return boolean
-function init_UI ()
+function init_UI()
 	return true
 end
 
 ---@return boolean
-function init_UnitIds ()
+function init_UnitIds()
 	return true
 end
 
 ---@return boolean
-function init_UnitUnpauser ()
+function init_UnitUnpauser()
 	local t ---@type trigger
 	local t2 ---@type trigger
 	local t3 ---@type trigger
@@ -32109,12 +32109,12 @@ function init_UnitUnpauser ()
 end
 
 ---@return boolean
-function init_Units ()
+function init_Units()
 	return true
 end
 
 ---@return boolean
-function init_Vectors ()
+function init_Vectors()
 	local tuple_temp = 0. ---@type number real
 	local tuple_temp_1 = 0. ---@type number real
 	Vectors_ZERO2_x = tuple_temp
@@ -32124,11 +32124,11 @@ function init_Vectors ()
 end
 
 ---@return boolean
-function init_WeatherEffects ()
+function init_WeatherEffects()
 	return true
 end
 
-function forForceigrokov ()
+function forForceigrokov()
 	local p = GetTriggerPlayer() ---@type player
 	local id_1 = player_getId(p) ---@type number integer
 	local i_1 ---@type number integer
@@ -32160,11 +32160,11 @@ function forForceigrokov ()
 	p = nil
 end
 
-function kickafk ()
+function kickafk()
 	forForceigrokov()
 end
 
-function forForceigrokov1 ()
+function forForceigrokov1()
 	local p = GetTriggerPlayer() ---@type player
 	local id_1 = player_getId(p) ---@type number integer
 	local i_1 ---@type number integer
@@ -32207,11 +32207,11 @@ function forForceigrokov1 ()
 	p = nil
 end
 
-function kickafk1 ()
+function kickafk1()
 	forForceigrokov1()
 end
 
-function marker ()
+function marker()
 	local i_1 = 0 ---@type number integer
 	local p ---@type player
 	local id_1 ---@type number integer
@@ -32236,7 +32236,7 @@ function marker ()
 	p_1 = nil
 end
 
-function resetFFWhenLeave ()
+function resetFFWhenLeave()
 	local p = GetTriggerPlayer() ---@type player
 	local pid = player_getId(p) ---@type number integer
 	local team_1 = R2I(pid * 1. / 4) ---@type number integer
@@ -32247,7 +32247,7 @@ function resetFFWhenLeave ()
 	p = nil
 end
 
-function risyu ()
+function risyu()
 	local p = GetEnumPlayer() ---@type player
 	local i_1 = player_getId(p) ---@type number integer
 	PictureStuck_stakPicture[i_1] = CreateImage("war3mapImported\\ZS.blp", 104., 104., 0., PictureStuckStore_r1positionsX[i_1], PictureStuckStore_r1positionsY[i_1], 256., 0., 0., 0., 3)
@@ -32260,7 +32260,7 @@ function risyu ()
 	p = nil
 end
 
-function Results_findSenders ()
+function Results_findSenders()
 	local totalPlayers = 0 ---@type number integer
 	local i_1 = 0 ---@type number integer
 	local p ---@type player
@@ -32297,18 +32297,18 @@ end
 ---@param missionKey string
 ---@param key string
 ---@param value number integer
-function gamecache_saveInt (this, missionKey, key, value)
+function gamecache_saveInt(this, missionKey, key, value)
 	StoreInteger(this, missionKey, key, value)
 end
 
 ---@param this gamecache
 ---@param missionKey string
 ---@param key string
-function gamecache_syncInt (this, missionKey, key)
+function gamecache_syncInt(this, missionKey, key)
 	SyncStoredInteger(this, missionKey, key)
 end
 
-function Results_send ()
+function Results_send()
 	gamecache_saveInt(Results_cache, "EOG", "Win1", Results_data)
 	gamecache_saveInt(Results_cache, "EOG", "Win2", Results_data)
 	if Results_senderOne == nil or Results_senderTwo == nil or not player_isIngame(Results_senderOne) or not player_isIngame(Results_senderTwo) then
@@ -32323,7 +32323,7 @@ function Results_send ()
 end
 
 ---@param pid number integer
-function Results_set (pid)
+function Results_set(pid)
 	local rez = 1 ---@type number integer
 	local i_1 = pid ---@type number integer
 	while(true) do
@@ -32334,7 +32334,7 @@ function Results_set (pid)
 	Results_data = Results_data + rez
 end
 
-function sendResults ()
+function sendResults()
 	local i_1 = 0 ---@type number integer
 	local p ---@type player
 	local pid ---@type number integer
@@ -32354,42 +32354,42 @@ function sendResults ()
 	p = nil
 end
 
-function teleportLeftFighters ()
+function teleportLeftFighters()
 	local u_1 = GetEnumUnit() ---@type unit
 	SetUnitPosition(u_1, -4500., -2200.)
 	unit_issueImmediateOrderById(u_1, OrderIds_stop)
 	u_1 = nil
 end
 
-function teleportRightFighters ()
+function teleportRightFighters()
 	local u_1 = GetEnumUnit() ---@type unit
 	SetUnitPosition(u_1, 4500., -2200.)
 	unit_issueImmediateOrderById(u_1, OrderIds_stop)
 	u_1 = nil
 end
 
-function unpauserAction ()
+function unpauserAction()
 	ForGroup(FG, ref_function_forActiveGroup)
 end
 
-function updateInGameTime ()
+function updateInGameTime()
 	local p = GetEnumPlayer() ---@type player
 	local pid = player_getId(p) ---@type number integer
 	Ladder_events_udg_PlayerTime[pid + 1] = PR * 3600 + FN * 60 + GN
 	p = nil
 end
 
-function updateInGameTimeAct ()
+function updateInGameTimeAct()
 	ForForce(ZI, ref_function_updateInGameTime)
 end
 
-function wUnpause ()
+function wUnpause()
 	if WestForceUnpause == false then
 		WestForceUnpause = true
 	end
 end
 
-function weatherEffect ()
+function weatherEffect()
 	local p = GetTriggerPlayer() ---@type player
 	local pid = player_getId(p) ---@type number integer
 	local i_1 = S2I(SubString(GetEventPlayerChatString(), 9, StringLength(GetEventPlayerChatString()))) ---@type number integer
@@ -32409,7 +32409,7 @@ function weatherEffect ()
 	p = nil
 end
 
-function zerolyse ()
+function zerolyse()
 	local p = GetTriggerPlayer() ---@type player
 	local id_1 = player_getId(p) ---@type number integer
 	AfkCounter[id_1] = 0
@@ -32420,7 +32420,7 @@ function zerolyse ()
 	p = nil
 end
 
-function initGlobals ()
+function initGlobals()
 	BO = InitGameCache("KeyBindings.w3v")
 	V = nil
 	StringLength("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-+= \\!@#$%^&*()/?>.<,;:'\"{}[]|`~")
@@ -34053,7 +34053,7 @@ end
 
 ---@param p number integer
 ---@return string
-function GetPlayerColorString (p)
+function GetPlayerColorString(p)
 	local playerId = p ---@type number integer
 	local colorCode ---@type string
 	if playerId == 0 then
@@ -34083,7 +34083,7 @@ end
 ---@param teamStart number integer
 ---@param teamEnd number integer
 ---@return number integer
-function CountActivePlayersInTeam (teamStart, teamEnd)
+function CountActivePlayersInTeam(teamStart, teamEnd)
 	local countt = 0 ---@type number integer
 	local it ---@type number integer
 	while(true) do
@@ -34098,7 +34098,7 @@ function CountActivePlayersInTeam (teamStart, teamEnd)
 end
 
 ---@param whichPlayer player
-function SetObsMultiboard (whichPlayer)
+function SetObsMultiboard(whichPlayer)
 	local playerId = GetPlayerId(whichPlayer) ---@type number integer
 	local iObs = 3 ---@type number integer
 	if IsPlayerObserver(whichPlayer) then
@@ -34120,7 +34120,7 @@ function SetObsMultiboard (whichPlayer)
 end
 
 ---@param whichPlayer player
-function UpdateMultiboardForPlayer (whichPlayer)
+function UpdateMultiboardForPlayer(whichPlayer)
 	local playerId = GetPlayerId(whichPlayer) ---@type number integer
 	local allyId ---@type number integer
 	local row = 0 ---@type number integer
@@ -34159,7 +34159,7 @@ function UpdateMultiboardForPlayer (whichPlayer)
 	end
 end
 
-function UpdateAllPlayersMultiboards ()
+function UpdateAllPlayersMultiboards()
 	local ir = 0 ---@type number integer
 	while(true) do
 		if (ir > 11) then break end
@@ -34174,7 +34174,7 @@ function UpdateAllPlayersMultiboards ()
 end
 
 ---@param whichPlayer player
-function ToggleMultiboardForPlayer (whichPlayer)
+function ToggleMultiboardForPlayer(whichPlayer)
 	local playerId = GetPlayerId(whichPlayer) ---@type number integer
 	isMultiboardVisible[playerId] = not isMultiboardVisible[playerId]
 	if GetLocalPlayer() == whichPlayer then
@@ -34182,11 +34182,11 @@ function ToggleMultiboardForPlayer (whichPlayer)
 	end
 end
 
-function ToggleMultiboardAction ()
+function ToggleMultiboardAction()
 	ToggleMultiboardForPlayer(GetTriggerPlayer())
 end
 
-function InitTrig_ToggleMultiboard ()
+function InitTrig_ToggleMultiboard()
 	local trg = CreateTrigger() ---@type trigger
 	local itrg = 0 ---@type number integer
 	while(true) do
@@ -34198,7 +34198,7 @@ function InitTrig_ToggleMultiboard ()
 	trg = nil
 end
 
-function UpdateLumberTotals ()
+function UpdateLumberTotals()
 	local pliterator = 0 ---@type number integer
 	local pl ---@type player
 	local plid ---@type number integer
@@ -34227,14 +34227,14 @@ function UpdateLumberTotals ()
 	end
 end
 
-function InitTrig_UpdateLumberTotals ()
+function InitTrig_UpdateLumberTotals()
 	local updateMultiboardTrigger = CreateTrigger() ---@type trigger
 	TriggerRegisterTimerEventPeriodic(updateMultiboardTrigger, 1.0)
 	TriggerAddAction(updateMultiboardTrigger, UpdateLumberTotals)
 	updateMultiboardTrigger = nil
 end
 
-function SetPlayerResoureses ()
+function SetPlayerResoureses()
 	local itr = 0 ---@type number integer
 	local PlStats ---@type string
 	local pl ---@type player
@@ -34247,7 +34247,7 @@ function SetPlayerResoureses ()
 	end
 end
 
-function CreateTopPlayersTextTag ()
+function CreateTopPlayersTextTag()
 	local tt ---@type texttag
 	local topPlayers = "|cffFFcc00   TOP 6 Players\n" .. "of the last season:\n \n|r" .. playerName1 .. "\n" .. playerName2 .. "\n" .. playerName3 .. "\n" .. playerName4 .. "\n" .. playerName5 .. "\n" .. playerName6 ---@type string
 	tt = CreateTextTag()
@@ -34263,13 +34263,13 @@ end
 ---@param ypos number real
 ---@param zpos number real
 ---@param imgtype number integer
-function SetImagePositionForImg (filePath, xpos, ypos, zpos, imgtype)
+function SetImagePositionForImg(filePath, xpos, ypos, zpos, imgtype)
 	local img = CreateImage(filePath, 256 * 1.4, 256 * 1.4, 0, xpos, ypos, zpos, 0, 0, 0, 4) ---@type image
 	SetImageRenderAlways(img, true)
 	ShowImage(img, true)
 end
 
-function CreateMosaic ()
+function CreateMosaic()
 	local xpos = 200 ---@type number integer
 	local ypos = 4500 ---@type number integer
 	SetImagePositionForImg("UI\\Glues\\ScoreScreen\\ScoreScreen-Defeat\\scorescreen-defeat.blp", xpos - 612, ypos + 612, 0, 0)
@@ -34278,7 +34278,7 @@ function CreateMosaic ()
 	SetImagePositionForImg("UI\\Glues\\Loading\\Backgrounds\\Campaigns\\UndeadSymbol.blp", xpos, ypos, 0, 0)
 end
 
-function setHybridBuilder ()
+function setHybridBuilder()
 	local ie = 0 ---@type number integer
 	local ue ---@type unit
 	while(true) do
@@ -34292,7 +34292,7 @@ function setHybridBuilder ()
 	ue = nil
 end
 
-function UpdateMaxUnits ()
+function UpdateMaxUnits()
 	local currentWestUnits = CountUnitsInGroup(MA[1]) ---@type number integer
 	local currentEastUnits = CountUnitsInGroup(MA[2]) ---@type number integer
 	if currentWestUnits > maxWestUnits then
@@ -34303,7 +34303,7 @@ function UpdateMaxUnits ()
 	end
 end
 
-function ClearTrashTextag ()
+function ClearTrashTextag()
 	local TPl = GetPlayerId(GetLocalPlayer()) ---@type number integer
 	local i = 0 ---@type number integer
 	local tag ---@type texttag
@@ -34328,7 +34328,7 @@ function ClearTrashTextag ()
 	end
 end
 
-function CreateUnitTableInRect ()
+function CreateUnitTableInRect()
 	local unitGroup = CreateGroup() ---@type group
 	local u ---@type unit
 	local i = 0 ---@type number integer
@@ -34434,7 +34434,7 @@ function CreateUnitTableInRect ()
 	u = nil
 end
 
-function InitTrig_UnitTrashNameTable ()
+function InitTrig_UnitTrashNameTable()
 	local trg = CreateTrigger() ---@type trigger
 	TriggerRegisterTimerEvent(trg, 1.0, true)
 	TriggerAddAction(trg, CreateUnitTableInRect)
@@ -34443,7 +34443,7 @@ end
 
 ---@param unitrect rect
 ---@return number integer
-function CountUnitsInTrashGroup (unitrect)
+function CountUnitsInTrashGroup(unitrect)
 	local count = 0 ---@type number integer
 	local u = nil ---@type unit
 	local unitGroup = CreateGroup() ---@type group
@@ -34461,7 +34461,7 @@ function CountUnitsInTrashGroup (unitrect)
 	return count
 end
 
-function UpdateGameTime ()
+function UpdateGameTime()
 	local timeString ---@type string
 	if PR > 0 then
 		timeString = I2S(PR) .. ":"
@@ -34475,11 +34475,11 @@ function UpdateGameTime ()
 	eastUnitsInTrash = CountUnitsInTrashGroup(IK)
 end
 
-function StartGameTimerForMap ()
+function StartGameTimerForMap()
 	TimerStart(gameTimer, 1.0, true, UpdateGameTime)
 end
 
-function main ()
+function main()
 	local A6E ---@type trigger
 	local IQE ---@type number integer
 	local AHE ---@type number integer
@@ -36646,7 +36646,7 @@ function main ()
 	initTrig = nil
 end
 
-function InitCustomPlayerSlots ()
+function InitCustomPlayerSlots()
 	SetPlayerStartLocation(Player(0), 0)
 	ForcePlayerStartLocation(Player(0), 0)
 	SetPlayerColor(Player(0), ConvertPlayerColor(0))
@@ -36709,7 +36709,7 @@ function InitCustomPlayerSlots ()
 	SetPlayerController(Player(9), MAP_CONTROL_COMPUTER)
 end
 
-function InitCustomTeams ()
+function InitCustomTeams()
 	SetPlayerTeam(Player(0), 0)
 	SetPlayerTeam(Player(1), 0)
 	SetPlayerTeam(Player(2), 0)
@@ -36762,7 +36762,7 @@ function InitCustomTeams ()
 	SetPlayerAllianceStateAllyBJ(Player(9), Player(7), true)
 end
 
-function InitAllyPriorities ()
+function InitAllyPriorities()
 	SetStartLocPrioCount(0, 1)
 	SetStartLocPrio(0, 0, 1, MAP_LOC_PRIO_HIGH)
 	SetStartLocPrioCount(1, 1)
@@ -36787,7 +36787,7 @@ function InitAllyPriorities ()
 	SetStartLocPrioCount(9, 0)
 end
 
-function config ()
+function config()
 	SetMapName("|cff1E90FFLegion TD x20|r |cff7B68EENextGen|r")
 	SetMapDescription("Build your warriors to defend your King vs a horde of menacing enemies.
 Changelogs and privileges-(Discord)https:

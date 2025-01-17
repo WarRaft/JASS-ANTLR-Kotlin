@@ -14,7 +14,8 @@ class JassStateTest {
                 type location extends handle
                 native GetLocationX takes real x returns real
                 native GetLocationY takes real y returns real
-                
+                native SquareRoot takes real y returns real
+               
                 function DistanceBetweenPoints takes location locA, location locB, real dy returns real
                     local real dx = 2
                     local real dx = GetLocationX(locB) - GetLocationX(locA)
