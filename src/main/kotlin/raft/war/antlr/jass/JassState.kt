@@ -18,6 +18,7 @@ import raft.war.antlr.jass.psi.*
 import java.util.BitSet
 
 class JassState : JassBaseVisitor<IJassNode>() {
+
     var states: List<JassState> = listOf()
 
     val natives: MutableList<JassFun> = mutableListOf()
@@ -26,22 +27,20 @@ class JassState : JassBaseVisitor<IJassNode>() {
 
     val mapNode: MutableMap<String, IJassNode> = mutableMapOf()
     fun getNode(key: String, f: JassFun?): IJassNode? {
-        var node: IJassNode? = null
         if (f != null) {
             for (p in f.param.asReversed()) {
                 if (p.name == key) return p
             }
         }
-
         states.forEach {
             if (it.mapNode.containsKey(key)) {
-                node = it.mapNode[key]
+                return it.mapNode[key]
             }
         }
         if (mapNode.containsKey(key)) {
-            node = mapNode[key]
+            return mapNode[key]
         }
-        return node
+        return null
     }
 
     val mapType: MutableMap<String, JassHandleType> = mutableMapOf()
@@ -99,7 +98,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
             constant = ctx.CONSTANT() != null,
             array = ctx.ARRAY() != null,
             global = true,
-            type = typeFromString(ctx.typename().text)
+            type = typeFromString(ctx.typename().text),
         )
 
         if (ctx.EQ() != null) {
@@ -123,21 +122,6 @@ class JassState : JassBaseVisitor<IJassNode>() {
 
         mapNode[v.name] = v
         globals.add(v)
-    }
-
-    fun takes(f: JassFun, ctx: TakesContext) {
-        if (ctx.NOTHING() != null) return
-
-        ctx.params().param().forEach {
-            f.param.add(
-                JassVar(
-                    name = it.varname().text,
-                    type = typeFromString(it.typename().text),
-                    local = true,
-                    param = true,
-                )
-            )
-        }
     }
 
     fun returns(f: JassFun, ctx: Returns_Context) {
@@ -165,7 +149,20 @@ class JassState : JassBaseVisitor<IJassNode>() {
             return
         }
 
-        takes(f, ctx.takes())
+        val takes = ctx.takes()
+        if (takes.NOTHING() == null) {
+            for (it in takes.params().param()) {
+                f.param.add(
+                    JassVar(
+                        name = it.varname().text,
+                        type = typeFromString(it.typename().text),
+                        local = true,
+                        param = true,
+                    )
+                )
+            }
+        }
+
         returns(f, ctx.returns_())
 
         mapNode[f.name] = f
@@ -192,15 +189,12 @@ class JassState : JassBaseVisitor<IJassNode>() {
 
             is ExprCallContext -> {
                 val name = ctx.ID().text
-                val cf = JassFun(
-                    name = name,
-                )
-
-                val node = getNode(name, null)
-                if (node is JassFun) {
-                    cf.type = node.type
-
+                val node = getNode(name, f)
+                if (node !is JassFun) {
+                    errors.add(JassError(JassErrorId.ERROR, ctx.start.line, 0, "[call] $name is not a function"))
+                    return null
                 }
+                val cf = node.clone()
 
                 ctx.expr().forEach {
                     val e = expr(it, f)
@@ -222,6 +216,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
                     return JassExpr(op = JassExprOp.Get, a = node.clone())
                 }
                 errors.add(JassError(JassErrorId.ERROR, ctx.start.line, 0, "$name is not declared"))
+                //println("🍒 ${ctx.start.line} $name | ${f?.param}")
                 return null
             }
 
@@ -455,12 +450,28 @@ class JassState : JassBaseVisitor<IJassNode>() {
             return
         }
 
-        takes(f, ctx.takes())
-        returns(f, ctx.returns_())
+        mapNode[f.name] = f
+        functions.add(f)
+
+        val takes: TakesContext = ctx.takes()
+        if (takes.NOTHING() == null) {
+            for (vctx in takes.params().param()) {
+                f.param.add(
+                    JassVar(
+                        name = vctx.varname().text,
+                        type = typeFromString(vctx.typename().text),
+                        local = true,
+                        param = true,
+                    )
+                )
+            }
+        }
 
         for (vctx: VariableContext in ctx.variable()) {
+            val name = vctx.varname().text
+
             val v = JassVar(
-                name = vctx.varname().text,
+                name = name,
                 array = vctx.ARRAY() != null,
                 type = typeFromString(vctx.typename().text),
                 local = true
@@ -476,10 +487,19 @@ class JassState : JassBaseVisitor<IJassNode>() {
             f.param.add(v)
         }
 
-        stmt(ctx.stmt(), f.stmt, mutableListOf(f))
+        val params = mutableMapOf<String, JassVar>()
+        for (p in f.param.asReversed()) {
+            val base = params[p.name]
+            if (base == null) {
+                params[p.name] = p
+            } else {
+                p.base = base
+            }
+        }
 
-        mapNode[f.name] = f
-        functions.add(f)
+        returns(f, ctx.returns_())
+
+        stmt(ctx.stmt(), f.stmt, mutableListOf(f))
     }
 
     val errors = mutableListOf<JassError>()

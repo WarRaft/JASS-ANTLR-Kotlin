@@ -37,6 +37,18 @@ class JassLua(val jass: JassState, val output: Path) {
         return builder
     }
 
+    fun varname(v: JassVar): StringBuilder {
+        val root = v.root
+        builder.append(root.name)
+        return builder
+    }
+
+    fun funname(f: JassFun): StringBuilder {
+        val root = f.root
+        builder.append(root.name)
+        return builder
+    }
+
     fun reserved(name: String): Boolean = when (name) {
         "and", "break", "do", "else", "elseif", "end", "false", "for", "function", "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while" -> true
         else -> false
@@ -93,7 +105,7 @@ class JassLua(val jass: JassState, val output: Path) {
             is JassReal -> builder.append(e.raw)
             is JassStr -> builder.append(e.raw)
             is JassVar -> {
-                builder.append(e.basename)
+                varname(e)
                 if (e.index != null) {
                     builder.append("[")
                     expr(e.index)
@@ -134,7 +146,7 @@ class JassLua(val jass: JassState, val output: Path) {
             }
 
             is JassFun -> {
-                builder.append(e.basename)
+                funname(e)
                 if (!e.ref) {
                     builder.append("(")
                     e.arg.forEachIndexed { index, arg ->
@@ -203,7 +215,9 @@ class JassLua(val jass: JassState, val output: Path) {
                 }
 
                 is JassVar -> {
-                    tab(level).append(node.basename)
+                    tab(level)
+                    varname(node)
+
                     if (node.index != null) {
                         builder.append("[")
                         expr(node.index)
@@ -215,7 +229,8 @@ class JassLua(val jass: JassState, val output: Path) {
 
                 is JassFun -> {
                     if (!node.call) continue
-                    tab(level).append(node.basename)
+                    tab(level)
+                    funname(node)
 
                     builder.append("(")
                     node.arg.forEachIndexed { index, arg ->

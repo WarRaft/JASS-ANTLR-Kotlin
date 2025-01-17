@@ -13,8 +13,10 @@ class JassVar(
     override val type: IJassType,
 ) : IJassNode {
 
-    val basename: String
-        get() = base?.basename ?: name
+    var fakename: String = ""
+
+    val root: JassVar
+        get() = base ?: this
 
     fun clone(
         index: JassExpr? = null,
@@ -40,9 +42,12 @@ class JassVar(
             list.add("global")
         }
 
-        if (local) list.add("local")
         if (param) list.add("param")
+        else if (local) list.add("local")
+
         list.add(type.name)
+
+        if (base == null) list.add("<base>")
 
         if (array) list.add("[]")
 

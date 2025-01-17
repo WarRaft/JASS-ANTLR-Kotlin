@@ -8,12 +8,28 @@ import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.absolute
 
-class JassJass(val jass: JassState, val output: Path) {
+class JassJass(
+    val state: JassState,
+    val output: Path,
+    val fakename: Boolean = false,
+) {
     val builder = StringBuilder()
 
     fun tab(c: Int): StringBuilder {
         (0..c).forEach { builder.append("\t") }
         return builder
+    }
+
+    fun varname(v: JassVar): String {
+        val root = v.root
+        var name = root.name
+        return if (!fakename) name else root.fakename
+    }
+
+    fun funname(f: JassFun): String {
+        val root = f.root
+        var name = root.name
+        return if (!fakename || f.native) name else root.fakename
     }
 
     fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
@@ -53,7 +69,7 @@ class JassJass(val jass: JassState, val output: Path) {
             is JassReal -> builder.append(e.raw)
             is JassStr -> builder.append(e.raw)
             is JassVar -> {
-                builder.append(e.basename)
+                builder.append(varname(e))
                 if (e.index != null) {
                     builder.append("[")
                     expr(e.index)
@@ -97,7 +113,7 @@ class JassJass(val jass: JassState, val output: Path) {
                 if (e.ref) {
                     builder.append("function ")
                 }
-                builder.append(e.basename)
+                builder.append(funname(e))
                 if (!e.ref) {
                     builder.append("(")
                     e.arg.forEachIndexed { index, arg ->
@@ -118,8 +134,7 @@ class JassJass(val jass: JassState, val output: Path) {
         if (v.local) builder.append("local ")
         builder.append(v.type.name)
         if (v.array) builder.append(" array")
-        builder.append(" ")
-            .append(v.name)
+        builder.append(" ").append(varname(v))
 
         if (v.expr != null) {
             builder.append(" = ")
@@ -157,7 +172,7 @@ class JassJass(val jass: JassState, val output: Path) {
                 }
 
                 is JassVar -> {
-                    tab(level).append("set ").append(node.basename)
+                    tab(level).append("set ").append(varname(node))
                     if (node.index != null) {
                         builder.append("[")
                         expr(node.index)
@@ -169,7 +184,7 @@ class JassJass(val jass: JassState, val output: Path) {
 
                 is JassFun -> {
                     if (!node.call) continue
-                    tab(level).append("call ").append(node.basename)
+                    tab(level).append("call ").append(funname(node))
 
                     builder.append("(")
                     node.arg.forEachIndexed { index, arg ->
@@ -203,7 +218,6 @@ class JassJass(val jass: JassState, val output: Path) {
                 else -> println("🔥 Lua missing node: ${node.javaClass.simpleName}")
             }
 
-
             builder.append("\n")
         }
     }
@@ -214,12 +228,12 @@ class JassJass(val jass: JassState, val output: Path) {
         if (f.native) builder.append("native")
         else builder.append("function")
 
-        builder.append(" ${f.name} takes ")
+        builder.append(" ").append(funname(f)).append(" takes ")
 
         val list: MutableList<String> = mutableListOf()
         for (it in f.param) {
             if (!it.param) break
-            list.add("${it.type.name} ${it.name}")
+            list.add("${it.type.name} ${varname(it)}")
         }
 
         if (list.isEmpty()) {
@@ -241,7 +255,7 @@ class JassJass(val jass: JassState, val output: Path) {
         for (it in f.param) {
             if (it.param) continue
 
-            builder.append("\tlocal ${it.type.name} ${it.name}")
+            builder.append("\tlocal ${it.type.name} ${varname(it)}")
 
             if (it.expr != null) {
                 builder.append(" = ")
@@ -268,20 +282,24 @@ class JassJass(val jass: JassState, val output: Path) {
     fun convert() {
         builder.clear()
 
-        jass.types.forEach(::type)
+        state.types.forEach(::type)
 
-        jass.natives.forEach(::function)
+        state.natives.forEach(::function)
 
         builder.append("\n")
 
-        if (jass.globals.isNotEmpty()) {
+        if (state.globals.isNotEmpty()) {
             builder.append("globals\n")
-            jass.globals.forEach(::global)
+            state.globals.forEach(::global)
             builder.append("endglobals\n")
         }
 
-        jass.functions.forEach(::function)
+        state.functions.forEach(::function)
 
         File(output.absolute().toString()).writeText(builder.toString().trim())
+    }
+
+    init {
+        convert()
     }
 }

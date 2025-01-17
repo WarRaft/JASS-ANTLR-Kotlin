@@ -9,13 +9,24 @@ class JassFun(
     override var type: IJassType = JassUndefinedType(),
 ) : IJassNode {
 
-    val basename: String
-        get() = base?.basename ?: name
+    var fakename: String = ""
+
+    val root: JassFun
+        get() = base ?: this
 
     val param: MutableList<JassVar> = mutableListOf()
     val arg: MutableList<JassExpr> = mutableListOf()
 
     val stmt: MutableList<IJassNode> = mutableListOf()
+
+    fun clone(): JassFun = JassFun(
+        name = name,
+        native = native,
+        call = call,
+        ref = ref,
+        base = this,
+        type = type,
+    )
 
     override fun toString(): String = "JassFun(name='$name'):$type"
 }
