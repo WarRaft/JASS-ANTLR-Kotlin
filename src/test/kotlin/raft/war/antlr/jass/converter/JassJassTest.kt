@@ -39,6 +39,18 @@ class JassJassTest {
     }
 
     @Test
+    fun bj() {
+        val cj = fromPath(cjp)
+        val bj = fromPath(bjp, listOf(cj))
+
+        JassJass(
+            state = bj,
+            output = j2l(bjp),
+            fakename = true
+        )
+    }
+
+    @Test
     fun lg() {
         val cj = fromPath(cjp)
         val bj = fromPath(bjp, listOf(cj))

@@ -1,5 +1,6 @@
 globals
     real do = 1
+    real do_ = 2
     real keyword = 2
 endglobals
 
