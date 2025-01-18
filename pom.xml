@@ -116,6 +116,7 @@
                         </configuration>
                     </plugin>
 
+
                     <plugin>
                         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-source-plugin -->
                         <groupId>org.apache.maven.plugins</groupId>
@@ -130,6 +131,25 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+
+                    <plugin>
+                        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-javadoc-plugin -->
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.11.2</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadoc</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <stylesheet>java</stylesheet>
+                            <doclint>none</doclint>
+                        </configuration>
                     </plugin>
 
                     <plugin>
