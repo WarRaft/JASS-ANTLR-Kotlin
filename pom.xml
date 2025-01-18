@@ -44,6 +44,19 @@
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4</artifactId>
+            <version>4.13.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -58,8 +71,37 @@
                         <version>${kotlin.version}</version>
                         <!-- You can set this option to automatically take information about lifecycles -->
                         <extensions>true</extensions>
+                        <executions>
+                            <execution>
+                                <id>compile</id>
+                                <goals>
+                                    <!-- You can skip the <goals> element if you enable extensions for the plugin -->
+                                    <goal>compile</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceDirs>
+                                        <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                                        <sourceDir>${project.basedir}/src/main/gen</sourceDir>
+                                    </sourceDirs>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
 
+                    <plugin>
+                        <!-- https://www.antlr.org/api/maven-plugin/latest/examples/simple.html -->
+                        <!-- https://mvnrepository.com/artifact/org.antlr/antlr4-maven-plugin -->
+                        <groupId>org.antlr</groupId>
+                        <artifactId>antlr4-maven-plugin</artifactId>
+                        <version>4.13.2</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>antlr4</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
 
                     <plugin>
                         <!-- https://mvnrepository.com/artifact/org.sonatype.central/central-publishing-maven-plugin -->
