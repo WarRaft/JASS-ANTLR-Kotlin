@@ -5,12 +5,11 @@
       <list>
         <PerGrammarGenerationSettings>
           <option name="fileName" value="$PROJECT_DIR$/src/main/antlr/raft/war/antlr/jass/Jass.g4" />
-          <option name="autoGen" value="true" />
           <option name="outputDir" value="" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
-          <option name="pkg" value="raft.war" />
-          <option name="language" value="Kotlin" />
+          <option name="pkg" value="" />
+          <option name="language" value="" />
           <option name="generateVisitor" value="true" />
         </PerGrammarGenerationSettings>
         <PerGrammarGenerationSettings>

@@ -5,6 +5,9 @@
       <module name="JAK" target="21" />
       <module name="JAK.main" target="21" />
       <module name="JAK.test" target="21" />
+      <module name="JASS-ANTLR-Kotlin" target="21" />
+      <module name="JASS-ANTLR-Kotlin.main" target="21" />
+      <module name="JASS-ANTLR-Kotlin.test" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>

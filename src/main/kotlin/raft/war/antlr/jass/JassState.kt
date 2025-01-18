@@ -8,16 +8,44 @@ import org.antlr.v4.runtime.RecognitionException
 import org.antlr.v4.runtime.Recognizer
 import org.antlr.v4.runtime.atn.ATNConfigSet
 import org.antlr.v4.runtime.dfa.DFA
-import raft.war.antlr.grammar.Jass.JassBaseVisitor
-import raft.war.antlr.grammar.Jass.JassLexer
-import raft.war.antlr.grammar.Jass.JassParser
-import raft.war.antlr.grammar.Jass.JassParser.*
+import raft.war.antlr.jass.JassParser.ExprAddContext
+import raft.war.antlr.jass.JassParser.ExprAndContext
+import raft.war.antlr.jass.JassParser.ExprArrContext
+import raft.war.antlr.jass.JassParser.ExprBoolContext
+import raft.war.antlr.jass.JassParser.ExprCallContext
+import raft.war.antlr.jass.JassParser.ExprContext
+import raft.war.antlr.jass.JassParser.ExprEqContext
+import raft.war.antlr.jass.JassParser.ExprFunContext
+import raft.war.antlr.jass.JassParser.ExprIntContext
+import raft.war.antlr.jass.JassParser.ExprLtContext
+import raft.war.antlr.jass.JassParser.ExprMulContext
+import raft.war.antlr.jass.JassParser.ExprNullContext
+import raft.war.antlr.jass.JassParser.ExprParenContext
+import raft.war.antlr.jass.JassParser.ExprRealContext
+import raft.war.antlr.jass.JassParser.ExprStrContext
+import raft.war.antlr.jass.JassParser.ExprUnContext
+import raft.war.antlr.jass.JassParser.ExprVarContext
+import raft.war.antlr.jass.JassParser.FunctionContext
+import raft.war.antlr.jass.JassParser.GlobalsContext
+import raft.war.antlr.jass.JassParser.NativeRuleContext
+import raft.war.antlr.jass.JassParser.ReturnsRuleContext
+import raft.war.antlr.jass.JassParser.RootContext
+import raft.war.antlr.jass.JassParser.StmtCallContext
+import raft.war.antlr.jass.JassParser.StmtContext
+import raft.war.antlr.jass.JassParser.StmtExitWhenContext
+import raft.war.antlr.jass.JassParser.StmtIfContext
+import raft.war.antlr.jass.JassParser.StmtLoopContext
+import raft.war.antlr.jass.JassParser.StmtReturnContext
+import raft.war.antlr.jass.JassParser.StmtSetContext
+import raft.war.antlr.jass.JassParser.TakesContext
+import raft.war.antlr.jass.JassParser.TypeContext
+import raft.war.antlr.jass.JassParser.VariableContext
 import raft.war.antlr.jass.error.JassError
 import raft.war.antlr.jass.error.JassErrorId
 import raft.war.antlr.jass.psi.*
 import java.util.BitSet
 
-class JassState : JassBaseVisitor<IJassNode>() {
+class JassState {
 
     var states: List<JassState> = listOf()
 
@@ -71,7 +99,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
     }
 
     private fun typedef(ctx: TypeContext) {
-        val parent = ctx.extends_().typename().text
+        val parent = ctx.extendsRule().typename().text
 
         val type = JassHandleType(ctx.typename().text)
 
@@ -124,7 +152,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
         globals.add(v)
     }
 
-    fun returns(f: JassFun, ctx: Returns_Context) {
+    fun returns(f: JassFun, ctx: ReturnsRuleContext) {
         if (ctx.NOTHING() != null) return
         val t = ctx.ID().text
         f.type = typeFromString(t)
@@ -138,7 +166,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
         )
     }
 
-    fun native(ctx: NativeContext) {
+    fun native(ctx: NativeRuleContext) {
         val f = JassFun(
             name = ctx.ID().text,
             native = true
@@ -163,7 +191,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
             }
         }
 
-        returns(f, ctx.returns_())
+        returns(f, ctx.returnsRule())
 
         mapNode[f.name] = f
         natives.add(f)
@@ -398,13 +426,13 @@ class JassState : JassBaseVisitor<IJassNode>() {
                 is StmtReturnContext -> {
                     list.add(
                         JassReturn(
-                            expr = expr(item.return_().expr(), f),
+                            expr = expr(item.returnRule().expr(), f),
                         )
                     )
                 }
 
                 is StmtIfContext -> {
-                    val ctxIf = item.if_()
+                    val ctxIf = item.ifRule()
                     val e = expr(ctxIf.expr(), f)
                     if (e == null) {
                         errors.add(JassError(JassErrorId.ERROR, ctxIf.start.line, 0, "[if] not have expr"))
@@ -427,7 +455,7 @@ class JassState : JassBaseVisitor<IJassNode>() {
                         stmt(ctxElseif.stmt(), nodeElseif.stmt, ss)
                     }
 
-                    val ctxElse = ctxIf.else_()
+                    val ctxElse = ctxIf.elseRule()
                     if (ctxElse != null) {
                         val elser = JassIf()
                         nodeIf.elser = elser
@@ -497,9 +525,21 @@ class JassState : JassBaseVisitor<IJassNode>() {
             }
         }
 
-        returns(f, ctx.returns_())
+        returns(f, ctx.returnsRule())
 
         stmt(ctx.stmt(), f.stmt, mutableListOf(f))
+    }
+
+    fun root(ctx: RootContext): IJassNode? {
+        ctx.children.forEach {
+            when (it) {
+                is GlobalsContext -> it.variable().forEach(::global)
+                is NativeRuleContext -> native(it)
+                is TypeContext -> typedef(it)
+                is FunctionContext -> function(it)
+            }
+        }
+        return null
     }
 
     val errors = mutableListOf<JassError>()
@@ -518,23 +558,11 @@ class JassState : JassBaseVisitor<IJassNode>() {
         val parser = JassParser(tokens)
         parser.removeErrorListeners()
         parser.addErrorListener(errorJassErrorListener)
-        parser.root().accept(this)
+        root(parser.root())
 
         if (errorJassErrorListener.jassErrors.isNotEmpty()) {
             errors.addAll(errorJassErrorListener.jassErrors)
         }
-    }
-
-    override fun visitRoot(ctx: RootContext): IJassNode? {
-        ctx.children.forEach {
-            when (it) {
-                is GlobalsContext -> it.variable().forEach(::global)
-                is NativeContext -> native(it)
-                is TypeContext -> typedef(it)
-                is FunctionContext -> function(it)
-            }
-        }
-        return null
     }
 
     companion object {

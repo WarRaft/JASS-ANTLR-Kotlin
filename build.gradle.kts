@@ -8,7 +8,7 @@ plugins {
     kotlin("jvm") version "2.1.0"
 }
 
-group = "raft.war.antlr"
+group = "raft.war.antlr.jass"
 version = "0.0.2"
 
 repositories {
@@ -16,12 +16,13 @@ repositories {
 }
 
 dependencies {
+    // https://docs.gradle.org/current/userguide/antlr_plugin.html#sec:antlr_dependency_management
+    // https://mvnrepository.com/artifact/org.antlr/antlr4-maven-plugin
+    antlr("org.antlr:antlr4:4.13.2")
+
     testImplementation(kotlin("test"))
-    implementation("org.antlr:antlr4:4.13.2")
-    implementation("org.antlr:antlr4-runtime:4.13.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
-
 
 java {
     withJavadocJar()
@@ -47,31 +48,18 @@ kotlin {
     jvmToolchain(21)
 }
 
+tasks.generateGrammarSource {
+    maxHeapSize = "64m"
 
-tasks.register("generateCustomANTLR", JavaExec::class) {
-    group = "build"
-    description = "Генерация ANTLR-кода с пользовательскими параметрами"
-
-    // Указываем путь к JAR-файлу ANTLR
-    val antlrJar = configurations["antlr"].resolve().first()
-
-    // Настраиваем параметры выполнения
-    mainClass.set("org.antlr.v4.Tool")
-    classpath = files(antlrJar)
-    args = listOf(
-        "-visitor",
-        "-no-listener",
-        "-Xexact-output-dir",
-        "-o", "${buildDir}/generated-src/antlr",
-        "src/main/antlr/MyGrammar.g4"
+    // https://codeberg.org/UniGrammar/antlr4/src/branch/tool_refactoring/doc/tool-options.md
+    arguments = listOf(
+        "-package", "raft.war.antlr.jass",
+        "-no-visitor",
+        "-no-listener"
     )
 
-    // Обеспечиваем, что каталог создается
-    doFirst {
-        file("${buildDir}/generated-src/antlr").mkdirs()
-    }
+    outputDirectory = file("src/main/gen")
 }
-
 
 tasks.jar {
     manifest {
@@ -79,7 +67,7 @@ tasks.jar {
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
-    archiveBaseName.set("ANTLR")
+    archiveBaseName.set(rootProject.name)
     archiveVersion.set(version as String)
 }
 
@@ -87,11 +75,12 @@ tasks.test {
     useJUnitPlatform()
 }
 
+// https://docs.gradle.org/current/userguide/publishing_maven.html
 
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            artifactId = "JASS-ANTLR"
+            //artifactId = project.name
             from(components["java"])
             versionMapping {
                 usage("java-api") {
@@ -102,14 +91,13 @@ publishing {
                 }
             }
             pom {
-                name = "JASS-ANTLR"
-                description = "ANTLR tools for JASS"
+                name = "My Library"
+                description = "A concise description of my library"
                 url = "https://github.com/WarRaft/JASS-ANTLR-Kotlin"
-
                 licenses {
                     license {
-                        name = "The Apache License, Version 2.0"
-                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                        name = "MIT License"
+                        url = "https://opensource.org/licenses/MIT"
                     }
                 }
                 developers {
@@ -119,12 +107,16 @@ publishing {
                         email = "nazarpunk@gmail.com"
                     }
                 }
+                scm {
+                    connection = "scm:git:git://github.com:WarRaft/JASS-ANTLR-Kotlin.git"
+                    developerConnection = "scm:git:ssh://github.com:WarRaft/JASS-ANTLR-Kotlin.git"
+                    url = "https://github.com/WarRaft/JASS-ANTLR-Kotlin"
+                }
             }
         }
     }
     repositories {
         maven {
-            // change URLs to point to your repos, e.g. http://my.org/repo
             val releasesRepoUrl = uri(layout.buildDirectory.dir("repos/releases"))
             val snapshotsRepoUrl = uri(layout.buildDirectory.dir("repos/snapshots"))
             url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
@@ -136,11 +128,8 @@ signing {
     sign(publishing.publications["mavenJava"])
 }
 
-/*
 tasks.javadoc {
     if (JavaVersion.current().isJava9Compatible) {
         (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
     }
 }
-
- */

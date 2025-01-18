@@ -1,1 +1,1 @@
-rootProject.name = "JASS-ANTLR-Kotlin"
+rootProject.name = "JASS-ANTLR"
