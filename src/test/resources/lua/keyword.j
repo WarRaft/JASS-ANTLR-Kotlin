@@ -12,5 +12,3 @@ endfunction
 function main takes nothing returns nothing
     local real repeat = end(do) + end(keyword)
 endfunction
-
-

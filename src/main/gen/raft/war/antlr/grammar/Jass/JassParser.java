@@ -148,14 +148,6 @@ public class JassParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_root; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterRoot(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitRoot(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitRoot(this);
 			else return visitor.visitChildren(this);
@@ -230,14 +222,6 @@ public class JassParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_typename; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterTypename(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitTypename(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitTypename(this);
 			else return visitor.visitChildren(this);
@@ -272,14 +256,6 @@ public class JassParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_varname; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterVarname(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitVarname(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitVarname(this);
@@ -322,14 +298,6 @@ public class JassParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_type; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitType(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitType(this);
 			else return visitor.visitChildren(this);
@@ -371,14 +339,6 @@ public class JassParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_extends; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExtends(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExtends(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExtends(this);
@@ -423,14 +383,6 @@ public class JassParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_globals; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterGlobals(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitGlobals(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitGlobals(this);
@@ -495,14 +447,6 @@ public class JassParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_variable; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterVariable(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitVariable(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitVariable(this);
@@ -589,14 +533,6 @@ public class JassParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_param; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterParam(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitParam(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitParam(this);
 			else return visitor.visitChildren(this);
@@ -642,14 +578,6 @@ public class JassParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_params; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterParams(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitParams(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitParams(this);
@@ -707,14 +635,6 @@ public class JassParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_takes; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterTakes(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitTakes(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitTakes(this);
 			else return visitor.visitChildren(this);
@@ -770,14 +690,6 @@ public class JassParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_returns_; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterReturns_(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitReturns_(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitReturns_(this);
 			else return visitor.visitChildren(this);
@@ -831,14 +743,6 @@ public class JassParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_native; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterNative(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitNative(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitNative(this);
@@ -912,14 +816,6 @@ public class JassParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_function; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterFunction(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitFunction(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitFunction(this);
@@ -1014,14 +910,6 @@ public class JassParser extends Parser {
 		}
 		public StmtIfContext(StmtContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterStmtIf(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitStmtIf(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitStmtIf(this);
 			else return visitor.visitChildren(this);
@@ -1033,14 +921,6 @@ public class JassParser extends Parser {
 			return getRuleContext(CallContext.class,0);
 		}
 		public StmtCallContext(StmtContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterStmtCall(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitStmtCall(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitStmtCall(this);
@@ -1054,14 +934,6 @@ public class JassParser extends Parser {
 		}
 		public StmtExitWhenContext(StmtContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterStmtExitWhen(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitStmtExitWhen(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitStmtExitWhen(this);
 			else return visitor.visitChildren(this);
@@ -1073,14 +945,6 @@ public class JassParser extends Parser {
 			return getRuleContext(LoopContext.class,0);
 		}
 		public StmtLoopContext(StmtContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterStmtLoop(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitStmtLoop(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitStmtLoop(this);
@@ -1094,14 +958,6 @@ public class JassParser extends Parser {
 		}
 		public StmtSetContext(StmtContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterStmtSet(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitStmtSet(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitStmtSet(this);
 			else return visitor.visitChildren(this);
@@ -1113,14 +969,6 @@ public class JassParser extends Parser {
 			return getRuleContext(ReturnContext.class,0);
 		}
 		public StmtReturnContext(StmtContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterStmtReturn(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitStmtReturn(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitStmtReturn(this);
@@ -1211,14 +1059,6 @@ public class JassParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_setBrack; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterSetBrack(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitSetBrack(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitSetBrack(this);
 			else return visitor.visitChildren(this);
@@ -1274,14 +1114,6 @@ public class JassParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_set; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterSet(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitSet(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitSet(this);
@@ -1348,14 +1180,6 @@ public class JassParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_call; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterCall(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitCall(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitCall(this);
@@ -1438,14 +1262,6 @@ public class JassParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_return; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterReturn(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitReturn(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitReturn(this);
 			else return visitor.visitChildren(this);
@@ -1511,14 +1327,6 @@ public class JassParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_if; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterIf(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitIf(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitIf(this);
@@ -1610,14 +1418,6 @@ public class JassParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_elseif; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterElseif(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitElseif(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitElseif(this);
 			else return visitor.visitChildren(this);
@@ -1678,14 +1478,6 @@ public class JassParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_else; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterElse(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitElse(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitElse(this);
 			else return visitor.visitChildren(this);
@@ -1743,14 +1535,6 @@ public class JassParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_loop; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterLoop(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitLoop(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitLoop(this);
 			else return visitor.visitChildren(this);
@@ -1806,14 +1590,6 @@ public class JassParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_exitwhen; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExitwhen(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExitwhen(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExitwhen(this);
 			else return visitor.visitChildren(this);
@@ -1862,14 +1638,6 @@ public class JassParser extends Parser {
 		public TerminalNode RAWVAL() { return getToken(JassParser.RAWVAL, 0); }
 		public ExprIntContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprInt(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprInt(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprInt(this);
 			else return visitor.visitChildren(this);
@@ -1879,14 +1647,6 @@ public class JassParser extends Parser {
 	public static class ExprStrContext extends ExprContext {
 		public TerminalNode STRING() { return getToken(JassParser.STRING, 0); }
 		public ExprStrContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprStr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprStr(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprStr(this);
@@ -1902,14 +1662,6 @@ public class JassParser extends Parser {
 		public TerminalNode NOT() { return getToken(JassParser.NOT, 0); }
 		public ExprUnContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprUn(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprUn(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprUn(this);
 			else return visitor.visitChildren(this);
@@ -1919,14 +1671,6 @@ public class JassParser extends Parser {
 	public static class ExprVarContext extends ExprContext {
 		public TerminalNode ID() { return getToken(JassParser.ID, 0); }
 		public ExprVarContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprVar(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprVar(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprVar(this);
@@ -1945,14 +1689,6 @@ public class JassParser extends Parser {
 		public TerminalNode NEQ() { return getToken(JassParser.NEQ, 0); }
 		public ExprEqContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprEq(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprEq(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprEq(this);
 			else return visitor.visitChildren(this);
@@ -1962,14 +1698,6 @@ public class JassParser extends Parser {
 	public static class ExprNullContext extends ExprContext {
 		public TerminalNode NULL() { return getToken(JassParser.NULL, 0); }
 		public ExprNullContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprNull(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprNull(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprNull(this);
@@ -1981,14 +1709,6 @@ public class JassParser extends Parser {
 		public TerminalNode FUNCTION() { return getToken(JassParser.FUNCTION, 0); }
 		public TerminalNode ID() { return getToken(JassParser.ID, 0); }
 		public ExprFunContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprFun(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprFun(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprFun(this);
@@ -2003,14 +1723,6 @@ public class JassParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(JassParser.RPAREN, 0); }
 		public ExprParenContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprParen(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprParen(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprParen(this);
@@ -2034,14 +1746,6 @@ public class JassParser extends Parser {
 		}
 		public ExprCallContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprCall(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprCall(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprCall(this);
 			else return visitor.visitChildren(this);
@@ -2061,14 +1765,6 @@ public class JassParser extends Parser {
 		public TerminalNode GT_EQ() { return getToken(JassParser.GT_EQ, 0); }
 		public ExprLtContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprLt(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprLt(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprLt(this);
 			else return visitor.visitChildren(this);
@@ -2086,14 +1782,6 @@ public class JassParser extends Parser {
 		public TerminalNode DIV() { return getToken(JassParser.DIV, 0); }
 		public ExprMulContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprMul(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprMul(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprMul(this);
 			else return visitor.visitChildren(this);
@@ -2108,14 +1796,6 @@ public class JassParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public ExprArrContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprArr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprArr(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprArr(this);
@@ -2134,14 +1814,6 @@ public class JassParser extends Parser {
 		public TerminalNode PLUS() { return getToken(JassParser.PLUS, 0); }
 		public ExprAddContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprAdd(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprAdd(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprAdd(this);
 			else return visitor.visitChildren(this);
@@ -2152,14 +1824,6 @@ public class JassParser extends Parser {
 		public TerminalNode TRUE() { return getToken(JassParser.TRUE, 0); }
 		public TerminalNode FALSE() { return getToken(JassParser.FALSE, 0); }
 		public ExprBoolContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprBool(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprBool(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprBool(this);
@@ -2178,14 +1842,6 @@ public class JassParser extends Parser {
 		public TerminalNode OR() { return getToken(JassParser.OR, 0); }
 		public ExprAndContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprAnd(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprAnd(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprAnd(this);
 			else return visitor.visitChildren(this);
@@ -2195,14 +1851,6 @@ public class JassParser extends Parser {
 	public static class ExprRealContext extends ExprContext {
 		public TerminalNode REALVAL() { return getToken(JassParser.REALVAL, 0); }
 		public ExprRealContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).enterExprReal(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JassListener ) ((JassListener)listener).exitExprReal(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JassVisitor ) return ((JassVisitor<? extends T>)visitor).visitExprReal(this);

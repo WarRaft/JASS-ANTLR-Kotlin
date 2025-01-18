@@ -71,6 +71,7 @@
           <option name="encoding" value="" />
           <option name="pkg" value="raft.war.antlr.grammar.Jass" />
           <option name="language" value="Java" />
+          <option name="generateListener" value="false" />
           <option name="generateVisitor" value="true" />
         </PerGrammarGenerationSettings>
       </list>

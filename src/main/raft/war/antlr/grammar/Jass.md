@@ -9,5 +9,5 @@
 | Package/namespace for the generated code       | `raft.war.antlr.grammar.Jass` |
 | Language (e.g., Java, Python2, Sharp, ...)     | `Java`                        |
 | Case transformation in the Preview window      | ✅                             |
-| generate parse tree listener (default)         | ✅                             |
+| generate parse tree listener (default)         | ❌                             |
 | generate parse tree visitor                    | ✅                             |
