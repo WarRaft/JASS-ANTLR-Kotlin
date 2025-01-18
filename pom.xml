@@ -39,6 +39,14 @@
         <url>https://github.com/WarRaft/JASS-ANTLR-Kotlin/tree/main</url>
     </scm>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+    </dependencies>
+
     <profiles>
         <profile>
             <id>release</id>
