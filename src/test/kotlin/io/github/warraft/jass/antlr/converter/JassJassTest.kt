@@ -1,8 +1,8 @@
 package io.github.warraft.jass.antlr.converter
 
+import io.github.warraft.jass.antlr.JassState
 import org.antlr.v4.runtime.CharStreams
 import org.junit.jupiter.api.Test
-import raft.war.antlr.jass.JassState
 import java.nio.file.Path
 import java.nio.file.Paths
 

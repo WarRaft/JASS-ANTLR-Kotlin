@@ -1,7 +1,7 @@
 @file:Suppress("DuplicatedCode")
 
+import io.github.warraft.jass.antlr.JassState
 import org.antlr.v4.runtime.CharStreams
-import raft.war.antlr.jass.JassState
 import io.github.warraft.jass.antlr.converter.JassLua
 import java.nio.file.Path
 import java.nio.file.Paths

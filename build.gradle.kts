@@ -7,7 +7,7 @@ plugins {
     kotlin("jvm") version "2.1.0"
 }
 
-group = "raft.war.antlr.jass"
+group = "io.github.warraft"
 version = "0.0.2"
 
 repositories {
@@ -52,10 +52,13 @@ tasks.generateGrammarSource {
 
     // https://codeberg.org/UniGrammar/antlr4/src/branch/tool_refactoring/doc/tool-options.md
     arguments = listOf(
-        "-package", "raft.war.antlr.jass",
+        "-package", "io.github.warraft.jass.antlr",
+        //"-lib", "src/main/kotlin/",
         "-no-visitor",
         "-no-listener"
     )
+
+    //source = fileTree("src/main/kotlin").matching {include("**/*.g4")}
 
     outputDirectory = file("src/main/gen")
 }
@@ -74,7 +77,13 @@ tasks.test {
     useJUnitPlatform()
 }
 
+// https://central.sonatype.com/account
+
+// https://medium.com/@jtbsorensen/publish-your-artifact-to-the-maven-central-repository-using-github-actions-15d3b5d9ce88
+
 // https://docs.gradle.org/current/userguide/publishing_maven.html
+
+// https://stackoverflow.com/questions/74752707/github-actions-how-to-resolve-the-process-usr-bin-gpg-failed-with-exit-c
 
 /*
 publishing {

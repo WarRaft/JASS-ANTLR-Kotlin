@@ -1,7 +1,10 @@
 package io.github.warraft.jass.antlr.converter
 
 import io.github.warraft.jass.antlr.JassFakeName
+import io.github.warraft.jass.antlr.JassState
 import io.github.warraft.jass.antlr.psi.IJassNode
+import io.github.warraft.jass.antlr.psi.JassBool
+import io.github.warraft.jass.antlr.psi.JassExitWhen
 import io.github.warraft.jass.antlr.psi.JassExpr
 import io.github.warraft.jass.antlr.psi.JassExprOp
 import io.github.warraft.jass.antlr.psi.JassFun
@@ -9,8 +12,11 @@ import io.github.warraft.jass.antlr.psi.JassHandleType
 import io.github.warraft.jass.antlr.psi.JassIf
 import io.github.warraft.jass.antlr.psi.JassInt
 import io.github.warraft.jass.antlr.psi.JassLoop
+import io.github.warraft.jass.antlr.psi.JassNull
 import io.github.warraft.jass.antlr.psi.JassReal
+import io.github.warraft.jass.antlr.psi.JassReturn
 import io.github.warraft.jass.antlr.psi.JassStr
+import io.github.warraft.jass.antlr.psi.JassUndefinedType
 import io.github.warraft.jass.antlr.psi.JassVar
 import java.io.File
 import java.nio.file.Path
