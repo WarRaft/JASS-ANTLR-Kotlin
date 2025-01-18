@@ -1,7 +1,6 @@
 plugins {
     id("java")
     `maven-publish`
-    signing
 
     antlr
     // https://kotlinlang.org/docs/gradle-configure-project.html
@@ -77,6 +76,7 @@ tasks.test {
 
 // https://docs.gradle.org/current/userguide/publishing_maven.html
 
+/*
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
@@ -124,12 +124,10 @@ publishing {
     }
 }
 
-signing {
-    sign(publishing.publications["mavenJava"])
-}
 
 tasks.javadoc {
     if (JavaVersion.current().isJava9Compatible) {
         (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
     }
 }
+*/

@@ -2,7 +2,7 @@
 
 import org.antlr.v4.runtime.CharStreams
 import raft.war.antlr.jass.JassState
-import raft.war.antlr.jass.converter.JassLua
+import io.github.warraft.jass.antlr.converter.JassLua
 import java.nio.file.Path
 import java.nio.file.Paths
 
