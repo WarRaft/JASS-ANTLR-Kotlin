@@ -7,9 +7,6 @@ plugins {
     kotlin("jvm") version "2.1.0"
 }
 
-group = "io.github.warraft"
-version = "0.0.2"
-
 repositories {
     mavenCentral()
 }
@@ -69,8 +66,8 @@ tasks.jar {
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
-    archiveBaseName.set(rootProject.name)
-    archiveVersion.set(version as String)
+    archiveBaseName.set("JASS")
+    archiveVersion.set("ANTLR")
 }
 
 tasks.test {
@@ -84,59 +81,3 @@ tasks.test {
 // https://docs.gradle.org/current/userguide/publishing_maven.html
 
 // https://stackoverflow.com/questions/74752707/github-actions-how-to-resolve-the-process-usr-bin-gpg-failed-with-exit-c
-
-/*
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            //artifactId = project.name
-            from(components["java"])
-            versionMapping {
-                usage("java-api") {
-                    fromResolutionOf("runtimeClasspath")
-                }
-                usage("java-runtime") {
-                    fromResolutionResult()
-                }
-            }
-            pom {
-                name = "My Library"
-                description = "A concise description of my library"
-                url = "https://github.com/WarRaft/JASS-ANTLR-Kotlin"
-                licenses {
-                    license {
-                        name = "MIT License"
-                        url = "https://opensource.org/licenses/MIT"
-                    }
-                }
-                developers {
-                    developer {
-                        id = "nazarpunk"
-                        name = "nazarpunk"
-                        email = "nazarpunk@gmail.com"
-                    }
-                }
-                scm {
-                    connection = "scm:git:git://github.com:WarRaft/JASS-ANTLR-Kotlin.git"
-                    developerConnection = "scm:git:ssh://github.com:WarRaft/JASS-ANTLR-Kotlin.git"
-                    url = "https://github.com/WarRaft/JASS-ANTLR-Kotlin"
-                }
-            }
-        }
-    }
-    repositories {
-        maven {
-            val releasesRepoUrl = uri(layout.buildDirectory.dir("repos/releases"))
-            val snapshotsRepoUrl = uri(layout.buildDirectory.dir("repos/snapshots"))
-            url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-        }
-    }
-}
-
-
-tasks.javadoc {
-    if (JavaVersion.current().isJava9Compatible) {
-        (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
-    }
-}
-*/
