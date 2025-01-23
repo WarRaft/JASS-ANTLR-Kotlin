@@ -6,7 +6,7 @@ globals
     real f = 2
 endglobals
 
-native Deg2Rad1 takes real degrees returns real
+native Deg2Rad takes real degrees returns real
 native Deg2Rad2 takes nothing returns nothing
 
 function B takes nothing returns nothing

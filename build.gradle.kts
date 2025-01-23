@@ -1,5 +1,5 @@
 plugins {
-    id("java")
+    java
     `maven-publish`
 
     antlr
@@ -26,6 +26,7 @@ java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
+
 
 sourceSets {
     main {
@@ -72,6 +73,11 @@ tasks.jar {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.javadoc {
+    source = sourceSets["main"].allJava
+    classpath = configurations["compileClasspath"]
 }
 
 // https://central.sonatype.com/account

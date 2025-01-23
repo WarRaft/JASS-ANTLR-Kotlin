@@ -9,7 +9,7 @@
 
     <groupId>io.github.warraft</groupId>
     <artifactId>JASS-ANTLR</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>JASS-ANTLR</name>
@@ -69,13 +69,11 @@
                         <groupId>org.jetbrains.kotlin</groupId>
                         <artifactId>kotlin-maven-plugin</artifactId>
                         <version>${kotlin.version}</version>
-                        <!-- You can set this option to automatically take information about lifecycles -->
                         <extensions>true</extensions>
                         <executions>
                             <execution>
                                 <id>compile</id>
                                 <goals>
-                                    <!-- You can skip the <goals> element if you enable extensions for the plugin -->
                                     <goal>compile</goal>
                                 </goals>
                                 <configuration>
@@ -90,15 +88,20 @@
                     </plugin>
 
                     <plugin>
-                        <!-- https://www.antlr.org/api/maven-plugin/latest/examples/simple.html -->
-                        <!-- https://mvnrepository.com/artifact/org.antlr/antlr4-maven-plugin -->
-                        <groupId>org.antlr</groupId>
-                        <artifactId>antlr4-maven-plugin</artifactId>
-                        <version>4.13.2</version>
+                        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.13.0</version>
                         <executions>
                             <execution>
+                                <id>default-compile</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>java-compile</id>
+                                <phase>compile</phase>
                                 <goals>
-                                    <goal>antlr4</goal>
+                                    <goal>compile</goal>
                                 </goals>
                             </execution>
                         </executions>
@@ -112,11 +115,9 @@
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
-                            <tokenAuth>true</tokenAuth>
                             <autoPublish>true</autoPublish>
                         </configuration>
                     </plugin>
-
 
                     <plugin>
                         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-source-plugin -->
@@ -148,7 +149,6 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <stylesheet>java</stylesheet>
                             <doclint>none</doclint>
                         </configuration>
                     </plugin>
