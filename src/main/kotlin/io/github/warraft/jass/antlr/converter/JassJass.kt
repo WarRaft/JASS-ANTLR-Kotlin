@@ -1,50 +1,18 @@
 package io.github.warraft.jass.antlr.converter
 
-import io.github.warraft.jass.antlr.JassFakeName
 import io.github.warraft.jass.antlr.JassState
-import io.github.warraft.jass.antlr.psi.IJassNode
-import io.github.warraft.jass.antlr.psi.JassBool
-import io.github.warraft.jass.antlr.psi.JassExitWhen
-import io.github.warraft.jass.antlr.psi.JassExpr
-import io.github.warraft.jass.antlr.psi.JassExprOp
-import io.github.warraft.jass.antlr.psi.JassFun
-import io.github.warraft.jass.antlr.psi.JassHandleType
-import io.github.warraft.jass.antlr.psi.JassIf
-import io.github.warraft.jass.antlr.psi.JassInt
-import io.github.warraft.jass.antlr.psi.JassLoop
-import io.github.warraft.jass.antlr.psi.JassNull
-import io.github.warraft.jass.antlr.psi.JassReal
-import io.github.warraft.jass.antlr.psi.JassReturn
-import io.github.warraft.jass.antlr.psi.JassStr
-import io.github.warraft.jass.antlr.psi.JassUndefinedType
-import io.github.warraft.jass.antlr.psi.JassVar
-import java.io.File
+import io.github.warraft.jass.antlr.psi.*
 import java.nio.file.Path
-import kotlin.io.path.absolute
 
 class JassJass(
-    val state: JassState,
-    val output: Path,
-    val fakename: Boolean = false,
+    state: JassState,
+    output: Path,
+    fakename: Boolean = false,
+) : JassBase(
+    state = state,
+    output = output,
+    fakename = fakename,
 ) {
-    val builder = StringBuilder()
-
-    fun tab(c: Int): StringBuilder {
-        (0..c).forEach { builder.append("\t") }
-        return builder
-    }
-
-    fun varname(v: JassVar): String {
-        val root = v.root
-        var name = root.name
-        return if (!fakename) name else root.fakename
-    }
-
-    fun funname(f: JassFun): String {
-        val root = f.root
-        var name = root.name
-        return if (!fakename || f.native) name else root.fakename
-    }
 
     fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
         val s = when (op) {
@@ -74,6 +42,7 @@ class JassJass(
         expr(b)
     }
 
+    @Suppress("DuplicatedCode")
     fun expr(e: IJassNode?) {
         if (e == null) return
         when (e) {
@@ -158,6 +127,7 @@ class JassJass(
         builder.append("\n")
     }
 
+    @Suppress("DuplicatedCode")
     fun stmt(nodes: List<IJassNode>, level: Int) {
         for (node in nodes) {
 
@@ -236,7 +206,7 @@ class JassJass(
         }
     }
 
-    fun function(f: JassFun) {
+    override fun function(f: JassFun) {
         builder.append("\n")
 
         if (f.native) builder.append("native")
@@ -284,7 +254,7 @@ class JassJass(
         builder.append("endfunction\n")
     }
 
-    fun type(t: JassHandleType) {
+    override fun type(t: JassHandleType) {
         builder.append("---@class ${t.name}")
 
         if (t.parent != null) builder
@@ -293,29 +263,11 @@ class JassJass(
         builder.append("\n")
     }
 
-    private fun convert() {
-        JassFakeName(state = state)
-
-        builder.clear()
-
-        state.types.forEach(::type)
-
-        state.natives.forEach(::function)
-
-        builder.append("\n")
-
+    override fun globals() {
         if (state.globals.isNotEmpty()) {
             builder.append("globals\n")
             state.globals.forEach(::global)
             builder.append("endglobals\n")
         }
-
-        state.functions.forEach(::function)
-
-        File(output.absolute().toString()).writeText(builder.toString().trim())
-    }
-
-    init {
-        convert()
     }
 }

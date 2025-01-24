@@ -97,7 +97,7 @@ class Main(val args: Array<String>) {
         JassJass(
             state = states.last(),
             output = p,
-            fakename = true
+            fakename = false
         )
     }
 
@@ -107,7 +107,7 @@ class Main(val args: Array<String>) {
         JassLua(
             state = states.last(),
             output = p,
-            fakename = true
+            fakename = false
         )
     }
 

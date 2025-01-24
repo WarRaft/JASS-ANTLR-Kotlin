@@ -1,56 +1,21 @@
 package io.github.warraft.jass.antlr.converter
 
-import io.github.warraft.jass.antlr.JassFakeName
+import io.github.warraft.jass.antlr.JassFakeName.Companion.LuaKeywords
 import io.github.warraft.jass.antlr.JassState
-import io.github.warraft.jass.antlr.psi.IJassNode
-import io.github.warraft.jass.antlr.psi.IJassType
-import io.github.warraft.jass.antlr.psi.JassBool
-import io.github.warraft.jass.antlr.psi.JassBoolType
-import io.github.warraft.jass.antlr.psi.JassCodeType
-import io.github.warraft.jass.antlr.psi.JassExitWhen
-import io.github.warraft.jass.antlr.psi.JassExpr
-import io.github.warraft.jass.antlr.psi.JassExprOp
-import io.github.warraft.jass.antlr.psi.JassFun
-import io.github.warraft.jass.antlr.psi.JassHandleType
-import io.github.warraft.jass.antlr.psi.JassIf
-import io.github.warraft.jass.antlr.psi.JassInt
-import io.github.warraft.jass.antlr.psi.JassIntType
-import io.github.warraft.jass.antlr.psi.JassLoop
-import io.github.warraft.jass.antlr.psi.JassNull
-import io.github.warraft.jass.antlr.psi.JassReal
-import io.github.warraft.jass.antlr.psi.JassRealType
-import io.github.warraft.jass.antlr.psi.JassReturn
-import io.github.warraft.jass.antlr.psi.JassStr
-import io.github.warraft.jass.antlr.psi.JassStrType
-import io.github.warraft.jass.antlr.psi.JassUndefinedType
-import io.github.warraft.jass.antlr.psi.JassVar
-import java.io.File
+import io.github.warraft.jass.antlr.psi.*
 import java.nio.file.Path
-import kotlin.io.path.absolute
 
 class JassLua(
-    val state: JassState,
-    val output: Path,
-    val fakename: Boolean = false,
+    state: JassState,
+    output: Path,
+    fakename: Boolean = false,
+) : JassBase(
+    state = state,
+    output = output,
+    fakename = fakename,
 ) {
-    val builder = StringBuilder()
 
-    fun tab(c: Int): StringBuilder {
-        (0..c).forEach { builder.append("\t") }
-        return builder
-    }
-
-    fun varname(v: JassVar): String {
-        val root = v.root
-        var name = root.name
-        return if (fakename || JassFakeName.Companion.LuaKeywords.contains(name)) root.fakename else name
-    }
-
-    fun funname(f: JassFun): String {
-        val root = f.root
-        var name = root.name
-        return if ((fakename || JassFakeName.Companion.LuaKeywords.contains(name)) && !f.native) root.fakename else name
-    }
+    override fun isKeyword(name: String): Boolean = LuaKeywords.contains(name)
 
     fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
         val s = when (op) {
@@ -83,6 +48,7 @@ class JassLua(
         expr(b)
     }
 
+    @Suppress("DuplicatedCode")
     fun expr(e: IJassNode?) {
         if (e == null) return
         when (e) {
@@ -185,9 +151,9 @@ class JassLua(
         builder.append("\n")
     }
 
+    @Suppress("DuplicatedCode")
     fun stmt(nodes: List<IJassNode>, level: Int) {
         for (node in nodes) {
-
             when (node) {
                 is JassIf -> {
                     tab(level).append("if ")
@@ -268,7 +234,7 @@ class JassLua(
         }
     }
 
-    fun function(f: JassFun) {
+    override fun function(f: JassFun) {
         builder.append("\n")
         if (f.native) builder.append("--- native\n")
         f.param.forEach {
@@ -320,7 +286,7 @@ class JassLua(
         builder.append("end\n")
     }
 
-    fun type(t: JassHandleType) {
+    override fun type(t: JassHandleType) {
         builder.append("---@class ${t.name}")
 
         if (t.parent != null) builder
@@ -329,27 +295,7 @@ class JassLua(
         builder.append("\n")
     }
 
-    private fun convert() {
-        JassFakeName(state = state)
-
-        builder.clear()
-
-        state.types.forEach(::type)
-
-        state.natives.forEach(::function)
-
-        builder.append("\n")
-
+    override fun globals() {
         state.globals.forEach(::global)
-
-        builder.append("\n")
-
-        state.functions.forEach(::function)
-
-        File(output.absolute().toString()).writeText(builder.toString().trim())
-    }
-
-    init {
-        convert()
     }
 }
