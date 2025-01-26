@@ -1,4 +1,5 @@
 import io.github.warraft.jass.antlr.JassState
+import io.github.warraft.jass.antlr.converter.JassAs
 import io.github.warraft.jass.antlr.converter.JassJass
 import io.github.warraft.jass.antlr.converter.JassLua
 import org.antlr.v4.runtime.CharStreams
@@ -25,6 +26,7 @@ class Main(val args: Array<String>) {
             when (arg) {
                 "-$JASS2JASS" -> action = JASS2JASS
                 "-$JASS2LUA" -> action = JASS2LUA
+                "-$JASS2AS" -> action = JASS2AS
                 else -> {
                     if (arg.startsWith("-")) {
                         println("$warn Unknown argument: $arg")
@@ -42,6 +44,7 @@ class Main(val args: Array<String>) {
             when (action) {
                 JASS2JASS -> println("Using $ITALIC${CYAN}JASS to JASS converter$RESET")
                 JASS2LUA -> println("Using $ITALIC${CYAN}JASS to Lua converter$RESET")
+                JASS2AS -> println("Using $ITALIC${CYAN}JASS to Lua converter$RESET")
             }
         }
 
@@ -82,33 +85,40 @@ class Main(val args: Array<String>) {
         }
 
         when (action) {
-            JASS2JASS -> jassjass()
-            JASS2LUA -> jasslua()
+            JASS2JASS -> {
+                val p = ext(path!!, "opt.j")
+                println("Output: $PURPLE${p.toAbsolutePath()}$RESET")
+                JassJass(
+                    state = states.last(),
+                    output = p,
+                    fakename = false
+                )
+            }
+
+            JASS2LUA -> {
+                val p = ext(path!!, "lua")
+                println("Output: $PURPLE${p.toAbsolutePath()}$RESET")
+                JassLua(
+                    state = states.last(),
+                    output = p,
+                    fakename = false
+                )
+            }
+
+            JASS2AS -> {
+                val p = ext(path!!, "as")
+                println("Output: $PURPLE${p.toAbsolutePath()}$RESET")
+                JassAs(
+                    state = states.last(),
+                    output = p,
+                    fakename = false
+                )
+            }
         }
     }
 
     init {
         process()
-    }
-
-    private fun jassjass() {
-        val p = ext(path!!, "opt.j")
-        println("Output: $PURPLE${p.toAbsolutePath()}$RESET")
-        JassJass(
-            state = states.last(),
-            output = p,
-            fakename = false
-        )
-    }
-
-    private fun jasslua() {
-        val p = ext(path!!, "lua")
-        println("Output: $PURPLE${p.toAbsolutePath()}$RESET")
-        JassLua(
-            state = states.last(),
-            output = p,
-            fakename = false
-        )
     }
 
     companion object {
@@ -118,6 +128,7 @@ class Main(val args: Array<String>) {
 
         private const val JASS2JASS = "jass2jass"
         private const val JASS2LUA = "jass2lua"
+        private const val JASS2AS = "jass2as"
 
         private const val RESET = "\u001B[0m"
 

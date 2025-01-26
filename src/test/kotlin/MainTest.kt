@@ -10,7 +10,7 @@ class MainTest {
     private fun jass(path: Path) {
         Main(
             arrayOf(
-                "-jass2lua",
+                "-jass2jass",
                 cjp.absolute().toString(),
                 bjp.absolute().toString(),
                 path.absolute().toString(),
@@ -26,6 +26,16 @@ class MainTest {
     @Test
     fun testJass() {
         jass(Paths.get("src", "test", "resources", "jass", "test.j"))
+    }
+
+    @Test
+    fun convertJass() {
+        jass(Paths.get("src", "test", "resources", "check", "convert.j"))
+    }
+
+    @Test
+    fun convertLua() {
+        lua(Paths.get("src", "test", "resources", "check", "convert.j"))
     }
 
     private fun lua(path: Path) {
@@ -63,4 +73,26 @@ class MainTest {
     fun lg() {
         lua(Paths.get("src", "test", "resources", "map", "LastGuard.j"))
     }
+
+    private fun ass(path: Path) {
+        Main(
+            arrayOf(
+                "-jass2as",
+                cjp.absolute().toString(),
+                bjp.absolute().toString(),
+                path.absolute().toString(),
+            )
+        )
+    }
+
+    @Test
+    fun convertAs() {
+        ass(Paths.get("src", "test", "resources", "check", "convert.j"))
+    }
+
+    @Test
+    fun lgAs() {
+        ass(Paths.get("src", "test", "resources", "map", "LastGuard.j"))
+    }
+
 }

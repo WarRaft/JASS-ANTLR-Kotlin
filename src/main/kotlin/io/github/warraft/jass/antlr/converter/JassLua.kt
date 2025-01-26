@@ -1,3 +1,5 @@
+@file:Suppress("DuplicatedCode")
+
 package io.github.warraft.jass.antlr.converter
 
 import io.github.warraft.jass.antlr.JassFakeName.Companion.LuaKeywords
@@ -16,6 +18,30 @@ class JassLua(
 ) {
 
     override fun isKeyword(name: String): Boolean = LuaKeywords.contains(name)
+
+    override fun type(t: JassHandleType) {
+        builder.append("---@class ${t.name}")
+
+        if (t.parent != null) builder
+            .append(":")
+            .append(t.parent!!.name)
+        builder.append("\n")
+    }
+
+    override fun global(v: JassVar) {
+        if (v.local) builder.append("local ")
+        builder.append(varname(v)).append(" = ")
+        if (v.expr == null) builder.append(if (v.array) "{}" else "nil")
+        else expr(v.expr!!)
+
+        builder
+            .append(" ---@type ")
+            .append(typeName(v.type, v.array))
+
+        if (v.constant) builder.append(" constant")
+
+        builder.append("\n")
+    }
 
     fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
         val s = when (op) {
@@ -134,21 +160,6 @@ class JassLua(
             is JassCodeType -> "function"
             else -> type.name
         }
-    }
-
-    fun global(v: JassVar) {
-        if (v.local) builder.append("local ")
-        builder.append(varname(v)).append(" = ")
-        if (v.expr == null) builder.append(if (v.array) "{}" else "nil")
-        else expr(v.expr!!)
-
-        builder
-            .append(" ---@type ")
-            .append(typeName(v.type, v.array))
-
-        if (v.constant) builder.append(" constant")
-
-        builder.append("\n")
     }
 
     @Suppress("DuplicatedCode")
@@ -284,18 +295,5 @@ class JassLua(
         stmt(f.stmt, 0)
 
         builder.append("end\n")
-    }
-
-    override fun type(t: JassHandleType) {
-        builder.append("---@class ${t.name}")
-
-        if (t.parent != null) builder
-            .append(":")
-            .append(t.parent!!.name)
-        builder.append("\n")
-    }
-
-    override fun globals() {
-        state.globals.forEach(::global)
     }
 }

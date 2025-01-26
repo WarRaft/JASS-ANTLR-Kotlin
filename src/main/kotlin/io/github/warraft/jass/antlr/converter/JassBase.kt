@@ -39,7 +39,11 @@ abstract class JassBase(
 
     abstract fun function(f: JassFun)
 
-    abstract fun globals()
+    abstract fun global(v: JassVar)
+
+    open fun globals() {
+        state.globals.forEach(::global)
+    }
 
     fun convert() {
         JassFakeName(state = state)

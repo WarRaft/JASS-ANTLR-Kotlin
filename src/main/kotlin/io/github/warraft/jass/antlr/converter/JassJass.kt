@@ -1,3 +1,5 @@
+@file:Suppress("DuplicatedCode")
+
 package io.github.warraft.jass.antlr.converter
 
 import io.github.warraft.jass.antlr.JassState
@@ -13,6 +15,86 @@ class JassJass(
     output = output,
     fakename = fakename,
 ) {
+
+    override fun type(t: JassHandleType) {
+        builder.append("type ${t.name}")
+
+        if (t.parent != null) builder
+            .append(" extends ")
+            .append(t.parent!!.name)
+        builder.append("\n")
+    }
+
+    override fun global(v: JassVar) {
+        builder.append("\t")
+        if (v.constant) builder.append("constant ")
+        if (v.local) builder.append("local ")
+        builder.append(v.type.name)
+        if (v.array) builder.append(" array")
+        builder.append(" ").append(varname(v))
+
+        if (v.expr != null) {
+            builder.append(" = ")
+            expr(v.expr)
+        }
+
+        builder.append("\n")
+    }
+
+    override fun globals() {
+        if (state.globals.isEmpty()) return
+        builder.append("globals\n")
+        state.globals.forEach(::global)
+        builder.append("endglobals\n")
+    }
+
+    override fun function(f: JassFun) {
+        builder.append("\n")
+
+        if (f.native) builder.append("native")
+        else builder.append("function")
+
+        builder.append(" ").append(funname(f)).append(" takes ")
+
+        val list: MutableList<String> = mutableListOf()
+        for (it in f.param) {
+            if (!it.param) break
+            list.add("${it.type.name} ${varname(it)}")
+        }
+
+        if (list.isEmpty()) {
+            builder.append("nothing")
+        } else {
+            builder.append(list.joinToString(", "))
+        }
+
+        builder.append(" returns ")
+        if (f.type is JassUndefinedType) {
+            builder.append("nothing")
+        } else {
+            builder.append(f.type.name)
+        }
+        builder.append("\n")
+
+        if (f.native) return
+
+        for (it in f.param) {
+            if (it.param) continue
+
+            builder.append("\tlocal ${it.type.name} ${varname(it)}")
+
+            if (it.expr != null) {
+                builder.append(" = ")
+                expr(it.expr!!)
+            }
+
+            builder.append("\n")
+        }
+
+        stmt(f.stmt, 0)
+
+        builder.append("endfunction\n")
+    }
 
     fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
         val s = when (op) {
@@ -42,7 +124,6 @@ class JassJass(
         expr(b)
     }
 
-    @Suppress("DuplicatedCode")
     fun expr(e: IJassNode?) {
         if (e == null) return
         when (e) {
@@ -111,23 +192,6 @@ class JassJass(
         }
     }
 
-    fun global(v: JassVar) {
-        builder.append("\t")
-        if (v.constant) builder.append("constant ")
-        if (v.local) builder.append("local ")
-        builder.append(v.type.name)
-        if (v.array) builder.append(" array")
-        builder.append(" ").append(varname(v))
-
-        if (v.expr != null) {
-            builder.append(" = ")
-            expr(v.expr)
-        }
-
-        builder.append("\n")
-    }
-
-    @Suppress("DuplicatedCode")
     fun stmt(nodes: List<IJassNode>, level: Int) {
         for (node in nodes) {
 
@@ -206,68 +270,4 @@ class JassJass(
         }
     }
 
-    override fun function(f: JassFun) {
-        builder.append("\n")
-
-        if (f.native) builder.append("native")
-        else builder.append("function")
-
-        builder.append(" ").append(funname(f)).append(" takes ")
-
-        val list: MutableList<String> = mutableListOf()
-        for (it in f.param) {
-            if (!it.param) break
-            list.add("${it.type.name} ${varname(it)}")
-        }
-
-        if (list.isEmpty()) {
-            builder.append("nothing")
-        } else {
-            builder.append(list.joinToString(", "))
-        }
-
-        builder.append(" returns ")
-        if (f.type is JassUndefinedType) {
-            builder.append("nothing")
-        } else {
-            builder.append(f.type.name)
-        }
-        builder.append("\n")
-
-        if (f.native) return
-
-        for (it in f.param) {
-            if (it.param) continue
-
-            builder.append("\tlocal ${it.type.name} ${varname(it)}")
-
-            if (it.expr != null) {
-                builder.append(" = ")
-                expr(it.expr!!)
-            }
-
-            builder.append("\n")
-        }
-
-        stmt(f.stmt, 0)
-
-        builder.append("endfunction\n")
-    }
-
-    override fun type(t: JassHandleType) {
-        builder.append("---@class ${t.name}")
-
-        if (t.parent != null) builder
-            .append(":")
-            .append(t.parent!!.name)
-        builder.append("\n")
-    }
-
-    override fun globals() {
-        if (state.globals.isNotEmpty()) {
-            builder.append("globals\n")
-            state.globals.forEach(::global)
-            builder.append("endglobals\n")
-        }
-    }
 }
