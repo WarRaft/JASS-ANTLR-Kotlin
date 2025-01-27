@@ -8,7 +8,6 @@ plugins {
 }
 
 group = "io.github.warraft"
-version = "0.0.21"
 
 repositories {
     mavenCentral()
