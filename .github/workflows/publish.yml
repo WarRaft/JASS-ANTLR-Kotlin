@@ -1,8 +1,6 @@
 name: Publish Kotlin Package
 
 on:
-  release:
-    types: [ created ]
   workflow_dispatch:
 
 jobs:
