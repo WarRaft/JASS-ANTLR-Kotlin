@@ -47,6 +47,24 @@ kotlin {
     jvmToolchain(21)
 }
 
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/WarRaft/JASS-ANTLR-Kotlin")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        create<MavenPublication>("gpr") {
+            from(components["java"])
+        }
+    }
+}
+
 tasks.generateGrammarSource {
     maxHeapSize = "64m"
 
