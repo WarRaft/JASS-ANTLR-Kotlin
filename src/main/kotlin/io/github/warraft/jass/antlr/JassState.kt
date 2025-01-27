@@ -446,11 +446,17 @@ class JassState {
                 }
 
                 is StmtReturnContext -> {
-                    list.add(
-                        JassReturn(
-                            expr = expr(item.returnRule().expr(), f),
-                        )
-                    )
+                    val rctx = item.returnRule()
+                    val e = expr(rctx.expr(), f)
+                    if (e != null) {
+                        val v = e.a
+                        if (v is JassVar) {
+                            if (v.array) {
+                                errors.add(JassError(JassErrorId.RETURN_ARRAY, rctx.start.line, 0, "return array"))
+                            }
+                        }
+                    }
+                    list.add(JassReturn(expr = e))
                 }
 
                 is StmtIfContext -> {
@@ -601,7 +607,7 @@ class JassState {
             ) {
                 jassErrors.add(
                     JassError(
-                        jassErrorId = JassErrorId.SYNTAX,
+                        id = JassErrorId.SYNTAX,
                         line = line,
                         char = charPositionInLine,
                         message = msg ?: "Unknown error"

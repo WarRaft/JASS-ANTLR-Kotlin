@@ -27,7 +27,6 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
-
 sourceSets {
     main {
         java {
@@ -79,11 +78,3 @@ tasks.javadoc {
     source = sourceSets["main"].allJava
     classpath = configurations["compileClasspath"]
 }
-
-// https://central.sonatype.com/account
-
-// https://medium.com/@jtbsorensen/publish-your-artifact-to-the-maven-central-repository-using-github-actions-15d3b5d9ce88
-
-// https://docs.gradle.org/current/userguide/publishing_maven.html
-
-// https://stackoverflow.com/questions/74752707/github-actions-how-to-resolve-the-process-usr-bin-gpg-failed-with-exit-c

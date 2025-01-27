@@ -5,5 +5,6 @@ enum class JassErrorId {
     SYNTAX,
     TYPE_CAST,
     TYPE_DEF,
-    REDECLARED
+    REDECLARED,
+    RETURN_ARRAY
 }

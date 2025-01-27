@@ -92,7 +92,7 @@ class MainTest {
 
     @Test
     fun lgAs() {
-        ass(Paths.get("src", "test", "resources", "map", "LastGuard.j"))
+        ass(Paths.get("src", "test", "resources", "maps", "LastGuard.j"))
     }
 
 }
