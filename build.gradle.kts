@@ -7,6 +7,9 @@ plugins {
     kotlin("jvm") version "2.1.0"
 }
 
+group = "io.github.warraft"
+version = "0.0.20"
+
 repositories {
     mavenCentral()
 }
