@@ -81,3 +81,5 @@ tasks.javadoc {
     source = sourceSets["main"].allJava
     classpath = configurations["compileClasspath"]
 }
+
+// https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-java-packages-with-gradle
