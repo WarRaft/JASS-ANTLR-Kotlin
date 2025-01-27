@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JASS-ANTLR.main.iml" filepath="$PROJECT_DIR$/.idea/modules/JASS-ANTLR.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JASS-ANTLR.test.iml" filepath="$PROJECT_DIR$/.idea/modules/JASS-ANTLR.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jass-antlr.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jass-antlr.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jass-antlr.test.iml" filepath="$PROJECT_DIR$/.idea/modules/jass-antlr.test.iml" />
     </modules>
   </component>
 </project>
