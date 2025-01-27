@@ -2,6 +2,9 @@ package io.github.warraft.jass.antlr.converter
 
 import io.github.warraft.jass.antlr.JassFakeName
 import io.github.warraft.jass.antlr.JassState
+import io.github.warraft.jass.antlr.psi.IJassNode
+import io.github.warraft.jass.antlr.psi.IJassType
+import io.github.warraft.jass.antlr.psi.JassExprOp
 import io.github.warraft.jass.antlr.psi.JassFun
 import io.github.warraft.jass.antlr.psi.JassHandleType
 import io.github.warraft.jass.antlr.psi.JassVar
@@ -23,6 +26,8 @@ abstract class JassBase(
 
     open fun isKeyword(s: String): Boolean = false
 
+    abstract fun typename(type: IJassType, array: Boolean = false): String
+
     fun varname(v: JassVar): String {
         val root = v.root
         var name = root.name
@@ -43,6 +48,45 @@ abstract class JassBase(
 
     open fun globals() {
         state.globals.forEach(::global)
+    }
+
+    open fun opname(op: JassExprOp, a: IJassNode, b: IJassNode): String = when (op) {
+        JassExprOp.Mul -> "*"
+        JassExprOp.Div -> "/"
+        JassExprOp.Add -> "+"
+        JassExprOp.Sub -> "-"
+
+        JassExprOp.Lt -> "<"
+        JassExprOp.LtEq -> "<="
+        JassExprOp.Gt -> ">"
+        JassExprOp.GtEq -> ">="
+
+        JassExprOp.Eq -> "=="
+        JassExprOp.Neq -> "!="
+
+        JassExprOp.And -> "and"
+        JassExprOp.Or -> "or"
+
+        JassExprOp.UnSub -> "-"
+        JassExprOp.UnNot -> "not "
+        JassExprOp.Get,
+        JassExprOp.Set,
+        JassExprOp.Paren,
+            -> {
+            println("⚠️Unexpected operator: $op")
+            ""
+        }
+    }
+
+    abstract fun expr(e: IJassNode?)
+
+    open fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
+        expr(a)
+        builder
+            .append(" ")
+            .append(opname(op, a, b))
+            .append(" ")
+        expr(b)
     }
 
     fun convert() {

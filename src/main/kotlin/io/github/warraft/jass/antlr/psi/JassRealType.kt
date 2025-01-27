@@ -1,6 +1,6 @@
 package io.github.warraft.jass.antlr.psi
 
-class JassRealType : IJassType {
+class JassRealType : IJassType() {
     override val name: String = "real"
 
     override fun op(op: JassExprOp, b: IJassType): IJassType {
@@ -24,6 +24,4 @@ class JassRealType : IJassType {
             else -> JassUndefinedType()
         }
     }
-
-    override fun toString(): String = "<primitive>$name"
 }

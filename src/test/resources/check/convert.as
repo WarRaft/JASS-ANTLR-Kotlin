@@ -3,12 +3,24 @@
 
 funcdef unit UnitAlive(unit u);
 
-bool b = "a" != nil;
-int a = 22;
+hashtable HT = InitHashtable();
+bool s1 = "a" != "";
+bool s2 = "" == "a";
+bool s3 = "" == LoadStr(HT, 0, 0);
+bool b1 = 1 == null;
+array<int> a;
+float b = 33.3;
+int hex = $A;
+int hex1 = 0xA;
+int raw = 'A';
 string s = "a" + "b";
 
-float A(float a) {
-	int b = 33;
+void Ba() {
+}
+float A(float a, CallbackFunc d) {
+	TimerStart(15., true, Ba);
+	s[0] = "00";
+	s[1] = "11";
 	if (a > b) {
 		s = s + "e";
 	}
@@ -16,6 +28,6 @@ float A(float a) {
 		s = s + "g";
 		if (b > a) break;
 	}
-	UnitAlive(nil);
+	UnitAlive(null);
 	return a * b;
 }

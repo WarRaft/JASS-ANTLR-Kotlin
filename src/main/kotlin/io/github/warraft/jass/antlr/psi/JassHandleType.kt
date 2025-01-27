@@ -1,6 +1,6 @@
 package io.github.warraft.jass.antlr.psi
 
-class JassHandleType(override val name: String) : IJassType {
+class JassHandleType(override val name: String) : IJassType() {
     var parent: JassHandleType? = null
 
     override fun op(
@@ -22,6 +22,4 @@ class JassHandleType(override val name: String) : IJassType {
             else -> JassUndefinedType()
         }
     }
-
-    override fun toString(): String = "<handle>$name"
 }

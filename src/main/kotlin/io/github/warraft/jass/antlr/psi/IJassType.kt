@@ -1,6 +1,11 @@
 package io.github.warraft.jass.antlr.psi
 
-interface IJassType {
-    val name: String
-    fun op(op: JassExprOp, b: IJassType): IJassType
+import Main.Companion.BLUE
+import Main.Companion.RESET
+
+abstract class IJassType {
+    abstract val name: String
+    abstract fun op(op: JassExprOp, b: IJassType): IJassType
+
+    override fun toString(): String = "$BLUE$name$RESET"
 }

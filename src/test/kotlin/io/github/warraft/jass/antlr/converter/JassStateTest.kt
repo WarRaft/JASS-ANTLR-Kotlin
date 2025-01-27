@@ -7,6 +7,32 @@ import org.junit.jupiter.api.Test
 class JassStateTest {
 
     @Test
+    fun typeTest() {
+        val state = JassState()
+        state.parse(
+            CharStreams.fromString(
+                """
+                globals
+                    boolean a = "a" != null
+                    boolean b = null == "b"   
+                endglobals
+                """.trimIndent()
+            )
+        )
+
+        state.errors.forEach { println("⚠️ $it") }
+
+        for (f in state.functions) {
+            println("=== ${f.name}")
+            for (p in f.param) {
+                println(p)
+            }
+        }
+
+        assert(state.errors.isEmpty())
+    }
+
+    @Test
     fun parseParam() {
         val state = JassState()
         state.parse(

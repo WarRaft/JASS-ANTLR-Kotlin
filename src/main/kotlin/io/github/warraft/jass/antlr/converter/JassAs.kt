@@ -28,24 +28,21 @@ class JassAs(
         builder.append("\n")
     }
 
-    fun typename(type: IJassType, array: Boolean = false): String {
-        val a = if (array) "[]" else ""
-        return when (type) {
-            is JassBoolType -> "bool$a"
+    override fun typename(type: IJassType, array: Boolean): String {
+        var s = if (array) "array<" else ""
+        s += when (type) {
+            is JassBoolType -> "bool"
             is JassIntType -> "int"
             is JassRealType -> "float"
-            is JassCodeType -> "function"
+            is JassCodeType -> "CallbackFunc"
             else -> type.name
         }
+        return if (array) "$s>" else s
     }
 
     override fun global(v: JassVar) {
         if (v.constant) builder.append("const ")
-        if (v.array) {
-            builder.append("array<").append(typename(v.type)).append(">")
-        } else {
-            builder.append(typename(v.type))
-        }
+        builder.append(typename(v.type, v.array))
 
         builder
             .append(" ")
@@ -93,7 +90,7 @@ class JassAs(
 
             builder
                 .append("\t")
-                .append(typename(it.type))
+                .append(typename(it.type, it.array))
                 .append(" ")
                 .append(varname(it))
 
@@ -110,38 +107,33 @@ class JassAs(
         builder.append("}\n")
     }
 
-    fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
-        val s = when (op) {
-            JassExprOp.Mul -> "*"
-            JassExprOp.Div -> "/"
-            JassExprOp.Add -> "+"
-            JassExprOp.Sub -> "-"
+    override fun opname(op: JassExprOp, a: IJassNode, b: IJassNode): String = when (op) {
+        JassExprOp.And -> "&&"
+        JassExprOp.Or -> "||"
 
-            JassExprOp.Lt -> "<"
-            JassExprOp.LtEq -> "<="
-            JassExprOp.Gt -> ">"
-            JassExprOp.GtEq -> ">="
-
-            JassExprOp.Eq -> "=="
-            JassExprOp.Neq -> "!="
-
-            JassExprOp.And -> "&&"
-            JassExprOp.Or -> "||"
-
-            else -> {
-                println("⚠️As: Missing $op")
-                "$op"
-            }
-        }
-        expr(a)
-        builder.append(" $s ")
-        expr(b)
+        else -> super.opname(op, a, b)
     }
 
-    fun expr(e: IJassNode?) {
+    override fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
+        var aa: IJassNode = a
+        var bb: IJassNode = b
+        when (op) {
+            JassExprOp.Eq,
+            JassExprOp.Neq,
+                -> {
+                if (aa.type is JassStrType && bb.type is JassNullType) bb = JassStr("\"\"")
+                if (bb.type is JassStrType && aa.type is JassNullType) aa = JassStr("\"\"")
+            }
+
+            else -> null
+        }
+        super.expr(op, aa, bb)
+    }
+
+    override fun expr(e: IJassNode?) {
         if (e == null) return
         when (e) {
-            is JassNull -> builder.append("nil")
+            is JassNull -> builder.append("null")
             is JassBool -> builder.append(e.raw)
             is JassInt -> builder.append(e.raw)
 
@@ -159,7 +151,7 @@ class JassAs(
             is JassExpr -> when (e.op) {
                 JassExprOp.Get -> expr(e.a)
                 JassExprOp.Set -> {
-                    println("🍒Lua: expr Set!!!")
+                    println("🍒AS: expr Set!!!")
                 }
 
                 JassExprOp.Add, JassExprOp.Sub,

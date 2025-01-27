@@ -44,7 +44,7 @@ class Main(val args: Array<String>) {
             when (action) {
                 JASS2JASS -> println("Using $ITALIC${CYAN}JASS to JASS converter$RESET")
                 JASS2LUA -> println("Using $ITALIC${CYAN}JASS to Lua converter$RESET")
-                JASS2AS -> println("Using $ITALIC${CYAN}JASS to Lua converter$RESET")
+                JASS2AS -> println("Using $ITALIC${CYAN}JASS to AngelScript converter$RESET")
             }
         }
 
@@ -130,11 +130,12 @@ class Main(val args: Array<String>) {
         private const val JASS2LUA = "jass2lua"
         private const val JASS2AS = "jass2as"
 
-        private const val RESET = "\u001B[0m"
+        const val RESET = "\u001B[0m"
 
         private const val RED = "\u001b[31m"
         private const val GREEN = "\u001b[32m"
         private const val YELLOW = "\u001b[33m"
+        const val BLUE = "\u001b[34m"
         private const val PURPLE = "\u001b[35m"
         private const val CYAN = "\u001b[36m"
 

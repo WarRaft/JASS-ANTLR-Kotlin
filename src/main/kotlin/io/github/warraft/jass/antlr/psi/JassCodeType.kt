@@ -1,6 +1,6 @@
 package io.github.warraft.jass.antlr.psi
 
-class JassCodeType() : IJassType {
+class JassCodeType() : IJassType() {
     override val name: String = "code"
     override fun op(op: JassExprOp, b: IJassType): IJassType {
         return when (op) {
@@ -15,6 +15,4 @@ class JassCodeType() : IJassType {
             else -> JassUndefinedType()
         }
     }
-
-    override fun toString(): String = "<primitive>$name"
 }

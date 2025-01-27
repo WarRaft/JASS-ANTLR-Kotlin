@@ -1,6 +1,6 @@
 package io.github.warraft.jass.antlr.psi
 
-class JassIntType() : IJassType {
+class JassIntType() : IJassType() {
     override val name: String = "integer"
     override fun op(op: JassExprOp, b: IJassType): IJassType {
         return when (op) {
@@ -22,9 +22,14 @@ class JassIntType() : IJassType {
                 else -> JassUndefinedType()
             }
 
+            JassExprOp.Eq,
+            JassExprOp.Neq,
+                -> when (b) {
+                is JassIntType, is JassNullType -> JassBoolType()
+                else -> JassUndefinedType()
+            }
+
             else -> JassUndefinedType()
         }
     }
-
-    override fun toString(): String = "<primitive>$name"
 }

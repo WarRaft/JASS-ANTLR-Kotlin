@@ -25,11 +25,13 @@ class JassJass(
         builder.append("\n")
     }
 
+    override fun typename(type: IJassType, array: Boolean): String = type.name
+
     override fun global(v: JassVar) {
         builder.append("\t")
         if (v.constant) builder.append("constant ")
         if (v.local) builder.append("local ")
-        builder.append(v.type.name)
+        builder.append(typename(v.type))
         if (v.array) builder.append(" array")
         builder.append(" ").append(varname(v))
 
@@ -59,7 +61,7 @@ class JassJass(
         val list: MutableList<String> = mutableListOf()
         for (it in f.param) {
             if (!it.param) break
-            list.add("${it.type.name} ${varname(it)}")
+            list.add("${typename(it.type)} ${varname(it)}")
         }
 
         if (list.isEmpty()) {
@@ -72,7 +74,7 @@ class JassJass(
         if (f.type is JassUndefinedType) {
             builder.append("nothing")
         } else {
-            builder.append(f.type.name)
+            builder.append(typename(f.type))
         }
         builder.append("\n")
 
@@ -81,7 +83,7 @@ class JassJass(
         for (it in f.param) {
             if (it.param) continue
 
-            builder.append("\tlocal ${it.type.name} ${varname(it)}")
+            builder.append("\tlocal ${typename(it.type)} ${varname(it)}")
 
             if (it.expr != null) {
                 builder.append(" = ")
@@ -96,35 +98,7 @@ class JassJass(
         builder.append("endfunction\n")
     }
 
-    fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
-        val s = when (op) {
-            JassExprOp.Mul -> "*"
-            JassExprOp.Div -> "/"
-            JassExprOp.Add -> "+"
-            JassExprOp.Sub -> "-"
-
-            JassExprOp.Lt -> "<"
-            JassExprOp.LtEq -> "<="
-            JassExprOp.Gt -> ">"
-            JassExprOp.GtEq -> ">="
-
-            JassExprOp.Eq -> "=="
-            JassExprOp.Neq -> "!="
-
-            JassExprOp.And -> "and"
-            JassExprOp.Or -> "or"
-
-            else -> {
-                println("⚠️Lua: Missing $op")
-                "$op"
-            }
-        }
-        expr(a)
-        builder.append(" $s ")
-        expr(b)
-    }
-
-    fun expr(e: IJassNode?) {
+    override fun expr(e: IJassNode?) {
         if (e == null) return
         when (e) {
             is JassNull -> builder.append("null")

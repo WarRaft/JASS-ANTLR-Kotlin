@@ -28,6 +28,17 @@ class JassLua(
         builder.append("\n")
     }
 
+    override fun typename(type: IJassType, array: Boolean): String {
+        val a = if (array) "[]" else ""
+        return when (type) {
+            is JassBoolType -> "boolean$a"
+            is JassIntType -> "number$a integer"
+            is JassRealType -> "number$a real"
+            is JassCodeType -> "function"
+            else -> type.name
+        }
+    }
+
     override fun global(v: JassVar) {
         if (v.local) builder.append("local ")
         builder.append(varname(v)).append(" = ")
@@ -36,46 +47,75 @@ class JassLua(
 
         builder
             .append(" ---@type ")
-            .append(typeName(v.type, v.array))
+            .append(typename(v.type, v.array))
 
         if (v.constant) builder.append(" constant")
 
         builder.append("\n")
     }
 
-    fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
-        val s = when (op) {
-            JassExprOp.Mul -> "*"
-            JassExprOp.Div -> "/"
-            JassExprOp.Add -> {
-                if (a.type is JassStrType || b.type is JassStrType) ".."
-                else "+"
-            }
-
-            JassExprOp.Sub -> "-"
-            JassExprOp.Lt -> "<"
-            JassExprOp.LtEq -> "<="
-            JassExprOp.Gt -> ">"
-            JassExprOp.GtEq -> ">="
-
-            JassExprOp.Eq -> "=="
-            JassExprOp.Neq -> "~="
-
-            JassExprOp.And -> "and"
-            JassExprOp.Or -> "or"
-
-            else -> {
-                println("⚠️Lua: Missing $op")
-                "$op"
+    override fun function(f: JassFun) {
+        builder.append("\n")
+        if (f.native) builder.append("--- native\n")
+        f.param.forEach {
+            if (it.param) {
+                builder.append("---@param ")
+                    .append(varname(it))
+                    .append(" ")
+                    .append(typename(it.type))
+                    .append("\n")
             }
         }
-        expr(a)
-        builder.append(" $s ")
-        expr(b)
+
+        if (f.type !is JassUndefinedType) {
+            builder.append("---@return ${typename(f.type)}\n")
+        }
+
+        builder.append("function ")
+            .append(funname(f))
+            .append("(")
+        val list: MutableList<String> = mutableListOf()
+        for (it in f.param) {
+            if (!it.param) break
+            list.add(varname(it))
+        }
+
+        builder.append(list.joinToString(", "))
+        builder.append(")\n")
+
+        for (it in f.param) {
+            if (it.param) continue
+
+            builder
+                .append("\tlocal ")
+                .append(varname(it))
+
+            if (it.expr != null) {
+                builder.append(" = ")
+                expr(it.expr!!)
+            }
+
+            builder
+                .append(" ---@type ")
+                .append(typename(it.type))
+                .append("\n")
+        }
+
+        stmt(f.stmt, 0)
+
+        builder.append("end\n")
     }
 
-    @Suppress("DuplicatedCode")
-    fun expr(e: IJassNode?) {
+    override fun opname(op: JassExprOp, a: IJassNode, b: IJassNode): String = when (op) {
+        JassExprOp.Add -> {
+            if (a.type is JassStrType || b.type is JassStrType) ".."
+            else "+"
+        }
+
+        else -> super.opname(op, a, b)
+    }
+
+    override fun expr(e: IJassNode?) {
         if (e == null) return
         when (e) {
             is JassNull -> builder.append("nil")
@@ -89,7 +129,6 @@ class JassLua(
                 } else {
                     builder.append(e.raw)
                 }
-
             }
 
             is JassReal -> builder.append(e.raw)
@@ -148,17 +187,6 @@ class JassLua(
             }
 
             else -> null
-        }
-    }
-
-    fun typeName(type: IJassType, array: Boolean = false): String {
-        val a = if (array) "[]" else ""
-        return when (type) {
-            is JassBoolType -> "boolean$a"
-            is JassIntType -> "number$a integer"
-            is JassRealType -> "number$a real"
-            is JassCodeType -> "function"
-            else -> type.name
         }
     }
 
@@ -243,57 +271,5 @@ class JassLua(
 
             builder.append("\n")
         }
-    }
-
-    override fun function(f: JassFun) {
-        builder.append("\n")
-        if (f.native) builder.append("--- native\n")
-        f.param.forEach {
-            if (it.param) {
-                builder.append("---@param ")
-                    .append(varname(it))
-                    .append(" ")
-                    .append(typeName(it.type))
-                    .append("\n")
-            }
-        }
-
-        if (f.type !is JassUndefinedType) {
-            builder.append("---@return ${typeName(f.type)}\n")
-        }
-
-        builder.append("function ")
-            .append(funname(f))
-            .append("(")
-        val list: MutableList<String> = mutableListOf()
-        for (it in f.param) {
-            if (!it.param) break
-            list.add(varname(it))
-        }
-
-        builder.append(list.joinToString(", "))
-        builder.append(")\n")
-
-        for (it in f.param) {
-            if (it.param) continue
-
-            builder
-                .append("\tlocal ")
-                .append(varname(it))
-
-            if (it.expr != null) {
-                builder.append(" = ")
-                expr(it.expr!!)
-            }
-
-            builder
-                .append(" ---@type ")
-                .append(typeName(it.type))
-                .append("\n")
-        }
-
-        stmt(f.stmt, 0)
-
-        builder.append("end\n")
     }
 }
