@@ -2,6 +2,5 @@
 /build/
 /.kotlin/
 /gradlew.bat
-/gradle/
 /.gradle/
 /target/
