@@ -59,17 +59,6 @@ kotlin {
     jvmToolchain(21)
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = "io.github.warraft"
-            artifactId = "jass-antlr"
-            version = version
-            from(components["java"])
-        }
-    }
-}
-
 tasks.generateGrammarSource {
     maxHeapSize = "64m"
 
@@ -100,10 +89,8 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.publishToMavenLocal {
-
-}
-
 // https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-java-packages-with-gradle
 
 // https://developerlife.com/2021/02/06/publish-kotlin-library-as-gradle-dep/
+
+// https://medium.com/@cristurean.marius.ovidiu/how-to-publish-your-own-kotlin-multiplatform-library-to-mavencentral-4bc02c8e109d

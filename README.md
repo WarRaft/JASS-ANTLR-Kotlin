@@ -1,6 +1,3 @@
-[![Release](https://jitpack.io/v/User/Repo.svg)]
-(https://jitpack.io/WarRaft/JASS-ANTLR-Kotlin)
-
 # JASS-ANTLR-Kotlin
 
 Средства для работы с JASS написанные с помощью ANTLR + Kotlin.
