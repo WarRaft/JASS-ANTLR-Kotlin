@@ -3,4 +3,6 @@
 /.kotlin/
 /gradlew.bat
 /.gradle/
+/gradle/
+gradlew
 /target/
