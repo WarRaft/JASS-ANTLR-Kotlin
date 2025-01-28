@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.warraft"
-version = "0.0.0"
+version = "0.0.61"
 
 repositories {
     mavenCentral()
@@ -98,6 +98,10 @@ tasks.jar {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.publishToMavenLocal {
+
 }
 
 // https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-java-packages-with-gradle
