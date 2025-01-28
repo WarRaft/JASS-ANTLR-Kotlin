@@ -1,5 +1,7 @@
 package io.github.warraft.jass.antlr.psi
 
+import io.github.warraft.jass.antlr.JassParser.FunctionContext
+
 class JassFun(
     val name: String,
     val native: Boolean = false,
@@ -7,6 +9,7 @@ class JassFun(
     val ref: Boolean = false,
     var base: JassFun? = null,
     override var type: IJassType = JassUndefinedType(),
+    val ctx: FunctionContext? = null,
 ) : IJassNode {
 
     var fakename: String = ""

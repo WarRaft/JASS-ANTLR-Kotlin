@@ -499,6 +499,7 @@ class JassState {
     fun function(ctx: FunctionContext) {
         val f = JassFun(
             name = ctx.ID().text,
+            ctx = ctx,
         )
 
         if (getNode(f.name, f) != null) {
