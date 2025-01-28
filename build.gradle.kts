@@ -80,7 +80,7 @@ mavenPublishing {
     coordinates(
         groupId = "io.github.warraft",
         artifactId = "jass-antlr",
-        version = "0.0.20"
+        version = "0.0.21"
     )
 
     pom {
