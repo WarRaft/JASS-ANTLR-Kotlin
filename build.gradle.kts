@@ -10,7 +10,6 @@ plugins {
 }
 
 group = "io.github.warraft"
-version = "0.0.62"
 
 repositories {
     mavenCentral()
@@ -95,7 +94,7 @@ mavenPublishing {
     coordinates(
         groupId = "io.github.warraft",
         artifactId = "jass-antlr",
-        version = "1.0.0"
+        version = "0.0.20"
     )
 
     pom {
