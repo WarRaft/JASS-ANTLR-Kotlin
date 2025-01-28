@@ -3,7 +3,7 @@
 Средства для работы с JASS написанные с помощью ANTLR + Kotlin.
 
 ```
-java -jar <path to .jar>
+java -jar <path to .jar> 1
 ```
 
 ```
