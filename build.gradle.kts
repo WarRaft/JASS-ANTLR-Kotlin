@@ -1,10 +1,12 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     java
-    `maven-publish`
-
     antlr
     // https://kotlinlang.org/docs/gradle-configure-project.html
     kotlin("jvm") version "2.1.0"
+    // https://mvnrepository.com/artifact/com.vanniktech/gradle-maven-publish-plugin
+    id("com.vanniktech.maven.publish") version "0.30.0"
 }
 
 group = "io.github.warraft"
@@ -89,8 +91,42 @@ tasks.test {
     useJUnitPlatform()
 }
 
-// https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-java-packages-with-gradle
+mavenPublishing {
+    coordinates(
+        groupId = "io.github.warraft",
+        artifactId = "jass-antlr",
+        version = "1.0.0"
+    )
 
-// https://developerlife.com/2021/02/06/publish-kotlin-library-as-gradle-dep/
+    pom {
+        name.set("JASS ANTLR tools")
+        description.set("You can use this tools")
+        inceptionYear.set("2025")
+        url.set("https://github.com/WarRaft/JASS-ANTLR-Kotlin")
+
+        licenses {
+            license {
+                name.set("MIT")
+                url.set("https://opensource.org/licenses/MIT")
+            }
+        }
+
+        developers {
+            developer {
+                id.set("nazarpunk")
+                name.set("nazarpunk")
+                email.set("nazarpunk@gmail.com")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/WarRaft/JASS-ANTLR-Kotlin")
+        }
+    }
+
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    signAllPublications()
+}
 
 // https://medium.com/@cristurean.marius.ovidiu/how-to-publish-your-own-kotlin-multiplatform-library-to-mavencentral-4bc02c8e109d
