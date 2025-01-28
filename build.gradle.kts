@@ -8,11 +8,25 @@ plugins {
 }
 
 group = "io.github.warraft"
-version = "0.0.51"
+version = "0.0.0"
 
 repositories {
     mavenCentral()
 }
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // https://mvnrepository.com/artifact/com.android.tools.build/gradle
+        classpath("com.android.tools.build:gradle:8.8.0")
+        // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
+    }
+}
+
 
 dependencies {
     // https://docs.gradle.org/current/userguide/antlr_plugin.html#sec:antlr_dependency_management
@@ -84,11 +98,6 @@ tasks.jar {
 
 tasks.test {
     useJUnitPlatform()
-}
-
-tasks.javadoc {
-    source = sourceSets["main"].allJava
-    classpath = configurations["compileClasspath"]
 }
 
 // https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-java-packages-with-gradle
