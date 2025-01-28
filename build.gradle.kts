@@ -15,20 +15,6 @@ repositories {
     mavenCentral()
 }
 
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        // https://mvnrepository.com/artifact/com.android.tools.build/gradle
-        classpath("com.android.tools.build:gradle:8.8.0")
-        // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
-    }
-}
-
-
 dependencies {
     // https://docs.gradle.org/current/userguide/antlr_plugin.html#sec:antlr_dependency_management
     // https://mvnrepository.com/artifact/org.antlr/antlr4-maven-plugin
