@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.warraft"
-version = "0.0.30"
+version = "0.0.51"
 
 repositories {
     mavenCentral()
@@ -24,8 +24,6 @@ dependencies {
 }
 
 java {
-    withJavadocJar()
-    withSourcesJar()
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
@@ -48,18 +46,11 @@ kotlin {
 }
 
 publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/WarRaft/JASS-ANTLR-Kotlin")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
     publications {
-        create<MavenPublication>("gpr") {
+        create<MavenPublication>("maven") {
+            groupId = "io.github.warraft"
+            artifactId = "jass-antlr"
+            version = version
             from(components["java"])
         }
     }
@@ -101,3 +92,5 @@ tasks.javadoc {
 }
 
 // https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-java-packages-with-gradle
+
+// https://developerlife.com/2021/02/06/publish-kotlin-library-as-gradle-dep/
