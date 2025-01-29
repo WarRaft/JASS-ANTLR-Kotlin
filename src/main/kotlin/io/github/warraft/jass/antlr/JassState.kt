@@ -71,11 +71,17 @@ class JassState {
 
     var states: List<JassState> = listOf()
 
+    val typeMap: MutableMap<String, JassHandleType> = mutableMapOf()
+    val types: MutableList<JassHandleType> = mutableListOf()
+
     val natives: MutableList<JassFun> = mutableListOf()
     val globals: MutableList<JassVar> = mutableListOf()
     val functions: MutableList<JassFun> = mutableListOf()
 
-    val mapNode: MutableMap<String, IJassNode> = mutableMapOf()
+    val nodeMap: MutableMap<String, IJassNode> = mutableMapOf()
+
+    val errors = mutableListOf<JassError>()
+
     fun getNode(key: String, f: JassFun?): IJassNode? {
         if (f != null) {
             for (p in f.param.asReversed()) {
@@ -83,28 +89,25 @@ class JassState {
             }
         }
         states.forEach {
-            if (it.mapNode.containsKey(key)) {
-                return it.mapNode[key]
+            if (it.nodeMap.containsKey(key)) {
+                return it.nodeMap[key]
             }
         }
-        if (mapNode.containsKey(key)) {
-            return mapNode[key]
+        if (nodeMap.containsKey(key)) {
+            return nodeMap[key]
         }
         return null
     }
 
-    val mapType: MutableMap<String, JassHandleType> = mutableMapOf()
-    val types: MutableList<JassHandleType> = mutableListOf()
-
     fun getType(key: String): IJassType? {
         var type: IJassType? = null
         states.forEach {
-            if (it.mapType.containsKey(key)) {
-                type = it.mapType[key]
+            if (it.typeMap.containsKey(key)) {
+                type = it.typeMap[key]
             }
         }
-        if (mapType.containsKey(key)) {
-            type = mapType[key]
+        if (typeMap.containsKey(key)) {
+            type = typeMap[key]
         }
         return type
 
@@ -125,10 +128,10 @@ class JassState {
 
         val type = JassHandleType(ctx.typename().text)
 
-        var p = mapType[parent]
+        var p = typeMap[parent]
         if (parent == "handle" && p == null) {
             p = JassHandleType("handle")
-            mapType[parent] = p
+            typeMap[parent] = p
             types.add(p)
         }
 
@@ -138,7 +141,7 @@ class JassState {
         }
 
         type.parent = p
-        mapType[type.name] = type
+        typeMap[type.name] = type
         types.add(type)
     }
 
@@ -170,7 +173,7 @@ class JassState {
             return
         }
 
-        mapNode[v.name] = v
+        nodeMap[v.name] = v
         globals.add(v)
     }
 
@@ -215,7 +218,7 @@ class JassState {
 
         returns(f, ctx.returnsRule())
 
-        mapNode[f.name] = f
+        nodeMap[f.name] = f
         natives.add(f)
     }
 
@@ -266,7 +269,6 @@ class JassState {
                     return JassExpr(op = JassExprOp.Get, a = node.clone())
                 }
                 errors.add(JassError(JassErrorId.ERROR, ctx.start.line, 0, "$name is not declared"))
-                //println("🍒 ${ctx.start.line} $name | ${f?.param}")
                 return null
             }
 
@@ -359,8 +361,7 @@ class JassState {
                 b = expr(ctx.expr(1), f)
             )
         }
-
-        println("🔥Expr: ${ctx.javaClass.name} | ${ctx.text}")
+        errors.add(JassError(JassErrorId.ERROR, ctx.start.line, 0, "Undeclared expression"))
         return null
     }
 
@@ -436,10 +437,10 @@ class JassState {
                 }
 
                 is StmtExitWhenContext -> {
-                    val exitWhen = item.exitwhen()
-                    val exp = expr(exitWhen.expr(), f)
+                    val ewhenCtx = item.exitwhen()
+                    val exp = expr(ewhenCtx.expr(), f)
                     if (exp == null) {
-                        println("🔥exitwhen no expr")
+                        errors.add(JassError(JassErrorId.ERROR, ewhenCtx.start.line, 0, "exitwhen without expression"))
                     } else {
                         list.add(JassExitWhen(expr = exp))
                     }
@@ -491,7 +492,9 @@ class JassState {
                     }
                 }
 
-                else -> println("🔥JASS: Missing stmt: ${item.javaClass.name}")
+                else -> {
+                    errors.add(JassError(JassErrorId.REDECLARED, item.start.line, 0, "Udeclared statement"))
+                }
             }
         }
     }
@@ -507,7 +510,7 @@ class JassState {
             return
         }
 
-        mapNode[f.name] = f
+        nodeMap[f.name] = f
         functions.add(f)
 
         val takes: TakesContext = ctx.takes()
@@ -519,6 +522,7 @@ class JassState {
                         type = typeFromString(vctx.typename().text),
                         local = true,
                         param = true,
+                        ctx = vctx,
                     )
                 )
             }
@@ -531,7 +535,8 @@ class JassState {
                 name = name,
                 array = vctx.ARRAY() != null,
                 type = typeFromString(vctx.typename().text),
-                local = true
+                local = true,
+                ctx = vctx,
             )
 
             if (vctx.EQ() != null) {
@@ -571,10 +576,16 @@ class JassState {
         return null
     }
 
-    val errors = mutableListOf<JassError>()
-
     fun parse(stream: CharStream, states: List<JassState> = listOf()) {
         this.states = states
+
+        types.clear()
+        typeMap.clear()
+        natives.clear()
+        globals.clear()
+        functions.clear()
+        nodeMap.clear()
+        errors.clear()
 
         val errorJassErrorListener = JassErrorListener()
 
@@ -625,7 +636,6 @@ class JassState {
                 ambigAlts: BitSet?,
                 configs: ATNConfigSet?,
             ) {
-                if (false) println("[$startIndex, $stopIndex] reportAmbiguity")
             }
 
             override fun reportAttemptingFullContext(
@@ -636,7 +646,6 @@ class JassState {
                 conflictingAlts: BitSet?,
                 configs: ATNConfigSet?,
             ) {
-                if (false) println("[$startIndex, $stopIndex] reportAttemptingFullContext")
             }
 
             override fun reportContextSensitivity(
@@ -647,7 +656,6 @@ class JassState {
                 prediction: Int,
                 configs: ATNConfigSet?,
             ) {
-                if (false) println("[$startIndex, $stopIndex] reportContextSensitivity")
             }
         }
 

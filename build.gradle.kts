@@ -29,6 +29,11 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
+kotlin {
+    jvmToolchain(21)
+}
+
+
 sourceSets {
     main {
         java {
@@ -42,9 +47,6 @@ sourceSets {
     }
 }
 
-kotlin {
-    jvmToolchain(21)
-}
 
 tasks.generateGrammarSource {
     maxHeapSize = "64m"
@@ -68,8 +70,8 @@ tasks.jar {
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
-    archiveBaseName.set("JASS")
-    archiveVersion.set("ANTLR")
+    archiveBaseName.set("jass")
+    archiveVersion.set("antlr")
 }
 
 tasks.test {

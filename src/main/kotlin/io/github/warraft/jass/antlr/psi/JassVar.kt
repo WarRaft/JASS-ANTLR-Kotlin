@@ -1,5 +1,7 @@
 package io.github.warraft.jass.antlr.psi
 
+import org.antlr.v4.runtime.ParserRuleContext
+
 class JassVar(
     var name: String,
     val constant: Boolean = false,
@@ -11,6 +13,7 @@ class JassVar(
     var index: JassExpr? = null,
     var expr: JassExpr? = null,
     override val type: IJassType,
+    val ctx: ParserRuleContext? = null,
 ) : IJassNode {
 
     var fakename: String = ""
