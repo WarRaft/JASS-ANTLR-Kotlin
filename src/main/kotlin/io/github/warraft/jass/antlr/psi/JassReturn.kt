@@ -1,5 +1,10 @@
 package io.github.warraft.jass.antlr.psi
 
-class JassReturn(val expr: JassExpr?) : IJassNode {
+import io.github.warraft.jass.antlr.JassParser.ReturnRuleContext
+
+class JassReturn(
+    val expr: JassExpr?,
+    val ctx: ReturnRuleContext? = null,
+) : IJassNode {
     override var type: IJassType = JassUndefinedType()
 }

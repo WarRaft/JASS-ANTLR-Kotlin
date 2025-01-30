@@ -1,5 +1,9 @@
 package io.github.warraft.jass.antlr
 
+import io.github.warraft.jass.antlr.JassParser.CallContext
+import io.github.warraft.jass.antlr.JassParser.ElseRuleContext
+import io.github.warraft.jass.antlr.JassParser.ElseifContext
+import io.github.warraft.jass.antlr.JassParser.ExitwhenContext
 import io.github.warraft.jass.antlr.JassParser.ExprAddContext
 import io.github.warraft.jass.antlr.JassParser.ExprAndContext
 import io.github.warraft.jass.antlr.JassParser.ExprArrContext
@@ -19,9 +23,13 @@ import io.github.warraft.jass.antlr.JassParser.ExprUnContext
 import io.github.warraft.jass.antlr.JassParser.ExprVarContext
 import io.github.warraft.jass.antlr.JassParser.FunctionContext
 import io.github.warraft.jass.antlr.JassParser.GlobalsContext
+import io.github.warraft.jass.antlr.JassParser.IfRuleContext
+import io.github.warraft.jass.antlr.JassParser.LoopContext
 import io.github.warraft.jass.antlr.JassParser.NativeRuleContext
+import io.github.warraft.jass.antlr.JassParser.ReturnRuleContext
 import io.github.warraft.jass.antlr.JassParser.ReturnsRuleContext
 import io.github.warraft.jass.antlr.JassParser.RootContext
+import io.github.warraft.jass.antlr.JassParser.SetContext
 import io.github.warraft.jass.antlr.JassParser.StmtCallContext
 import io.github.warraft.jass.antlr.JassParser.StmtContext
 import io.github.warraft.jass.antlr.JassParser.StmtExitWhenContext
@@ -76,6 +84,8 @@ class JassState {
 
     val natives: MutableList<JassFun> = mutableListOf()
     val globals: MutableList<JassVar> = mutableListOf()
+    val globalsCtx: MutableList<GlobalsContext> = mutableListOf()
+
     val functions: MutableList<JassFun> = mutableListOf()
 
     val nodeMap: MutableMap<String, IJassNode> = mutableMapOf()
@@ -152,6 +162,7 @@ class JassState {
             array = ctx.ARRAY() != null,
             global = true,
             type = typeFromString(ctx.typename().text),
+            ctx = ctx,
         )
 
         if (ctx.EQ() != null) {
@@ -371,21 +382,21 @@ class JassState {
         for (item in ctxs) {
             when (item) {
                 is StmtSetContext -> {
-                    val set = item.set()
-                    val name = set.ID().text
+                    val setctx: SetContext = item.set()
+                    val name = setctx.ID().text
                     var node = getNode(name, f)
 
                     if (node !is JassVar) {
-                        errors.add(JassError(JassErrorId.ERROR, set.start.line, 0, "[set] $name not exists"))
+                        errors.add(JassError(JassErrorId.ERROR, setctx.start.line, 0, "[set] $name not exists"))
                         continue
                     }
 
-                    val e = expr(set.expr(), f)
+                    val e = expr(setctx.expr(), f)
                     if (e == null) {
                         errors.add(
                             JassError(
                                 JassErrorId.ERROR,
-                                set.start.line,
+                                setctx.start.line,
                                 0,
                                 "[set] $name no have expression"
                             )
@@ -396,29 +407,29 @@ class JassState {
                     list.add(
                         node.clone(
                             expr = e,
-                            index = expr(set.setBrack()?.expr(), f),
+                            index = expr(setctx.setBrack()?.expr(), f),
+                            ctx = item,
                         )
                     )
                     continue
                 }
 
                 is StmtCallContext -> {
-                    val call = item.call()
-                    val name = call.ID().text
+                    val callctx: CallContext = item.call()
+                    val name = callctx.ID().text
                     var node = getNode(name, f)
 
                     if (node !is JassFun) {
-                        errors.add(JassError(JassErrorId.ERROR, call.start.line, 0, "[call] $name not exists"))
+                        errors.add(JassError(JassErrorId.ERROR, callctx.start.line, 0, "[call] $name not exists"))
                         continue
                     }
 
-                    val cf = JassFun(
-                        base = node,
+                    val cf = node.clone(
                         call = true,
-                        name = name,
+                        ctx = callctx,
                     )
 
-                    call.expr().forEach {
+                    callctx.expr().forEach {
                         val e = expr(it, f)
                         if (e != null) {
                             cf.arg.add(e)
@@ -429,25 +440,31 @@ class JassState {
                 }
 
                 is StmtLoopContext -> {
-                    val l = JassLoop()
+                    val loopctx: LoopContext = item.loop()
+                    val l = JassLoop(ctx = loopctx)
                     list.add(l)
                     val ss = scopes.toMutableList()
                     ss.add(l)
-                    stmt(item.loop().stmt(), l.stmt, ss)
+                    stmt(loopctx.stmt(), l.stmt, ss)
                 }
 
                 is StmtExitWhenContext -> {
-                    val ewhenCtx = item.exitwhen()
-                    val exp = expr(ewhenCtx.expr(), f)
+                    val ewhenctx: ExitwhenContext = item.exitwhen()
+                    val exp = expr(ewhenctx.expr(), f)
                     if (exp == null) {
-                        errors.add(JassError(JassErrorId.ERROR, ewhenCtx.start.line, 0, "exitwhen without expression"))
+                        errors.add(JassError(JassErrorId.ERROR, ewhenctx.start.line, 0, "exitwhen without expression"))
                     } else {
-                        list.add(JassExitWhen(expr = exp))
+                        list.add(
+                            JassExitWhen(
+                                expr = exp,
+                                ctx = ewhenctx,
+                            )
+                        )
                     }
                 }
 
                 is StmtReturnContext -> {
-                    val rctx = item.returnRule()
+                    val rctx: ReturnRuleContext = item.returnRule()
                     val e = expr(rctx.expr(), f)
                     if (e != null) {
                         val v = e.a
@@ -457,38 +474,43 @@ class JassState {
                             }
                         }
                     }
-                    list.add(JassReturn(expr = e))
+                    list.add(
+                        JassReturn(
+                            expr = e,
+                            ctx = rctx,
+                        )
+                    )
                 }
 
                 is StmtIfContext -> {
-                    val ctxIf = item.ifRule()
-                    val e = expr(ctxIf.expr(), f)
+                    val ifcxt: IfRuleContext = item.ifRule()
+                    val e = expr(ifcxt.expr(), f)
                     if (e == null) {
-                        errors.add(JassError(JassErrorId.ERROR, ctxIf.start.line, 0, "[if] not have expr"))
+                        errors.add(JassError(JassErrorId.ERROR, ifcxt.start.line, 0, "[if] not have expr"))
                         continue
                     }
-                    val nodeIf = JassIf(expr = e)
+                    val nodeIf = JassIf(expr = e, ctx = ifcxt)
                     list.add(nodeIf)
                     val ss = scopes.toMutableList()
                     ss.add(nodeIf)
-                    stmt(ctxIf.stmt(), nodeIf.stmt, ss)
+                    stmt(ifcxt.stmt(), nodeIf.stmt, ss)
 
-                    for (ctxElseif in ctxIf.elseif()) {
-                        val e = expr(ctxIf.expr(), f)
+                    for (elseifctx: ElseifContext in ifcxt.elseif()) {
+                        val e = expr(ifcxt.expr(), f)
                         if (e == null) {
-                            errors.add(JassError(JassErrorId.ERROR, ctxIf.start.line, 0, "[elseif] not have expr"))
+                            errors.add(JassError(JassErrorId.ERROR, ifcxt.start.line, 0, "[elseif] not have expr"))
                             continue
                         }
-                        val nodeElseif = JassIf(expr = e)
+                        val nodeElseif = JassIf(expr = e, ctx = elseifctx)
                         nodeIf.elseifs.add(nodeElseif)
-                        stmt(ctxElseif.stmt(), nodeElseif.stmt, ss)
+                        stmt(elseifctx.stmt(), nodeElseif.stmt, ss)
                     }
 
-                    val ctxElse = ctxIf.elseRule()
-                    if (ctxElse != null) {
-                        val elser = JassIf()
+                    val elsectx: ElseRuleContext? = ifcxt.elseRule()
+                    if (elsectx != null) {
+                        val elser = JassIf(ctx = elsectx)
                         nodeIf.elser = elser
-                        stmt(ctxElse.stmt(), elser.stmt, ss)
+                        stmt(elsectx.stmt(), elser.stmt, ss)
                     }
                 }
 
@@ -567,7 +589,11 @@ class JassState {
     fun root(ctx: RootContext): IJassNode? {
         ctx.children.forEach {
             when (it) {
-                is GlobalsContext -> it.variable().forEach(::global)
+                is GlobalsContext -> {
+                    globalsCtx.add(it)
+                    it.variable().forEach(::global)
+                }
+
                 is NativeRuleContext -> native(it)
                 is TypeContext -> typedef(it)
                 is FunctionContext -> function(it)
@@ -583,6 +609,7 @@ class JassState {
         typeMap.clear()
         natives.clear()
         globals.clear()
+        globalsCtx.clear()
         functions.clear()
         nodeMap.clear()
         errors.clear()

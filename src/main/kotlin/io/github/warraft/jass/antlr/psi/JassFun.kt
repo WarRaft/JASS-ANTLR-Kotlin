@@ -1,6 +1,6 @@
 package io.github.warraft.jass.antlr.psi
 
-import io.github.warraft.jass.antlr.JassParser.FunctionContext
+import org.antlr.v4.runtime.ParserRuleContext
 
 class JassFun(
     val name: String,
@@ -9,7 +9,7 @@ class JassFun(
     val ref: Boolean = false,
     var base: JassFun? = null,
     override var type: IJassType = JassUndefinedType(),
-    val ctx: FunctionContext? = null,
+    val ctx: ParserRuleContext? = null,
 ) : IJassNode {
 
     var fakename: String = ""
@@ -22,13 +22,17 @@ class JassFun(
 
     val stmt: MutableList<IJassNode> = mutableListOf()
 
-    fun clone(): JassFun = JassFun(
+    fun clone(
+        call: Boolean? = null,
+        ctx: ParserRuleContext? = null,
+    ): JassFun = JassFun(
         name = name,
         native = native,
-        call = call,
+        call = call ?: this.call,
         ref = ref,
         base = this,
         type = type,
+        ctx = ctx,
     )
 
     override fun toString(): String = "JassFun(name='$name'):$type"

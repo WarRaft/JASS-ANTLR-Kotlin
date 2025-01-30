@@ -1,7 +1,10 @@
 package io.github.warraft.jass.antlr.psi
 
+import org.antlr.v4.runtime.ParserRuleContext
+
 class JassIf(
     val expr: JassExpr? = null,
+    val ctx: ParserRuleContext? = null,
 ) : IJassNode {
     override var type: IJassType = JassUndefinedType()
 

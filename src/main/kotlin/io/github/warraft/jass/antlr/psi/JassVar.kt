@@ -24,6 +24,7 @@ class JassVar(
     fun clone(
         index: JassExpr? = null,
         expr: JassExpr? = null,
+        ctx: ParserRuleContext? = null,
     ): JassVar = JassVar(
         name = name,
         constant = constant,
@@ -34,7 +35,8 @@ class JassVar(
         type = type,
         base = this,
         expr = expr ?: this.expr,
-        index = index ?: this.index
+        index = index ?: this.index,
+        ctx = ctx
     )
 
     override fun toString(): String {

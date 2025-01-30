@@ -1,6 +1,8 @@
 package io.github.warraft.jass.antlr.psi
 
-class JassLoop : IJassNode {
+import io.github.warraft.jass.antlr.JassParser.LoopContext
+
+class JassLoop(val ctx: LoopContext? = null) : IJassNode {
     override var type: IJassType = JassUndefinedType()
 
     val stmt: MutableList<IJassNode> = mutableListOf()
