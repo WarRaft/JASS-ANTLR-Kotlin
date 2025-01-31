@@ -13,6 +13,7 @@ class JassStateTest {
         state.parse(
             CharStreams.fromString(
                 """
+                // CORRR!!!!
                 globals
                     integer array l__Array
                 endglobals

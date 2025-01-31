@@ -1,79 +1,15 @@
 package io.github.warraft.jass.antlr
 
-import io.github.warraft.jass.antlr.JassParser.CallContext
-import io.github.warraft.jass.antlr.JassParser.ElseRuleContext
-import io.github.warraft.jass.antlr.JassParser.ElseifContext
-import io.github.warraft.jass.antlr.JassParser.ExitwhenContext
-import io.github.warraft.jass.antlr.JassParser.ExprAddContext
-import io.github.warraft.jass.antlr.JassParser.ExprAndContext
-import io.github.warraft.jass.antlr.JassParser.ExprArrContext
-import io.github.warraft.jass.antlr.JassParser.ExprBoolContext
-import io.github.warraft.jass.antlr.JassParser.ExprCallContext
-import io.github.warraft.jass.antlr.JassParser.ExprContext
-import io.github.warraft.jass.antlr.JassParser.ExprEqContext
-import io.github.warraft.jass.antlr.JassParser.ExprFunContext
-import io.github.warraft.jass.antlr.JassParser.ExprIntContext
-import io.github.warraft.jass.antlr.JassParser.ExprLtContext
-import io.github.warraft.jass.antlr.JassParser.ExprMulContext
-import io.github.warraft.jass.antlr.JassParser.ExprNullContext
-import io.github.warraft.jass.antlr.JassParser.ExprParenContext
-import io.github.warraft.jass.antlr.JassParser.ExprRealContext
-import io.github.warraft.jass.antlr.JassParser.ExprStrContext
-import io.github.warraft.jass.antlr.JassParser.ExprUnContext
-import io.github.warraft.jass.antlr.JassParser.ExprVarContext
-import io.github.warraft.jass.antlr.JassParser.FunctionContext
-import io.github.warraft.jass.antlr.JassParser.GlobalsContext
-import io.github.warraft.jass.antlr.JassParser.IfRuleContext
-import io.github.warraft.jass.antlr.JassParser.LoopContext
-import io.github.warraft.jass.antlr.JassParser.NativeRuleContext
-import io.github.warraft.jass.antlr.JassParser.ReturnRuleContext
-import io.github.warraft.jass.antlr.JassParser.ReturnsRuleContext
-import io.github.warraft.jass.antlr.JassParser.RootContext
-import io.github.warraft.jass.antlr.JassParser.SetContext
-import io.github.warraft.jass.antlr.JassParser.StmtCallContext
-import io.github.warraft.jass.antlr.JassParser.StmtContext
-import io.github.warraft.jass.antlr.JassParser.StmtExitWhenContext
-import io.github.warraft.jass.antlr.JassParser.StmtIfContext
-import io.github.warraft.jass.antlr.JassParser.StmtLoopContext
-import io.github.warraft.jass.antlr.JassParser.StmtReturnContext
-import io.github.warraft.jass.antlr.JassParser.StmtSetContext
-import io.github.warraft.jass.antlr.JassParser.TakesContext
-import io.github.warraft.jass.antlr.JassParser.TypeContext
-import io.github.warraft.jass.antlr.JassParser.VariableContext
+import io.github.warraft.jass.antlr.JassParser.*
 import io.github.warraft.jass.antlr.error.JassError
 import io.github.warraft.jass.antlr.error.JassErrorId
-import io.github.warraft.jass.antlr.psi.IJassNode
-import io.github.warraft.jass.antlr.psi.IJassType
-import io.github.warraft.jass.antlr.psi.JassBool
-import io.github.warraft.jass.antlr.psi.JassBoolType
-import io.github.warraft.jass.antlr.psi.JassCodeType
-import io.github.warraft.jass.antlr.psi.JassExitWhen
-import io.github.warraft.jass.antlr.psi.JassExpr
-import io.github.warraft.jass.antlr.psi.JassExprOp
-import io.github.warraft.jass.antlr.psi.JassFun
-import io.github.warraft.jass.antlr.psi.JassHandleType
-import io.github.warraft.jass.antlr.psi.JassIf
-import io.github.warraft.jass.antlr.psi.JassInt
-import io.github.warraft.jass.antlr.psi.JassIntType
-import io.github.warraft.jass.antlr.psi.JassLoop
-import io.github.warraft.jass.antlr.psi.JassNull
-import io.github.warraft.jass.antlr.psi.JassReal
-import io.github.warraft.jass.antlr.psi.JassRealType
-import io.github.warraft.jass.antlr.psi.JassReturn
-import io.github.warraft.jass.antlr.psi.JassStr
-import io.github.warraft.jass.antlr.psi.JassStrType
-import io.github.warraft.jass.antlr.psi.JassUndefinedType
-import io.github.warraft.jass.antlr.psi.JassVar
-import org.antlr.v4.runtime.BaseErrorListener
-import org.antlr.v4.runtime.CharStream
-import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.Parser
-import org.antlr.v4.runtime.RecognitionException
-import org.antlr.v4.runtime.Recognizer
+import io.github.warraft.jass.antlr.psi.*
+import org.antlr.v4.runtime.*
 import org.antlr.v4.runtime.atn.ATNConfigSet
 import org.antlr.v4.runtime.dfa.DFA
-
-import java.util.BitSet
+import org.antlr.v4.runtime.misc.Pair
+import java.util.*
+import kotlin.collections.mutableListOf
 
 class JassState {
 
@@ -89,6 +25,8 @@ class JassState {
     val functions: MutableList<JassFun> = mutableListOf()
 
     val nodeMap: MutableMap<String, IJassNode> = mutableMapOf()
+
+    var comments = mutableListOf<CommonToken>()
 
     val errors = mutableListOf<JassError>()
 
@@ -136,7 +74,10 @@ class JassState {
     private fun typedef(ctx: TypeContext) {
         val parent = ctx.extendsRule().typename().text
 
-        val type = JassHandleType(ctx.typename().text)
+        val type = JassHandleType(
+            ctx.typename().text,
+            ctx = ctx
+        )
 
         var p = typeMap[parent]
         if (parent == "handle" && p == null) {
@@ -205,7 +146,8 @@ class JassState {
     fun native(ctx: NativeRuleContext) {
         val f = JassFun(
             name = ctx.ID().text,
-            native = true
+            native = true,
+            ctx = ctx
         )
 
         if (getNode(f.name, null) != null) {
@@ -613,12 +555,15 @@ class JassState {
         functions.clear()
         nodeMap.clear()
         errors.clear()
+        comments.clear()
 
         val errorJassErrorListener = JassErrorListener()
 
         val lexer = JassLexer(stream)
         lexer.removeErrorListeners()
         lexer.addErrorListener(errorJassErrorListener)
+        val f = JassTokenFactory()
+        lexer.tokenFactory = f
 
         val tokens = CommonTokenStream(lexer)
 
@@ -627,12 +572,35 @@ class JassState {
         parser.addErrorListener(errorJassErrorListener)
         root(parser.root())
 
+        comments = f.comments
+
         if (errorJassErrorListener.jassErrors.isNotEmpty()) {
             errors.addAll(errorJassErrorListener.jassErrors)
         }
     }
 
     companion object {
+        private class JassTokenFactory : CommonTokenFactory() {
+            val comments = mutableListOf<CommonToken>()
+
+            override fun create(
+                source: Pair<TokenSource?, CharStream?>?,
+                type: Int,
+                text: String?,
+                channel: Int,
+                start: Int,
+                stop: Int,
+                line: Int,
+                charPositionInLine: Int,
+            ): CommonToken? {
+                var t = super.create(source, type, text, channel, start, stop, line, charPositionInLine)
+                if (t.channel == 2) {
+                    comments.add(t)
+                }
+                return t
+            }
+        }
+
         private class JassErrorListener : BaseErrorListener() {
             val jassErrors = mutableListOf<JassError>()
 

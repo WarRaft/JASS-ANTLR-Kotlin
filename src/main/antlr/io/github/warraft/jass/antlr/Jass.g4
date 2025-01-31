@@ -139,7 +139,7 @@ HEXVAL: (('0' [xX])| '$' )  HexDigit+;
 
 REALVAL : (('0' .. '9')* '.' ('0' .. '9')+)|(('0' .. '9')+ '.' ('0' .. '9')*);
 
-WS: [ \t]+ -> channel(HIDDEN);
-NL: [\r\n] -> channel(2);
+WS: [ \t]+ -> skip;
+NL: [\r\n] -> skip;
 
-LINE_COMMENT: '//' ~[\r\n]* -> channel(HIDDEN);
+LINE_COMMENT: '//' ~[\r\n]* -> channel(2);

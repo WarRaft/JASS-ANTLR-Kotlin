@@ -1,6 +1,11 @@
 package io.github.warraft.jass.antlr.psi
 
-class JassHandleType(override val name: String) : IJassType() {
+import io.github.warraft.jass.antlr.JassParser.TypeContext
+
+class JassHandleType(
+    override val name: String,
+    val ctx: TypeContext? = null,
+) : IJassType() {
     var parent: JassHandleType? = null
 
     override fun op(
