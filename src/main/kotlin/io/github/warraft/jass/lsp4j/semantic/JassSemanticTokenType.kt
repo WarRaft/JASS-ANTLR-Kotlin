@@ -8,4 +8,6 @@ enum class JassSemanticTokenType {
     PARAMETER,
     KEYWORD,
     TYPE,
+    NUMBER,
+    STRING
 }
