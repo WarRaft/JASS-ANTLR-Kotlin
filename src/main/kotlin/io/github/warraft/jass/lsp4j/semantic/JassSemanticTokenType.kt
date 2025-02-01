@@ -9,5 +9,6 @@ enum class JassSemanticTokenType {
     KEYWORD,
     TYPE,
     NUMBER,
-    STRING
+    STRING,
+    OPERATOR,
 }

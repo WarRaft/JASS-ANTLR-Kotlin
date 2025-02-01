@@ -7,7 +7,6 @@ class JassIntType() : IJassType() {
             JassExprOp.Add -> when (b) {
                 is JassIntType -> JassIntType()
                 is JassRealType -> JassRealType()
-                is JassStrType -> JassStrType()
                 else -> JassUndefinedType()
             }
 

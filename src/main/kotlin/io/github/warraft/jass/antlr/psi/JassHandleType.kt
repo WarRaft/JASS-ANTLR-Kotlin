@@ -1,10 +1,7 @@
 package io.github.warraft.jass.antlr.psi
 
-import io.github.warraft.jass.antlr.JassParser.TypeContext
-
 class JassHandleType(
-    override val name: String,
-    val ctx: TypeContext? = null,
+    override val name: String
 ) : IJassType() {
     var parent: JassHandleType? = null
 

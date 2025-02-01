@@ -70,13 +70,13 @@ class Main(val args: Array<String>) {
             s.parse(stream, states)
             states.add(s)
 
-            if (s.errors.isEmpty()) {
+            if (s.diagnosticHub.diagnostics.isEmpty()) {
                 println("Checking: ${GREEN}No errors$RESET")
             } else {
-                println("Checking: $RED${s.errors.count()} error$RESET")
+                println("Checking: $RED${s.diagnosticHub.diagnostics.count()} error$RESET")
             }
 
-            for (e in s.errors) {
+            for (e in s.diagnosticHub.diagnostics) {
                 println("⚠️$e")
             }
         }

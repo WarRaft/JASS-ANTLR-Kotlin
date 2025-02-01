@@ -2,31 +2,9 @@ package io.github.warraft.jass.lsp4j.service
 
 import io.github.warraft.jass.antlr.JassState
 import io.github.warraft.jass.lsp4j.JassLanguageServer
-import io.github.warraft.jass.lsp4j.service.document.provider.JassFoldingRangeProvider
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CharStreams
-import org.eclipse.lsp4j.CompletionItem
-import org.eclipse.lsp4j.CompletionList
-import org.eclipse.lsp4j.CompletionParams
-import org.eclipse.lsp4j.Diagnostic
-import org.eclipse.lsp4j.DidChangeTextDocumentParams
-import org.eclipse.lsp4j.DidCloseTextDocumentParams
-import org.eclipse.lsp4j.DidOpenTextDocumentParams
-import org.eclipse.lsp4j.DidSaveTextDocumentParams
-import org.eclipse.lsp4j.DocumentDiagnosticParams
-import org.eclipse.lsp4j.DocumentDiagnosticReport
-import org.eclipse.lsp4j.DocumentHighlight
-import org.eclipse.lsp4j.DocumentHighlightKind
-import org.eclipse.lsp4j.DocumentHighlightParams
-import org.eclipse.lsp4j.FoldingRange
-import org.eclipse.lsp4j.FoldingRangeRequestParams
-import org.eclipse.lsp4j.Hover
-import org.eclipse.lsp4j.HoverParams
-import org.eclipse.lsp4j.Position
-import org.eclipse.lsp4j.Range
-import org.eclipse.lsp4j.RelatedFullDocumentDiagnosticReport
-import org.eclipse.lsp4j.SemanticTokens
-import org.eclipse.lsp4j.SemanticTokensParams
+import org.eclipse.lsp4j.*
 import org.eclipse.lsp4j.jsonrpc.messages.Either
 import org.eclipse.lsp4j.services.TextDocumentService
 import java.net.URI
@@ -42,9 +20,12 @@ class JassTextDocumentService(val server: JassLanguageServer) : TextDocumentServ
     override fun semanticTokensFull(params: SemanticTokensParams?): CompletableFuture<SemanticTokens> =
         CompletableFuture.completedFuture(SemanticTokens(getState(params?.textDocument?.uri)?.semanticHub?.data()))
 
-    val foldingRangeProvider = JassFoldingRangeProvider()
     override fun foldingRange(params: FoldingRangeRequestParams?): CompletableFuture<List<FoldingRange>> =
-        CompletableFuture.completedFuture(foldingRangeProvider.ranges(getState(params?.textDocument?.uri)))
+        CompletableFuture.completedFuture(getState(params?.textDocument?.uri)?.foldingHub?.ranges)
+
+    override fun diagnostic(params: DocumentDiagnosticParams?): CompletableFuture<DocumentDiagnosticReport?> =
+        CompletableFuture.completedFuture(DocumentDiagnosticReport(RelatedFullDocumentDiagnosticReport(getState(params?.textDocument?.uri)?.diagnosticHub?.diagnostics)))
+
 
     override fun documentHighlight(params: DocumentHighlightParams?): CompletableFuture<List<DocumentHighlight>> {
         val highlights = mutableListOf<DocumentHighlight>()
@@ -145,33 +126,5 @@ class JassTextDocumentService(val server: JassLanguageServer) : TextDocumentServ
 
     override fun resolveCompletionItem(unresolved: CompletionItem?): CompletableFuture<CompletionItem?>? {
         return CompletableFuture.completedFuture(unresolved)
-    }
-
-    override fun diagnostic(params: DocumentDiagnosticParams?): CompletableFuture<DocumentDiagnosticReport?> {
-        val diagnostics = mutableListOf<Diagnostic>()
-
-        val state = getState(params?.textDocument?.uri)
-        if (state == null) {
-            val report = RelatedFullDocumentDiagnosticReport(diagnostics)
-            return CompletableFuture.completedFuture(DocumentDiagnosticReport(report))
-        }
-
-        /*
-                for (e in state.errors) {
-                    val t = e.token
-                    if (t == null) continue
-                    diagnostics.add(
-                        Diagnostic(
-                            Range(Position(t.line - 1, t.pos), Position(t.line - 1, t.pos + t.len)),
-                            e.message,
-                            DiagnosticSeverity.Error,
-                            "${e.id}"
-                        )
-                    )
-                }
-
-                 */
-        val report = RelatedFullDocumentDiagnosticReport(diagnostics)
-        return CompletableFuture.completedFuture(DocumentDiagnosticReport(report))
     }
 }
