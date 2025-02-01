@@ -1,13 +1,9 @@
 package io.github.warraft.jass.antlr.psi
 
-import io.github.warraft.jass.antlr.token.JassToken
-
 class JassExpr(
     val op: JassExprOp,
     val a: IJassNode?,
     val b: IJassNode? = null,
-    val tOp: JassToken? = null,
-    val tVal: JassToken? = null,
     ) : IJassNode() {
     override var type: IJassType
 

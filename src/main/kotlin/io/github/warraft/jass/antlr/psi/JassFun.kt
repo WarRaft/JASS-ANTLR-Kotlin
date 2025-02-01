@@ -1,7 +1,5 @@
 package io.github.warraft.jass.antlr.psi
 
-import io.github.warraft.jass.antlr.token.JassTokenHolder
-
 class JassFun(
     var name: String? = null,
     var native: Boolean = false,

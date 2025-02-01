@@ -1,4 +1,4 @@
-package io.github.warraft.jass.antlr.converter
+package io.github.warraft.jass.converter
 
 import io.github.warraft.jass.antlr.JassState
 import io.github.warraft.jass.antlr.error.JassErrorId

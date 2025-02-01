@@ -1,12 +1,13 @@
 @file:Suppress("DuplicatedCode")
 
-package io.github.warraft.jass.antlr.converter
+package io.github.warraft.jass.converter
 
+import io.github.warraft.jass.antlr.JassFakeName.Companion.AsKeywords
 import io.github.warraft.jass.antlr.JassState
 import io.github.warraft.jass.antlr.psi.*
 import java.nio.file.Path
 
-class JassJass(
+class JassAs(
     state: JassState,
     output: Path,
     fakename: Boolean = false,
@@ -16,8 +17,10 @@ class JassJass(
     fakename = fakename,
 ) {
 
+    override fun isKeyword(name: String): Boolean = AsKeywords.contains(name)
+
     override fun type(t: JassHandleType) {
-        builder.append("type ${t.name}")
+        builder.append("// type ${t.name}")
 
         if (t.parent != null) builder
             .append(" extends ")
@@ -25,38 +28,46 @@ class JassJass(
         builder.append("\n")
     }
 
-    override fun typename(type: IJassType, array: Boolean): String = type.name
+    override fun typename(type: IJassType, array: Boolean): String {
+        var s = if (array) "array<" else ""
+        s += when (type) {
+            is JassBoolType -> "bool"
+            is JassIntType -> "int"
+            is JassRealType -> "float"
+            is JassCodeType -> "CallbackFunc"
+            else -> type.name
+        }
+        return if (array) "$s>" else s
+    }
 
     override fun global(v: JassVar) {
-        builder.append("\t")
-        if (v.constant) builder.append("constant ")
-        if (v.local) builder.append("local ")
-        builder.append(typename(v.type))
-        if (v.array) builder.append(" array")
-        builder.append(" ").append(varname(v))
+        if (v.constant) builder.append("const ")
+        builder.append(typename(v.type, v.array))
+
+        builder
+            .append(" ")
+            .append(varname(v))
 
         if (v.expr != null) {
             builder.append(" = ")
-            expr(v.expr)
+            expr(v.expr!!)
         }
 
-        builder.append("\n")
-    }
-
-    override fun globals() {
-        if (state.globals.isEmpty()) return
-        builder.append("globals\n")
-        state.globals.forEach(::global)
-        builder.append("endglobals\n")
+        builder.append(";\n")
     }
 
     override fun function(f: JassFun) {
-        builder.append("\n")
+        if (f.native) builder.append("funcdef ")
 
-        if (f.native) builder.append("native")
-        else builder.append("function")
-
-        builder.append(" ").append(funname(f)).append(" takes ")
+        if (f.type is JassUndefinedType) {
+            builder.append("void")
+        } else {
+            builder.append(typename(f.type))
+        }
+        builder
+            .append(" ")
+            .append(funname(f))
+            .append("(")
 
         val list: MutableList<String> = mutableListOf()
         for (it in f.param) {
@@ -64,38 +75,59 @@ class JassJass(
             list.add("${typename(it.type)} ${varname(it)}")
         }
 
-        if (list.isEmpty()) {
-            builder.append("nothing")
-        } else {
-            builder.append(list.joinToString(", "))
+        builder.append(list.joinToString(", "))
+        builder.append(")")
+
+        if (f.native) {
+            builder.append(";\n")
+            return
         }
 
-        builder.append(" returns ")
-        if (f.type is JassUndefinedType) {
-            builder.append("nothing")
-        } else {
-            builder.append(typename(f.type))
-        }
-        builder.append("\n")
-
-        if (f.native) return
+        builder.append(" {\n")
 
         for (it in f.param) {
             if (it.param) continue
 
-            builder.append("\tlocal ${typename(it.type)} ${varname(it)}")
+            builder
+                .append("\t")
+                .append(typename(it.type, it.array))
+                .append(" ")
+                .append(varname(it))
 
             if (it.expr != null) {
                 builder.append(" = ")
                 expr(it.expr!!)
             }
 
-            builder.append("\n")
+            builder.append(";\n")
         }
 
         stmt(f.stmt, 0)
 
-        builder.append("endfunction\n")
+        builder.append("}\n")
+    }
+
+    override fun opname(op: JassExprOp, a: IJassNode, b: IJassNode): String = when (op) {
+        JassExprOp.And -> "&&"
+        JassExprOp.Or -> "||"
+
+        else -> super.opname(op, a, b)
+    }
+
+    override fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
+        var aa: IJassNode = a
+        var bb: IJassNode = b
+        when (op) {
+            JassExprOp.Eq,
+            JassExprOp.Neq,
+                -> {
+                if (aa.type is JassStrType && bb.type is JassNullType) bb = JassStr("\"\"")
+                if (bb.type is JassStrType && aa.type is JassNullType) aa = JassStr("\"\"")
+            }
+
+            else -> null
+        }
+        super.expr(op, aa, bb)
     }
 
     override fun expr(e: IJassNode?) {
@@ -104,6 +136,7 @@ class JassJass(
             is JassNull -> builder.append("null")
             is JassBool -> builder.append(e.raw)
             is JassInt -> builder.append(e.raw)
+
             is JassReal -> builder.append(e.raw)
             is JassStr -> builder.append(e.raw)
             is JassVar -> {
@@ -118,7 +151,7 @@ class JassJass(
             is JassExpr -> when (e.op) {
                 JassExprOp.Get -> expr(e.a)
                 JassExprOp.Set -> {
-                    println("⚠️JassExprOp.Set")
+                    println("🍒AS: expr Set!!!")
                 }
 
                 JassExprOp.Add, JassExprOp.Sub,
@@ -141,16 +174,13 @@ class JassJass(
                 }
 
                 JassExprOp.UnNot -> {
-                    builder.append("not ")
+                    builder.append("!")
                     expr(e.a)
                 }
 
             }
 
             is JassFun -> {
-                if (e.ref) {
-                    builder.append("function ")
-                }
                 builder.append(funname(e))
                 if (!e.ref) {
                     builder.append("(")
@@ -166,14 +196,14 @@ class JassJass(
         }
     }
 
+    @Suppress("DuplicatedCode")
     fun stmt(nodes: List<IJassNode>, level: Int) {
         for (node in nodes) {
-
             when (node) {
                 is JassIf -> {
-                    tab(level).append("if ")
+                    tab(level).append("if (")
                     expr(node.expr)
-                    builder.append(" then\n")
+                    builder.append(") {\n")
 
                     stmt(node.stmt, level + 1)
 
@@ -190,11 +220,13 @@ class JassJass(
                         stmt(elser.stmt, level + 1)
                     }
 
-                    tab(level).append("endif")
+                    tab(level).append("}")
                 }
 
                 is JassVar -> {
-                    tab(level).append("set ").append(varname(node))
+                    tab(level)
+                    builder.append(varname(node))
+
                     if (node.index != null) {
                         builder.append("[")
                         expr(node.index)
@@ -202,31 +234,33 @@ class JassJass(
                     }
                     builder.append(" = ")
                     expr(node.expr)
+                    builder.append(";")
                 }
 
                 is JassFun -> {
                     if (!node.call) continue
-                    tab(level).append("call ").append(funname(node))
-
+                    tab(level)
+                    builder.append(funname(node))
                     builder.append("(")
                     node.arg.forEachIndexed { index, arg ->
                         if (index > 0) builder.append(", ")
                         expr(arg)
                     }
-                    builder.append(")")
+                    builder.append(");")
                 }
 
                 is JassLoop -> {
-                    tab(level).append("loop\n")
+                    tab(level).append("while (true) {\n")
 
                     stmt(node.stmt, level + 1)
 
-                    tab(level).append("endloop")
+                    tab(level).append("}")
                 }
 
                 is JassExitWhen -> {
-                    tab(level).append("exitwhen ")
+                    tab(level).append("if (")
                     expr(node.expr)
+                    builder.append(") break;")
                 }
 
                 is JassReturn -> {
@@ -234,14 +268,15 @@ class JassJass(
                     if (node.expr != null) {
                         builder.append(" ")
                         expr(node.expr)
+                        builder.append(";")
                     }
                 }
 
                 else -> println("🔥 Lua missing node: ${node.javaClass.simpleName}")
             }
 
+
             builder.append("\n")
         }
     }
-
 }

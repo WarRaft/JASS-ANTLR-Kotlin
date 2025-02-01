@@ -1,6 +1,6 @@
 @file:Suppress("DuplicatedCode")
 
-package io.github.warraft.jass.antlr.converter
+package io.github.warraft.jass.converter
 
 import io.github.warraft.jass.antlr.JassFakeName.Companion.LuaKeywords
 import io.github.warraft.jass.antlr.JassState

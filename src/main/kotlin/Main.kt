@@ -1,8 +1,10 @@
 import io.github.warraft.jass.antlr.JassState
-import io.github.warraft.jass.antlr.converter.JassAs
-import io.github.warraft.jass.antlr.converter.JassJass
-import io.github.warraft.jass.antlr.converter.JassLua
+import io.github.warraft.jass.converter.JassAs
+import io.github.warraft.jass.converter.JassJass
+import io.github.warraft.jass.converter.JassLua
+import io.github.warraft.jass.lsp4j.JassLanguageServer
 import org.antlr.v4.runtime.CharStreams
+import org.eclipse.lsp4j.launch.LSPLauncher.createServerLauncher
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.isReadable
@@ -157,5 +159,12 @@ class Main(val args: Array<String>) {
 }
 
 fun main(args: Array<String>) {
-    Main(args)
+    if (args.firstOrNull() == "-lsp4j") {
+        val server = JassLanguageServer(args)
+        val launcher = createServerLauncher(server, System.`in`, System.out)
+        server.connect(launcher.remoteProxy)
+        launcher.startListening().get()
+    } else {
+        Main(args)
+    }
 }

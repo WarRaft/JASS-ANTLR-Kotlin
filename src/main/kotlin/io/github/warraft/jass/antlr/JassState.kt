@@ -4,14 +4,14 @@ import io.github.warraft.jass.antlr.JassParser.*
 import io.github.warraft.jass.antlr.error.JassError
 import io.github.warraft.jass.antlr.error.JassErrorId
 import io.github.warraft.jass.antlr.psi.*
-import io.github.warraft.jass.antlr.token.JassToken
+import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenHub
+import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
 import org.antlr.v4.runtime.*
 import org.antlr.v4.runtime.atn.ATNConfigSet
 import org.antlr.v4.runtime.dfa.DFA
 import org.antlr.v4.runtime.misc.Pair
 import org.antlr.v4.runtime.tree.TerminalNode
 import java.util.*
-import kotlin.collections.mutableListOf
 
 class JassState {
 
@@ -32,22 +32,55 @@ class JassState {
 
     val errors = mutableListOf<JassError>()
 
+    val semanticHub = JassSemanticTokenHub()
+
+    fun parse(stream: CharStream, states: List<JassState> = listOf()) {
+        this.states = states
+
+        types.clear()
+        typeMap.clear()
+        natives.clear()
+        globals.clear()
+        globalsCtx.clear()
+        functions.clear()
+        nodeMap.clear()
+        errors.clear()
+        comments.clear()
+        semanticHub.clear()
+
+        val errorJassErrorListener = JassErrorListener()
+
+        val lexer = JassLexer(stream)
+        lexer.removeErrorListeners()
+        lexer.addErrorListener(errorJassErrorListener)
+        val f = JassTokenFactory()
+        lexer.tokenFactory = f
+
+        val tokens = CommonTokenStream(lexer)
+
+        val parser = JassParser(tokens)
+        parser.removeErrorListeners()
+        parser.addErrorListener(errorJassErrorListener)
+        root(parser.root())
+
+        comments = f.comments
+
+        if (errorJassErrorListener.jassErrors.isNotEmpty()) {
+            errors.addAll(errorJassErrorListener.jassErrors)
+        }
+    }
+
     fun err(
         id: JassErrorId,
-        token: JassToken?,
         message: String,
     ) {
         errors.add(
             JassError(
                 id = id,
-                token = token,
                 message = message
             )
         )
     }
-
-    fun token(ctx: ParserRuleContext?): JassToken? = if (ctx == null) null else JassToken(ctx)
-    fun token(ctx: TerminalNode?): JassToken? = if (ctx == null) null else JassToken(ctx)
 
     fun getNode(key: String, f: JassFun?): IJassNode? {
         if (f != null) {
@@ -160,8 +193,8 @@ class JassState {
                     type = JassCodeType(),
                     ref = true,
                 )
-                cf.token.name = token(idctx)
-                cf.token.keyword(ctx.FUNCTION())
+                //cf.token.name = token(idctx)
+                //cf.token.keyword(ctx.FUNCTION())
 
                 return JassExpr(
                     op = JassExprOp.Get,
@@ -337,7 +370,7 @@ class JassState {
                     val idctx: TerminalNode? = callctx.ID()
 
                     if (idctx == null) {
-                        err(JassErrorId.ERROR, JassToken(ctx), "Function name is missing")
+                        //err(JassErrorId.ERROR, JassToken(ctx), "Function name is missing")
                         continue
                     }
 
@@ -351,13 +384,16 @@ class JassState {
 
                     when (node) {
                         is JassFun -> cf = node.clone(call = true)
-                        null -> err(JassErrorId.ERROR_CALL_NOT_EXISTS, JassToken(idctx), "Function not exists")
-                        else -> err(JassErrorId.ERROR_CALL_NOT_FUNC, JassToken(idctx), "Target is not a function")
+                        //null -> err(JassErrorId.ERROR_CALL_NOT_EXISTS, JassToken(idctx), "Function not exists")
+                        //else -> err(JassErrorId.ERROR_CALL_NOT_FUNC, JassToken(idctx), "Target is not a function")
                     }
+                    /*
                     cf.token.name = token(idctx)
                     cf.token
                         .keyword(callctx.DEBUG())
                         .keyword(callctx.CALL())
+
+                     */
 
 
                     callctx.expr().forEach {
@@ -467,9 +503,12 @@ class JassState {
                 tctx = fctx.takes()
                 rctx = fctx.returnsRule()
 
+                /*
                 f.token
                     .keyword(fctx.CONSTANT())
                     .keyword(fctx.NATIVE())
+
+                 */
             }
 
             is FunctionContext -> {
@@ -477,21 +516,24 @@ class JassState {
                 tctx = fctx.takes()
                 rctx = fctx.returnsRule()
 
+                /*
                 f.token
                     .keyword(fctx.CONSTANT())
                     .keyword(fctx.FUNCTION())
                     .keyword(fctx.ENDFUNCTION())
+
+                 */
             }
         }
 
         if (idctx == null) {
-            err(JassErrorId.ERROR, f.token.sort().keywords.firstOrNull(), "Function name is missing")
+            //err(JassErrorId.ERROR, f.token.sort().keywords.firstOrNull(), "Function name is missing")
         } else {
             val name = idctx.text
-            f.token.name = token(idctx)
+            //f.token.name = token(idctx)
             f.name = name
             if (getNode(name, f) != null) {
-                err(JassErrorId.ERROR_FUN_REDECLARED, f.token.name, "Function name redeclared: ${f.name}")
+                //err(JassErrorId.ERROR_FUN_REDECLARED, f.token.name, "Function name redeclared: ${f.name}")
             }
             nodeMap[name] = f
         }
@@ -501,9 +543,12 @@ class JassState {
 
         if (tctx != null) {
             val nctx = tctx.NOTHING()
+            /*
             f.token
                 .keyword(nctx)
                 .keyword(tctx.TAKES())
+
+             */
 
             if (nctx == null) {
                 for (vctx in tctx.params().param()) {
@@ -522,17 +567,17 @@ class JassState {
 
         if (rctx != null) {
             val nctx = rctx.NOTHING()
-            f.token
-                .keyword(nctx)
-                .keyword(rctx.RETURNS())
+            semanticHub
+                .add(nctx, JassSemanticTokenType.TYPE)
+                .add(rctx.RETURNS(), JassSemanticTokenType.KEYWORD)
+
             if (nctx == null) {
                 val idctx: TerminalNode? = rctx.ID()
                 if (idctx != null) {
-                    f.token.type = token(idctx)
                     f.type = typeFromString(idctx.text)
+
                     if (f.type is JassUndefinedType) err(
                         JassErrorId.ERROR_TYPE_UNKNOWN,
-                        f.token.type,
                         "Unknown type: ${idctx.text}"
                     )
                 }
@@ -584,8 +629,6 @@ class JassState {
             }
         }
 
-        f.token.sort()
-
         if (fctx is FunctionContext) {
             stmt(fctx.stmt(), f.stmt, mutableListOf(f))
         }
@@ -605,41 +648,6 @@ class JassState {
             }
         }
         return null
-    }
-
-    fun parse(stream: CharStream, states: List<JassState> = listOf()) {
-        this.states = states
-
-        types.clear()
-        typeMap.clear()
-        natives.clear()
-        globals.clear()
-        globalsCtx.clear()
-        functions.clear()
-        nodeMap.clear()
-        errors.clear()
-        comments.clear()
-
-        val errorJassErrorListener = JassErrorListener()
-
-        val lexer = JassLexer(stream)
-        lexer.removeErrorListeners()
-        lexer.addErrorListener(errorJassErrorListener)
-        val f = JassTokenFactory()
-        lexer.tokenFactory = f
-
-        val tokens = CommonTokenStream(lexer)
-
-        val parser = JassParser(tokens)
-        parser.removeErrorListeners()
-        parser.addErrorListener(errorJassErrorListener)
-        root(parser.root())
-
-        comments = f.comments
-
-        if (errorJassErrorListener.jassErrors.isNotEmpty()) {
-            errors.addAll(errorJassErrorListener.jassErrors)
-        }
     }
 
     companion object {
@@ -678,11 +686,6 @@ class JassState {
                 jassErrors.add(
                     JassError(
                         id = JassErrorId.ERROR_SYNTAX,
-                        token = JassToken(
-                            line = line,
-                            pos = charPositionInLine,
-                            len = 0
-                        ),
                         message = msg ?: "Syntax error",
                     )
                 )

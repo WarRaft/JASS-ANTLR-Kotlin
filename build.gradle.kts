@@ -20,6 +20,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.antlr/antlr4-maven-plugin
     antlr("org.antlr:antlr4:4.13.2")
 
+    implementation("org.eclipse.lsp4j:org.eclipse.lsp4j:0.23.1")
+    implementation("org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.23.1")
+
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
@@ -69,10 +72,30 @@ tasks.jar {
         attributes["Main-Class"] = "MainKt"
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(sourceSets.main.get().output)
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
     archiveBaseName.set("jass")
     archiveVersion.set("antlr")
 }
+
+tasks.register<Jar>("jarAntlrLsp") {
+    manifest {
+        attributes["Main-Class"] = "MainKt"
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(sourceSets.main.get().output)
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+    exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
+    archiveBaseName.set("jass")
+    archiveVersion.set("antlr-lsp")
+    doLast {
+        copy {
+            from(archiveFile.get().asFile)
+            into("/Users/nazarpunk/IdeaProjects/JASS-ANTLR-Kotlin-VSCode/extension")
+        }
+    }
+}
+
 
 tasks.test {
     useJUnitPlatform()
