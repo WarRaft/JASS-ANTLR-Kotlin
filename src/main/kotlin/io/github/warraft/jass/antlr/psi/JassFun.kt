@@ -1,8 +1,6 @@
 package io.github.warraft.jass.antlr.psi
 
-import io.github.warraft.jass.antlr.token.JassToken
-import org.antlr.v4.runtime.ParserRuleContext
-import org.antlr.v4.runtime.tree.TerminalNode
+import io.github.warraft.jass.antlr.token.JassTokenHolder
 
 class JassFun(
     var name: String? = null,
@@ -11,9 +9,6 @@ class JassFun(
     val ref: Boolean = false,
     var base: JassFun? = null,
     override var type: IJassType = JassUndefinedType(),
-
-    var tname: JassToken? = null,
-    var ttype: JassToken? = null,
 ) : IJassNode() {
 
     var fakename: String = ""

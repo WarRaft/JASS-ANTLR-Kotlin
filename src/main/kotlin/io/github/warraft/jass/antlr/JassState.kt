@@ -41,12 +41,13 @@ class JassState {
             JassError(
                 id = id,
                 token = token,
-                message = message,
-                line = -1,
-                char = -1,
+                message = message
             )
         )
     }
+
+    fun token(ctx: ParserRuleContext?): JassToken? = if (ctx == null) null else JassToken(ctx)
+    fun token(ctx: TerminalNode?): JassToken? = if (ctx == null) null else JassToken(ctx)
 
     fun getNode(key: String, f: JassFun?): IJassNode? {
         if (f != null) {
@@ -152,12 +153,15 @@ class JassState {
 
         when (ctx) {
             is ExprFunContext -> {
-                val name = ctx.ID().text
+                val idctx = ctx.ID()
+                val name = idctx.text
                 val cf = JassFun(
                     name = name,
                     type = JassCodeType(),
                     ref = true,
                 )
+                cf.token.name = token(idctx)
+                cf.token.keyword(ctx.FUNCTION())
 
                 return JassExpr(
                     op = JassExprOp.Get,
@@ -293,10 +297,10 @@ class JassState {
     fun stmt(ctxs: List<StmtContext>, list: MutableList<IJassNode>, scopes: MutableList<IJassNode>) {
         val f = scopes.first() as JassFun
 
-        for (item in ctxs) {
-            when (item) {
+        for (ctx in ctxs) {
+            when (ctx) {
                 is StmtSetContext -> {
-                    val setctx: SetContext = item.set()
+                    val setctx: SetContext = ctx.set()
                     val name = setctx.ID().text
                     var node = getNode(name, f)
 
@@ -322,25 +326,39 @@ class JassState {
                         node.clone(
                             expr = e,
                             index = expr(setctx.setBrack()?.expr(), f),
-                            ctx = item,
+                            ctx = ctx,
                         )
                     )
                     continue
                 }
 
                 is StmtCallContext -> {
-                    val callctx: CallContext = item.call()
-                    val name = callctx.ID().text
-                    var node = getNode(name, f)
+                    val callctx: CallContext = ctx.call()
+                    val idctx: TerminalNode? = callctx.ID()
 
-                    if (node !is JassFun) {
-                        errors.add(JassError(JassErrorId.ERROR, callctx.start.line, 0, "[call] $name not exists"))
+                    if (idctx == null) {
+                        err(JassErrorId.ERROR, JassToken(ctx), "Function name is missing")
                         continue
                     }
 
-                    val cf = node.clone(
-                        call = true
+                    val name = idctx.text
+                    var node = getNode(name, f)
+
+                    var cf = JassFun(
+                        call = true,
+                        name = name
                     )
+
+                    when (node) {
+                        is JassFun -> cf = node.clone(call = true)
+                        null -> err(JassErrorId.ERROR_CALL_NOT_EXISTS, JassToken(idctx), "Function not exists")
+                        else -> err(JassErrorId.ERROR_CALL_NOT_FUNC, JassToken(idctx), "Target is not a function")
+                    }
+                    cf.token.name = token(idctx)
+                    cf.token
+                        .keyword(callctx.DEBUG())
+                        .keyword(callctx.CALL())
+
 
                     callctx.expr().forEach {
                         val e = expr(it, f)
@@ -353,7 +371,7 @@ class JassState {
                 }
 
                 is StmtLoopContext -> {
-                    val loopctx: LoopContext = item.loop()
+                    val loopctx: LoopContext = ctx.loop()
                     val l = JassLoop(ctx = loopctx)
                     list.add(l)
                     val ss = scopes.toMutableList()
@@ -362,7 +380,7 @@ class JassState {
                 }
 
                 is StmtExitWhenContext -> {
-                    val ewhenctx: ExitwhenContext = item.exitwhen()
+                    val ewhenctx: ExitwhenContext = ctx.exitwhen()
                     val exp = expr(ewhenctx.expr(), f)
                     if (exp == null) {
                         errors.add(JassError(JassErrorId.ERROR, ewhenctx.start.line, 0, "exitwhen without expression"))
@@ -377,7 +395,7 @@ class JassState {
                 }
 
                 is StmtReturnContext -> {
-                    val rctx: ReturnRuleContext = item.returnRule()
+                    val rctx: ReturnRuleContext = ctx.returnRule()
                     val e = expr(rctx.expr(), f)
                     if (e != null) {
                         val v = e.a
@@ -396,7 +414,7 @@ class JassState {
                 }
 
                 is StmtIfContext -> {
-                    val ifcxt: IfRuleContext = item.ifRule()
+                    val ifcxt: IfRuleContext = ctx.ifRule()
                     val e = expr(ifcxt.expr(), f)
                     if (e == null) {
                         errors.add(JassError(JassErrorId.ERROR, ifcxt.start.line, 0, "[if] not have expr"))
@@ -428,7 +446,7 @@ class JassState {
                 }
 
                 else -> {
-                    errors.add(JassError(JassErrorId.REDECLARED, item.start.line, 0, "Udeclared statement"))
+                    errors.add(JassError(JassErrorId.REDECLARED, ctx.start.line, 0, "Udeclared statement"))
                 }
             }
         }
@@ -449,10 +467,9 @@ class JassState {
                 tctx = fctx.takes()
                 rctx = fctx.returnsRule()
 
-                f.tkeywordsAdd(
-                    fctx.CONSTANT(),
-                    fctx.NATIVE()
-                )
+                f.token
+                    .keyword(fctx.CONSTANT())
+                    .keyword(fctx.NATIVE())
             }
 
             is FunctionContext -> {
@@ -460,26 +477,21 @@ class JassState {
                 tctx = fctx.takes()
                 rctx = fctx.returnsRule()
 
-                f.tkeywordsAdd(
-                    fctx.CONSTANT(),
-                    fctx.FUNCTION(),
-                    fctx.ENDFUNCTION()
-                )
+                f.token
+                    .keyword(fctx.CONSTANT())
+                    .keyword(fctx.FUNCTION())
+                    .keyword(fctx.ENDFUNCTION())
             }
         }
 
         if (idctx == null) {
-            f.tname = f.tkeywords.firstOrNull()
-
-            errors.add(JassError(JassErrorId.REDECLARED, fctx.start.line, 0, "Name missing"))
-
+            err(JassErrorId.ERROR, f.token.sort().keywords.firstOrNull(), "Function name is missing")
         } else {
             val name = idctx.text
-            f.tname = JassToken(idctx)
-
+            f.token.name = token(idctx)
             f.name = name
             if (getNode(name, f) != null) {
-                errors.add(JassError(JassErrorId.REDECLARED, fctx.start.line, 0, "${f.name} redeclared function"))
+                err(JassErrorId.ERROR_FUN_REDECLARED, f.token.name, "Function name redeclared: ${f.name}")
             }
             nodeMap[name] = f
         }
@@ -489,7 +501,10 @@ class JassState {
 
         if (tctx != null) {
             val nctx = tctx.NOTHING()
-            f.tkeywordsAdd(tctx.TAKES(), nctx)
+            f.token
+                .keyword(nctx)
+                .keyword(tctx.TAKES())
+
             if (nctx == null) {
                 for (vctx in tctx.params().param()) {
                     f.param.add(
@@ -507,15 +522,17 @@ class JassState {
 
         if (rctx != null) {
             val nctx = rctx.NOTHING()
-            f.tkeywordsAdd(rctx.RETURNS(), nctx)
+            f.token
+                .keyword(nctx)
+                .keyword(rctx.RETURNS())
             if (nctx == null) {
                 val idctx: TerminalNode? = rctx.ID()
                 if (idctx != null) {
-                    f.ttype = JassToken(idctx)
+                    f.token.type = token(idctx)
                     f.type = typeFromString(idctx.text)
                     if (f.type is JassUndefinedType) err(
                         JassErrorId.ERROR_TYPE_UNKNOWN,
-                        f.ttype,
+                        f.token.type,
                         "Unknown type: ${idctx.text}"
                     )
                 }
@@ -567,7 +584,7 @@ class JassState {
             }
         }
 
-        f.tkeywords.sortWith(compareBy<JassToken> { it.line }.thenBy { it.pos })
+        f.token.sort()
 
         if (fctx is FunctionContext) {
             stmt(fctx.stmt(), f.stmt, mutableListOf(f))
@@ -661,8 +678,11 @@ class JassState {
                 jassErrors.add(
                     JassError(
                         id = JassErrorId.ERROR_SYNTAX,
-                        line = line,
-                        char = charPositionInLine,
+                        token = JassToken(
+                            line = line,
+                            pos = charPositionInLine,
+                            len = 0
+                        ),
                         message = msg ?: "Syntax error",
                     )
                 )
