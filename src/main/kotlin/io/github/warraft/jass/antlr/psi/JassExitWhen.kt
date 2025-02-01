@@ -5,6 +5,6 @@ import io.github.warraft.jass.antlr.JassParser.ExitwhenContext
 class JassExitWhen(
     val expr: JassExpr,
     var ctx: ExitwhenContext? = null,
-) : IJassNode {
+) : IJassNode() {
     override var type: IJassType = JassUndefinedType()
 }

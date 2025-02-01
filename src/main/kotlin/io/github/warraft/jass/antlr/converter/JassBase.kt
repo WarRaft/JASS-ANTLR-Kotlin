@@ -36,7 +36,7 @@ abstract class JassBase(
 
     fun funname(f: JassFun): String {
         val root = f.root
-        var name = root.name
+        var name = root.name ?: ""
         return if ((fakename || isKeyword(name)) && !f.native) root.fakename else name
     }
 

@@ -4,10 +4,12 @@ import io.github.warraft.jass.antlr.JassParser.*
 import io.github.warraft.jass.antlr.error.JassError
 import io.github.warraft.jass.antlr.error.JassErrorId
 import io.github.warraft.jass.antlr.psi.*
+import io.github.warraft.jass.antlr.token.JassToken
 import org.antlr.v4.runtime.*
 import org.antlr.v4.runtime.atn.ATNConfigSet
 import org.antlr.v4.runtime.dfa.DFA
 import org.antlr.v4.runtime.misc.Pair
+import org.antlr.v4.runtime.tree.TerminalNode
 import java.util.*
 import kotlin.collections.mutableListOf
 
@@ -29,6 +31,22 @@ class JassState {
     var comments = mutableListOf<CommonToken>()
 
     val errors = mutableListOf<JassError>()
+
+    fun err(
+        id: JassErrorId,
+        token: JassToken?,
+        message: String,
+    ) {
+        errors.add(
+            JassError(
+                id = id,
+                token = token,
+                message = message,
+                line = -1,
+                char = -1,
+            )
+        )
+    }
 
     fun getNode(key: String, f: JassFun?): IJassNode? {
         if (f != null) {
@@ -127,52 +145,6 @@ class JassState {
 
         nodeMap[v.name] = v
         globals.add(v)
-    }
-
-    fun returns(f: JassFun, ctx: ReturnsRuleContext) {
-        if (ctx.NOTHING() != null) return
-        val t = ctx.ID().text
-        f.type = typeFromString(t)
-        if (f.type is JassUndefinedType) errors.add(
-            JassError(
-                JassErrorId.TYPE_DEF,
-                ctx.start.line,
-                0,
-                "type $t not exists"
-            )
-        )
-    }
-
-    fun native(ctx: NativeRuleContext) {
-        val f = JassFun(
-            name = ctx.ID().text,
-            native = true,
-            ctx = ctx
-        )
-
-        if (getNode(f.name, null) != null) {
-            errors.add(JassError(JassErrorId.REDECLARED, ctx.start.line, 0, "${f.name} redeclared"))
-            return
-        }
-
-        val takes = ctx.takes()
-        if (takes.NOTHING() == null) {
-            for (it in takes.params().param()) {
-                f.param.add(
-                    JassVar(
-                        name = it.varname().text,
-                        type = typeFromString(it.typename().text),
-                        local = true,
-                        param = true,
-                    )
-                )
-            }
-        }
-
-        returns(f, ctx.returnsRule())
-
-        nodeMap[f.name] = f
-        natives.add(f)
     }
 
     fun expr(ctx: ExprContext?, f: JassFun?): JassExpr? {
@@ -367,8 +339,7 @@ class JassState {
                     }
 
                     val cf = node.clone(
-                        call = true,
-                        ctx = callctx,
+                        call = true
                     )
 
                     callctx.expr().forEach {
@@ -463,54 +434,127 @@ class JassState {
         }
     }
 
-    fun function(ctx: FunctionContext) {
-        val f = JassFun(
-            name = ctx.ID().text,
-            ctx = ctx,
-        )
+    fun function(fctx: ParserRuleContext) {
+        var idctx: TerminalNode? = null
+        var tctx: TakesContext? = null
+        var rctx: ReturnsRuleContext? = null
 
-        if (getNode(f.name, f) != null) {
-            errors.add(JassError(JassErrorId.REDECLARED, ctx.start.line, 0, "${f.name} redeclared function"))
-            return
-        }
+        val f = JassFun()
 
-        nodeMap[f.name] = f
-        functions.add(f)
+        when (fctx) {
+            is NativeRuleContext -> {
+                f.native = true
 
-        val takes: TakesContext = ctx.takes()
-        if (takes.NOTHING() == null) {
-            for (vctx in takes.params().param()) {
-                f.param.add(
-                    JassVar(
-                        name = vctx.varname().text,
-                        type = typeFromString(vctx.typename().text),
-                        local = true,
-                        param = true,
-                        ctx = vctx,
-                    )
+                idctx = fctx.ID()
+                tctx = fctx.takes()
+                rctx = fctx.returnsRule()
+
+                f.tkeywordsAdd(
+                    fctx.CONSTANT(),
+                    fctx.NATIVE()
+                )
+            }
+
+            is FunctionContext -> {
+                idctx = fctx.ID()
+                tctx = fctx.takes()
+                rctx = fctx.returnsRule()
+
+                f.tkeywordsAdd(
+                    fctx.CONSTANT(),
+                    fctx.FUNCTION(),
+                    fctx.ENDFUNCTION()
                 )
             }
         }
 
-        for (vctx: VariableContext in ctx.variable()) {
-            val name = vctx.varname().text
+        if (idctx == null) {
+            f.tname = f.tkeywords.firstOrNull()
 
-            val v = JassVar(
-                name = name,
-                array = vctx.ARRAY() != null,
-                type = typeFromString(vctx.typename().text),
-                local = true,
-                ctx = vctx,
-            )
+            errors.add(JassError(JassErrorId.REDECLARED, fctx.start.line, 0, "Name missing"))
 
-            if (vctx.EQ() != null) {
-                v.expr = expr(vctx.expr(), f)
-                if (v.expr == null) {
-                    errors.add(JassError(JassErrorId.ERROR, ctx.start.line, 0, "${f.name} variable without expression"))
+        } else {
+            val name = idctx.text
+            f.tname = JassToken(idctx)
+
+            f.name = name
+            if (getNode(name, f) != null) {
+                errors.add(JassError(JassErrorId.REDECLARED, fctx.start.line, 0, "${f.name} redeclared function"))
+            }
+            nodeMap[name] = f
+        }
+
+        if (f.native) natives.add(f)
+        else functions.add(f)
+
+        if (tctx != null) {
+            val nctx = tctx.NOTHING()
+            f.tkeywordsAdd(tctx.TAKES(), nctx)
+            if (nctx == null) {
+                for (vctx in tctx.params().param()) {
+                    f.param.add(
+                        JassVar(
+                            name = vctx.varname().text,
+                            type = typeFromString(vctx.typename().text),
+                            local = true,
+                            param = true,
+                            ctx = vctx,
+                        )
+                    )
                 }
             }
+        }
 
-            f.param.add(v)
+        if (rctx != null) {
+            val nctx = rctx.NOTHING()
+            f.tkeywordsAdd(rctx.RETURNS(), nctx)
+            if (nctx == null) {
+                val idctx: TerminalNode? = rctx.ID()
+                if (idctx != null) {
+                    f.ttype = JassToken(idctx)
+                    f.type = typeFromString(idctx.text)
+                    if (f.type is JassUndefinedType) err(
+                        JassErrorId.ERROR_TYPE_UNKNOWN,
+                        f.ttype,
+                        "Unknown type: ${idctx.text}"
+                    )
+                }
+            }
+        }
+
+        if (fctx is FunctionContext) {
+            for (vctx: VariableContext in fctx.variable()) {
+                val vnamectx: VarnameContext? = vctx.varname()
+                if (vnamectx == null) {
+                    continue
+                }
+
+                val name = vnamectx.text
+
+                val v = JassVar(
+                    name = name,
+                    array = vctx.ARRAY() != null,
+                    type = typeFromString(vctx.typename().text),
+                    local = true,
+                    ctx = vctx,
+                )
+
+                if (vctx.EQ() != null) {
+                    v.expr = expr(vctx.expr(), f)
+                    if (v.expr == null) {
+                        errors.add(
+                            JassError(
+                                JassErrorId.ERROR,
+                                fctx.start.line,
+                                0,
+                                "${f.name} variable without expression"
+                            )
+                        )
+                    }
+                }
+
+                f.param.add(v)
+            }
         }
 
         val params = mutableMapOf<String, JassVar>()
@@ -523,9 +567,11 @@ class JassState {
             }
         }
 
-        returns(f, ctx.returnsRule())
+        f.tkeywords.sortWith(compareBy<JassToken> { it.line }.thenBy { it.pos })
 
-        stmt(ctx.stmt(), f.stmt, mutableListOf(f))
+        if (fctx is FunctionContext) {
+            stmt(fctx.stmt(), f.stmt, mutableListOf(f))
+        }
     }
 
     fun root(ctx: RootContext): IJassNode? {
@@ -536,8 +582,8 @@ class JassState {
                     it.variable().forEach(::global)
                 }
 
-                is NativeRuleContext -> native(it)
                 is TypeContext -> typedef(it)
+                is NativeRuleContext -> function(it)
                 is FunctionContext -> function(it)
             }
         }
@@ -614,10 +660,10 @@ class JassState {
             ) {
                 jassErrors.add(
                     JassError(
-                        id = JassErrorId.SYNTAX,
+                        id = JassErrorId.ERROR_SYNTAX,
                         line = line,
                         char = charPositionInLine,
-                        message = msg ?: "Unknown error"
+                        message = msg ?: "Syntax error",
                     )
                 )
             }

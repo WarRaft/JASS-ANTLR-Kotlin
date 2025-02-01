@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.ParserRuleContext
 class JassIf(
     val expr: JassExpr? = null,
     val ctx: ParserRuleContext? = null,
-) : IJassNode {
+) : IJassNode() {
     override var type: IJassType = JassUndefinedType()
 
     val stmt: MutableList<IJassNode> = mutableListOf()

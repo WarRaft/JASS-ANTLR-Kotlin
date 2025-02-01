@@ -14,7 +14,7 @@ class JassVar(
     var expr: JassExpr? = null,
     override val type: IJassType,
     val ctx: ParserRuleContext? = null,
-) : IJassNode {
+) : IJassNode() {
 
     var fakename: String = ""
 

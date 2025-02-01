@@ -8,12 +8,41 @@ import org.junit.jupiter.api.Test
 class JassStateTest {
 
     @Test
+    fun funTypeMissing() {
+        val state = JassState()
+        state.parse(
+            CharStreams.fromString(
+                """
+                function Anal takes nothing returns anal
+                endfunction
+                """.trimIndent()
+            )
+        )
+        assert(state.errors.size == 1)
+    }
+
+    @Test
+    fun nullCheck() {
+        val state = JassState()
+        state.parse(
+            CharStreams.fromString(
+                """
+                function Anal takes nothing returns nothing
+                    local
+                    set anal = 2
+                endfunction
+                """.trimIndent()
+            )
+        )
+    }
+
+
+    @Test
     fun memhack() {
         val state = JassState()
         state.parse(
             CharStreams.fromString(
                 """
-                // CORRR!!!!
                 globals
                     integer array l__Array
                 endglobals

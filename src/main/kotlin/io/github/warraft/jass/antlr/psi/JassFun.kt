@@ -1,16 +1,20 @@
 package io.github.warraft.jass.antlr.psi
 
+import io.github.warraft.jass.antlr.token.JassToken
 import org.antlr.v4.runtime.ParserRuleContext
+import org.antlr.v4.runtime.tree.TerminalNode
 
 class JassFun(
-    val name: String,
-    val native: Boolean = false,
+    var name: String? = null,
+    var native: Boolean = false,
     val call: Boolean = false,
     val ref: Boolean = false,
     var base: JassFun? = null,
     override var type: IJassType = JassUndefinedType(),
-    val ctx: ParserRuleContext? = null,
-) : IJassNode {
+
+    var tname: JassToken? = null,
+    var ttype: JassToken? = null,
+) : IJassNode() {
 
     var fakename: String = ""
 
@@ -24,7 +28,6 @@ class JassFun(
 
     fun clone(
         call: Boolean? = null,
-        ctx: ParserRuleContext? = null,
     ): JassFun = JassFun(
         name = name,
         native = native,
@@ -32,7 +35,6 @@ class JassFun(
         ref = ref,
         base = this,
         type = type,
-        ctx = ctx,
     )
 
     override fun toString(): String = "JassFun(name='$name'):$type"
