@@ -1,7 +1,6 @@
 package io.github.warraft.jass.converter
 
 import io.github.warraft.jass.antlr.JassState
-import io.github.warraft.jass.antlr.error.JassErrorId
 import org.antlr.v4.runtime.CharStreams
 import org.junit.jupiter.api.Test
 
