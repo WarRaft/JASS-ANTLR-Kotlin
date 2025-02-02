@@ -13,11 +13,20 @@ class JassStateTest {
             CharStreams.fromString(
                 """
                 globals
-                    integer a = 1 + ""
+                    integer a = 1 - ""
                 endglobals
                 """.trimIndent()
             )
         )
+        println("🔥")
+        for (g in state.globals) {
+            println(g)
+        }
+
+        for (g in state.diagnosticHub.diagnostics) {
+            println(g)
+        }
+
         //assert(state.errors.size == 1)
     }
 

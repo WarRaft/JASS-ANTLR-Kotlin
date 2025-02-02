@@ -140,21 +140,14 @@ class Main(val args: Array<String>) {
         const val BLUE = "\u001b[34m"
         private const val PURPLE = "\u001b[35m"
         private const val CYAN = "\u001b[36m"
+        //private const val WHITE = "\u001b[37m"
 
         private const val BOLD = "\u001b[1m"
         //private const val BOLDOFF = "\u001b[22m"
 
         private const val ITALIC = "\u001b[3m"
         //private const val ITALICOFF = "\u001b[23m"
-
     }
-
-    /*
-
-    BLUE   => "\033[34m",
-
-    WHITE  => "\033[37m",
-    */
 
 }
 

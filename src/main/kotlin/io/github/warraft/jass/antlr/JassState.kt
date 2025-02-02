@@ -154,12 +154,15 @@ class JassState {
         val tctx = ctx.typename()?.ID()
         val cctx = ctx.CONSTANT()
         val actx = ctx.ARRAY()
+        val eqctx = ctx.EQ()
 
         semanticHub
             .add(nctx, JassSemanticTokenType.VARIABLE, JassSemanticTokenModifier.DECLARATION)
             .add(tctx, JassSemanticTokenType.TYPE)
             .add(cctx, JassSemanticTokenType.KEYWORD)
             .add(actx, JassSemanticTokenType.KEYWORD)
+            .add(eqctx, JassSemanticTokenType.OPERATOR)
+
 
         val v = JassVar(
             name = nctx?.text ?: "",
@@ -170,11 +173,11 @@ class JassState {
             ctx = ctx,
         )
 
-        if (ctx.EQ() != null) {
+        if (eqctx != null) {
             v.expr = expr(ctx.expr(), null)
             if (v.expr == null) {
                 diagnosticHub.add(
-                    ctx.EQ(),
+                    eqctx,
                     JassDiagnosticCode.ERROR,
                     "${v.name} global set missing"
                 )
@@ -205,7 +208,40 @@ class JassState {
         globals.add(v)
     }
 
-    fun expr(ctx: ExprContext?, f: JassFun?): JassExpr? {
+    fun expr(a: ExprContext?, b: ExprContext?, ops: List<TerminalNode?>, scope: JassFun?): JassExpr? {
+        val ab = a ?: b
+        var op: JassExprOp? = null
+        var optext: String? = ""
+        for (it in ops) {
+            semanticHub.add(it, JassSemanticTokenType.OPERATOR)
+            optext = it?.text;
+            op = JassExprOp.fromSymbol(optext)
+            if (op != null) break
+        }
+
+        if (op == null) {
+            diagnosticHub.add(ab, JassDiagnosticCode.PLUGIN, "Missing operator")
+            return null
+        }
+
+        val e = JassExpr(
+            op = op,
+            a = expr(a, scope),
+            b = expr(b, scope)
+        )
+
+        if (e.type is JassUndefinedType) {
+            diagnosticHub.add(
+                ab,
+                JassDiagnosticCode.ERROR,
+                "Operation not exists: (${a?.text})->${e.a?.type?.name} $optext (${b?.text})->${e.b?.type?.name}"
+            )
+        }
+
+        return e
+    }
+
+    fun expr(ctx: ExprContext?, scope: JassFun?): JassExpr? {
         if (ctx == null) return null
 
         when (ctx) {
@@ -231,7 +267,7 @@ class JassState {
             is ExprCallContext -> {
                 val idctx = ctx.ID()
                 val name = idctx.text
-                val node = getNode(name, f)
+                val node = getNode(name, scope)
                 if (node !is JassFun) {
                     diagnosticHub.add(
                         idctx,
@@ -245,7 +281,7 @@ class JassState {
                 semanticHub.add(idctx, JassSemanticTokenType.FUNCTION)
 
                 ctx.expr().forEach {
-                    val e = expr(it, f)
+                    val e = expr(it, scope)
                     if (e != null) {
                         cf.arg.add(e)
                     }
@@ -261,7 +297,7 @@ class JassState {
                 val idctx = ctx.ID()
                 semanticHub.add(idctx, JassSemanticTokenType.VARIABLE)
                 val name = idctx.text
-                var node: IJassNode? = getNode(name, f)
+                var node: IJassNode? = getNode(name, scope)
                 if (node is JassVar) {
                     return JassExpr(op = JassExprOp.Get, a = node.clone())
                 }
@@ -278,7 +314,7 @@ class JassState {
                 semanticHub.add(idctx, JassSemanticTokenType.VARIABLE)
 
                 val name = idctx.text
-                var node: IJassNode? = getNode(name, f)
+                var node: IJassNode? = getNode(name, scope)
                 if (node !is JassVar) {
                     diagnosticHub.add(
                         idctx,
@@ -290,7 +326,7 @@ class JassState {
                 return JassExpr(
                     op = JassExprOp.Get,
                     a = node.clone(
-                        index = expr(ctx.expr(), f)
+                        index = expr(ctx.expr(), scope)
                     )
                 )
             }
@@ -301,7 +337,7 @@ class JassState {
                     (ctx.NOT() != null) -> JassExprOp.UnNot
                     else -> return null
                 },
-                a = expr(ctx.expr(), f),
+                a = expr(ctx.expr(), scope),
             )
 
             is ExprIntContext -> {
@@ -325,7 +361,7 @@ class JassState {
             }
 
             is ExprRealContext -> {
-                semanticHub.add(ctx.REALVAL(), JassSemanticTokenType.KEYWORD)
+                semanticHub.add(ctx.REALVAL(), JassSemanticTokenType.NUMBER)
                 return JassExpr(op = JassExprOp.Get, a = JassReal(ctx.text))
             }
 
@@ -334,87 +370,44 @@ class JassState {
                 return JassExpr(op = JassExprOp.Get, a = JassNull())
             }
 
-            is ExprParenContext -> return JassExpr(op = JassExprOp.Paren, a = expr(ctx.expr(), f))
+            is ExprParenContext -> return JassExpr(op = JassExprOp.Paren, a = expr(ctx.expr(), scope))
 
-            // 3
-            is ExprMulContext -> return JassExpr(
-                op = when (true) {
-                    (ctx.MUL() != null) -> JassExprOp.Mul
-                    (ctx.DIV() != null) -> JassExprOp.Div
-                    else -> return null
-                },
-                a = expr(ctx.expr(0), f),
-                b = expr(ctx.expr(1), f)
+            is ExprMulContext -> return expr(
+                ctx.expr(0),
+                ctx.expr(1),
+                listOf(ctx.MUL(), ctx.DIV()),
+                scope
             )
 
-            is ExprAddContext -> {
-                val actx = ctx.PLUS()
-                val sctx = ctx.MINUS()
-                semanticHub
-                    .add(actx, JassSemanticTokenType.OPERATOR)
-                    .add(sctx, JassSemanticTokenType.OPERATOR)
-
-                val e = JassExpr(
-                    op = when (true) {
-                        (actx != null) -> JassExprOp.Add
-                        (sctx != null) -> JassExprOp.Sub
-                        else -> return null
-                    },
-                    a = expr(ctx.expr(0), f),
-                    b = expr(ctx.expr(1), f)
-                )
-                val op = actx ?: sctx
-
-                if (e.type is JassUndefinedType) {
-                    diagnosticHub.add(
-                        op,
-                        JassDiagnosticCode.ERROR,
-                        "Operation not exists: ${e.a?.type?.name} ${op.text} ${e.b?.type?.name}"
-                    )
-                }
-                return e
-            }
-
-            // 5
-            is ExprLtContext -> return JassExpr(
-                op = when (true) {
-                    (ctx.LT() != null) -> JassExprOp.Lt
-                    (ctx.LT_EQ() != null) -> JassExprOp.LtEq
-                    (ctx.GT() != null) -> JassExprOp.Gt
-                    (ctx.GT_EQ() != null) -> JassExprOp.GtEq
-                    else -> return null
-                },
-                a = expr(ctx.expr(0), f),
-                b = expr(ctx.expr(1), f)
+            is ExprAddContext -> return expr(
+                ctx.expr(0),
+                ctx.expr(1),
+                listOf(ctx.PLUS(), ctx.MINUS()),
+                scope
             )
 
-            // 6
-            is ExprEqContext -> return JassExpr(
-                op = when (true) {
-                    (ctx.EQ_EQ() != null) -> JassExprOp.Eq
-                    (ctx.NEQ() != null) -> JassExprOp.Neq
-                    else -> return null
-                },
-                a = expr(ctx.expr(0), f),
-                b = expr(ctx.expr(1), f)
+            is ExprLtContext -> return expr(
+                ctx.expr(0),
+                ctx.expr(1),
+                listOf(ctx.LT(), ctx.LT_EQ(), ctx.GT(), ctx.GT_EQ()),
+                scope
             )
 
-            // 7
-            is ExprAndContext -> return JassExpr(
-                op = when (true) {
-                    (ctx.AND() != null) -> JassExprOp.And
-                    (ctx.OR() != null) -> JassExprOp.Or
-                    else -> return null
-                },
-                a = expr(ctx.expr(0), f),
-                b = expr(ctx.expr(1), f)
+            is ExprEqContext -> return expr(
+                ctx.expr(0),
+                ctx.expr(1),
+                listOf(ctx.EQ_EQ(), ctx.NEQ()),
+                scope
+            )
+
+            is ExprAndContext -> return expr(
+                ctx.expr(0),
+                ctx.expr(1),
+                listOf(ctx.AND(), ctx.OR()),
+                scope
             )
         }
-        diagnosticHub.add(
-            null,
-            JassDiagnosticCode.ERROR,
-            "Undeclared expression"
-        )
+        diagnosticHub.add(JassDiagnosticCode.PLUGIN, "Undeclared expression")
         return null
     }
 
@@ -432,6 +425,8 @@ class JassState {
                     semanticHub
                         .add(idctx, JassSemanticTokenType.VARIABLE)
                         .add(setctx.SET(), JassSemanticTokenType.KEYWORD)
+                        .add(setctx.EQ(), JassSemanticTokenType.OPERATOR)
+
 
                     if (node !is JassVar) {
                         diagnosticHub.add(
@@ -467,7 +462,7 @@ class JassState {
                     val idctx: TerminalNode? = callctx.ID()
 
                     semanticHub
-                        .add(idctx, JassSemanticTokenType.VARIABLE)
+                        .add(idctx, JassSemanticTokenType.FUNCTION)
                         .add(callctx.CALL(), JassSemanticTokenType.KEYWORD)
 
                     if (idctx == null) {
@@ -629,16 +624,11 @@ class JassState {
                     }
                 }
 
-                else -> {
-                    diagnosticHub.add(
-                        null,
-                        JassDiagnosticCode.ERROR,
-                        "Udeclared statement"
-                    )
-                }
+                else -> diagnosticHub.add(JassDiagnosticCode.PLUGIN, "Udeclared statement")
             }
         }
     }
+
 
     fun function(fctx: ParserRuleContext) {
         var idctx: TerminalNode? = null
@@ -655,9 +645,17 @@ class JassState {
                 tctx = fctx.takes()
                 rctx = fctx.returnsRule()
 
+                val nctx = fctx.NATIVE()
+
+                if (idctx == null) diagnosticHub.add(
+                    nctx,
+                    JassDiagnosticCode.ERROR,
+                    "Native name is missing"
+                )
+
                 semanticHub
                     .add(fctx.CONSTANT(), JassSemanticTokenType.KEYWORD)
-                    .add(fctx.NATIVE(), JassSemanticTokenType.KEYWORD)
+                    .add(nctx, JassSemanticTokenType.KEYWORD)
             }
 
             is FunctionContext -> {
@@ -668,6 +666,12 @@ class JassState {
                 val sfctx = fctx.FUNCTION()
                 val efctx = fctx.ENDFUNCTION()
 
+                if (idctx == null) diagnosticHub.add(
+                    sfctx,
+                    JassDiagnosticCode.ERROR,
+                    "Function name is missing"
+                )
+
                 foldingHub.add(sfctx, efctx)
 
                 semanticHub
@@ -677,13 +681,7 @@ class JassState {
             }
         }
 
-        if (idctx == null) {
-            diagnosticHub.add(
-                idctx,
-                JassDiagnosticCode.ERROR,
-                "Function name is missing"
-            )
-        } else {
+        if (idctx != null) {
             val name = idctx.text
             semanticHub.add(idctx, JassSemanticTokenType.FUNCTION, JassSemanticTokenModifier.DECLARATION)
             f.name = name

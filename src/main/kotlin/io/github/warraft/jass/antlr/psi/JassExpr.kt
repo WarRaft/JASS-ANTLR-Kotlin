@@ -4,7 +4,7 @@ class JassExpr(
     val op: JassExprOp,
     val a: IJassNode?,
     val b: IJassNode? = null,
-    ) : IJassNode() {
+) : IJassNode() {
     override var type: IJassType
 
     init {
@@ -20,7 +20,7 @@ class JassExpr(
     override fun toString(): String {
         return when (op) {
             JassExprOp.Get -> "$a"
-            else -> return "$op<$type>($a, $b)"
+            else -> return "$type:$op($a, $b)"
         }
     }
 }

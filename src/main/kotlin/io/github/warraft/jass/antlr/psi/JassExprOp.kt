@@ -10,5 +10,23 @@ enum class JassExprOp {
     And, Or,
     Get,
     Set,
-    Paren,
+    Paren;
+
+    companion object {
+        fun fromSymbol(symbol: String?): JassExprOp? = when (symbol) {
+            "*" -> Mul
+            "/" -> Div
+            "+" -> Add
+            "-" -> Sub
+            "<" -> Lt
+            "<=" -> LtEq
+            ">" -> Gt
+            ">=" -> GtEq
+            "==" -> Eq
+            "!=" -> Neq
+            "and" -> And
+            "or" -> Or
+            else -> null
+        }
+    }
 }

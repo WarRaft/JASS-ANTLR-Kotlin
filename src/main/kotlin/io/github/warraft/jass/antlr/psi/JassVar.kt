@@ -1,5 +1,7 @@
 package io.github.warraft.jass.antlr.psi
 
+import Main.Companion.BLUE
+import Main.Companion.RESET
 import org.antlr.v4.runtime.ParserRuleContext
 
 class JassVar(
@@ -52,11 +54,12 @@ class JassVar(
 
         list.add(type.name)
 
-        if (base == null) list.add("<base>")
-
         if (array) list.add("[]")
 
-        list.add(name)
+        var n = ""
+        if (base == null) n += "${BLUE}base:$RESET"
+
+        list.add(n + name)
 
         if (expr != null) {
             list.add("=")
