@@ -68,6 +68,10 @@ class JassTextDocumentService(val server: JassLanguageServer) : TextDocumentServ
         return CompletableFuture.completedFuture(Either.forLeft(completionItems))
     }
 
+    override fun resolveCompletionItem(unresolved: CompletionItem?): CompletableFuture<CompletionItem?>? {
+        return CompletableFuture.completedFuture(unresolved)
+    }
+
     override fun hover(params: HoverParams): CompletableFuture<Hover> {
         val hover = Hover(listOf(Either.forLeft("Anal22")), null)
         return CompletableFuture.completedFuture(hover)
@@ -126,9 +130,5 @@ class JassTextDocumentService(val server: JassLanguageServer) : TextDocumentServ
     }
 
     override fun didSave(params: DidSaveTextDocumentParams) {
-    }
-
-    override fun resolveCompletionItem(unresolved: CompletionItem?): CompletableFuture<CompletionItem?>? {
-        return CompletableFuture.completedFuture(unresolved)
     }
 }

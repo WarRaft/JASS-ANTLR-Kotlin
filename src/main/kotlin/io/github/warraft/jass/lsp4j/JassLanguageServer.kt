@@ -38,7 +38,13 @@ class JassLanguageServer(val args: Array<String>) : LanguageServer, LanguageClie
             // https://code.visualstudio.com/api/language-extensions/semantic-highlight-guide
             semanticTokensProvider = SemanticTokensWithRegistrationOptions().apply {
                 legend = SemanticTokensLegend(
-                    JassSemanticTokenType.entries.map { it -> it.name.lowercase() },
+                    JassSemanticTokenType.entries.map { it ->
+                        it.name.split("_")
+                            .mapIndexed { index, s ->
+                                if (index == 0) s.lowercase() else s.lowercase().replaceFirstChar { it.uppercaseChar() }
+                            }
+                            .joinToString("")
+                    },
                     JassSemanticTokenModifier.entries.map { it -> it.name.lowercase() },
                 )
                 full = Either.forLeft(true)

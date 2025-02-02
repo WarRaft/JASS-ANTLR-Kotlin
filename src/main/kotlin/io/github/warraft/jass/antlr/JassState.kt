@@ -724,14 +724,12 @@ class JassState {
                     }
 
                     semanticHub
-                        .add(typeCtx, JassSemanticTokenType.TYPE)
+                        .add(typeCtx, JassSemanticTokenType.TYPE_PARAMETER)
                         .add(
                             namectx,
                             JassSemanticTokenType.PARAMETER,
                             JassSemanticTokenModifier.DECLARATION
                         )
-
-
 
                     f.param.add(
                         JassVar(
