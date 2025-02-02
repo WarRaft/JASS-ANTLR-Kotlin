@@ -8,6 +8,7 @@ import io.github.warraft.jass.lsp4j.folding.JassFoldingHub
 import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenHub
 import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenModifier
 import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
+import io.github.warraft.jass.lsp4j.symbol.JassDocumentSymbolHub
 import org.antlr.v4.runtime.*
 import org.antlr.v4.runtime.atn.ATNConfigSet
 import org.antlr.v4.runtime.dfa.DFA
@@ -15,8 +16,10 @@ import org.antlr.v4.runtime.misc.Pair
 import org.antlr.v4.runtime.tree.TerminalNode
 import org.eclipse.lsp4j.Diagnostic
 import org.eclipse.lsp4j.DiagnosticSeverity
+import org.eclipse.lsp4j.DocumentSymbol
 import org.eclipse.lsp4j.Position
 import org.eclipse.lsp4j.Range
+import org.eclipse.lsp4j.SymbolKind
 import java.util.*
 
 class JassState {
@@ -34,7 +37,7 @@ class JassState {
     val semanticHub = JassSemanticTokenHub()
     val foldingHub = JassFoldingHub()
     val diagnosticHub = JassDiagnosticHub()
-
+    val documentSymbolHub = JassDocumentSymbolHub()
 
     fun parse(stream: CharStream, states: List<JassState> = listOf()) {
         this.states = states
@@ -45,9 +48,11 @@ class JassState {
         globals.clear()
         functions.clear()
         nodeMap.clear()
+
         semanticHub.clear()
         foldingHub.clear()
         diagnosticHub.clear()
+        documentSymbolHub.clear()
 
         val errorJassErrorListener = JassErrorListener()
 
@@ -214,7 +219,7 @@ class JassState {
         var optext: String? = ""
         for (it in ops) {
             semanticHub.add(it, JassSemanticTokenType.OPERATOR)
-            optext = it?.text;
+            optext = it?.text
             op = JassExprOp.fromSymbol(optext)
             if (op != null) break
         }
@@ -632,17 +637,19 @@ class JassState {
 
     fun function(fctx: ParserRuleContext) {
         var idctx: TerminalNode? = null
-        var tctx: TakesContext? = null
+        var takesCtx: TakesContext? = null
         var rctx: ReturnsRuleContext? = null
 
         val f = JassFun()
+
+        var sym: DocumentSymbol? = null
 
         when (fctx) {
             is NativeRuleContext -> {
                 f.native = true
 
                 idctx = fctx.ID()
-                tctx = fctx.takes()
+                takesCtx = fctx.takes()
                 rctx = fctx.returnsRule()
 
                 val nctx = fctx.NATIVE()
@@ -653,6 +660,8 @@ class JassState {
                     "Native name is missing"
                 )
 
+                sym = documentSymbolHub.add(fctx, idctx, SymbolKind.Function)
+
                 semanticHub
                     .add(fctx.CONSTANT(), JassSemanticTokenType.KEYWORD)
                     .add(nctx, JassSemanticTokenType.KEYWORD)
@@ -660,7 +669,7 @@ class JassState {
 
             is FunctionContext -> {
                 idctx = fctx.ID()
-                tctx = fctx.takes()
+                takesCtx = fctx.takes()
                 rctx = fctx.returnsRule()
 
                 val sfctx = fctx.FUNCTION()
@@ -674,6 +683,7 @@ class JassState {
 
                 foldingHub.add(sfctx, efctx)
 
+                sym = documentSymbolHub.add(fctx, idctx, SymbolKind.Function)
                 semanticHub
                     .add(fctx.CONSTANT(), JassSemanticTokenType.KEYWORD)
                     .add(sfctx, JassSemanticTokenType.KEYWORD)
@@ -698,29 +708,38 @@ class JassState {
         if (f.native) natives.add(f)
         else functions.add(f)
 
-        if (tctx != null) {
-            val nctx = tctx.NOTHING()
+        if (takesCtx != null) {
+            val nctx = takesCtx.NOTHING()
             semanticHub
                 .add(nctx, JassSemanticTokenType.KEYWORD)
-                .add(tctx.TAKES(), JassSemanticTokenType.KEYWORD)
+                .add(takesCtx.TAKES(), JassSemanticTokenType.KEYWORD)
 
             if (nctx == null) {
-                for (vctx in tctx.params().param()) {
+                for (paramCtx in takesCtx.params().param()) {
+                    val namectx = paramCtx.varname().ID()
+                    val typeCtx = paramCtx.typename().ID()
+
+                    documentSymbolHub.add(paramCtx, namectx, SymbolKind.Variable, sym).apply {
+                        this?.detail = typeCtx.text
+                    }
+
                     semanticHub
-                        .add(vctx.typename().ID(), JassSemanticTokenType.TYPE)
+                        .add(typeCtx, JassSemanticTokenType.TYPE)
                         .add(
-                            vctx.varname().ID(),
+                            namectx,
                             JassSemanticTokenType.PARAMETER,
                             JassSemanticTokenModifier.DECLARATION
                         )
 
+
+
                     f.param.add(
                         JassVar(
-                            name = vctx.varname().text,
-                            type = typeFromString(vctx.typename().text),
+                            name = paramCtx.varname().text,
+                            type = typeFromString(paramCtx.typename().text),
                             local = true,
                             param = true,
-                            ctx = vctx,
+                            ctx = paramCtx,
                         )
                     )
                 }
@@ -895,6 +914,5 @@ class JassState {
             ) {
             }
         }
-
     }
 }

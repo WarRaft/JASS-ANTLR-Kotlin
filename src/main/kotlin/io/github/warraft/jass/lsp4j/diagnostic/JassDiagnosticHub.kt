@@ -1,5 +1,6 @@
 package io.github.warraft.jass.lsp4j.diagnostic
 
+import io.github.warraft.jass.lsp4j.ex.RangeEx
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
 import org.eclipse.lsp4j.Diagnostic
@@ -37,20 +38,7 @@ class JassDiagnosticHub {
     ) {
         diagnostics.add(
             Diagnostic(
-                when (node) {
-                    null -> Range(
-                        Position(0, 0),
-                        Position(0, 0),
-                    )
-
-                    else -> Range(
-                        Position(node.start.line - 1, node.start.charPositionInLine),
-                        Position(
-                            node.stop.line - 1,
-                            node.stop.charPositionInLine + (node.stop.stopIndex - node.stop.stopIndex) + 1
-                        ),
-                    )
-                },
+                RangeEx.get(node),
                 msg,
                 DiagnosticSeverity.Error,
                 SOURCE,
@@ -65,20 +53,9 @@ class JassDiagnosticHub {
         code: JassDiagnosticCode,
         msg: String,
     ) {
-        val s = node?.symbol
         diagnostics.add(
             Diagnostic(
-                when (s) {
-                    null -> Range(
-                        Position(0, 0),
-                        Position(0, 0),
-                    )
-
-                    else -> Range(
-                        Position(s.line - 1, s.charPositionInLine),
-                        Position(s.line - 1, s.charPositionInLine + (s.stopIndex - s.stopIndex) + 1),
-                    )
-                },
+                RangeEx.get(node),
                 msg,
                 DiagnosticSeverity.Error,
                 SOURCE,

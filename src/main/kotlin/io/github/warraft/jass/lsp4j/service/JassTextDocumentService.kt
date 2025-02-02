@@ -14,6 +14,7 @@ import java.util.concurrent.CompletableFuture
 import kotlin.io.path.isReadable
 import kotlin.io.path.toPath
 
+
 class JassTextDocumentService(val server: JassLanguageServer) : TextDocumentService {
     private val states = mutableMapOf<Path, JassState>()
 
@@ -25,6 +26,9 @@ class JassTextDocumentService(val server: JassLanguageServer) : TextDocumentServ
 
     override fun diagnostic(params: DocumentDiagnosticParams?): CompletableFuture<DocumentDiagnosticReport?> =
         CompletableFuture.completedFuture(DocumentDiagnosticReport(RelatedFullDocumentDiagnosticReport(getState(params?.textDocument?.uri)?.diagnosticHub?.diagnostics)))
+
+    override fun documentSymbol(params: DocumentSymbolParams?): CompletableFuture<List<Either<SymbolInformation?, DocumentSymbol?>?>?>? =
+        CompletableFuture.completedFuture(getState(params?.textDocument?.uri)?.documentSymbolHub?.symbols)
 
 
     override fun documentHighlight(params: DocumentHighlightParams?): CompletableFuture<List<DocumentHighlight>> {

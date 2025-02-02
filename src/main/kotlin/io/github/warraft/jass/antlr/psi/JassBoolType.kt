@@ -8,6 +8,12 @@ class JassBoolType : IJassType() {
             is JassBoolType -> JassBoolType()
             else -> JassUndefinedType()
         }
+
+        JassExprOp.And, JassExprOp.Or, JassExprOp.Eq, JassExprOp.Neq -> when (b) {
+            is JassBoolType -> JassBoolType()
+            else -> JassUndefinedType()
+        }
+
         else -> JassUndefinedType()
     }
 }

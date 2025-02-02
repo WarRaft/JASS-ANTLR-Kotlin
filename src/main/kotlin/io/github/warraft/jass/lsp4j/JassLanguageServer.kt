@@ -48,6 +48,8 @@ class JassLanguageServer(val args: Array<String>) : LanguageServer, LanguageClie
 
             foldingRangeProvider = Either.forLeft(true)
 
+            documentSymbolProvider = Either.forLeft(true)
+
             diagnosticProvider = DiagnosticRegistrationOptions().apply {
 
             }

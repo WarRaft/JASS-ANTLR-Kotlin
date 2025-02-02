@@ -5,14 +5,19 @@ class JassRealType : IJassType() {
 
     override fun op(op: JassExprOp, b: IJassType): IJassType {
         return when (op) {
-            JassExprOp.Add -> when (b) {
+
+            JassExprOp.Add, JassExprOp.Sub, JassExprOp.Mul, JassExprOp.Div -> when (b) {
                 is JassIntType, is JassRealType -> JassRealType()
-                is JassStrType -> JassStrType()
                 else -> JassUndefinedType()
             }
 
-            JassExprOp.Sub, JassExprOp.Mul, JassExprOp.Div -> when (b) {
-                is JassIntType, is JassRealType -> JassRealType()
+            JassExprOp.Lt, JassExprOp.LtEq, JassExprOp.Gt, JassExprOp.GtEq -> when (b) {
+                is JassIntType, is JassRealType -> JassBoolType()
+                else -> JassUndefinedType()
+            }
+
+            JassExprOp.Eq, JassExprOp.Neq -> when (b) {
+                is JassIntType, is JassRealType -> JassBoolType()
                 else -> JassUndefinedType()
             }
 

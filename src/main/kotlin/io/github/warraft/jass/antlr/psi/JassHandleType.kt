@@ -1,7 +1,7 @@
 package io.github.warraft.jass.antlr.psi
 
 class JassHandleType(
-    override val name: String
+    override val name: String,
 ) : IJassType() {
     var parent: JassHandleType? = null
 
@@ -17,7 +17,11 @@ class JassHandleType(
                 }
 
                 is JassNullType -> this
+                else -> JassUndefinedType()
+            }
 
+            JassExprOp.Eq, JassExprOp.Neq -> when (b) {
+                is JassHandleType, is JassNullType -> JassBoolType()
                 else -> JassUndefinedType()
             }
 
