@@ -14,12 +14,16 @@ import org.antlr.v4.runtime.atn.ATNConfigSet
 import org.antlr.v4.runtime.dfa.DFA
 import org.antlr.v4.runtime.misc.Pair
 import org.antlr.v4.runtime.tree.TerminalNode
+import org.eclipse.lsp4j.CompletionItem
+import org.eclipse.lsp4j.CompletionItemKind
 import org.eclipse.lsp4j.Diagnostic
 import org.eclipse.lsp4j.DiagnosticSeverity
 import org.eclipse.lsp4j.DocumentSymbol
+import org.eclipse.lsp4j.InsertTextFormat
 import org.eclipse.lsp4j.Position
 import org.eclipse.lsp4j.Range
 import org.eclipse.lsp4j.SymbolKind
+import org.eclipse.lsp4j.jsonrpc.messages.Either
 import java.util.*
 
 class JassState {
@@ -213,8 +217,13 @@ class JassState {
         globals.add(v)
     }
 
-    fun expr(a: ExprContext?, b: ExprContext?, ops: List<TerminalNode?>, scope: JassFun?): JassExpr? {
-        val ab = a ?: b
+    fun expr(
+        ctx: ParserRuleContext,
+        a: ExprContext?,
+        b: ExprContext?,
+        ops: List<TerminalNode?>,
+        scope: JassFun?,
+    ): JassExpr? {
         var op: JassExprOp? = null
         var optext: String? = ""
         for (it in ops) {
@@ -225,7 +234,7 @@ class JassState {
         }
 
         if (op == null) {
-            diagnosticHub.add(ab, JassDiagnosticCode.PLUGIN, "Missing operator")
+            diagnosticHub.add(a ?: b, JassDiagnosticCode.PLUGIN, "Missing operator")
             return null
         }
 
@@ -237,7 +246,7 @@ class JassState {
 
         if (e.type is JassUndefinedType) {
             diagnosticHub.add(
-                ab,
+                ctx,
                 JassDiagnosticCode.ERROR,
                 "Operation not exists: (${a?.text})->${e.a?.type?.name} $optext (${b?.text})->${e.b?.type?.name}"
             )
@@ -378,6 +387,7 @@ class JassState {
             is ExprParenContext -> return JassExpr(op = JassExprOp.Paren, a = expr(ctx.expr(), scope))
 
             is ExprMulContext -> return expr(
+                ctx,
                 ctx.expr(0),
                 ctx.expr(1),
                 listOf(ctx.MUL(), ctx.DIV()),
@@ -385,6 +395,7 @@ class JassState {
             )
 
             is ExprAddContext -> return expr(
+                ctx,
                 ctx.expr(0),
                 ctx.expr(1),
                 listOf(ctx.PLUS(), ctx.MINUS()),
@@ -392,6 +403,7 @@ class JassState {
             )
 
             is ExprLtContext -> return expr(
+                ctx,
                 ctx.expr(0),
                 ctx.expr(1),
                 listOf(ctx.LT(), ctx.LT_EQ(), ctx.GT(), ctx.GT_EQ()),
@@ -399,6 +411,7 @@ class JassState {
             )
 
             is ExprEqContext -> return expr(
+                ctx,
                 ctx.expr(0),
                 ctx.expr(1),
                 listOf(ctx.EQ_EQ(), ctx.NEQ()),
@@ -406,6 +419,7 @@ class JassState {
             )
 
             is ExprAndContext -> return expr(
+                ctx,
                 ctx.expr(0),
                 ctx.expr(1),
                 listOf(ctx.AND(), ctx.OR()),
@@ -437,7 +451,7 @@ class JassState {
                         diagnosticHub.add(
                             idctx,
                             JassDiagnosticCode.ERROR,
-                            "Varaible nit exists"
+                            "Varaible not exists"
                         )
                         continue
                     }
@@ -603,7 +617,7 @@ class JassState {
                     stmt(ifcxt.stmt(), nodeIf.stmt, ss)
 
                     for (elseifctx: ElseifContext in ifcxt.elseif()) {
-                        val e = expr(ifcxt.expr(), f)
+                        val e = expr(elseifctx.expr(), f)
                         semanticHub
                             .add(elseifctx.ELSEIF(), JassSemanticTokenType.KEYWORD)
                             .add(elseifctx.THEN(), JassSemanticTokenType.KEYWORD)
@@ -638,7 +652,7 @@ class JassState {
     fun function(fctx: ParserRuleContext) {
         var idctx: TerminalNode? = null
         var takesCtx: TakesContext? = null
-        var rctx: ReturnsRuleContext? = null
+        var returnsCtx: ReturnsRuleContext? = null
 
         val f = JassFun()
 
@@ -650,7 +664,7 @@ class JassState {
 
                 idctx = fctx.ID()
                 takesCtx = fctx.takes()
-                rctx = fctx.returnsRule()
+                returnsCtx = fctx.returnsRule()
 
                 val nctx = fctx.NATIVE()
 
@@ -670,7 +684,7 @@ class JassState {
             is FunctionContext -> {
                 idctx = fctx.ID()
                 takesCtx = fctx.takes()
-                rctx = fctx.returnsRule()
+                returnsCtx = fctx.returnsRule()
 
                 val sfctx = fctx.FUNCTION()
                 val efctx = fctx.ENDFUNCTION()
@@ -744,16 +758,18 @@ class JassState {
             }
         }
 
-        if (rctx != null) {
-            val nctx = rctx.NOTHING()
+        if (returnsCtx != null) {
+            val nctx = returnsCtx.NOTHING()
             semanticHub
                 .add(nctx, JassSemanticTokenType.KEYWORD)
-                .add(rctx.RETURNS(), JassSemanticTokenType.KEYWORD)
+                .add(returnsCtx.RETURNS(), JassSemanticTokenType.KEYWORD)
 
             if (nctx == null) {
-                val idctx: TerminalNode? = rctx.ID()
+                val idctx: TerminalNode? = returnsCtx.ID()
                 if (idctx != null) {
                     semanticHub.add(idctx, JassSemanticTokenType.TYPE)
+                    sym?.detail = idctx.text
+
                     f.type = typeFromString(idctx.text)
                     if (f.type is JassUndefinedType) diagnosticHub.add(
                         idctx,
@@ -835,6 +851,45 @@ class JassState {
             }
         }
         return null
+    }
+
+
+    fun completion(): List<CompletionItem> {
+        val list = mutableListOf<CompletionItem>()
+
+        fun type(t: String) {
+            list.add(CompletionItem(t).apply {
+                kind = CompletionItemKind.TypeParameter
+                detail = "type"
+            })
+        }
+        listOf("integer", "real", "boolean", "handle", "code").forEach { type(it) }
+
+        fun function(f: JassFun) {
+            list.add(CompletionItem(f.name).apply {
+                kind = CompletionItemKind.Variable
+                detail = "function"
+                insertText = "${f.name}()"
+                insertTextFormat = InsertTextFormat.PlainText
+            })
+        }
+
+        fun get(state: JassState) {
+            for (g in state.types) type(g.name)
+            for (g in state.globals) {
+                list.add(CompletionItem(g.name).apply {
+                    kind = CompletionItemKind.Variable
+                    detail = "global"
+                })
+            }
+            for (f in state.natives) function(f)
+            for (f in state.functions) function(f)
+        }
+
+        for (state in states) get(state)
+        get(this)
+
+        return list
     }
 
     companion object {

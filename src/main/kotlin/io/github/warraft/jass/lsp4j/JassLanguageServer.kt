@@ -56,9 +56,8 @@ class JassLanguageServer(val args: Array<String>) : LanguageServer, LanguageClie
 
             documentSymbolProvider = Either.forLeft(true)
 
-            diagnosticProvider = DiagnosticRegistrationOptions().apply {
+            diagnosticProvider = DiagnosticRegistrationOptions().apply {}
 
-            }
         }
         return CompletableFuture.completedFuture(InitializeResult(capabilities))
     }

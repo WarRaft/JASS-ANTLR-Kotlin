@@ -16,6 +16,13 @@ import kotlin.io.path.toPath
 
 
 class JassTextDocumentService(val server: JassLanguageServer) : TextDocumentService {
+    override fun completion(params: CompletionParams?): CompletableFuture<Either<List<CompletionItem>, CompletionList>> =
+        CompletableFuture.completedFuture(Either.forLeft(getState(params?.textDocument?.uri)?.completion()))
+
+    override fun resolveCompletionItem(unresolved: CompletionItem?): CompletableFuture<CompletionItem> {
+        return CompletableFuture.completedFuture(unresolved)
+    }
+
     private val states = mutableMapOf<Path, JassState>()
 
     override fun semanticTokensFull(params: SemanticTokensParams?): CompletableFuture<SemanticTokens> =
@@ -58,18 +65,6 @@ class JassTextDocumentService(val server: JassLanguageServer) : TextDocumentServ
         }
 
         return CompletableFuture.completedFuture(highlights)
-    }
-
-    override fun completion(params: CompletionParams): CompletableFuture<Either<List<CompletionItem>, CompletionList>> {
-        val completionItems = listOf(
-            CompletionItem("Anal5"),
-            CompletionItem("Cunt4")
-        )
-        return CompletableFuture.completedFuture(Either.forLeft(completionItems))
-    }
-
-    override fun resolveCompletionItem(unresolved: CompletionItem?): CompletableFuture<CompletionItem?>? {
-        return CompletableFuture.completedFuture(unresolved)
     }
 
     override fun hover(params: HoverParams): CompletableFuture<Hover> {
