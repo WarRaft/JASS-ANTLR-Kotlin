@@ -1,7 +1,7 @@
 package io.github.warraft.jass.converter
 
-import io.github.warraft.jass.antlr.JassFakeName
-import io.github.warraft.jass.antlr.JassState
+import io.github.warraft.jass.antlr.utils.JassFakeName
+import io.github.warraft.jass.antlr.state.JassState
 import org.antlr.v4.runtime.CharStreams
 import org.junit.jupiter.api.Test
 

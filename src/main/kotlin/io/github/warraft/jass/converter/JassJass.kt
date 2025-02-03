@@ -2,7 +2,7 @@
 
 package io.github.warraft.jass.converter
 
-import io.github.warraft.jass.antlr.JassState
+import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.antlr.psi.*
 import java.nio.file.Path
 

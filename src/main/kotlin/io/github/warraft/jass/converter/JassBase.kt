@@ -1,7 +1,7 @@
 package io.github.warraft.jass.converter
 
-import io.github.warraft.jass.antlr.JassFakeName
-import io.github.warraft.jass.antlr.JassState
+import io.github.warraft.jass.antlr.utils.JassFakeName
+import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.antlr.psi.IJassNode
 import io.github.warraft.jass.antlr.psi.IJassType
 import io.github.warraft.jass.antlr.psi.JassExprOp

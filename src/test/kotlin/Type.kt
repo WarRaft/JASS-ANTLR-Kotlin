@@ -1,4 +1,4 @@
-import io.github.warraft.jass.antlr.JassState
+import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.antlr.psi.JassUndefinedType
 import org.antlr.v4.runtime.CharStreams
 import org.junit.jupiter.api.Test

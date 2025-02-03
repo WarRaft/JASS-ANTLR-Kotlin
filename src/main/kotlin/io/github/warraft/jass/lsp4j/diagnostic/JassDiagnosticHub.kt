@@ -1,6 +1,6 @@
 package io.github.warraft.jass.lsp4j.diagnostic
 
-import io.github.warraft.jass.lsp4j.ex.RangeEx
+import io.github.warraft.jass.lsp4j.utils.RangeEx
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
 import org.eclipse.lsp4j.Diagnostic

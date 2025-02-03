@@ -1,6 +1,6 @@
 package io.github.warraft.jass.converter
 
-import io.github.warraft.jass.antlr.JassState
+import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenModifier
 import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
 import org.antlr.v4.runtime.CharStreams
@@ -14,15 +14,28 @@ class JassStateTest {
         state.parse(
             CharStreams.fromString(
                 """
+                type unit extends handle
+                    
                 globals
-                    integer a = 1 - ""
+                    unit asuna
                 endglobals
+                function main takes nothing returns nothing
+                    set asuna = 2
+                endfunction
+                
                 """.trimIndent()
             )
         )
         println("🔥")
         for (g in state.globals) {
             println(g)
+        }
+
+        for (f in state.functions) {
+            for (s in f.stmt) {
+                println(s)
+            }
+
         }
 
         for (g in state.diagnosticHub.diagnostics) {

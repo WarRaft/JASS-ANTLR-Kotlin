@@ -2,8 +2,8 @@
 
 package io.github.warraft.jass.converter
 
-import io.github.warraft.jass.antlr.JassFakeName.Companion.AsKeywords
-import io.github.warraft.jass.antlr.JassState
+import io.github.warraft.jass.antlr.utils.JassFakeName.Companion.AsKeywords
+import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.antlr.psi.*
 import java.nio.file.Path
 

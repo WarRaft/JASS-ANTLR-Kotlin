@@ -1,4 +1,6 @@
-package io.github.warraft.jass.antlr
+package io.github.warraft.jass.antlr.utils
+
+import io.github.warraft.jass.antlr.state.JassState
 
 class JassFakeName(val state: JassState) {
 

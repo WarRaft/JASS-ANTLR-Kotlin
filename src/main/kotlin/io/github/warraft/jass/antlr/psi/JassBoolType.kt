@@ -9,8 +9,13 @@ class JassBoolType : IJassType() {
             else -> JassUndefinedType()
         }
 
-        JassExprOp.And, JassExprOp.Or, JassExprOp.Eq, JassExprOp.Neq -> when (b) {
+        JassExprOp.And, JassExprOp.Or -> when (b) {
             is JassBoolType -> JassBoolType()
+            else -> JassUndefinedType()
+        }
+
+        JassExprOp.Eq, JassExprOp.Neq -> when (b) {
+            is JassBoolType, is JassNullType -> JassBoolType()
             else -> JassUndefinedType()
         }
 

@@ -7,7 +7,7 @@ class JassNullType : IJassType() {
         JassExprOp.Eq,
         JassExprOp.Neq,
             -> when (b) {
-            is JassStrType, is JassNullType -> JassBoolType()
+            is JassNullType, is JassIntType, is JassRealType, is JassStrType, is JassHandleType -> JassBoolType()
             else -> JassUndefinedType()
         }
 
