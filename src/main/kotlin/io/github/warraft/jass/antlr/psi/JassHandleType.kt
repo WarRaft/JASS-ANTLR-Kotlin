@@ -1,14 +1,16 @@
 package io.github.warraft.jass.antlr.psi
 
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
+
 class JassHandleType(
     override val name: String,
-) : IJassType() {
+) : JassTypeBase() {
     var parent: JassHandleType? = null
 
     override fun op(
         op: JassExprOp,
-        b: IJassType,
-    ): IJassType {
+        b: JassTypeBase,
+    ): JassTypeBase {
         return when (op) {
             JassExprOp.Set -> when (b) {
                 is JassHandleType -> {

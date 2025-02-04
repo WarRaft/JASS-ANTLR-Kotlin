@@ -1,11 +1,14 @@
 package io.github.warraft.jass.antlr.psi
 
+import io.github.warraft.jass.antlr.psi.base.JassNodeBase
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
+
 class JassExpr(
     val op: JassExprOp,
-    val a: IJassNode?,
-    val b: IJassNode? = null,
-) : IJassNode() {
-    override var type: IJassType
+    val a: JassNodeBase?,
+    val b: JassNodeBase? = null,
+) : JassNodeBase() {
+    override var type: JassTypeBase
 
     init {
         type = JassUndefinedType()

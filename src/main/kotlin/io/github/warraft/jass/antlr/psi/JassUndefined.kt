@@ -1,8 +1,11 @@
 package io.github.warraft.jass.antlr.psi
 
-class JassUndefined(val raw: String) : IJassNode() {
+import io.github.warraft.jass.antlr.psi.base.JassNodeBase
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 
-    override val type: IJassType = JassUndefinedType()
+class JassUndefined(val raw: String) : JassNodeBase() {
+
+    override val type: JassTypeBase = JassUndefinedType()
 
     override fun toString(): String = "<$type>$raw"
 }

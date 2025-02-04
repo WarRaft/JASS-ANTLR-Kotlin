@@ -18,7 +18,6 @@ import java.util.concurrent.CompletableFuture
 import kotlin.io.path.isReadable
 import kotlin.io.path.toPath
 
-
 class JassTextDocumentService(val server: JassLanguageServer) : TextDocumentService {
     override fun completion(params: CompletionParams?): CompletableFuture<Either<List<CompletionItem>, CompletionList>> =
         CompletableFuture.completedFuture(Either.forLeft(getState(params)?.completion()))
@@ -31,13 +30,10 @@ class JassTextDocumentService(val server: JassLanguageServer) : TextDocumentServ
 
     private val states = mutableMapOf<Path, JassState>()
 
-    override fun references(params: ReferenceParams?): CompletableFuture<MutableList<out Location?>?>? {
-        server.log("references ${params?.position}")
-        return CompletableFuture.completedFuture(getState(params)?.references(params))
-    }
-
     override fun documentHighlight(params: DocumentHighlightParams?): CompletableFuture<List<DocumentHighlight>> =
         CompletableFuture.completedFuture(getState(params)?.documentHighlight(params))
+
+    override fun references(params: ReferenceParams?): CompletableFuture<MutableList<out Location?>?>? = CompletableFuture.completedFuture(getState(params)?.references(params))
 
     override fun rename(params: RenameParams?): CompletableFuture<WorkspaceEdit?>? {
         val edit = WorkspaceEdit()
@@ -78,7 +74,7 @@ class JassTextDocumentService(val server: JassLanguageServer) : TextDocumentServ
         list: List<JassState> = listOf(),
         noparse: Boolean,
     ): JassState {
-        val s = states.getOrPut(path) { JassState() }
+        val s = states.getOrPut(path) { JassState() }.apply { this.path = path }
         if (noparse && s.nodeMap.isNotEmpty()) return s
         try {
             s.parse(stream, list)

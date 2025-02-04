@@ -2,8 +2,8 @@ package io.github.warraft.jass.converter
 
 import io.github.warraft.jass.antlr.utils.JassFakeName
 import io.github.warraft.jass.antlr.state.JassState
-import io.github.warraft.jass.antlr.psi.IJassNode
-import io.github.warraft.jass.antlr.psi.IJassType
+import io.github.warraft.jass.antlr.psi.base.JassNodeBase
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import io.github.warraft.jass.antlr.psi.JassExprOp
 import io.github.warraft.jass.antlr.psi.JassFun
 import io.github.warraft.jass.antlr.psi.JassHandleType
@@ -26,7 +26,7 @@ abstract class JassBase(
 
     open fun isKeyword(s: String): Boolean = false
 
-    abstract fun typename(type: IJassType, array: Boolean = false): String
+    abstract fun typename(type: JassTypeBase, array: Boolean = false): String
 
     fun varname(v: JassVar): String {
         val root = v.root
@@ -50,7 +50,7 @@ abstract class JassBase(
         state.globals.forEach(::global)
     }
 
-    open fun opname(op: JassExprOp, a: IJassNode, b: IJassNode): String = when (op) {
+    open fun opname(op: JassExprOp, a: JassNodeBase, b: JassNodeBase): String = when (op) {
         JassExprOp.Mul -> "*"
         JassExprOp.Div -> "/"
         JassExprOp.Add -> "+"
@@ -78,9 +78,9 @@ abstract class JassBase(
         }
     }
 
-    abstract fun expr(e: IJassNode?)
+    abstract fun expr(e: JassNodeBase?)
 
-    open fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
+    open fun expr(op: JassExprOp, a: JassNodeBase, b: JassNodeBase) {
         expr(a)
         builder
             .append(" ")

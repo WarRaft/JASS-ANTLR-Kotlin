@@ -1,7 +1,10 @@
 package io.github.warraft.jass.antlr.psi
 
-class JassReal(val raw: String) : IJassNode() {
-    override val type: IJassType = JassRealType()
+import io.github.warraft.jass.antlr.psi.base.JassNodeBase
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
+
+class JassReal(val raw: String) : JassNodeBase() {
+    override val type: JassTypeBase = JassRealType()
 
     override fun toString(): String = "<$type>$raw"
 }

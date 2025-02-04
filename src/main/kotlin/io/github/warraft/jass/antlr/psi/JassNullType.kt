@@ -1,9 +1,11 @@
 package io.github.warraft.jass.antlr.psi
 
-class JassNullType : IJassType() {
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
+
+class JassNullType : JassTypeBase() {
     override val name: String = "null"
 
-    override fun op(op: JassExprOp, b: IJassType): IJassType = when (op) {
+    override fun op(op: JassExprOp, b: JassTypeBase): JassTypeBase = when (op) {
         JassExprOp.Eq,
         JassExprOp.Neq,
             -> when (b) {

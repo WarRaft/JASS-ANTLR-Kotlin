@@ -55,9 +55,9 @@ class JassLanguageServer(val args: Array<String>) : LanguageServer, LanguageClie
             documentSymbolProvider = Either.forRight(DocumentSymbolOptions())
             diagnosticProvider = DiagnosticRegistrationOptions()
             hoverProvider = Either.forRight(HoverOptions())
-            renameProvider = Either.forRight(RenameOptions())
-            linkedEditingRangeProvider = Either.forRight(LinkedEditingRangeRegistrationOptions())
-            //referencesProvider = Either.forRight(ReferenceOptions())
+            //renameProvider = Either.forRight(RenameOptions())
+            //linkedEditingRangeProvider = Either.forRight(LinkedEditingRangeRegistrationOptions())
+            referencesProvider = Either.forRight(ReferenceOptions())
 
         }
         return CompletableFuture.completedFuture(InitializeResult(capabilities))

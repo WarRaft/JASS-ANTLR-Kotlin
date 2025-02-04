@@ -1,7 +1,8 @@
 package io.github.warraft.jass.antlr.state.ext
 
 import io.github.warraft.jass.antlr.JassParser
-import io.github.warraft.jass.antlr.psi.IJassNode
+import io.github.warraft.jass.antlr.JassParser.StmtCallContext
+import io.github.warraft.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.jass.antlr.psi.JassExitWhen
 import io.github.warraft.jass.antlr.psi.JassExprOp
 import io.github.warraft.jass.antlr.psi.JassFun
@@ -15,7 +16,7 @@ import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode
 import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
 import org.antlr.v4.runtime.tree.TerminalNode
 
-fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<IJassNode>, scopes: MutableList<IJassNode>) {
+fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNodeBase>, scopes: MutableList<JassNodeBase>) {
     val f = scopes.first() as JassFun
 
     for (ctx in ctxs) {
@@ -24,7 +25,7 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<IJassNo
                 val setctx: JassParser.SetContext = ctx.set()
                 val nameCtx: TerminalNode? = setctx.ID()
 
-                var node: IJassNode? = null
+                var node: JassNodeBase? = null
                 if (nameCtx == null) {
                     diagnosticHub.add(
                         setctx,
@@ -63,11 +64,12 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<IJassNo
 
                 if (node is JassVar) {
                     val v = node.clone(
+                        state = this,
                         expr = e,
                         index = expr(setctx.setBrack()?.expr(), f),
                         symbol = nameCtx?.symbol
-                    ).apply {
-                        tokenTree.add(this)
+                    ).also {
+                        tokenTree.add(it)
                     }
 
                     if (v.type.op(JassExprOp.Set, e.type) is JassUndefinedType) {
@@ -84,32 +86,42 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<IJassNo
                 continue
             }
 
-            is JassParser.StmtCallContext -> {
+            is StmtCallContext -> {
                 val callctx: JassParser.CallContext = ctx.call()
-                val idctx: TerminalNode? = callctx.ID()
+                val nameCtx: TerminalNode? = callctx.ID()
 
                 semanticHub
-                    .add(idctx, JassSemanticTokenType.FUNCTION)
+                    .add(nameCtx, JassSemanticTokenType.FUNCTION)
                     .add(callctx.CALL(), JassSemanticTokenType.KEYWORD)
 
-                if (idctx == null) {
-                    //err(JassErrorId.ERROR, JassToken(ctx), "Function name is missing")
+                if (nameCtx == null) {
+                    diagnosticHub.add(
+                        ctx,
+                        JassDiagnosticCode.ERROR,
+                        "Function name is missing"
+                    )
                     continue
                 }
 
-                val name = idctx.text
+                val name = nameCtx.text
                 var node = getNode(name, f)
 
                 var cf = JassFun(
+                    state = this,
                     call = true,
                     name = name
                 )
 
                 when (node) {
-                    is JassFun -> cf = node.clone(call = true)
+                    is JassFun -> cf = node.clone(
+                        state = this,
+                        call = true,
+                        symbol = nameCtx.symbol
+                    ).also { tokenTree.add(it) }
+
                     null -> {
                         diagnosticHub.add(
-                            idctx,
+                            nameCtx,
                             JassDiagnosticCode.ERROR,
                             "Function not exists"
                         )
@@ -117,7 +129,7 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<IJassNo
 
                     else -> {
                         diagnosticHub.add(
-                            idctx,
+                            nameCtx,
                             JassDiagnosticCode.ERROR,
                             "Target is not a function"
                         )
@@ -125,7 +137,7 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<IJassNo
                 }
 
                 semanticHub
-                    .add(idctx, JassSemanticTokenType.FUNCTION)
+                    .add(nameCtx, JassSemanticTokenType.FUNCTION)
                     .add(callctx.DEBUG(), JassSemanticTokenType.KEYWORD)
                     .add(callctx.CALL(), JassSemanticTokenType.KEYWORD)
 

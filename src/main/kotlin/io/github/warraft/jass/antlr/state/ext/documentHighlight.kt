@@ -1,6 +1,6 @@
 package io.github.warraft.jass.antlr.state.ext
 
-import io.github.warraft.jass.antlr.psi.JassVar
+import io.github.warraft.jass.antlr.psi.base.JassObjBase
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.lsp4j.utils.RangeEx
 import org.eclipse.lsp4j.DocumentHighlight
@@ -12,7 +12,8 @@ fun JassState.documentHighlight(params: DocumentHighlightParams?): List<Document
     val position = params?.position ?: return highlights
     val node = tokenTree.find(position) ?: return highlights
 
-    fun addVar(v: JassVar) {
+    fun addObj(v: JassObjBase<*>) {
+        if (path != v.state.path) return
         highlights.add(
             DocumentHighlight(
                 RangeEx.get(v.symbol),
@@ -22,10 +23,10 @@ fun JassState.documentHighlight(params: DocumentHighlightParams?): List<Document
     }
 
     when (node) {
-        is JassVar -> {
+        is JassObjBase<*> -> {
             val root = node.root
-            addVar(root)
-            for (v in root.links) addVar(v)
+            addObj(root)
+            for (v in root.links) addObj(v)
         }
     }
 

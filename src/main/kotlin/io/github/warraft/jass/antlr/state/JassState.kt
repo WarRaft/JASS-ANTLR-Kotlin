@@ -3,6 +3,8 @@ package io.github.warraft.jass.antlr.state
 import io.github.warraft.jass.antlr.JassLexer
 import io.github.warraft.jass.antlr.JassParser
 import io.github.warraft.jass.antlr.psi.*
+import io.github.warraft.jass.antlr.psi.base.JassNodeBase
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import io.github.warraft.jass.antlr.state.ext.expr
 import io.github.warraft.jass.antlr.state.ext.function
 import io.github.warraft.jass.antlr.utils.JassErrorListener
@@ -17,9 +19,12 @@ import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
 import io.github.warraft.jass.lsp4j.symbol.JassDocumentSymbolHub
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonTokenStream
+import java.nio.file.Path
 
 class JassState {
     var states: List<JassState> = listOf()
+
+    var path: Path? = null
 
     val typeMap: MutableMap<String, JassHandleType> = mutableMapOf()
     val types: MutableList<JassHandleType> = mutableListOf()
@@ -28,7 +33,7 @@ class JassState {
     val globals: MutableList<JassVar> = mutableListOf()
     val functions: MutableList<JassFun> = mutableListOf()
 
-    val nodeMap: MutableMap<String, IJassNode> = mutableMapOf()
+    val nodeMap: MutableMap<String, JassNodeBase> = mutableMapOf()
 
     val semanticHub = JassSemanticTokenHub()
     val foldingHub = JassFoldingHub()
@@ -74,7 +79,7 @@ class JassState {
         diagnosticHub.diagnostics.addAll(errorJassErrorListener.diagnostics)
     }
 
-    fun getNode(key: String, f: JassFun?): IJassNode? {
+    fun getNode(key: String, f: JassFun?): JassNodeBase? {
         if (f != null) {
             for (p in f.param.asReversed()) {
                 if (p.name == key) return p
@@ -91,8 +96,8 @@ class JassState {
         return null
     }
 
-    fun getType(key: String): IJassType? {
-        var type: IJassType? = null
+    fun getType(key: String): JassTypeBase? {
+        var type: JassTypeBase? = null
         states.forEach {
             if (it.typeMap.containsKey(key)) {
                 type = it.typeMap[key]
@@ -105,7 +110,7 @@ class JassState {
 
     }
 
-    fun typeFromString(str: String): IJassType = when (str) {
+    fun typeFromString(str: String): JassTypeBase = when (str) {
         "integer" -> JassIntType()
         "real" -> JassRealType()
         "string" -> JassStrType()
@@ -168,14 +173,15 @@ class JassState {
 
 
         val v = JassVar(
+            state = this,
             name = nameCtx?.text ?: "",
             constant = cctx != null,
             array = actx != null,
             global = true,
             type = typeFromString(ctx.typename().text),
             symbol = nameCtx?.symbol
-        ).apply {
-            tokenTree.add(this)
+        ).also {
+            tokenTree.add(it)
         }
 
         if (eqctx != null) {
@@ -187,8 +193,8 @@ class JassState {
                     "${v.name} global set missing"
                 )
             } else {
-                val ta: IJassType = v.type
-                val tb: IJassType = v.expr!!.type
+                val ta: JassTypeBase = v.type
+                val tb: JassTypeBase = v.expr!!.type
                 val t = ta.op(JassExprOp.Set, tb)
                 if (t is JassUndefinedType) {
                     diagnosticHub.add(
@@ -213,13 +219,12 @@ class JassState {
         globals.add(v)
     }
 
-    fun root(ctx: JassParser.RootContext): IJassNode? {
+    fun root(ctx: JassParser.RootContext): JassNodeBase? {
         ctx.children.forEach {
             when (it) {
                 is JassParser.GlobalsContext -> {
                     val sgctx = it.GLOBALS()
                     val egctx = it.ENDGLOBALS()
-
 
                     foldingHub.add(sgctx, egctx)
                     semanticHub

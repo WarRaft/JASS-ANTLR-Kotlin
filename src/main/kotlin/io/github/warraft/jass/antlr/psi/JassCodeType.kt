@@ -1,8 +1,10 @@
 package io.github.warraft.jass.antlr.psi
 
-class JassCodeType() : IJassType() {
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
+
+class JassCodeType() : JassTypeBase() {
     override val name: String = "code"
-    override fun op(op: JassExprOp, b: IJassType): IJassType {
+    override fun op(op: JassExprOp, b: JassTypeBase): JassTypeBase {
         return when (op) {
             JassExprOp.Set -> when (b) {
                 is JassCodeType,

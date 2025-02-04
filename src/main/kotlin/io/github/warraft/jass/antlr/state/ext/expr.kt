@@ -1,7 +1,7 @@
 package io.github.warraft.jass.antlr.state.ext
 
 import io.github.warraft.jass.antlr.JassParser
-import io.github.warraft.jass.antlr.psi.IJassNode
+import io.github.warraft.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.jass.antlr.psi.JassBool
 import io.github.warraft.jass.antlr.psi.JassCodeType
 import io.github.warraft.jass.antlr.psi.JassExpr
@@ -62,41 +62,62 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
 
     when (ctx) {
         is JassParser.ExprFunContext -> {
-            val idctx = ctx.ID()
-            val name = idctx.text
-            val cf = JassFun(
-                name = name,
-                type = JassCodeType(),
-                ref = true,
-            )
+            val nameCtx: TerminalNode? = ctx.ID()
+            if (nameCtx == null) {
+                diagnosticHub.add(ctx, JassDiagnosticCode.ERROR, "Missing function name")
+                return null
+            }
 
-            semanticHub
-                .add(idctx, JassSemanticTokenType.FUNCTION)
-                .add(ctx.FUNCTION(), JassSemanticTokenType.KEYWORD)
-
-            return JassExpr(
-                op = JassExprOp.Get,
-                a = cf
-            )
-        }
-
-        is JassParser.ExprCallContext -> {
-            val idctx = ctx.ID()
-            val name = idctx.text
+            val name = nameCtx.text
             val node = getNode(name, scope)
             if (node !is JassFun) {
                 diagnosticHub.add(
-                    idctx,
+                    nameCtx,
                     JassDiagnosticCode.ERROR,
                     "$name function not exists"
                 )
                 return null
             }
-            val cf = node.clone()
 
-            semanticHub.add(idctx, JassSemanticTokenType.FUNCTION)
+            semanticHub
+                .add(nameCtx, JassSemanticTokenType.FUNCTION)
+                .add(ctx.FUNCTION(), JassSemanticTokenType.KEYWORD)
 
-            ctx.expr().forEach {
+            return JassExpr(
+                op = JassExprOp.Get,
+                a = JassFun(
+                    state = this,
+                    name = name,
+                    type = JassCodeType(),
+                    ref = true,
+                    symbol = nameCtx.symbol
+                ).also {
+                    tokenTree.add(it)
+                }
+            )
+        }
+
+        is JassParser.ExprCallContext -> {
+            val nameCtx = ctx.ID()
+            val name = nameCtx.text
+            val node = getNode(name, scope)
+            if (node !is JassFun) {
+                diagnosticHub.add(
+                    nameCtx,
+                    JassDiagnosticCode.ERROR,
+                    "$name function not exists"
+                )
+                return null
+            }
+            semanticHub.add(nameCtx, JassSemanticTokenType.FUNCTION)
+
+            val cf = node.clone(
+                state = this
+            ).also {
+                tokenTree.add(it)
+            }
+
+            for (it in ctx.expr()) {
                 val e = expr(it, scope)
                 if (e != null) {
                     cf.arg.add(e)
@@ -113,13 +134,14 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
             val idctx = ctx.ID()
             semanticHub.add(idctx, JassSemanticTokenType.VARIABLE)
             val name = idctx.text
-            var node: IJassNode? = getNode(name, scope)
+            var node: JassNodeBase? = getNode(name, scope)
             if (node is JassVar) {
                 return JassExpr(
                     op = JassExprOp.Get,
                     a = node.clone(
+                        state = this,
                         symbol = idctx.symbol,
-                    ).apply { tokenTree.add(this) }
+                    ).also { tokenTree.add(it) }
                 )
             }
             diagnosticHub.add(
@@ -135,7 +157,7 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
             semanticHub.add(idctx, JassSemanticTokenType.VARIABLE)
 
             val name = idctx.text
-            var node: IJassNode? = getNode(name, scope)
+            var node: JassNodeBase? = getNode(name, scope)
             if (node !is JassVar) {
                 diagnosticHub.add(
                     idctx,
@@ -147,9 +169,10 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
             return JassExpr(
                 op = JassExprOp.Get,
                 a = node.clone(
+                    state = this,
                     index = expr(ctx.expr(), scope),
                     symbol = idctx.symbol
-                ).apply { tokenTree.add(this) },
+                ).also { tokenTree.add(it) },
             )
         }
 

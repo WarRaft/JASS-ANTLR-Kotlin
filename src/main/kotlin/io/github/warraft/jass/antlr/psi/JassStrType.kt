@@ -1,9 +1,11 @@
 package io.github.warraft.jass.antlr.psi
 
-class JassStrType : IJassType() {
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
+
+class JassStrType : JassTypeBase() {
     override val name: String = "string"
 
-    override fun op(op: JassExprOp, b: IJassType): IJassType = when (op) {
+    override fun op(op: JassExprOp, b: JassTypeBase): JassTypeBase = when (op) {
         JassExprOp.Set -> when (b) {
             is JassStrType, is JassNullType -> JassStrType()
             else -> JassUndefinedType()

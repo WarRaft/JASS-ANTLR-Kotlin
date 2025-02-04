@@ -1,10 +1,12 @@
 package io.github.warraft.jass.antlr.psi
 
 import io.github.warraft.jass.antlr.JassParser.ExitwhenContext
+import io.github.warraft.jass.antlr.psi.base.JassNodeBase
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 
 class JassExitWhen(
     val expr: JassExpr,
     var ctx: ExitwhenContext? = null,
-) : IJassNode() {
-    override var type: IJassType = JassUndefinedType()
+) : JassNodeBase() {
+    override var type: JassTypeBase = JassUndefinedType()
 }

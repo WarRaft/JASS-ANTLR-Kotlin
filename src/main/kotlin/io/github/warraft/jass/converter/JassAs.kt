@@ -5,6 +5,8 @@ package io.github.warraft.jass.converter
 import io.github.warraft.jass.antlr.utils.JassFakeName.Companion.AsKeywords
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.antlr.psi.*
+import io.github.warraft.jass.antlr.psi.base.JassNodeBase
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import java.nio.file.Path
 
 class JassAs(
@@ -28,7 +30,7 @@ class JassAs(
         builder.append("\n")
     }
 
-    override fun typename(type: IJassType, array: Boolean): String {
+    override fun typename(type: JassTypeBase, array: Boolean): String {
         var s = if (array) "array<" else ""
         s += when (type) {
             is JassBoolType -> "bool"
@@ -107,16 +109,16 @@ class JassAs(
         builder.append("}\n")
     }
 
-    override fun opname(op: JassExprOp, a: IJassNode, b: IJassNode): String = when (op) {
+    override fun opname(op: JassExprOp, a: JassNodeBase, b: JassNodeBase): String = when (op) {
         JassExprOp.And -> "&&"
         JassExprOp.Or -> "||"
 
         else -> super.opname(op, a, b)
     }
 
-    override fun expr(op: JassExprOp, a: IJassNode, b: IJassNode) {
-        var aa: IJassNode = a
-        var bb: IJassNode = b
+    override fun expr(op: JassExprOp, a: JassNodeBase, b: JassNodeBase) {
+        var aa: JassNodeBase = a
+        var bb: JassNodeBase = b
         when (op) {
             JassExprOp.Eq,
             JassExprOp.Neq,
@@ -130,7 +132,7 @@ class JassAs(
         super.expr(op, aa, bb)
     }
 
-    override fun expr(e: IJassNode?) {
+    override fun expr(e: JassNodeBase?) {
         if (e == null) return
         when (e) {
             is JassNull -> builder.append("null")
@@ -197,7 +199,7 @@ class JassAs(
     }
 
     @Suppress("DuplicatedCode")
-    fun stmt(nodes: List<IJassNode>, level: Int) {
+    fun stmt(nodes: List<JassNodeBase>, level: Int) {
         for (node in nodes) {
             when (node) {
                 is JassIf -> {

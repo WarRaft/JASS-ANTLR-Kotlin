@@ -4,6 +4,8 @@ package io.github.warraft.jass.converter
 
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.antlr.psi.*
+import io.github.warraft.jass.antlr.psi.base.JassNodeBase
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import java.nio.file.Path
 
 class JassJass(
@@ -25,7 +27,7 @@ class JassJass(
         builder.append("\n")
     }
 
-    override fun typename(type: IJassType, array: Boolean): String = type.name
+    override fun typename(type: JassTypeBase, array: Boolean): String = type.name
 
     override fun global(v: JassVar) {
         builder.append("\t")
@@ -98,7 +100,7 @@ class JassJass(
         builder.append("endfunction\n")
     }
 
-    override fun expr(e: IJassNode?) {
+    override fun expr(e: JassNodeBase?) {
         if (e == null) return
         when (e) {
             is JassNull -> builder.append("null")
@@ -166,7 +168,7 @@ class JassJass(
         }
     }
 
-    fun stmt(nodes: List<IJassNode>, level: Int) {
+    fun stmt(nodes: List<JassNodeBase>, level: Int) {
         for (node in nodes) {
 
             when (node) {

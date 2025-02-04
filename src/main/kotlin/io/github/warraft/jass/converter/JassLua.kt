@@ -5,6 +5,8 @@ package io.github.warraft.jass.converter
 import io.github.warraft.jass.antlr.utils.JassFakeName.Companion.LuaKeywords
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.antlr.psi.*
+import io.github.warraft.jass.antlr.psi.base.JassNodeBase
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import java.nio.file.Path
 
 class JassLua(
@@ -28,7 +30,7 @@ class JassLua(
         builder.append("\n")
     }
 
-    override fun typename(type: IJassType, array: Boolean): String {
+    override fun typename(type: JassTypeBase, array: Boolean): String {
         val a = if (array) "[]" else ""
         return when (type) {
             is JassBoolType -> "boolean$a"
@@ -106,7 +108,7 @@ class JassLua(
         builder.append("end\n")
     }
 
-    override fun opname(op: JassExprOp, a: IJassNode, b: IJassNode): String = when (op) {
+    override fun opname(op: JassExprOp, a: JassNodeBase, b: JassNodeBase): String = when (op) {
         JassExprOp.Add -> {
             if (a.type is JassStrType || b.type is JassStrType) ".."
             else "+"
@@ -115,7 +117,7 @@ class JassLua(
         else -> super.opname(op, a, b)
     }
 
-    override fun expr(e: IJassNode?) {
+    override fun expr(e: JassNodeBase?) {
         if (e == null) return
         when (e) {
             is JassNull -> builder.append("nil")
@@ -191,7 +193,7 @@ class JassLua(
     }
 
     @Suppress("DuplicatedCode")
-    fun stmt(nodes: List<IJassNode>, level: Int) {
+    fun stmt(nodes: List<JassNodeBase>, level: Int) {
         for (node in nodes) {
             when (node) {
                 is JassIf -> {

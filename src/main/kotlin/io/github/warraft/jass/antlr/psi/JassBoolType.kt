@@ -1,9 +1,11 @@
 package io.github.warraft.jass.antlr.psi
 
-class JassBoolType : IJassType() {
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
+
+class JassBoolType : JassTypeBase() {
     override val name: String = "boolean"
 
-    override fun op(op: JassExprOp, b: IJassType): IJassType = when (op) {
+    override fun op(op: JassExprOp, b: JassTypeBase): JassTypeBase = when (op) {
         JassExprOp.Set -> when (b) {
             is JassBoolType -> JassBoolType()
             else -> JassUndefinedType()

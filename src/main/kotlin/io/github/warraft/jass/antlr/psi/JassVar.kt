@@ -2,9 +2,14 @@ package io.github.warraft.jass.antlr.psi
 
 import Main.Companion.BLUE
 import Main.Companion.RESET
+import io.github.warraft.jass.antlr.psi.base.JassNodeBase
+import io.github.warraft.jass.antlr.psi.base.JassObjBase
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
+import io.github.warraft.jass.antlr.state.JassState
 import org.antlr.v4.runtime.Token
 
 class JassVar(
+    override val state: JassState,
     var name: String,
     val constant: Boolean = false,
     val global: Boolean = false,
@@ -14,37 +19,37 @@ class JassVar(
     var base: JassVar? = null,
     var index: JassExpr? = null,
     var expr: JassExpr? = null,
-    override val type: IJassType,
-    val symbol: Token? = null,
-) : IJassNode() {
+    override val type: JassTypeBase,
+    override val symbol: Token? = null,
+) : JassNodeBase(), JassObjBase<JassVar> {
 
     var fakename: String = ""
 
-    val root: JassVar
+    override val root: JassVar
         get() = base ?: this
 
-    val links = mutableListOf<JassVar>()
+    override val links = mutableListOf<JassVar>()
 
     fun clone(
+        state: JassState,
         index: JassExpr? = null,
         expr: JassExpr? = null,
         symbol: Token? = null,
-    ): JassVar {
-        val v = JassVar(
-            name = name,
-            constant = constant,
-            global = global,
-            array = array,
-            local = local,
-            param = param,
-            type = type,
-            base = this,
-            expr = expr ?: this.expr,
-            index = index ?: this.index,
-            symbol = symbol,
-        )
-        links.add(v)
-        return v
+    ): JassVar = JassVar(
+        state = state,
+        name = name,
+        constant = constant,
+        global = global,
+        array = array,
+        local = local,
+        param = param,
+        type = type,
+        base = this,
+        expr = expr ?: this.expr,
+        index = index ?: this.index,
+        symbol = symbol,
+    ).also {
+        links.add(it)
     }
 
     override fun toString(): String {

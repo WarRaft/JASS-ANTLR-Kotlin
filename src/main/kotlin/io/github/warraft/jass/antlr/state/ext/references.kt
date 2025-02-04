@@ -1,10 +1,8 @@
 package io.github.warraft.jass.antlr.state.ext
 
-import io.github.warraft.jass.antlr.psi.JassVar
+import io.github.warraft.jass.antlr.psi.base.JassObjBase
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.lsp4j.utils.RangeEx
-import org.eclipse.lsp4j.DocumentHighlight
-import org.eclipse.lsp4j.DocumentHighlightKind
 import org.eclipse.lsp4j.Location
 import org.eclipse.lsp4j.ReferenceParams
 
@@ -13,25 +11,17 @@ fun JassState.references(params: ReferenceParams?): MutableList<out Location?> {
     val position = params?.position ?: return refs
     val node = tokenTree.find(position) ?: return refs
 
-    /*
-    fun addVar(v: JassVar) {
-        refs.add(
-            DocumentHighlight(
-                RangeEx.get(v.symbol),
-                DocumentHighlightKind.Write
-            )
-        )
+    fun addObj(v: JassObjBase<*>) {
+        val p = v.state.path ?: return
+        refs.add(Location(p.toUri().toString(), RangeEx.get(v.symbol)))
     }
-
-
 
     when (node) {
-        is JassVar -> {
+        is JassObjBase<*> -> {
             val root = node.root
-            addVar(root)
-            for (v in root.links) addVar(v)
+            addObj(root)
+            for (v in root.links) addObj(v)
         }
     }
- */
     return refs
 }

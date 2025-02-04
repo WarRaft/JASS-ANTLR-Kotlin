@@ -1,9 +1,11 @@
 package io.github.warraft.jass.antlr.psi
 
-class JassRealType : IJassType() {
+import io.github.warraft.jass.antlr.psi.base.JassTypeBase
+
+class JassRealType : JassTypeBase() {
     override val name: String = "real"
 
-    override fun op(op: JassExprOp, b: IJassType): IJassType {
+    override fun op(op: JassExprOp, b: JassTypeBase): JassTypeBase {
         return when (op) {
 
             JassExprOp.Add, JassExprOp.Sub, JassExprOp.Mul, JassExprOp.Div -> when (b) {
