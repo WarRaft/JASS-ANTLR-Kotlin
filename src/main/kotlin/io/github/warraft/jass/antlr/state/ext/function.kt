@@ -2,6 +2,7 @@ package io.github.warraft.jass.antlr.state.ext
 
 import io.github.warraft.jass.antlr.JassParser
 import io.github.warraft.jass.antlr.JassParser.FunctionContext
+import io.github.warraft.jass.antlr.JassParser.NativeRuleContext
 import io.github.warraft.jass.antlr.JassParser.VariableContext
 import io.github.warraft.jass.antlr.JassParser.VarnameContext
 import io.github.warraft.jass.antlr.psi.JassFun
@@ -17,7 +18,7 @@ import org.eclipse.lsp4j.DocumentSymbol
 import org.eclipse.lsp4j.SymbolKind
 import kotlin.collections.set
 
-fun JassState.function(funCtx: ParserRuleContext) {
+fun JassState.function(defCtx: ParserRuleContext) {
     var nameCtx: TerminalNode? = null
     var takesCtx: JassParser.TakesContext? = null
     var returnsCtx: JassParser.ReturnsRuleContext? = null
@@ -28,15 +29,15 @@ fun JassState.function(funCtx: ParserRuleContext) {
 
     var sym: DocumentSymbol? = null
 
-    when (funCtx) {
-        is JassParser.NativeRuleContext -> {
+    when (defCtx) {
+        is NativeRuleContext -> {
             f.native = true
 
-            nameCtx = funCtx.ID()
-            takesCtx = funCtx.takes()
-            returnsCtx = funCtx.returnsRule()
+            nameCtx = defCtx.ID()
+            takesCtx = defCtx.takes()
+            returnsCtx = defCtx.returnsRule()
 
-            val nctx = funCtx.NATIVE()
+            val nctx = defCtx.NATIVE()
 
             if (nameCtx == null) diagnosticHub.add(
                 nctx,
@@ -44,22 +45,22 @@ fun JassState.function(funCtx: ParserRuleContext) {
                 "Native name is missing"
             )
 
-            sym = documentSymbolHub.add(funCtx, nameCtx, SymbolKind.Function)
+            sym = documentSymbolHub.add(defCtx, nameCtx, SymbolKind.Function)
 
             semanticHub
-                .add(funCtx.CONSTANT(), JassSemanticTokenType.KEYWORD)
+                .add(defCtx.CONSTANT(), JassSemanticTokenType.KEYWORD)
                 .add(nctx, JassSemanticTokenType.KEYWORD)
 
             tokenTree.add(f, nameCtx)
         }
 
         is FunctionContext -> {
-            nameCtx = funCtx.ID()
-            takesCtx = funCtx.takes()
-            returnsCtx = funCtx.returnsRule()
+            nameCtx = defCtx.ID()
+            takesCtx = defCtx.takes()
+            returnsCtx = defCtx.returnsRule()
 
-            val sfctx = funCtx.FUNCTION()
-            val efctx = funCtx.ENDFUNCTION()
+            val sfctx = defCtx.FUNCTION()
+            val efctx = defCtx.ENDFUNCTION()
 
             if (nameCtx == null) diagnosticHub.add(
                 sfctx,
@@ -69,20 +70,25 @@ fun JassState.function(funCtx: ParserRuleContext) {
 
             foldingHub.add(sfctx, efctx)
 
-            sym = documentSymbolHub.add(funCtx, nameCtx, SymbolKind.Function)
+            sym = documentSymbolHub.add(defCtx, nameCtx, SymbolKind.Function)
             semanticHub
-                .add(funCtx.CONSTANT(), JassSemanticTokenType.KEYWORD)
+                .add(defCtx.CONSTANT(), JassSemanticTokenType.KEYWORD)
                 .add(sfctx, JassSemanticTokenType.KEYWORD)
                 .add(efctx, JassSemanticTokenType.KEYWORD)
         }
     }
 
     if (nameCtx != null) {
-        tokenTree.add(f.apply { symbol = nameCtx.symbol })
+        var name = nameCtx.text
 
-        val name = nameCtx.text
+        tokenTree.add(f.also {
+            it.symbol = nameCtx.symbol
+            it.name = name
+            it.definition = defCtx
+        })
+
         semanticHub.add(nameCtx, JassSemanticTokenType.FUNCTION, JassSemanticTokenModifier.DECLARATION)
-        f.name = name
+
         if (getNode(name, f) != null) {
             diagnosticHub.add(
                 nameCtx,
@@ -131,6 +137,7 @@ fun JassState.function(funCtx: ParserRuleContext) {
                             local = true,
                             param = true,
                             symbol = nameCtx.symbol,
+                            definition = paramsCtx,
                         ).also {
                             tokenTree.add(it)
                         }
@@ -162,34 +169,35 @@ fun JassState.function(funCtx: ParserRuleContext) {
         }
     }
 
-    if (funCtx is FunctionContext) {
-        for (vctx: VariableContext in funCtx.variable()) {
-            val varnameCtx: VarnameContext? = vctx.varname()
+    if (defCtx is FunctionContext) {
+        for (varDefCtx: VariableContext in defCtx.variable()) {
+            val varnameCtx: VarnameContext? = varDefCtx.varname()
             val nameCtx = varnameCtx?.ID()
             if (nameCtx == null) continue
 
             val name = nameCtx.text
 
             semanticHub
-                .add(vctx.CONSTANT(), JassSemanticTokenType.KEYWORD)
-                .add(vctx.ARRAY(), JassSemanticTokenType.KEYWORD)
-                .add(vctx.LOCAL(), JassSemanticTokenType.KEYWORD)
+                .add(varDefCtx.CONSTANT(), JassSemanticTokenType.KEYWORD)
+                .add(varDefCtx.ARRAY(), JassSemanticTokenType.KEYWORD)
+                .add(varDefCtx.LOCAL(), JassSemanticTokenType.KEYWORD)
                 .add(nameCtx, JassSemanticTokenType.PARAMETER, JassSemanticTokenModifier.DECLARATION)
-                .add(vctx.typename().ID(), JassSemanticTokenType.TYPE, JassSemanticTokenModifier.DECLARATION)
+                .add(varDefCtx.typename().ID(), JassSemanticTokenType.TYPE, JassSemanticTokenModifier.DECLARATION)
 
             val v = JassVar(
                 state = this,
                 name = name,
-                array = vctx.ARRAY() != null,
-                type = typeFromString(vctx.typename().text),
+                array = varDefCtx.ARRAY() != null,
+                type = typeFromString(varDefCtx.typename().text),
                 local = true,
                 symbol = nameCtx.symbol,
+                definition = varDefCtx,
             ).also {
                 tokenTree.add(it)
             }
 
-            if (vctx.EQ() != null) {
-                v.expr = expr(vctx.expr(), f)
+            if (varDefCtx.EQ() != null) {
+                v.expr = expr(varDefCtx.expr(), f)
                 if (v.expr == null) {
                     diagnosticHub.add(nameCtx, JassDiagnosticCode.ERROR, "Missing expression")
                 }
@@ -201,8 +209,8 @@ fun JassState.function(funCtx: ParserRuleContext) {
 
     paramSameNameFix(f)
 
-    if (funCtx is FunctionContext) {
-        stmt(funCtx.stmt(), f.stmt, mutableListOf(f))
+    if (defCtx is FunctionContext) {
+        stmt(defCtx.stmt(), f.stmt, mutableListOf(f))
     }
 }
 

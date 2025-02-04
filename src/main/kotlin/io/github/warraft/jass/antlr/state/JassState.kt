@@ -5,8 +5,8 @@ import io.github.warraft.jass.antlr.JassParser
 import io.github.warraft.jass.antlr.psi.*
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.jass.antlr.psi.base.JassTypeBase
-import io.github.warraft.jass.antlr.state.ext.expr
 import io.github.warraft.jass.antlr.state.ext.function
+import io.github.warraft.jass.antlr.state.ext.global
 import io.github.warraft.jass.antlr.utils.JassErrorListener
 import io.github.warraft.jass.antlr.utils.JassTokenFactory
 import io.github.warraft.jass.antlr.utils.JassTokenTree
@@ -14,7 +14,6 @@ import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticHub
 import io.github.warraft.jass.lsp4j.folding.JassFoldingHub
 import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenHub
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenModifier
 import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
 import io.github.warraft.jass.lsp4j.symbol.JassDocumentSymbolHub
 import org.antlr.v4.runtime.CharStream
@@ -155,68 +154,6 @@ class JassState {
         type.parent = p
         typeMap[type.name] = type
         types.add(type)
-    }
-
-    private fun global(ctx: JassParser.VariableContext) {
-        val nameCtx = ctx.varname()?.ID()
-        val tctx = ctx.typename()?.ID()
-        val cctx = ctx.CONSTANT()
-        val actx = ctx.ARRAY()
-        val eqctx = ctx.EQ()
-
-        semanticHub
-            .add(nameCtx, JassSemanticTokenType.VARIABLE, JassSemanticTokenModifier.DECLARATION)
-            .add(tctx, JassSemanticTokenType.TYPE)
-            .add(cctx, JassSemanticTokenType.KEYWORD)
-            .add(actx, JassSemanticTokenType.KEYWORD)
-            .add(eqctx, JassSemanticTokenType.OPERATOR)
-
-
-        val v = JassVar(
-            state = this,
-            name = nameCtx?.text ?: "",
-            constant = cctx != null,
-            array = actx != null,
-            global = true,
-            type = typeFromString(ctx.typename().text),
-            symbol = nameCtx?.symbol
-        ).also {
-            tokenTree.add(it)
-        }
-
-        if (eqctx != null) {
-            v.expr = expr(ctx.expr(), null)
-            if (v.expr == null) {
-                diagnosticHub.add(
-                    eqctx,
-                    JassDiagnosticCode.ERROR,
-                    "${v.name} global set missing"
-                )
-            } else {
-                val ta: JassTypeBase = v.type
-                val tb: JassTypeBase = v.expr!!.type
-                val t = ta.op(JassExprOp.Set, tb)
-                if (t is JassUndefinedType) {
-                    diagnosticHub.add(
-                        ctx.EQ(),
-                        JassDiagnosticCode.ERROR,
-                        "${ta.name} + ${tb.name} is ${t.name}"
-                    )
-                }
-            }
-        }
-
-        if (getNode(v.name, null) != null) {
-            diagnosticHub.add(
-                nameCtx,
-                JassDiagnosticCode.ERROR,
-                "redeclared"
-            )
-            return
-        }
-
-        nodeMap[v.name] = v
-        globals.add(v)
     }
 
     fun root(ctx: JassParser.RootContext): JassNodeBase? {

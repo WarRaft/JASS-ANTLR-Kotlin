@@ -2,6 +2,7 @@ package io.github.warraft.jass.lsp4j.service
 
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.antlr.state.ext.completion
+import io.github.warraft.jass.antlr.state.ext.definition
 import io.github.warraft.jass.antlr.state.ext.documentHighlight
 import io.github.warraft.jass.antlr.state.ext.hover
 import io.github.warraft.jass.antlr.state.ext.references
@@ -29,6 +30,9 @@ class JassTextDocumentService(val server: JassLanguageServer) : TextDocumentServ
         CompletableFuture.completedFuture(getState(params)?.hover(params))
 
     private val states = mutableMapOf<Path, JassState>()
+
+    override fun definition(params: DefinitionParams?): CompletableFuture<Either<MutableList<out Location?>?, MutableList<out LocationLink?>?>?>? =
+        CompletableFuture.completedFuture(Either.forRight(getState(params)?.definition(params)))
 
     override fun documentHighlight(params: DocumentHighlightParams?): CompletableFuture<List<DocumentHighlight>> =
         CompletableFuture.completedFuture(getState(params)?.documentHighlight(params))

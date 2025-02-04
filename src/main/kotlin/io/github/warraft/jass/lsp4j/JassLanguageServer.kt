@@ -58,7 +58,7 @@ class JassLanguageServer(val args: Array<String>) : LanguageServer, LanguageClie
             //renameProvider = Either.forRight(RenameOptions())
             //linkedEditingRangeProvider = Either.forRight(LinkedEditingRangeRegistrationOptions())
             referencesProvider = Either.forRight(ReferenceOptions())
-
+            definitionProvider = Either.forRight(DefinitionOptions())
         }
         return CompletableFuture.completedFuture(InitializeResult(capabilities))
     }

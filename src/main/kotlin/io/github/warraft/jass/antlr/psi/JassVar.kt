@@ -6,6 +6,7 @@ import io.github.warraft.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.jass.antlr.psi.base.JassObjBase
 import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import io.github.warraft.jass.antlr.state.JassState
+import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 
 class JassVar(
@@ -16,11 +17,12 @@ class JassVar(
     val array: Boolean = false,
     val local: Boolean = false,
     val param: Boolean = false,
-    var base: JassVar? = null,
+    override var base: JassVar? = null,
     var index: JassExpr? = null,
     var expr: JassExpr? = null,
     override val type: JassTypeBase,
     override val symbol: Token? = null,
+    override val definition: ParserRuleContext? = null,
 ) : JassNodeBase(), JassObjBase<JassVar> {
 
     var fakename: String = ""

@@ -4,6 +4,7 @@ import io.github.warraft.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.jass.antlr.psi.base.JassObjBase
 import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import io.github.warraft.jass.antlr.state.JassState
+import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 
 class JassFun(
@@ -12,9 +13,10 @@ class JassFun(
     var native: Boolean = false,
     val call: Boolean = false,
     val ref: Boolean = false,
-    var base: JassFun? = null,
+    override var base: JassFun? = null,
     override var type: JassTypeBase = JassUndefinedType(),
     override var symbol: Token? = null,
+    override var definition: ParserRuleContext? = null,
 ) : JassNodeBase(), JassObjBase<JassFun> {
 
     var fakename: String = ""

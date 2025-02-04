@@ -9,6 +9,19 @@ import org.eclipse.lsp4j.InsertTextFormat
 fun JassState.completion(): List<CompletionItem> {
     val list = mutableListOf<CompletionItem>()
 
+    for (k in listOf(
+        "set", "call",
+        "globals", "endglobals",
+        "function", "takes", "returns", "nothing", "endfunction",
+        "return",
+        "if", "then", "else", "elseif", "endif",
+        "loop", "exitwhen", "endloop",
+    )) {
+        list.add(CompletionItem(k).apply {
+            kind = CompletionItemKind.Keyword
+        })
+    }
+
     fun type(t: String) {
         list.add(CompletionItem(t).apply {
             kind = CompletionItemKind.TypeParameter
