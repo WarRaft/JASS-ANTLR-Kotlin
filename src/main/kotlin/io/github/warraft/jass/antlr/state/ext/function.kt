@@ -27,6 +27,18 @@ fun JassState.function(defCtx: ParserRuleContext) {
         state = this
     )
 
+    val comments = mutableListOf<String>()
+    for (i in defCtx.start.line - 1 downTo 0) {
+        val t = commentsMap[i]
+        if (t == null) break
+        commentsMap.remove(i)
+        comments.addFirst(t.text.replaceFirst("^//\\s?".toRegex(), ""))
+        semanticHub.add(t, JassSemanticTokenType.COMMENT, JassSemanticTokenModifier.DOCUMENTATION)
+    }
+    for (c in comments) {
+        f.comments.append(c).append("\n")
+    }
+
     var sym: DocumentSymbol? = null
 
     when (defCtx) {

@@ -18,6 +18,7 @@ import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenHub
 import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
 import io.github.warraft.jass.lsp4j.symbol.JassDocumentSymbolHub
 import org.antlr.v4.runtime.CharStream
+import org.antlr.v4.runtime.CommonToken
 import org.antlr.v4.runtime.CommonTokenStream
 import java.nio.file.Path
 
@@ -40,6 +41,7 @@ class JassState {
     val diagnosticHub = JassDiagnosticHub()
     val documentSymbolHub = JassDocumentSymbolHub()
     val tokenTree = JassTokenTree()
+    val commentsMap = mutableMapOf<Int, CommonToken>()
 
     fun parse(stream: CharStream, states: List<JassState> = listOf()) {
         this.states = states
@@ -56,13 +58,14 @@ class JassState {
         diagnosticHub.clear()
         documentSymbolHub.clear()
         tokenTree.clear()
+        commentsMap.clear()
 
         val errorJassErrorListener = JassErrorListener()
 
         val lexer = JassLexer(stream)
         lexer.removeErrorListeners()
         lexer.addErrorListener(errorJassErrorListener)
-        val f = JassTokenFactory()
+        val f = JassTokenFactory(commentsMap)
         lexer.tokenFactory = f
 
         val tokens = CommonTokenStream(lexer)
@@ -73,6 +76,7 @@ class JassState {
         root(parser.root())
 
         for (c in f.comments) {
+            if (!commentsMap.containsKey(c.line)) continue
             semanticHub.add(c, JassSemanticTokenType.COMMENT)
         }
 

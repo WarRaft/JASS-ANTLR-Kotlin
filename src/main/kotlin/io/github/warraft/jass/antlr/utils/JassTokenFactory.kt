@@ -6,7 +6,7 @@ import org.antlr.v4.runtime.CommonTokenFactory
 import org.antlr.v4.runtime.TokenSource
 import org.antlr.v4.runtime.misc.Pair
 
-class JassTokenFactory : CommonTokenFactory() {
+class JassTokenFactory(val map: MutableMap<Int, CommonToken>) : CommonTokenFactory() {
     val comments = mutableListOf<CommonToken>()
 
     override fun create(
@@ -21,6 +21,7 @@ class JassTokenFactory : CommonTokenFactory() {
     ): CommonToken? {
         var t = super.create(source, type, text, channel, start, stop, line, charPositionInLine)
         if (t.channel == 2) {
+            map[line] = t
             comments.add(t)
         }
         return t

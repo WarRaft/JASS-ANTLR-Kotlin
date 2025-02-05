@@ -16,7 +16,7 @@ class JassStateTest {
                     """
                 // 1
                 
-                // 2 
+                //2 
                 // 3
                 function main takes nothing returns nothing
                 endfunction

@@ -31,6 +31,8 @@ class JassFun(
 
     val stmt: MutableList<JassNodeBase> = mutableListOf()
 
+    val comments = StringBuilder()
+
     fun clone(
         state: JassState,
         call: Boolean? = null,

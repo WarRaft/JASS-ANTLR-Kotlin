@@ -19,6 +19,11 @@ fun JassState.hover(params: HoverParams?): Hover? {
 
     if (node is JassFun) {
         val f = node.root
+
+        if (f.comments.isNotEmpty()) {
+            b.append(f.comments.toString()).append("\n")
+        }
+
         if (f.native) {
             b.append("[native]($uri/native.html)")
         } else {
