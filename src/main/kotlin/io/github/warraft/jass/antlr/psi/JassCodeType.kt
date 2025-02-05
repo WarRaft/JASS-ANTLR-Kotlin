@@ -17,4 +17,6 @@ class JassCodeType() : JassTypeBase() {
             else -> JassUndefinedType()
         }
     }
+
+    override fun clone(): JassTypeBase = JassCodeType()
 }

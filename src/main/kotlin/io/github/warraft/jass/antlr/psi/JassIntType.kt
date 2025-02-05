@@ -30,4 +30,6 @@ class JassIntType() : JassTypeBase() {
             else -> JassUndefinedType()
         }
     }
+
+    override fun clone(): JassIntType = JassIntType()
 }

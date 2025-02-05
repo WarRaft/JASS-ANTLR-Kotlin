@@ -9,6 +9,24 @@ import org.junit.jupiter.api.Test
 class JassStateTest {
 
     @Test
+    fun funcomment() {
+        JassState().apply {
+            parse(
+                CharStreams.fromString(
+                    """
+                // 1
+                
+                // 2 
+                // 3
+                function main takes nothing returns nothing
+                endfunction
+                """.trimIndent()
+                )
+            )
+        }
+    }
+
+    @Test
     fun test() {
         val state = JassState()
         state.parse(

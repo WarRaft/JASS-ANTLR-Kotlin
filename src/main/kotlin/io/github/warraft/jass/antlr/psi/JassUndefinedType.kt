@@ -6,4 +6,5 @@ class JassUndefinedType : JassTypeBase() {
     override val name: String = "undefined"
 
     override fun op(op: JassExprOp, b: JassTypeBase): JassTypeBase = JassUndefinedType()
+    override fun clone(): JassUndefinedType = JassUndefinedType()
 }

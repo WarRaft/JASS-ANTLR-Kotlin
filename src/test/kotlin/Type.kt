@@ -1,8 +1,15 @@
-import io.github.warraft.jass.antlr.state.JassState
+import io.github.warraft.jass.antlr.psi.JassBoolType
+import io.github.warraft.jass.antlr.psi.JassExprOp.*
+import io.github.warraft.jass.antlr.psi.JassIntType
+import io.github.warraft.jass.antlr.psi.JassRealType
 import io.github.warraft.jass.antlr.psi.JassUndefinedType
+import io.github.warraft.jass.antlr.state.JassState
+import io.github.warraft.jass.antlr.state.ext.typeGet
 import org.antlr.v4.runtime.CharStreams
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
+import kotlin.test.assertNotNull
 
 class Type {
 
@@ -12,60 +19,48 @@ class Type {
         return s
     }
 
-    val math = listOf<String>("+", "-", "*", "/")
-    val bool = listOf<String>(">", ">=", "<", "<=", "==", "!=")
-
     @Test
-    fun positive() {
-        val state = JassState()
-        for (gen in listOf(
-            Gen(math, "integer", "1", "2"),
-            Gen(math, "real", "1", "2."),
-            Gen(listOf("+"), "string", "\"a\"", "\"b\""),
+    fun primitive() {
+        val integer = JassIntType()
+        val real = JassRealType()
 
-            Gen(bool, "boolean", "1", "2"),
-            Gen(bool, "boolean", "1", "2."),
-        )) {
-            state.parse(CharStreams.fromString(gen.code))
-            for (g in state.globals) {
-                assertEquals(g.type::class, g.expr!!.type::class, g.toString())
-            }
-            assert(state.diagnosticHub.diagnostics.isEmpty()) {
-                state.diagnosticHub.diagnostics.forEach { println(it) }
-            }
-        }
+        val m = listOf(Add, Sub, Mul, Div)
+        val b = listOf(Lt, LtEq, Gt, GtEq, Eq, Neq)
+
+        for (op in m) assertIs<JassIntType>(integer.op(op, integer))
+        for (op in b) assertIs<JassBoolType>(integer.op(op, integer))
+
+
+        for (op in m) assertIs<JassRealType>(integer.op(op, real))
+        for (op in m) assertIs<JassRealType>(real.op(op, real))
+
+
     }
 
     @Test
-    fun negative() {
+    fun handle() {
         val state = JassState()
-        for (gen in listOf(
-            Gen(math, "integer", "1", "\"a\""),
-        )) {
-            state.parse(CharStreams.fromString(gen.code))
-            for (g in state.globals) {
-                assert(g.expr?.type is JassUndefinedType) { println(g.toString()) }
-            }
+        state.parse(
+            CharStreams.fromString(
+                """
+                type a extends handle
+                type b extends a
+                type c extends b
+                type d extends handle
+            """.trimIndent()
+            )
+        )
+        val a = state.typeGet("a")
+        assertNotNull(a)
+        val b = state.typeGet("b")
+        assertNotNull(b)
+        val c = state.typeGet("c")
+        assertNotNull(c)
+        val d = state.typeGet("d")
+        assertNotNull(d)
 
-            val d = state.diagnosticHub.diagnostics
-            assert(d.size == state.globals.size * 2) {
-                println("🔥${gen.code}")
-                d.forEach { println(it.message) }
-            }
-        }
+        assertEquals(a.op(Set, c).name, "a")
+        assertIs<JassUndefinedType>(a.op(Set, d))
     }
 
-
-    companion object {
-        private class Gen(list: List<String>, type: String, a: String, b: String) {
-            var code = "globals\n"
-
-            init {
-                for ((i, op) in list.withIndex()) {
-                    code += "$type a$i = $a $op $b\n"
-                }
-                code += "endglobals"
-            }
-        }
-    }
 }

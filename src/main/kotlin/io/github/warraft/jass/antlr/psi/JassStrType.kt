@@ -25,4 +25,6 @@ class JassStrType : JassTypeBase() {
 
         else -> JassUndefinedType()
     }
+
+    override fun clone(): JassStrType = JassStrType()
 }

@@ -4,8 +4,10 @@ import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 
 class JassHandleType(
     override val name: String,
+    val parent: JassHandleType? = null,
 ) : JassTypeBase() {
-    var parent: JassHandleType? = null
+
+    val childrens = mutableListOf<JassHandleType>()
 
     override fun op(
         op: JassExprOp,
@@ -14,8 +16,13 @@ class JassHandleType(
         return when (op) {
             JassExprOp.Set -> when (b) {
                 is JassHandleType -> {
-                    if (name == b.name) this
-                    else JassUndefinedType()
+                    var p: JassHandleType? = b
+
+                    while (p != null) {
+                        if (name == p.name) return p.clone()
+                        p = p.parent
+                    }
+                    JassUndefinedType()
                 }
 
                 is JassNullType -> this
@@ -29,5 +36,12 @@ class JassHandleType(
 
             else -> JassUndefinedType()
         }
+    }
+
+    override fun clone(): JassHandleType = JassHandleType(
+        name = name,
+        parent = parent?.clone(),
+    ).also {
+        it.childrens.addAll(childrens)
     }
 }

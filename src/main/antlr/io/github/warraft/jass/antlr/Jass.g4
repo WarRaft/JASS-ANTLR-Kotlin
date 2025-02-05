@@ -12,8 +12,8 @@ typename : ID;
 varname : ID;
 
 // === type
-type : TYPE typename extendsRule;
-extendsRule : EXTENDS typename;
+type : TYPE ID extendsRule;
+extendsRule : EXTENDS ID;
 
 // === globals
 globals : GLOBALS variable* ENDGLOBALS;

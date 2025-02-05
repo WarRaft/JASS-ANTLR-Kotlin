@@ -7,4 +7,6 @@ abstract class JassTypeBase {
     abstract fun op(op: JassExprOp, b: JassTypeBase): JassTypeBase
 
     override fun toString(): String = "${Main.Companion.BLUE}$name${Main.Companion.RESET}"
+
+    abstract fun clone(): JassTypeBase
 }

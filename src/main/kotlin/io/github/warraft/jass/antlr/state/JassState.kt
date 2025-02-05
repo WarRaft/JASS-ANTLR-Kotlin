@@ -2,15 +2,16 @@ package io.github.warraft.jass.antlr.state
 
 import io.github.warraft.jass.antlr.JassLexer
 import io.github.warraft.jass.antlr.JassParser
-import io.github.warraft.jass.antlr.psi.*
+import io.github.warraft.jass.antlr.psi.JassFun
+import io.github.warraft.jass.antlr.psi.JassHandleType
+import io.github.warraft.jass.antlr.psi.JassVar
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
-import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import io.github.warraft.jass.antlr.state.ext.function
 import io.github.warraft.jass.antlr.state.ext.global
+import io.github.warraft.jass.antlr.state.ext.typedef
 import io.github.warraft.jass.antlr.utils.JassErrorListener
 import io.github.warraft.jass.antlr.utils.JassTokenFactory
 import io.github.warraft.jass.antlr.utils.JassTokenTree
-import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticHub
 import io.github.warraft.jass.lsp4j.folding.JassFoldingHub
 import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenHub
@@ -95,67 +96,6 @@ class JassState {
         return null
     }
 
-    fun getType(key: String): JassTypeBase? {
-        var type: JassTypeBase? = null
-        states.forEach {
-            if (it.typeMap.containsKey(key)) {
-                type = it.typeMap[key]
-            }
-        }
-        if (typeMap.containsKey(key)) {
-            type = typeMap[key]
-        }
-        return type
-
-    }
-
-    fun typeFromString(str: String): JassTypeBase = when (str) {
-        "integer" -> JassIntType()
-        "real" -> JassRealType()
-        "string" -> JassStrType()
-        "boolean" -> JassBoolType()
-        "code" -> JassCodeType()
-        "handle" -> JassHandleType(str)
-        else -> getType(str) ?: JassUndefinedType()
-    }
-
-    private fun typedef(ctx: JassParser.TypeContext) {
-        val ectx: JassParser.ExtendsRuleContext? = ctx.extendsRule()
-        val namectx = ectx?.typename()
-        val idctx = ctx.typename().ID()
-
-        val type = JassHandleType(idctx.text)
-
-        semanticHub
-            .add(idctx, JassSemanticTokenType.TYPE)
-            .add(ectx?.typename()?.ID(), JassSemanticTokenType.TYPE)
-            .add(ctx.TYPE(), JassSemanticTokenType.KEYWORD)
-            .add(ectx?.EXTENDS(), JassSemanticTokenType.KEYWORD)
-
-        if (namectx == null) return
-
-        val parent = namectx.text
-        var p = typeMap[parent]
-        if (parent == "handle" && p == null) {
-            p = JassHandleType("handle")
-            typeMap[parent] = p
-            types.add(p)
-        }
-
-        if (p == null) {
-            diagnosticHub.add(
-                ctx.TYPE(),
-                JassDiagnosticCode.ERROR,
-                "${type.name} !extend $parent"
-            )
-            return
-        }
-
-        type.parent = p
-        typeMap[type.name] = type
-        types.add(type)
-    }
-
     fun root(ctx: JassParser.RootContext): JassNodeBase? {
         ctx.children.forEach {
             when (it) {
@@ -177,5 +117,5 @@ class JassState {
         }
         return null
     }
-
 }
+

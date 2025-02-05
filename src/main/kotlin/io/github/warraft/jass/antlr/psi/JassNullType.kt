@@ -15,4 +15,6 @@ class JassNullType : JassTypeBase() {
 
         else -> JassUndefinedType()
     }
+
+    override fun clone(): JassNullType = JassNullType()
 }

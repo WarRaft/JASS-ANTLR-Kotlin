@@ -85,9 +85,8 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
 
             return JassExpr(
                 op = JassExprOp.Get,
-                a = JassFun(
+                a = node.clone(
                     state = this,
-                    name = name,
                     type = JassCodeType(),
                     ref = true,
                     symbol = nameCtx.symbol
@@ -112,7 +111,8 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
             semanticHub.add(nameCtx, JassSemanticTokenType.FUNCTION)
 
             val cf = node.clone(
-                state = this
+                state = this,
+                symbol = nameCtx.symbol
             ).also {
                 tokenTree.add(it)
             }
@@ -216,46 +216,11 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
         }
 
         is JassParser.ExprParenContext -> return JassExpr(op = JassExprOp.Paren, a = expr(ctx.expr(), scope))
-
-        is JassParser.ExprMulContext -> return expr(
-            ctx,
-            ctx.expr(0),
-            ctx.expr(1),
-            listOf(ctx.MUL(), ctx.DIV()),
-            scope
-        )
-
-        is JassParser.ExprAddContext -> return expr(
-            ctx,
-            ctx.expr(0),
-            ctx.expr(1),
-            listOf(ctx.PLUS(), ctx.MINUS()),
-            scope
-        )
-
-        is JassParser.ExprLtContext -> return expr(
-            ctx,
-            ctx.expr(0),
-            ctx.expr(1),
-            listOf(ctx.LT(), ctx.LT_EQ(), ctx.GT(), ctx.GT_EQ()),
-            scope
-        )
-
-        is JassParser.ExprEqContext -> return expr(
-            ctx,
-            ctx.expr(0),
-            ctx.expr(1),
-            listOf(ctx.EQ_EQ(), ctx.NEQ()),
-            scope
-        )
-
-        is JassParser.ExprAndContext -> return expr(
-            ctx,
-            ctx.expr(0),
-            ctx.expr(1),
-            listOf(ctx.AND(), ctx.OR()),
-            scope
-        )
+        is JassParser.ExprMulContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.MUL(), ctx.DIV()), scope)
+        is JassParser.ExprAddContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.PLUS(), ctx.MINUS()), scope)
+        is JassParser.ExprLtContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.LT(), ctx.LT_EQ(), ctx.GT(), ctx.GT_EQ()), scope)
+        is JassParser.ExprEqContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.EQ_EQ(), ctx.NEQ()), scope)
+        is JassParser.ExprAndContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.AND(), ctx.OR()), scope)
     }
     diagnosticHub.add(JassDiagnosticCode.PLUGIN, "Undeclared expression")
     return null

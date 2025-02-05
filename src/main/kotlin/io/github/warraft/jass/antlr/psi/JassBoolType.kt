@@ -23,4 +23,6 @@ class JassBoolType : JassTypeBase() {
 
         else -> JassUndefinedType()
     }
+
+    override fun clone(): JassBoolType = JassBoolType()
 }

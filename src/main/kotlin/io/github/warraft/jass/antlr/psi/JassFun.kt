@@ -35,14 +35,16 @@ class JassFun(
         state: JassState,
         call: Boolean? = null,
         symbol: Token? = null,
+        ref: Boolean? = null,
+        type: JassTypeBase? = null,
     ): JassFun = JassFun(
         state = state,
         name = name,
         native = native,
         call = call ?: this.call,
-        ref = ref,
+        ref = ref ?: this.ref,
         base = this,
-        type = type,
+        type = type ?: this.type,
         symbol = symbol,
     ).also {
         links.add(it)

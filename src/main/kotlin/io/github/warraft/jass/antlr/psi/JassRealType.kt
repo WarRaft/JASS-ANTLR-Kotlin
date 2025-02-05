@@ -31,4 +31,6 @@ class JassRealType : JassTypeBase() {
             else -> JassUndefinedType()
         }
     }
+
+    override fun clone(): JassRealType = JassRealType()
 }
