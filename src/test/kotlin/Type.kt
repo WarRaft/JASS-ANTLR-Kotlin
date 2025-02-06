@@ -4,7 +4,7 @@ import io.github.warraft.jass.antlr.psi.JassIntType
 import io.github.warraft.jass.antlr.psi.JassRealType
 import io.github.warraft.jass.antlr.psi.JassUndefinedType
 import io.github.warraft.jass.antlr.state.JassState
-import io.github.warraft.jass.antlr.state.ext.typeGet
+import io.github.warraft.jass.antlr.state.ext.antlr.typeGet
 import org.antlr.v4.runtime.CharStreams
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

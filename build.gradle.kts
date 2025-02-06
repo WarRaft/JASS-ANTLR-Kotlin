@@ -56,7 +56,7 @@ tasks.generateGrammarSource {
 
     // https://codeberg.org/UniGrammar/antlr4/src/branch/tool_refactoring/doc/tool-options.md
     arguments = listOf(
-        "-package", "io.github.warraft.jass.antlr",
+        "-package", "io.github.warraft",
         //"-lib", "src/main/kotlin/",
         "-no-visitor",
         "-no-listener"

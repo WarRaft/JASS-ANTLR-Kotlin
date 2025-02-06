@@ -1,4 +1,3 @@
-type handle
 type anal extends handle
 
 

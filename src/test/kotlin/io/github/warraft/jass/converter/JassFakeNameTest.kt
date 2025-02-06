@@ -30,7 +30,9 @@ class JassFakeNameTest {
         )
 
         val c = JassState()
-        c.states = listOf(a, b)
+        c.states.clear()
+        c.states.add(a)
+        c.states.add(b)
 
         val fakeName = JassFakeName(c)
 

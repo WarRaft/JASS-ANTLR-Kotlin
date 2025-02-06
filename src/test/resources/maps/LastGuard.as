@@ -1323,7 +1323,7 @@ void SetAttackSpeedAbilityLevel(unit target, int attackspeed) {
 int MaxStateModifierID(unitstate u) {
 	if (u == UNIT_STATE_MAX_LIFE) {
 		return 'A07A';
-	elseif u == UNIT_STATE_MAX_LIFE then
+	elseif u == UNIT_STATE_MAX_MANA then
 		return 'A07E';
 	}
 	return 0;
@@ -1341,7 +1341,7 @@ void SetUnitMaxState(unit u, unitstate us, int val) {
 			if (c >= 'd') {
 				c = c - 'd';
 				SetUnitAbilityLevel(u, i, 4);
-			elseif c >= 'd' then
+			elseif c >= $A then
 				c = c - $A;
 				SetUnitAbilityLevel(u, i, 3);
 			else
@@ -1350,7 +1350,7 @@ void SetUnitMaxState(unit u, unitstate us, int val) {
 			}
 			UnitRemoveAbility(u, i);
 		}
-	elseif c > 0 then
+	elseif c < 0 then
 		c = -c;
 		while (true) {
 			if (c == 0) break;
@@ -1358,7 +1358,7 @@ void SetUnitMaxState(unit u, unitstate us, int val) {
 			if (c >= 'd') {
 				c = c - 'd';
 				SetUnitAbilityLevel(u, i, 7);
-			elseif c >= 'd' then
+			elseif c >= $A then
 				c = c - $A;
 				SetUnitAbilityLevel(u, i, 6);
 			else
@@ -1379,7 +1379,7 @@ void SetUnitLifeAndManaRegenerationActions() {
 	if (uslife > .405 && (life != 0 || mana != 0)) {
 		SetUnitState(target, UNIT_STATE_LIFE, uslife + (I2R(life) / $A));
 		SetUnitState(target, UNIT_STATE_MANA, GetUnitState(target, UNIT_STATE_MANA) + (I2R(mana) / $A));
-	elseif uslife > .405 && (life != 0 || mana != 0) then
+	elseif IsUnitType(target, UNIT_TYPE_HERO) == false then
 		FlushChildHashtable(udg_hash, ht);
 		DestroyTimer(t);
 	}

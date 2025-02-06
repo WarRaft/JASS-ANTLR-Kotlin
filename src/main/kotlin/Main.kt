@@ -2,7 +2,7 @@ import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.converter.JassAs
 import io.github.warraft.jass.converter.JassJass
 import io.github.warraft.jass.converter.JassLua
-import io.github.warraft.jass.lsp4j.JassLanguageServer
+import io.github.warraft.languages.lsp4j.LanguageServerEx
 import org.antlr.v4.runtime.CharStreams
 import org.eclipse.lsp4j.launch.LSPLauncher.createServerLauncher
 import java.nio.file.Path
@@ -153,7 +153,7 @@ class Main(val args: Array<String>) {
 
 fun main(args: Array<String>) {
     if (args.firstOrNull() == "-lsp4j") {
-        val server = JassLanguageServer(args)
+        val server = LanguageServerEx(args)
         val launcher = createServerLauncher(server, System.`in`, System.out)
         server.connect(launcher.remoteProxy)
         launcher.startListening().get()
