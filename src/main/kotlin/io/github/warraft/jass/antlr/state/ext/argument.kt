@@ -1,12 +1,7 @@
 package io.github.warraft.jass.antlr.state.ext
 
 import io.github.warraft.jass.antlr.JassParser.ExprContext
-import io.github.warraft.jass.antlr.psi.JassExprOp
-import io.github.warraft.jass.antlr.psi.JassFun
-import io.github.warraft.jass.antlr.psi.JassNull
-import io.github.warraft.jass.antlr.psi.JassNullType
-import io.github.warraft.jass.antlr.psi.JassUndefinedType
-import io.github.warraft.jass.antlr.psi.JassVar
+import io.github.warraft.jass.antlr.psi.*
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode
 import org.antlr.v4.runtime.tree.TerminalNode
@@ -42,9 +37,9 @@ fun JassState.argument(fn: JassFun, scope: JassFun?, exprs: List<ExprContext>, l
         }
         fn.arg.add(e)
 
-        val a = e.type
-        if (a is JassNullType) continue
-        val b = params.getOrNull(index)?.type ?: JassUndefinedType()
+        val a = params.getOrNull(index)?.type ?: JassUndefinedType()
+        val b = e.type
+        if (b is JassNullType) continue
 
         if (a.op(JassExprOp.Set, b) is JassUndefinedType) {
             diagnosticHub.add(
