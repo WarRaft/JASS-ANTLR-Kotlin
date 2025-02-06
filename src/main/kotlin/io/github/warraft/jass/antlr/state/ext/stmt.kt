@@ -141,8 +141,7 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
                     .add(callctx.DEBUG(), JassSemanticTokenType.KEYWORD)
                     .add(callctx.CALL(), JassSemanticTokenType.KEYWORD)
 
-
-                argument(fn, scope, callctx.expr())
+                argument(fn, scope, callctx.expr(), callctx.LPAREN(), callctx.RPAREN())
 
                 list.add(fn)
             }

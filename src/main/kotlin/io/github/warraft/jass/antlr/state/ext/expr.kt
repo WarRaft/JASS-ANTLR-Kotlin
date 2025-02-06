@@ -1,6 +1,7 @@
 package io.github.warraft.jass.antlr.state.ext
 
 import io.github.warraft.jass.antlr.JassParser
+import io.github.warraft.jass.antlr.JassParser.*
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.jass.antlr.psi.JassBool
 import io.github.warraft.jass.antlr.psi.JassCodeType
@@ -21,8 +22,8 @@ import org.antlr.v4.runtime.tree.TerminalNode
 
 fun JassState.expr(
     ctx: ParserRuleContext,
-    a: JassParser.ExprContext?,
-    b: JassParser.ExprContext?,
+    a: ExprContext?,
+    b: ExprContext?,
     ops: List<TerminalNode?>,
     scope: JassFun?,
 ): JassExpr? {
@@ -57,11 +58,11 @@ fun JassState.expr(
     return e
 }
 
-fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
+fun JassState.expr(ctx: ExprContext?, scope: JassFun?): JassExpr? {
     if (ctx == null) return null
 
     when (ctx) {
-        is JassParser.ExprFunContext -> {
+        is ExprFunContext -> {
             val nameCtx: TerminalNode? = ctx.ID()
             if (nameCtx == null) {
                 diagnosticHub.add(ctx, JassDiagnosticCode.ERROR, "Missing function name")
@@ -96,7 +97,7 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
             )
         }
 
-        is JassParser.ExprCallContext -> {
+        is ExprCallContext -> {
             val nameCtx = ctx.ID()
             val name = nameCtx.text
             val node = getNode(name, scope)
@@ -117,7 +118,7 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
                 tokenTree.add(it)
             }
 
-            argument(fn, scope, ctx.expr())
+            argument(fn, scope, ctx.expr(), ctx.LPAREN(), ctx.RPAREN())
 
             return JassExpr(
                 op = JassExprOp.Get,
@@ -125,7 +126,7 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
             )
         }
 
-        is JassParser.ExprVarContext -> {
+        is ExprVarContext -> {
             val idctx = ctx.ID()
             semanticHub.add(idctx, JassSemanticTokenType.VARIABLE)
             val name = idctx.text
@@ -147,7 +148,7 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
             return null
         }
 
-        is JassParser.ExprArrContext -> {
+        is ExprArrContext -> {
             val idctx = ctx.ID()
             semanticHub.add(idctx, JassSemanticTokenType.VARIABLE)
 
@@ -171,7 +172,7 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
             )
         }
 
-        is JassParser.ExprUnContext -> return JassExpr(
+        is ExprUnContext -> return JassExpr(
             op = when (true) {
                 (ctx.MINUS() != null) -> JassExprOp.UnSub
                 (ctx.NOT() != null) -> JassExprOp.UnNot
@@ -180,7 +181,7 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
             a = expr(ctx.expr(), scope),
         )
 
-        is JassParser.ExprIntContext -> {
+        is ExprIntContext -> {
             semanticHub
                 .add(ctx.INTVAL(), JassSemanticTokenType.NUMBER)
                 .add(ctx.HEXVAL(), JassSemanticTokenType.NUMBER)
@@ -188,34 +189,34 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
             return JassExpr(op = JassExprOp.Get, a = JassInt(ctx.text))
         }
 
-        is JassParser.ExprStrContext -> {
+        is ExprStrContext -> {
             semanticHub.add(ctx.STRING(), JassSemanticTokenType.STRING)
             return JassExpr(op = JassExprOp.Get, a = JassStr(ctx.text))
         }
 
-        is JassParser.ExprBoolContext -> {
+        is ExprBoolContext -> {
             semanticHub
                 .add(ctx.TRUE(), JassSemanticTokenType.KEYWORD)
                 .add(ctx.FALSE(), JassSemanticTokenType.KEYWORD)
             return JassExpr(op = JassExprOp.Get, a = JassBool(ctx.text))
         }
 
-        is JassParser.ExprRealContext -> {
+        is ExprRealContext -> {
             semanticHub.add(ctx.REALVAL(), JassSemanticTokenType.NUMBER)
             return JassExpr(op = JassExprOp.Get, a = JassReal(ctx.text))
         }
 
-        is JassParser.ExprNullContext -> {
+        is ExprNullContext -> {
             semanticHub.add(ctx.NULL(), JassSemanticTokenType.KEYWORD)
             return JassExpr(op = JassExprOp.Get, a = JassNull())
         }
 
-        is JassParser.ExprParenContext -> return JassExpr(op = JassExprOp.Paren, a = expr(ctx.expr(), scope))
-        is JassParser.ExprMulContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.MUL(), ctx.DIV()), scope)
-        is JassParser.ExprAddContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.PLUS(), ctx.MINUS()), scope)
-        is JassParser.ExprLtContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.LT(), ctx.LT_EQ(), ctx.GT(), ctx.GT_EQ()), scope)
-        is JassParser.ExprEqContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.EQ_EQ(), ctx.NEQ()), scope)
-        is JassParser.ExprAndContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.AND(), ctx.OR()), scope)
+        is ExprParenContext -> return JassExpr(op = JassExprOp.Paren, a = expr(ctx.expr(), scope))
+        is ExprMulContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.MUL(), ctx.DIV()), scope)
+        is ExprAddContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.PLUS(), ctx.MINUS()), scope)
+        is ExprLtContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.LT(), ctx.LT_EQ(), ctx.GT(), ctx.GT_EQ()), scope)
+        is ExprEqContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.EQ_EQ(), ctx.NEQ()), scope)
+        is ExprAndContext -> return expr(ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.AND(), ctx.OR()), scope)
     }
     diagnosticHub.add(JassDiagnosticCode.PLUGIN, "Undeclared expression")
     return null
