@@ -1,11 +1,7 @@
 package io.github.warraft.jass.lsp4j.service
 
 import io.github.warraft.jass.antlr.state.JassState
-import io.github.warraft.jass.antlr.state.ext.completion
-import io.github.warraft.jass.antlr.state.ext.definition
-import io.github.warraft.jass.antlr.state.ext.documentHighlight
-import io.github.warraft.jass.antlr.state.ext.hover
-import io.github.warraft.jass.antlr.state.ext.references
+import io.github.warraft.jass.antlr.state.ext.*
 import io.github.warraft.jass.lsp4j.JassLanguageServer
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CharStreams
@@ -20,14 +16,10 @@ import kotlin.io.path.isReadable
 import kotlin.io.path.toPath
 
 class JassTextDocumentService(val server: JassLanguageServer) : TextDocumentService {
-    override fun completion(params: CompletionParams?): CompletableFuture<Either<List<CompletionItem>, CompletionList>> =
-        CompletableFuture.completedFuture(Either.forLeft(getState(params)?.completion()))
-
-    override fun resolveCompletionItem(unresolved: CompletionItem?): CompletableFuture<CompletionItem> =
-        CompletableFuture.completedFuture(unresolved)
-
-    override fun hover(params: HoverParams?): CompletableFuture<Hover> =
-        CompletableFuture.completedFuture(getState(params)?.hover(params))
+    override fun completion(params: CompletionParams?): CompletableFuture<Either<List<CompletionItem>, CompletionList>> = CompletableFuture.completedFuture(Either.forLeft(getState(params)?.completion()))
+    override fun resolveCompletionItem(unresolved: CompletionItem?): CompletableFuture<CompletionItem> = CompletableFuture.completedFuture(unresolved)
+    override fun hover(params: HoverParams?): CompletableFuture<Hover> = CompletableFuture.completedFuture(getState(params)?.hover(params))
+    override fun signatureHelp(params: SignatureHelpParams?): CompletableFuture<SignatureHelp?>? = CompletableFuture.completedFuture(getState(params)?.signatureHelp(server, params))
 
     private val states = mutableMapOf<Path, JassState>()
 

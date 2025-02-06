@@ -32,7 +32,7 @@ class JassLanguageServer(val args: Array<String>) : LanguageServer, LanguageClie
 
             completionProvider = CompletionOptions().apply {
                 resolveProvider = true
-                triggerCharacters = listOf(".", "(")
+                triggerCharacters = listOf()
             }
 
             // https://code.visualstudio.com/api/language-extensions/semantic-highlight-guide
@@ -59,6 +59,7 @@ class JassLanguageServer(val args: Array<String>) : LanguageServer, LanguageClie
             //linkedEditingRangeProvider = Either.forRight(LinkedEditingRangeRegistrationOptions())
             referencesProvider = Either.forRight(ReferenceOptions())
             definitionProvider = Either.forRight(DefinitionOptions())
+            //signatureHelpProvider = SignatureHelpOptions(listOf("(", ","))
         }
         return CompletableFuture.completedFuture(InitializeResult(capabilities))
     }
