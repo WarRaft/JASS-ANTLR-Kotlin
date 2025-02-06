@@ -17,7 +17,7 @@ import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
 import org.antlr.v4.runtime.tree.TerminalNode
 
 fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNodeBase>, scopes: MutableList<JassNodeBase>) {
-    val f = scopes.first() as JassFun
+    val scope = scopes.first() as JassFun
 
     for (ctx in ctxs) {
         when (ctx) {
@@ -34,7 +34,7 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
                     )
                 } else {
                     val name = nameCtx.text
-                    node = getNode(name, f)
+                    node = getNode(name, scope)
 
                     if (node !is JassVar) {
                         diagnosticHub.add(
@@ -52,7 +52,7 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
 
 
                 val exprCtx = setctx.expr()
-                val e = expr(exprCtx, f)
+                val e = expr(exprCtx, scope)
                 if (e == null) {
                     diagnosticHub.add(
                         setctx.SET(),
@@ -66,7 +66,7 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
                     val v = node.clone(
                         state = this,
                         expr = e,
-                        index = expr(setctx.setBrack()?.expr(), f),
+                        index = expr(setctx.setBrack()?.expr(), scope),
                         symbol = nameCtx?.symbol
                     ).also {
                         tokenTree.add(it)
@@ -104,16 +104,16 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
                 }
 
                 val name = nameCtx.text
-                var node = getNode(name, f)
+                var node = getNode(name, scope)
 
-                var cf = JassFun(
+                var fn = JassFun(
                     state = this,
                     call = true,
                     name = name
                 )
 
                 when (node) {
-                    is JassFun -> cf = node.clone(
+                    is JassFun -> fn = node.clone(
                         state = this,
                         call = true,
                         symbol = nameCtx.symbol
@@ -141,14 +141,10 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
                     .add(callctx.DEBUG(), JassSemanticTokenType.KEYWORD)
                     .add(callctx.CALL(), JassSemanticTokenType.KEYWORD)
 
-                callctx.expr().forEach {
-                    val e = expr(it, f)
-                    if (e != null) {
-                        cf.arg.add(e)
-                    }
-                }
 
-                list.add(cf)
+                argument(fn, scope, callctx.expr())
+
+                list.add(fn)
             }
 
             is JassParser.StmtLoopContext -> {
@@ -170,7 +166,7 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
 
                 semanticHub.add(ewhenctx.EXITWHEN(), JassSemanticTokenType.KEYWORD)
 
-                val exp = expr(ewhenctx.expr(), f)
+                val exp = expr(ewhenctx.expr(), scope)
                 if (exp == null) {
                     diagnosticHub.add(
                         ewhenctx.EXITWHEN(),
@@ -192,7 +188,7 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
 
                 semanticHub.add(rctx.RETURN(), JassSemanticTokenType.KEYWORD)
 
-                val e = expr(rctx.expr(), f)
+                val e = expr(rctx.expr(), scope)
                 if (e != null) {
                     val v = e.a
                     if (v is JassVar) {
@@ -215,7 +211,7 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
 
             is JassParser.StmtIfContext -> {
                 val ifcxt: JassParser.IfRuleContext = ctx.ifRule()
-                val e = expr(ifcxt.expr(), f)
+                val e = expr(ifcxt.expr(), scope)
                 if (e == null) {
                     diagnosticHub.add(
                         ifcxt.IF(),
@@ -237,7 +233,7 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
                 stmt(ifcxt.stmt(), nodeIf.stmt, ss)
 
                 for (elseifctx: JassParser.ElseifContext in ifcxt.elseif()) {
-                    val e = expr(elseifctx.expr(), f)
+                    val e = expr(elseifctx.expr(), scope)
                     semanticHub
                         .add(elseifctx.ELSEIF(), JassSemanticTokenType.KEYWORD)
                         .add(elseifctx.THEN(), JassSemanticTokenType.KEYWORD)

@@ -110,23 +110,18 @@ fun JassState.expr(ctx: JassParser.ExprContext?, scope: JassFun?): JassExpr? {
             }
             semanticHub.add(nameCtx, JassSemanticTokenType.FUNCTION)
 
-            val cf = node.clone(
+            val fn = node.clone(
                 state = this,
                 symbol = nameCtx.symbol
             ).also {
                 tokenTree.add(it)
             }
 
-            for (it in ctx.expr()) {
-                val e = expr(it, scope)
-                if (e != null) {
-                    cf.arg.add(e)
-                }
-            }
+            argument(fn, scope, ctx.expr())
 
             return JassExpr(
                 op = JassExprOp.Get,
-                a = cf
+                a = fn
             )
         }
 
