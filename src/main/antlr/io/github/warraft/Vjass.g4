@@ -10,10 +10,7 @@ typename : ID;
 varname : ID;
 
 // === globals
-globals : GLOBALS variable* ENDGLOBALS;
-
-// === var
-variable : (PUBLIC|PRIVATE)? CONSTANT? LOCAL? typename ARRAY? varname brackExpr* (EQ expr)?;
+globals : GLOBALS stmt* ENDGLOBALS;
 
 // === function
 param : typename varname ;
@@ -23,31 +20,22 @@ takes : TAKES (NOTHING|params);
 returnsRule : RETURNS (NOTHING|ID);
 
 nativeRule : CONSTANT? NATIVE ID takes returnsRule;
-function : (PUBLIC|PRIVATE)? CONSTANT? FUNCTION ID takes returnsRule variable* stmt* ENDFUNCTION;
+function : (PUBLIC|PRIVATE)? CONSTANT? FUNCTION ID takes returnsRule stmt* ENDFUNCTION;
 
 // === STATEMENT
 stmt
-    : set #stmtSet
-    | call #stmtCall
-    | returnRule #stmtReturn
-    | ifRule #stmtIf
-    | loop #stmtLoop
-    | exitwhen #stmtExitWhen
+    : SET ID brackExpr? EQ expr #stmtSet
+    | DEBUG? CALL ID LPAREN (expr (COMMA expr)*)? RPAREN #stmtCall
+    | RETURN expr? #stmtReturn
+    | IF expr THEN stmt* elseif* elseRule? ENDIF #stmtIf
+    | LOOP stmt* ENDLOOP #stmtLoop
+    | EXITWHEN expr #stmtExitWhen
+    | (PUBLIC|PRIVATE)? CONSTANT? LOCAL? typename ARRAY? varname brackExpr* (EQ expr)? #stmtVar
     ;
 
 brackExpr : LBRACK expr? RBRACK ;
-set : SET ID brackExpr? EQ expr;
-
-call : DEBUG? CALL ID LPAREN (expr (COMMA expr)*)? RPAREN;
-
-returnRule : RETURN expr?;
-
-ifRule : IF expr THEN stmt* elseif* elseRule? ENDIF;
 elseif : ELSEIF expr THEN stmt*;
 elseRule : ELSE stmt*;
-
-loop : LOOP stmt* ENDLOOP ;
-exitwhen : EXITWHEN expr ;
 
 // === EXPRESSION
 expr
