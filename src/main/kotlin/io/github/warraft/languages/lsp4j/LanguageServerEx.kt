@@ -1,7 +1,7 @@
 package io.github.warraft.languages.lsp4j
 
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenModifier
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenModifier
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
 import io.github.warraft.languages.lsp4j.service.document.TextDocumentServiceEx
 import io.github.warraft.jass.lsp4j.service.JassWorkspaceService
 import org.eclipse.lsp4j.CompletionOptions
@@ -53,8 +53,8 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
             // https://code.visualstudio.com/api/language-extensions/semantic-highlight-guide
             semanticTokensProvider = SemanticTokensWithRegistrationOptions(
                 SemanticTokensLegend(
-                    JassSemanticTokenType.entries.map { it -> case(it.name) },
-                    JassSemanticTokenModifier.entries.map { it -> case(it.name) },
+                    SemanticTokenType.entries.map { it -> case(it.name) },
+                    SemanticTokenModifier.entries.map { it -> case(it.name) },
                 ),
                 true,
             )

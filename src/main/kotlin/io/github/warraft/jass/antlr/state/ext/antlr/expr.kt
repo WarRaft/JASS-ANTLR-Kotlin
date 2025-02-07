@@ -31,7 +31,7 @@ import io.github.warraft.jass.antlr.psi.JassUndefinedType
 import io.github.warraft.jass.antlr.psi.JassVar
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
 
@@ -45,7 +45,7 @@ fun JassState.expr(
     var op: JassExprOp? = null
     var optext: String? = ""
     for (it in ops) {
-        semanticHub.add(it, JassSemanticTokenType.OPERATOR)
+        semanticHub.add(it, SemanticTokenType.OPERATOR)
         optext = it?.text
         op = JassExprOp.Companion.fromSymbol(optext)
         if (op != null) break
@@ -96,8 +96,8 @@ fun JassState.expr(ctx: ExprContext?, scope: JassFun?): JassExpr? {
             }
 
             semanticHub
-                .add(nameCtx, JassSemanticTokenType.FUNCTION)
-                .add(ctx.FUNCTION(), JassSemanticTokenType.KEYWORD)
+                .add(nameCtx, SemanticTokenType.FUNCTION)
+                .add(ctx.FUNCTION(), SemanticTokenType.KEYWORD)
 
             return JassExpr(
                 op = JassExprOp.Get,
@@ -124,7 +124,7 @@ fun JassState.expr(ctx: ExprContext?, scope: JassFun?): JassExpr? {
                 )
                 return null
             }
-            semanticHub.add(nameCtx, JassSemanticTokenType.FUNCTION)
+            semanticHub.add(nameCtx, SemanticTokenType.FUNCTION)
 
             val fn = node.clone(
                 state = this,
@@ -143,7 +143,7 @@ fun JassState.expr(ctx: ExprContext?, scope: JassFun?): JassExpr? {
 
         is ExprVarContext -> {
             val idctx = ctx.ID()
-            semanticHub.add(idctx, JassSemanticTokenType.VARIABLE)
+            semanticHub.add(idctx, SemanticTokenType.VARIABLE)
             val name = idctx.text
             var node: JassNodeBase? = getNode(name, scope)
             if (node is JassVar) {
@@ -165,7 +165,7 @@ fun JassState.expr(ctx: ExprContext?, scope: JassFun?): JassExpr? {
 
         is ExprArrContext -> {
             val idctx = ctx.ID()
-            semanticHub.add(idctx, JassSemanticTokenType.VARIABLE)
+            semanticHub.add(idctx, SemanticTokenType.VARIABLE)
 
             val name = idctx.text
             var node: JassNodeBase? = getNode(name, scope)
@@ -198,31 +198,31 @@ fun JassState.expr(ctx: ExprContext?, scope: JassFun?): JassExpr? {
 
         is ExprIntContext -> {
             semanticHub
-                .add(ctx.INTVAL(), JassSemanticTokenType.NUMBER)
-                .add(ctx.HEXVAL(), JassSemanticTokenType.NUMBER)
-                .add(ctx.RAWVAL(), JassSemanticTokenType.NUMBER)
+                .add(ctx.INTVAL(), SemanticTokenType.NUMBER)
+                .add(ctx.HEXVAL(), SemanticTokenType.NUMBER)
+                .add(ctx.RAWVAL(), SemanticTokenType.NUMBER)
             return JassExpr(op = JassExprOp.Get, a = JassInt(ctx.text))
         }
 
         is ExprStrContext -> {
-            semanticHub.add(ctx.STRING(), JassSemanticTokenType.STRING)
+            semanticHub.add(ctx.STRING(), SemanticTokenType.STRING)
             return JassExpr(op = JassExprOp.Get, a = JassStr(ctx.text))
         }
 
         is ExprBoolContext -> {
             semanticHub
-                .add(ctx.TRUE(), JassSemanticTokenType.KEYWORD)
-                .add(ctx.FALSE(), JassSemanticTokenType.KEYWORD)
+                .add(ctx.TRUE(), SemanticTokenType.KEYWORD)
+                .add(ctx.FALSE(), SemanticTokenType.KEYWORD)
             return JassExpr(op = JassExprOp.Get, a = JassBool(ctx.text))
         }
 
         is ExprRealContext -> {
-            semanticHub.add(ctx.REALVAL(), JassSemanticTokenType.NUMBER)
+            semanticHub.add(ctx.REALVAL(), SemanticTokenType.NUMBER)
             return JassExpr(op = JassExprOp.Get, a = JassReal(ctx.text))
         }
 
         is ExprNullContext -> {
-            semanticHub.add(ctx.NULL(), JassSemanticTokenType.KEYWORD)
+            semanticHub.add(ctx.NULL(), SemanticTokenType.KEYWORD)
             return JassExpr(op = JassExprOp.Get, a = JassNull())
         }
 

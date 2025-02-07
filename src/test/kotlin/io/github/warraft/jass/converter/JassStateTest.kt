@@ -1,8 +1,7 @@
 package io.github.warraft.jass.converter
 
 import io.github.warraft.jass.antlr.state.JassState
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenModifier
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
 import org.antlr.v4.runtime.CharStreams
 import org.junit.jupiter.api.Test
 
@@ -76,7 +75,7 @@ class JassStateTest {
             )
         )
 
-        print(JassSemanticTokenType.entries.map { it ->
+        print(SemanticTokenType.entries.map { it ->
             it.name.split("_")
                 .mapIndexed { index, s ->
                     if (index == 0) s.lowercase() else s.lowercase().replaceFirstChar { it.uppercaseChar() }

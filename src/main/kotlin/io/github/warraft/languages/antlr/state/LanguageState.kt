@@ -1,18 +1,28 @@
-package io.github.warraft.languages.lsp4j.antlr.state
+package io.github.warraft.languages.antlr.state
 
 import io.github.warraft.jass.antlr.utils.JassTokenTree
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticHub
 import io.github.warraft.jass.lsp4j.folding.JassFoldingHub
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenHub
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenHub
 import io.github.warraft.jass.lsp4j.symbol.JassDocumentSymbolHub
+import io.github.warraft.languages.lsp4j.LanguageServerEx
 import org.antlr.v4.runtime.CharStream
-import org.eclipse.lsp4j.*
-import org.eclipse.lsp4j.services.LanguageServer
+import org.eclipse.lsp4j.CompletionItem
+import org.eclipse.lsp4j.DefinitionParams
+import org.eclipse.lsp4j.DocumentHighlight
+import org.eclipse.lsp4j.DocumentHighlightParams
+import org.eclipse.lsp4j.Hover
+import org.eclipse.lsp4j.HoverParams
+import org.eclipse.lsp4j.Location
+import org.eclipse.lsp4j.LocationLink
+import org.eclipse.lsp4j.ReferenceParams
+import org.eclipse.lsp4j.SignatureHelp
+import org.eclipse.lsp4j.SignatureHelpParams
 import java.nio.file.Path
 
 abstract class LanguageState {
     var path: Path? = null
-    var server: LanguageServer? = null
+    var server: LanguageServerEx? = null
 
     abstract fun nodeCount(): Int
 
@@ -28,7 +38,7 @@ abstract class LanguageState {
     val documentSymbolHub = JassDocumentSymbolHub()
     val tokenTree = JassTokenTree()
 
-    val semanticHub = JassSemanticTokenHub()
+    val semanticHub = SemanticTokenHub()
     fun semantic(): MutableList<Int> = semanticHub.data()
 
     open fun parse(stream: CharStream, states: List<LanguageState> = listOf()) {
@@ -39,4 +49,3 @@ abstract class LanguageState {
         semanticHub.clear()
     }
 }
-

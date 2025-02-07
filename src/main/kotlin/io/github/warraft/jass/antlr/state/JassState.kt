@@ -10,17 +10,11 @@ import io.github.warraft.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.jass.antlr.state.ext.antlr.function
 import io.github.warraft.jass.antlr.state.ext.antlr.global
 import io.github.warraft.jass.antlr.state.ext.antlr.typedef
-import io.github.warraft.jass.antlr.state.ext.lsp4j.completionExt
-import io.github.warraft.jass.antlr.state.ext.lsp4j.definitionExt
-import io.github.warraft.jass.antlr.state.ext.lsp4j.documentHighlightExt
-import io.github.warraft.jass.antlr.state.ext.lsp4j.hoverExt
-import io.github.warraft.jass.antlr.state.ext.lsp4j.referencesExt
-import io.github.warraft.jass.antlr.state.ext.lsp4j.signatureHelpExt
+import io.github.warraft.jass.antlr.state.ext.lsp4j.*
 import io.github.warraft.jass.antlr.utils.JassErrorListener
-import io.github.warraft.jass.antlr.utils.JassTokenFactory
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
-import io.github.warraft.languages.lsp4j.LanguageServerEx
-import io.github.warraft.languages.lsp4j.antlr.state.LanguageState
+import io.github.warraft.languages.antlr.utils.LanguageTokenFactory
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
+import io.github.warraft.languages.antlr.state.LanguageState
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonToken
 import org.antlr.v4.runtime.CommonTokenStream
@@ -70,7 +64,7 @@ class JassState : LanguageState() {
         val lexer = JassLexer(stream)
         lexer.removeErrorListeners()
         lexer.addErrorListener(errorJassErrorListener)
-        val f = JassTokenFactory(commentsMap)
+        val f = LanguageTokenFactory(commentsMap)
         lexer.tokenFactory = f
 
         val tokens = CommonTokenStream(lexer)
@@ -82,7 +76,7 @@ class JassState : LanguageState() {
 
         for (c in f.comments) {
             if (!commentsMap.containsKey(c.line)) continue
-            semanticHub.add(c, JassSemanticTokenType.COMMENT)
+            semanticHub.add(c, SemanticTokenType.COMMENT)
         }
 
         diagnosticHub.diagnostics.addAll(errorJassErrorListener.diagnostics)
@@ -114,8 +108,8 @@ class JassState : LanguageState() {
 
                     foldingHub.add(sgctx, egctx)
                     semanticHub
-                        .add(sgctx, JassSemanticTokenType.KEYWORD)
-                        .add(egctx, JassSemanticTokenType.KEYWORD)
+                        .add(sgctx, SemanticTokenType.KEYWORD)
+                        .add(egctx, SemanticTokenType.KEYWORD)
                     it.variable().forEach(::global)
                 }
 

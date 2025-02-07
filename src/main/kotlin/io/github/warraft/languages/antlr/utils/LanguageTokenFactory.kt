@@ -1,4 +1,4 @@
-package io.github.warraft.jass.antlr.utils
+package io.github.warraft.languages.antlr.utils
 
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonToken
@@ -6,7 +6,7 @@ import org.antlr.v4.runtime.CommonTokenFactory
 import org.antlr.v4.runtime.TokenSource
 import org.antlr.v4.runtime.misc.Pair
 
-class JassTokenFactory(val map: MutableMap<Int, CommonToken>) : CommonTokenFactory() {
+class LanguageTokenFactory(val map: MutableMap<Int, CommonToken>) : CommonTokenFactory() {
     val comments = mutableListOf<CommonToken>()
 
     override fun create(

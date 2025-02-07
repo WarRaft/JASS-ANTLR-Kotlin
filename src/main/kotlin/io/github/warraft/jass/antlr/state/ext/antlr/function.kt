@@ -10,8 +10,8 @@ import io.github.warraft.jass.antlr.psi.JassUndefinedType
 import io.github.warraft.jass.antlr.psi.JassVar
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenModifier
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenModifier
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
 import org.eclipse.lsp4j.DocumentSymbol
@@ -33,7 +33,7 @@ fun JassState.function(defCtx: ParserRuleContext) {
         if (t == null) break
         commentsMap.remove(i)
         comments.addFirst(t.text.replaceFirst("^//\\s?".toRegex(), ""))
-        semanticHub.add(t, JassSemanticTokenType.COMMENT, JassSemanticTokenModifier.DOCUMENTATION)
+        semanticHub.add(t, SemanticTokenType.COMMENT, SemanticTokenModifier.DOCUMENTATION)
     }
     for (c in comments) {
         f.comments.append(c).append("\n")
@@ -60,8 +60,8 @@ fun JassState.function(defCtx: ParserRuleContext) {
             sym = documentSymbolHub.add(defCtx, nameCtx, SymbolKind.Function)
 
             semanticHub
-                .add(defCtx.CONSTANT(), JassSemanticTokenType.KEYWORD)
-                .add(nctx, JassSemanticTokenType.KEYWORD)
+                .add(defCtx.CONSTANT(), SemanticTokenType.KEYWORD)
+                .add(nctx, SemanticTokenType.KEYWORD)
 
             tokenTree.add(f, nameCtx)
         }
@@ -84,9 +84,9 @@ fun JassState.function(defCtx: ParserRuleContext) {
 
             sym = documentSymbolHub.add(defCtx, nameCtx, SymbolKind.Function)
             semanticHub
-                .add(defCtx.CONSTANT(), JassSemanticTokenType.KEYWORD)
-                .add(sfctx, JassSemanticTokenType.KEYWORD)
-                .add(efctx, JassSemanticTokenType.KEYWORD)
+                .add(defCtx.CONSTANT(), SemanticTokenType.KEYWORD)
+                .add(sfctx, SemanticTokenType.KEYWORD)
+                .add(efctx, SemanticTokenType.KEYWORD)
         }
     }
 
@@ -99,7 +99,7 @@ fun JassState.function(defCtx: ParserRuleContext) {
             it.definition = defCtx
         })
 
-        semanticHub.add(nameCtx, JassSemanticTokenType.FUNCTION, JassSemanticTokenModifier.DECLARATION)
+        semanticHub.add(nameCtx, SemanticTokenType.FUNCTION, SemanticTokenModifier.DECLARATION)
 
         if (getNode(name, f) != null) {
             diagnosticHub.add(
@@ -117,8 +117,8 @@ fun JassState.function(defCtx: ParserRuleContext) {
     if (takesCtx != null) {
         val nctx = takesCtx.NOTHING()
         semanticHub
-            .add(nctx, JassSemanticTokenType.KEYWORD)
-            .add(takesCtx.TAKES(), JassSemanticTokenType.KEYWORD)
+            .add(nctx, SemanticTokenType.KEYWORD)
+            .add(takesCtx.TAKES(), SemanticTokenType.KEYWORD)
 
         if (nctx == null) {
             val paramsCtx: JassParser.ParamsContext? = takesCtx.params()
@@ -134,11 +134,11 @@ fun JassState.function(defCtx: ParserRuleContext) {
                     }
 
                     semanticHub
-                        .add(typeCtx, JassSemanticTokenType.TYPE_PARAMETER)
+                        .add(typeCtx, SemanticTokenType.TYPE_PARAMETER)
                         .add(
                             nameCtx,
-                            JassSemanticTokenType.PARAMETER,
-                            JassSemanticTokenModifier.DECLARATION
+                            SemanticTokenType.PARAMETER,
+                            SemanticTokenModifier.DECLARATION
                         )
 
                     f.param.add(
@@ -162,13 +162,13 @@ fun JassState.function(defCtx: ParserRuleContext) {
     if (returnsCtx != null) {
         val nctx = returnsCtx.NOTHING()
         semanticHub
-            .add(nctx, JassSemanticTokenType.KEYWORD)
-            .add(returnsCtx.RETURNS(), JassSemanticTokenType.KEYWORD)
+            .add(nctx, SemanticTokenType.KEYWORD)
+            .add(returnsCtx.RETURNS(), SemanticTokenType.KEYWORD)
 
         if (nctx == null) {
             val idctx: TerminalNode? = returnsCtx.ID()
             if (idctx != null) {
-                semanticHub.add(idctx, JassSemanticTokenType.TYPE)
+                semanticHub.add(idctx, SemanticTokenType.TYPE)
                 sym?.detail = idctx.text
 
                 f.type = typeFromString(idctx.text)
@@ -190,11 +190,11 @@ fun JassState.function(defCtx: ParserRuleContext) {
             val name = nameCtx.text
 
             semanticHub
-                .add(varDefCtx.CONSTANT(), JassSemanticTokenType.KEYWORD)
-                .add(varDefCtx.ARRAY(), JassSemanticTokenType.KEYWORD)
-                .add(varDefCtx.LOCAL(), JassSemanticTokenType.KEYWORD)
-                .add(nameCtx, JassSemanticTokenType.PARAMETER, JassSemanticTokenModifier.DECLARATION)
-                .add(varDefCtx.typename().ID(), JassSemanticTokenType.TYPE, JassSemanticTokenModifier.DECLARATION)
+                .add(varDefCtx.CONSTANT(), SemanticTokenType.KEYWORD)
+                .add(varDefCtx.ARRAY(), SemanticTokenType.KEYWORD)
+                .add(varDefCtx.LOCAL(), SemanticTokenType.KEYWORD)
+                .add(nameCtx, SemanticTokenType.PARAMETER, SemanticTokenModifier.DECLARATION)
+                .add(varDefCtx.typename().ID(), SemanticTokenType.TYPE, SemanticTokenModifier.DECLARATION)
 
             val v = JassVar(
                 state = this,

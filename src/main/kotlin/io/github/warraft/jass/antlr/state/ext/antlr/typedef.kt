@@ -11,8 +11,8 @@ import io.github.warraft.jass.antlr.psi.JassUndefinedType
 import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenModifier
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenModifier
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
 
 fun JassState.typeGet(key: String): JassTypeBase? {
     var type: JassTypeBase? = null
@@ -40,7 +40,7 @@ fun JassState.typeFromString(str: String): JassTypeBase = when (str) {
 fun JassState.typedef(defCtx: TypeContext) {
 
     val keyCtx = defCtx.TYPE()
-    semanticHub.add(keyCtx, JassSemanticTokenType.KEYWORD)
+    semanticHub.add(keyCtx, SemanticTokenType.KEYWORD)
 
     val nameCtx = defCtx.ID()
 
@@ -56,8 +56,8 @@ fun JassState.typedef(defCtx: TypeContext) {
     val eKeyCtxt = defCtx.extendsRule()
 
     semanticHub
-        .add(nameCtx, JassSemanticTokenType.TYPE, JassSemanticTokenModifier.DECLARATION)
-        .add(eKeyCtxt.EXTENDS(), JassSemanticTokenType.KEYWORD)
+        .add(nameCtx, SemanticTokenType.TYPE, SemanticTokenModifier.DECLARATION)
+        .add(eKeyCtxt.EXTENDS(), SemanticTokenType.KEYWORD)
 
     if (eKeyCtxt == null) {
         diagnosticHub.add(

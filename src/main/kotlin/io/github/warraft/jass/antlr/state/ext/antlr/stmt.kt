@@ -13,7 +13,7 @@ import io.github.warraft.jass.antlr.psi.JassUndefinedType
 import io.github.warraft.jass.antlr.psi.JassVar
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
 import org.antlr.v4.runtime.tree.TerminalNode
 
 fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNodeBase>, scopes: MutableList<JassNodeBase>) {
@@ -46,9 +46,9 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
                 }
 
                 semanticHub
-                    .add(nameCtx, JassSemanticTokenType.VARIABLE)
-                    .add(setctx.SET(), JassSemanticTokenType.KEYWORD)
-                    .add(setctx.EQ(), JassSemanticTokenType.OPERATOR)
+                    .add(nameCtx, SemanticTokenType.VARIABLE)
+                    .add(setctx.SET(), SemanticTokenType.KEYWORD)
+                    .add(setctx.EQ(), SemanticTokenType.OPERATOR)
 
 
                 val exprCtx = setctx.expr()
@@ -91,8 +91,8 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
                 val nameCtx: TerminalNode? = callctx.ID()
 
                 semanticHub
-                    .add(nameCtx, JassSemanticTokenType.FUNCTION)
-                    .add(callctx.CALL(), JassSemanticTokenType.KEYWORD)
+                    .add(nameCtx, SemanticTokenType.FUNCTION)
+                    .add(callctx.CALL(), SemanticTokenType.KEYWORD)
 
                 if (nameCtx == null) {
                     diagnosticHub.add(
@@ -137,9 +137,9 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
                 }
 
                 semanticHub
-                    .add(nameCtx, JassSemanticTokenType.FUNCTION)
-                    .add(callctx.DEBUG(), JassSemanticTokenType.KEYWORD)
-                    .add(callctx.CALL(), JassSemanticTokenType.KEYWORD)
+                    .add(nameCtx, SemanticTokenType.FUNCTION)
+                    .add(callctx.DEBUG(), SemanticTokenType.KEYWORD)
+                    .add(callctx.CALL(), SemanticTokenType.KEYWORD)
 
                 argument(fn, scope, callctx.expr(), callctx.LPAREN(), callctx.RPAREN())
 
@@ -150,8 +150,8 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
                 val loopctx: JassParser.LoopContext = ctx.loop()
 
                 semanticHub
-                    .add(loopctx.LOOP(), JassSemanticTokenType.KEYWORD)
-                    .add(loopctx.ENDLOOP(), JassSemanticTokenType.KEYWORD)
+                    .add(loopctx.LOOP(), SemanticTokenType.KEYWORD)
+                    .add(loopctx.ENDLOOP(), SemanticTokenType.KEYWORD)
 
                 val l = JassLoop(ctx = loopctx)
                 list.add(l)
@@ -163,7 +163,7 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
             is JassParser.StmtExitWhenContext -> {
                 val ewhenctx: JassParser.ExitwhenContext = ctx.exitwhen()
 
-                semanticHub.add(ewhenctx.EXITWHEN(), JassSemanticTokenType.KEYWORD)
+                semanticHub.add(ewhenctx.EXITWHEN(), SemanticTokenType.KEYWORD)
 
                 val exp = expr(ewhenctx.expr(), scope)
                 if (exp == null) {
@@ -185,7 +185,7 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
             is JassParser.StmtReturnContext -> {
                 val rctx: JassParser.ReturnRuleContext = ctx.returnRule()
 
-                semanticHub.add(rctx.RETURN(), JassSemanticTokenType.KEYWORD)
+                semanticHub.add(rctx.RETURN(), SemanticTokenType.KEYWORD)
 
                 val e = expr(rctx.expr(), scope)
                 if (e != null) {
@@ -222,9 +222,9 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
                 val nodeIf = JassIf(expr = e, ctx = ifcxt)
 
                 semanticHub
-                    .add(ifcxt.IF(), JassSemanticTokenType.KEYWORD)
-                    .add(ifcxt.THEN(), JassSemanticTokenType.KEYWORD)
-                    .add(ifcxt.ENDIF(), JassSemanticTokenType.KEYWORD)
+                    .add(ifcxt.IF(), SemanticTokenType.KEYWORD)
+                    .add(ifcxt.THEN(), SemanticTokenType.KEYWORD)
+                    .add(ifcxt.ENDIF(), SemanticTokenType.KEYWORD)
 
                 list.add(nodeIf)
                 val ss = scopes.toMutableList()
@@ -234,8 +234,8 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
                 for (elseifctx: JassParser.ElseifContext in ifcxt.elseif()) {
                     val e = expr(elseifctx.expr(), scope)
                     semanticHub
-                        .add(elseifctx.ELSEIF(), JassSemanticTokenType.KEYWORD)
-                        .add(elseifctx.THEN(), JassSemanticTokenType.KEYWORD)
+                        .add(elseifctx.ELSEIF(), SemanticTokenType.KEYWORD)
+                        .add(elseifctx.THEN(), SemanticTokenType.KEYWORD)
                     if (e == null) {
                         diagnosticHub.add(
                             elseifctx.ELSEIF(),
@@ -251,7 +251,7 @@ fun JassState.stmt(ctxs: List<JassParser.StmtContext>, list: MutableList<JassNod
 
                 val elsectx: JassParser.ElseRuleContext? = ifcxt.elseRule()
                 if (elsectx != null) {
-                    semanticHub.add(elsectx.ELSE(), JassSemanticTokenType.KEYWORD)
+                    semanticHub.add(elsectx.ELSE(), SemanticTokenType.KEYWORD)
                     val elser = JassIf(ctx = elsectx)
                     nodeIf.elser = elser
                     stmt(elsectx.stmt(), elser.stmt, ss)

@@ -1,34 +1,34 @@
-package io.github.warraft.jass.lsp4j.semantic
+package io.github.warraft.languages.lsp4j.service.document.semantic.token
 
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.TerminalNode
 
-class JassSemanticTokenHub {
-    val lines = mutableMapOf<Int, JassSemanticTokenLine>()
+class SemanticTokenHub {
+    val lines = mutableMapOf<Int, SemanticTokenLine>()
 
     fun add(
         line: Int,
         pos: Int,
         len: Int,
-        type: JassSemanticTokenType,
-        modifier: JassSemanticTokenModifier? = null,
-    ): JassSemanticTokenHub {
-        val t = JassSemanticToken(
+        type: SemanticTokenType,
+        modifier: SemanticTokenModifier? = null,
+    ): SemanticTokenHub {
+        val t = SemanticToken(
             line = line,
             pos = pos,
             len = len,
             type = type,
             modifier = modifier
         )
-        lines.getOrPut(t.line) { JassSemanticTokenLine(index = t.line) }.add(t)
+        lines.getOrPut(t.line) { SemanticTokenLine(index = t.line) }.add(t)
         return this
     }
 
     fun add(
         s: Token?,
-        type: JassSemanticTokenType,
-        modifier: JassSemanticTokenModifier? = null,
-    ): JassSemanticTokenHub = if (s == null) this else add(
+        type: SemanticTokenType,
+        modifier: SemanticTokenModifier? = null,
+    ): SemanticTokenHub = if (s == null) this else add(
         line = s.line - 1,
         pos = s.charPositionInLine,
         len = s.stopIndex - s.startIndex + 1,
@@ -38,9 +38,9 @@ class JassSemanticTokenHub {
 
     fun add(
         n: TerminalNode?,
-        type: JassSemanticTokenType,
-        modifier: JassSemanticTokenModifier? = null,
-    ): JassSemanticTokenHub = if (n == null) this else add(n.symbol, type, modifier)
+        type: SemanticTokenType,
+        modifier: SemanticTokenModifier? = null,
+    ): SemanticTokenHub = if (n == null) this else add(n.symbol, type, modifier)
 
     fun data(): MutableList<Int> {
         val l = mutableListOf<Int>()

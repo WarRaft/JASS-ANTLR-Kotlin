@@ -2,7 +2,7 @@ package io.github.warraft.languages.lsp4j.service.document
 
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.languages.lsp4j.LanguageServerEx
-import io.github.warraft.languages.lsp4j.antlr.state.LanguageState
+import io.github.warraft.languages.antlr.state.LanguageState
 import io.github.warraft.vex.antlr.state.VexState
 import io.github.warraft.vex.antlr.state.VjassState
 import io.github.warraft.vex.antlr.state.ZincState
@@ -39,6 +39,7 @@ import org.eclipse.lsp4j.SemanticTokensParams
 import org.eclipse.lsp4j.SignatureHelp
 import org.eclipse.lsp4j.SignatureHelpParams
 import org.eclipse.lsp4j.SymbolInformation
+import org.eclipse.lsp4j.TextDocumentIdentifier
 import org.eclipse.lsp4j.TextDocumentPositionAndWorkDoneProgressAndPartialResultParams
 import org.eclipse.lsp4j.TextDocumentPositionAndWorkDoneProgressParams
 import org.eclipse.lsp4j.WorkspaceEdit
@@ -79,15 +80,15 @@ class TextDocumentServiceEx(val server: LanguageServerEx) : TextDocumentService 
         return completedFuture(LinkedEditingRanges(ranges))
     }
 
-    private fun getState(params: DocumentSymbolParams?): LanguageState? = getState(params?.textDocument?.uri)
-    private fun getState(params: DocumentDiagnosticParams?): LanguageState? = getState(params?.textDocument?.uri)
-    private fun getState(params: FoldingRangeRequestParams?): LanguageState? = getState(params?.textDocument?.uri)
-    private fun getState(params: SemanticTokensParams?): LanguageState? = getState(params?.textDocument?.uri)
-    private fun getState(params: TextDocumentPositionAndWorkDoneProgressParams?): LanguageState? = getState(params?.textDocument?.uri)
-    private fun getState(params: TextDocumentPositionAndWorkDoneProgressAndPartialResultParams?): LanguageState? = getState(params?.textDocument?.uri)
-    private fun getState(uri: String?): LanguageState? = if (uri == null) null else getState(URI(uri).toPath())
 
-    private val states = mutableMapOf<Path, LanguageState>()
+    private fun getState(params: DocumentSymbolParams?): LanguageState? = getState(params?.textDocument)
+    private fun getState(params: DocumentDiagnosticParams?): LanguageState? = getState(params?.textDocument)
+    private fun getState(params: FoldingRangeRequestParams?): LanguageState? = getState(params?.textDocument)
+    private fun getState(params: SemanticTokensParams?): LanguageState? = getState(params?.textDocument)
+    private fun getState(params: TextDocumentPositionAndWorkDoneProgressParams?): LanguageState? = getState(params?.textDocument)
+    private fun getState(params: TextDocumentPositionAndWorkDoneProgressAndPartialResultParams?): LanguageState? = getState(params?.textDocument)
+    private fun getState(textDocument: TextDocumentIdentifier?): LanguageState? = getState(textDocument?.uri)
+    private fun getState(uri: String?): LanguageState? = if (uri == null) null else getState(URI(uri).toPath())
     private fun getState(p: Path): LanguageState {
         var state = states[p]
         when (p.extension) {
@@ -121,6 +122,8 @@ class TextDocumentServiceEx(val server: LanguageServerEx) : TextDocumentService 
         }
         return s
     }
+
+    private val states = mutableMapOf<Path, LanguageState>()
 
     private fun stateUpdate(uri: String, text: String) {
         val path = URI(uri).toPath()

@@ -7,8 +7,8 @@ import io.github.warraft.jass.antlr.psi.JassVar
 import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenModifier
-import io.github.warraft.jass.lsp4j.semantic.JassSemanticTokenType
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenModifier
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
 import kotlin.collections.set
 
 fun JassState.global(definitionCtx: VariableContext) {
@@ -19,11 +19,11 @@ fun JassState.global(definitionCtx: VariableContext) {
     val eqctx = definitionCtx.EQ()
 
     semanticHub
-        .add(nameCtx, JassSemanticTokenType.VARIABLE, JassSemanticTokenModifier.DECLARATION)
-        .add(tctx, JassSemanticTokenType.TYPE)
-        .add(cctx, JassSemanticTokenType.KEYWORD)
-        .add(actx, JassSemanticTokenType.KEYWORD)
-        .add(eqctx, JassSemanticTokenType.OPERATOR)
+        .add(nameCtx, SemanticTokenType.VARIABLE, SemanticTokenModifier.DECLARATION)
+        .add(tctx, SemanticTokenType.TYPE)
+        .add(cctx, SemanticTokenType.KEYWORD)
+        .add(actx, SemanticTokenType.KEYWORD)
+        .add(eqctx, SemanticTokenType.OPERATOR)
 
 
     val v = JassVar(
