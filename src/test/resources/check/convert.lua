@@ -28,13 +28,13 @@ end
 ---@return number real
 function A(a, d)
 	TimerStart(15., true, Ba)
-	s[0] = "00"
-	s[1] = "11"
+	s["00"] = "00"
+	s["11"] = "11"
 	if a > b then
-		s = s .. "e"
+		s[s .. "e"] = s .. "e"
 	end
 	while(true) do
-		s = s .. "g"
+		s[s .. "g"] = s .. "g"
 		if (b > a) then break end
 	end
 	UnitAlive(nil)

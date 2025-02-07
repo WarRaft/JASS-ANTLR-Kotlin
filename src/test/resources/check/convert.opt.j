@@ -23,13 +23,13 @@ endfunction
 
 function A takes real a, code d returns real
 	call TimerStart(15., true, function Ba)
-	set s[0] = "00"
-	set s[1] = "11"
+	set s["00"] = "00"
+	set s["11"] = "11"
 	if a > b then
-		set s = s + "e"
+		set s[s + "e"] = s + "e"
 	endif
 	loop
-		set s = s + "g"
+		set s[s + "g"] = s + "g"
 		exitwhen b > a
 	endloop
 	call UnitAlive(null)

@@ -18,13 +18,13 @@ void Ba() {
 }
 float A(float a, CallbackFunc d) {
 	TimerStart(15., true, Ba);
-	s[0] = "00";
-	s[1] = "11";
+	s["00"] = "00";
+	s["11"] = "11";
 	if (a > b) {
-		s = s + "e";
+		s[s + "e"] = s + "e";
 	}
 	while (true) {
-		s = s + "g";
+		s[s + "g"] = s + "g";
 		if (b > a) break;
 	}
 	UnitAlive(null);

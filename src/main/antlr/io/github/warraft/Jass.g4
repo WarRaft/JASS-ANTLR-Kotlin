@@ -30,27 +30,17 @@ function : CONSTANT? FUNCTION ID takes returnsRule variable* stmt* ENDFUNCTION ;
 
 // === STATEMENT
 stmt
-    : set #stmtSet
-    | call #stmtCall
-    | returnRule #stmtReturn
-    | ifRule #stmtIf
-    | loop #stmtLoop
-    | exitwhen #stmtExitWhen
+    : SET ID setBrack? EQ expr #stmtSet
+    | DEBUG? CALL ID LPAREN (expr (COMMA expr)*)? RPAREN #stmtCall
+    | RETURN expr? #stmtReturn
+    | IF expr THEN stmt* elseif* elseRule? ENDIF #stmtIf
+    | LOOP stmt* ENDLOOP #stmtLoop
+    | EXITWHEN expr #stmtExitWhen
     ;
 
-set : SET ID setBrack? EQ expr;
 setBrack : LBRACK expr? RBRACK ;
-
-call : DEBUG? CALL ID LPAREN (expr (COMMA expr)*)? RPAREN;
-
-returnRule : RETURN expr?;
-
-ifRule : IF expr THEN stmt* elseif* elseRule? ENDIF;
 elseif : ELSEIF expr THEN stmt*;
 elseRule : ELSE stmt*;
-
-loop : LOOP stmt* ENDLOOP ;
-exitwhen : EXITWHEN expr ;
 
 // === EXPRESSION
 expr
