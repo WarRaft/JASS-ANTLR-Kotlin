@@ -2,7 +2,7 @@ grammar Vjass;
 
 root : (library | rootItem)* EOF ;
 
-library : LIBRARY ID (INITIALIZER ID)? (USES ID (COMMA ID)*)? rootItem* ENDLIBRARY;
+library : LIBRARY ID (INITIALIZER ID)? ((REQUIRES|NEEDS|USES) ID (COMMA ID)*)? rootItem* ENDLIBRARY;
 
 rootItem : nativeRule | globals | function;
 
@@ -98,12 +98,14 @@ LIBRARY : 'library';
 LOCAL : 'local';
 LOOP : 'loop';
 NATIVE : 'native';
+NEEDS: 'needs';
 NOT : 'not';
 NOTHING : 'nothing';
 NULL : 'null';
 OR : 'or';
 PUBLIC : 'public';
 PRIVATE : 'private';
+REQUIRES: 'requires';
 RETURNS : 'returns';
 RETURN : 'return';
 SET : 'set';

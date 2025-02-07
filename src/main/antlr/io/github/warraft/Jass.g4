@@ -38,8 +38,8 @@ stmt
     | exitwhen #stmtExitWhen
     ;
 
-setBrack : LBRACK expr? RBRACK ;
 set : SET ID setBrack? EQ expr;
+setBrack : LBRACK expr? RBRACK ;
 
 call : DEBUG? CALL ID LPAREN (expr (COMMA expr)*)? RPAREN;
 

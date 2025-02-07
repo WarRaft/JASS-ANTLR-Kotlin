@@ -36,7 +36,6 @@ class VjassState : VexState() {
 
     fun root(ctx: RootContext) {
         for (item in ctx.children) {
-            server?.log("vjass | ${item.javaClass.simpleName}")
             when (item) {
                 is LibraryContext -> library(item)
                 is RootItemContext -> rootItem(item)
@@ -48,6 +47,8 @@ class VjassState : VexState() {
         semanticHub
             .add(ctx.LIBRARY(), SemanticTokenType.KEYWORD)
             .add(ctx.INITIALIZER(), SemanticTokenType.KEYWORD)
+            .add(ctx.REQUIRES(), SemanticTokenType.KEYWORD)
+            .add(ctx.NEEDS(), SemanticTokenType.KEYWORD)
             .add(ctx.USES(), SemanticTokenType.KEYWORD)
             .add(ctx.ENDLIBRARY(), SemanticTokenType.KEYWORD)
 
@@ -59,6 +60,7 @@ class VjassState : VexState() {
             when (item) {
                 is GlobalsContext -> globals(item)
                 is FunctionContext -> function(item)
+                else -> server?.log("💩rootItem: ${item.javaClass.simpleName}")
             }
         }
     }
@@ -77,12 +79,60 @@ class VjassState : VexState() {
         semanticHub
             .add(returnsCtx?.RETURNS(), SemanticTokenType.KEYWORD)
             .add(returnsCtx?.NOTHING(), SemanticTokenType.KEYWORD)
+
+        stmt(ctx.stmt())
     }
 
     fun globals(ctx: GlobalsContext) {
         semanticHub
             .add(ctx.GLOBALS(), SemanticTokenType.KEYWORD)
             .add(ctx.ENDGLOBALS(), SemanticTokenType.KEYWORD)
+
+        for (varCtx in ctx.variable()) {
+            val varnameCtx: VarnameContext? = varCtx.varname()
+
+            semanticHub
+                .add(varnameCtx?.ID(), SemanticTokenType.VARIABLE)
+                .add(varCtx.PRIVATE(), SemanticTokenType.KEYWORD)
+
+            expr(varCtx.expr())
+        }
+    }
+
+    fun expr(exprCtx: ExprContext?) {
+        if (exprCtx == null) return
+        when (exprCtx) {
+            is ExprBoolContext -> {
+                semanticHub
+                    .add(exprCtx.TRUE(), SemanticTokenType.KEYWORD)
+                    .add(exprCtx.FALSE(), SemanticTokenType.KEYWORD)
+            }
+
+            is ExprRealContext -> {
+                semanticHub.add(exprCtx.REALVAL(), SemanticTokenType.NUMBER)
+            }
+
+            is ExprCallContext -> {
+                semanticHub.add(exprCtx.ID(), SemanticTokenType.VARIABLE)
+                for (e in exprCtx.expr()) expr(e)
+            }
+
+            else -> server?.log("💩expr: ${exprCtx.javaClass.simpleName}")
+        }
+    }
+
+    fun stmt(stmtsCtx: List<StmtContext>) {
+        for (stmtCtx in stmtsCtx) {
+            when (stmtCtx) {
+                is StmtCallContext -> {
+                    val callCtx: CallContext? = stmtCtx.call()
+                    semanticHub.add(callCtx?.CALL(), SemanticTokenType.VARIABLE)
+
+                }
+
+                else -> server?.log("💩stmt: ${stmtCtx.javaClass.simpleName}")
+            }
+        }
     }
 
 }
