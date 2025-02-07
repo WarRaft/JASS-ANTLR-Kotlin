@@ -4,6 +4,8 @@ import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.languages.lsp4j.LanguageServerEx
 import io.github.warraft.languages.lsp4j.antlr.state.LanguageState
 import io.github.warraft.vex.antlr.state.VexState
+import io.github.warraft.vex.antlr.state.VjassState
+import io.github.warraft.vex.antlr.state.ZincState
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CharStreams
 import org.eclipse.lsp4j.CompletionItem
@@ -89,13 +91,9 @@ class TextDocumentServiceEx(val server: LanguageServerEx) : TextDocumentService 
     private fun getState(p: Path): LanguageState {
         var state = states[p]
         when (p.extension) {
-            "j" -> {
-                if (state !is JassState) state = JassState()
-            }
-
-            "vj" -> {
-                if (state !is VexState) state = VexState()
-            }
+            "j" -> if (state !is JassState) state = JassState()
+            "vj" -> if (state !is VexState) state = VjassState()
+            "zn" -> if (state !is VexState) state = ZincState()
         }
         if (state == null) return object : LanguageState() {
             override fun nodeCount(): Int = 0

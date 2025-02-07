@@ -1,19 +1,19 @@
 grammar Vjass;
 
-root : (type | nativeRule | globals | function)* EOF ;
+root : (library | rootItem)* EOF ;
+
+library : LIBRARY ID (INITIALIZER ID)? (USES ID (COMMA ID)*)? rootItem* ENDLIBRARY;
+
+rootItem : nativeRule | globals | function;
 
 typename : ID;
 varname : ID;
-
-// === type
-type : TYPE ID extendsRule;
-extendsRule : EXTENDS ID;
 
 // === globals
 globals : GLOBALS variable* ENDGLOBALS;
 
 // === var
-variable : CONSTANT? LOCAL? typename ARRAY? varname (EQ expr)?;
+variable : (PUBLIC|PRIVATE)? CONSTANT? LOCAL? typename ARRAY? varname brackExpr* (EQ expr)?;
 
 // === function
 param : typename varname ;
@@ -23,7 +23,7 @@ takes : TAKES (NOTHING|params);
 returnsRule : RETURNS (NOTHING|ID);
 
 nativeRule : CONSTANT? NATIVE ID takes returnsRule;
-function : CONSTANT? FUNCTION ID takes returnsRule variable* stmt* ENDFUNCTION ;
+function : (PUBLIC|PRIVATE)? CONSTANT? FUNCTION ID takes returnsRule variable* stmt* ENDFUNCTION;
 
 // === STATEMENT
 stmt
@@ -35,8 +35,8 @@ stmt
     | exitwhen #stmtExitWhen
     ;
 
-setBrack : LBRACK expr? RBRACK ;
-set : SET ID setBrack? EQ expr;
+brackExpr : LBRACK expr? RBRACK ;
+set : SET ID brackExpr? EQ expr;
 
 call : DEBUG? CALL ID LPAREN (expr (COMMA expr)*)? RPAREN;
 
@@ -86,12 +86,15 @@ ENDFUNCTION : 'endfunction';
 ENDIF : 'endif';
 ENDLOOP : 'endloop';
 ENDGLOBALS : 'endglobals';
+ENDLIBRARY: 'endlibrary';
 EXTENDS : 'extends';
 EXITWHEN : 'exitwhen';
 FALSE : 'false';
 FUNCTION : 'function';
 GLOBALS : 'globals';
 IF : 'if';
+INITIALIZER : 'initializer';
+LIBRARY : 'library';
 LOCAL : 'local';
 LOOP : 'loop';
 NATIVE : 'native';
@@ -99,6 +102,8 @@ NOT : 'not';
 NOTHING : 'nothing';
 NULL : 'null';
 OR : 'or';
+PUBLIC : 'public';
+PRIVATE : 'private';
 RETURNS : 'returns';
 RETURN : 'return';
 SET : 'set';
@@ -106,6 +111,7 @@ TAKES : 'takes';
 THEN : 'then';
 TRUE : 'true';
 TYPE : 'type';
+USES: 'uses';
 COMMA : ',';
 EQ_EQ: '==';
 EQ : '=';
@@ -136,4 +142,5 @@ REALVAL : (('0' .. '9')* '.' ('0' .. '9')+)|(('0' .. '9')+ '.' ('0' .. '9')*);
 WS: [ \t]+ -> skip;
 NL: [\r\n] -> skip;
 
+COMMENT : '/*' (COMMENT|.)*? '*/' -> channel(2) ;
 LINE_COMMENT: '//' ~[\r\n]* -> channel(2);
