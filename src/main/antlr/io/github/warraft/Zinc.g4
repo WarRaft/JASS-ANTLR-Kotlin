@@ -3,14 +3,13 @@ grammar Zinc;
 root : rootItem* EOF ;
 rootItem : lib | vis | stmt | function;
 
-lib : (LIBRARY|STRUCT) ID (REQUIRES ID (COMMA ID)*)? LBRACE rootItem* RBRACE;
+lib : (LIBRARY|STRUCT) (LBRACK expr RBRACK)*  ID (REQUIRES ID (COMMA ID)*)? LBRACE rootItem* RBRACE;
 
 vis : (PUBLIC|PRIVATE) (rootItem|(LBRACE rootItem* RBRACE));
 
 typename : ID;
 varname : ID;
 
-// === function
 param : typename varname ;
 
 function :
@@ -22,23 +21,27 @@ function :
     (stmt | LBRACE stmt* RBRACE)
     ;
 
-// === STATEMENT
-stmt
-    :  (STATIC | CONSTANT)* typename varname brackExpr* (EQ expr)? SEMI #stmtVar
-    | DEBUG? ID LPAREN (expr (COMMA expr)*)? RPAREN #stmtCall
-    | RETURN expr? SEMI #stmtReturn
-    | IF expr THEN stmt* elseif* elseRule? ENDIF #stmtIf
-    | LOOP stmt* ENDLOOP #stmtLoop
-    | EXITWHEN expr SEMI #stmtExitWhen
+left
+    : ID #leftId
+    | ID left #leftType
+    | left LPAREN (expr (COMMA expr)*)? RPAREN #leftCall
+    | left LBRACK left? RBRACK #leftArr
+    | left DOT left #leftDot
     ;
 
-brackExpr : LBRACK expr? RBRACK ;
-elseif : ELSEIF expr THEN stmt*;
-elseRule : ELSE stmt*;
+
+stmt
+    : (DEBUG| STATIC | CONSTANT)* left (EQ expr)? SEMI #stmtLeft
+    | RETURN expr? SEMI #stmtReturn
+    | (IF|WHILE|FOR) LPAREN expr RPAREN (stmt | (LBRACE stmt* RBRACE)) elseRule? #stmtIf
+    ;
+
+elseRule : ELSE (stmt | (LBRACE stmt* RBRACE));
 
 // === EXPRESSION
 expr
-    : LPAREN expr RPAREN # exprParen // 1
+    : expr DOT expr #exprDot
+    | LPAREN expr RPAREN # exprParen // 1
     | (MINUS|NOT) expr # exprUn // 2
     | expr (MUL|DIV) expr # exprMul  // 3
     | expr (MINUS|PLUS) expr # exprAdd // 4
@@ -50,9 +53,10 @@ expr
     | (INTVAL|HEXVAL|RAWVAL) # exprInt
     | REALVAL # exprReal
     | STRING # exprStr
-    | ID LBRACK expr? RBRACK # exprArr
-    | ID LPAREN (expr (COMMA expr)*)? RPAREN # exprCall
+    | expr LBRACK expr? RBRACK # exprArr
+    | expr LPAREN (expr (COMMA expr)*)? RPAREN # exprCall
     | FUNCTION ID # exprFun
+    | FUNCTION LPAREN RPAREN (RETURNS ID)? LBRACE stmt* RBRACE # exprLambda
     | ID # exprVar
     ;
 
@@ -65,19 +69,11 @@ fragment STRING_CLOSE : ~["\\] ;
 CONSTANT : 'constant';
 DEBUG : 'debug';
 ELSE : 'else';
-ELSEIF : 'elseif';
-ENDIF : 'endif';
-ENDLOOP : 'endloop';
-ENDGLOBALS : 'endglobals';
-ENDLIBRARY: 'endlibrary';
-EXTENDS : 'extends';
-EXITWHEN : 'exitwhen';
 FALSE : 'false';
+FOR : 'for';
 FUNCTION : 'function';
-GLOBALS : 'globals';
 IF : 'if';
 LIBRARY : 'library';
-LOOP : 'loop';
 METHOD : 'method';
 NATIVE : 'native';
 NULL : 'null';
@@ -87,11 +83,8 @@ REQUIRES: 'requires';
 RETURN : 'return';
 STATIC: 'static';
 STRUCT : 'struct';
-TAKES : 'takes';
-THEN : 'then';
 TRUE : 'true';
-TYPE : 'type';
-
+WHILE : 'while';
 
 RETURNS : '->';
 NOT : '!';
