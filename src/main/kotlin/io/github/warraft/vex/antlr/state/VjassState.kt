@@ -10,6 +10,7 @@ import io.github.warraft.languages.antlr.utils.LanguageTokenFactory
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonToken
 import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.tree.TerminalNode
 
 class VjassState : VexState() {
 
@@ -73,13 +74,26 @@ class VjassState : VexState() {
         semanticHub
             .add(ctx.ID(), SemanticTokenType.FUNCTION)
             .add(ctx.CONSTANT(), SemanticTokenType.KEYWORD)
+            .add(ctx.PRIVATE(), SemanticTokenType.KEYWORD)
+            .add(ctx.PUBLIC(), SemanticTokenType.KEYWORD)
             .add(ctx.FUNCTION(), SemanticTokenType.KEYWORD)
             .add(ctx.ENDFUNCTION(), SemanticTokenType.KEYWORD)
 
         val takesCtx: TakesContext? = ctx.takes()
-        semanticHub
-            .add(takesCtx?.TAKES(), SemanticTokenType.KEYWORD)
-            .add(takesCtx?.NOTHING(), SemanticTokenType.KEYWORD)
+        if (takesCtx != null) {
+            semanticHub
+                .add(takesCtx.TAKES(), SemanticTokenType.KEYWORD)
+                .add(takesCtx.NOTHING(), SemanticTokenType.KEYWORD)
+
+            for (paramCtx in takesCtx.param()) {
+                val typenameCtx: TypenameContext? = paramCtx.typename()
+                val varnameCtx: VarnameContext? = paramCtx.varname()
+
+                semanticHub
+                    .add(typenameCtx?.ID(), SemanticTokenType.TYPE_PARAMETER)
+                    .add(varnameCtx?.ID(), SemanticTokenType.PARAMETER)
+            }
+        }
 
         val returnsCtx: ReturnsRuleContext? = ctx.returnsRule()
         semanticHub
@@ -98,13 +112,44 @@ class VjassState : VexState() {
         stmt(ctx.stmt())
     }
 
+    fun expr(exprsCtx: List<ExprContext>, opsCtx: List<TerminalNode?>) {
+        for (exprCtx in exprsCtx) expr(exprCtx)
+        for (opCtx in opsCtx) semanticHub.add(opCtx, SemanticTokenType.OPERATOR)
+    }
+
     fun expr(exprCtx: ExprContext?) {
         if (exprCtx == null) return
+
         when (exprCtx) {
+            is ExprEqContext -> expr(exprCtx.expr(), listOf(exprCtx.EQ_EQ(), exprCtx.NEQ()))
+            is ExprAddContext -> expr(exprCtx.expr(), listOf(exprCtx.PLUS(), exprCtx.MINUS()))
+            is ExprMulContext -> expr(exprCtx.expr(), listOf(exprCtx.MUL(), exprCtx.DIV()))
+            is ExprLtContext -> expr(exprCtx.expr(), listOf(exprCtx.LT(), exprCtx.LT_EQ(), exprCtx.GT(), exprCtx.GT_EQ()))
+            is ExprAndContext -> expr(exprCtx.expr(), listOf(exprCtx.AND(), exprCtx.OR()))
+
+            is ExprParenContext -> expr(exprCtx.expr())
+
+            is ExprNullContext -> {
+                semanticHub
+                    .add(exprCtx.NULL(), SemanticTokenType.KEYWORD)
+            }
+
+            is ExprStrContext -> {
+                semanticHub
+                    .add(exprCtx.STRING(), SemanticTokenType.STRING)
+            }
+
             is ExprBoolContext -> {
                 semanticHub
                     .add(exprCtx.TRUE(), SemanticTokenType.KEYWORD)
                     .add(exprCtx.FALSE(), SemanticTokenType.KEYWORD)
+            }
+
+            is ExprIntContext -> {
+                semanticHub
+                    .add(exprCtx.INTVAL(), SemanticTokenType.NUMBER)
+                    .add(exprCtx.HEXVAL(), SemanticTokenType.NUMBER)
+                    .add(exprCtx.RAWVAL(), SemanticTokenType.NUMBER)
             }
 
             is ExprRealContext -> {
@@ -116,6 +161,32 @@ class VjassState : VexState() {
                 for (e in exprCtx.expr()) expr(e)
             }
 
+            is ExprVarContext -> {
+                semanticHub
+                    .add(exprCtx.ID(), SemanticTokenType.VARIABLE)
+            }
+
+            is ExprFunContext -> {
+                semanticHub
+                    .add(exprCtx.FUNCTION(), SemanticTokenType.KEYWORD)
+                    .add(exprCtx.ID(), SemanticTokenType.FUNCTION)
+            }
+
+            is ExprUnContext -> {
+                semanticHub
+                    .add(exprCtx.MINUS(), SemanticTokenType.OPERATOR)
+                    .add(exprCtx.NOT(), SemanticTokenType.OPERATOR)
+
+                expr(exprCtx.expr())
+            }
+
+            is ExprArrContext -> {
+                semanticHub
+                    .add(exprCtx.ID(), SemanticTokenType.VARIABLE)
+
+                expr(exprCtx.expr())
+            }
+
             else -> server?.log("💩expr: ${exprCtx.javaClass.simpleName}")
         }
     }
@@ -125,13 +196,35 @@ class VjassState : VexState() {
             when (stmtCtx) {
                 is StmtVarContext -> {
                     val varnameCtx: VarnameContext? = stmtCtx.varname()
+                    val typenameCtx: TypenameContext? = stmtCtx.typename()
 
                     semanticHub
                         .add(varnameCtx?.ID(), SemanticTokenType.VARIABLE)
+                        .add(typenameCtx?.ID(), SemanticTokenType.TYPE)
+                        .add(stmtCtx.CONSTANT(), SemanticTokenType.KEYWORD)
                         .add(stmtCtx.PRIVATE(), SemanticTokenType.KEYWORD)
+                        .add(stmtCtx.ARRAY(), SemanticTokenType.KEYWORD)
+                        .add(stmtCtx.PUBLIC(), SemanticTokenType.KEYWORD)
+                        .add(stmtCtx.LOCAL(), SemanticTokenType.KEYWORD)
+                        .add(stmtCtx.EQ(), SemanticTokenType.OPERATOR)
 
+                    for (brackCtx in stmtCtx.brackExpr()) {
+                        expr(brackCtx.expr())
+                    }
 
+                    expr(stmtCtx.expr())
+                }
 
+                is StmtSetContext -> {
+                    semanticHub
+                        .add(stmtCtx.ID(), SemanticTokenType.VARIABLE)
+                        .add(stmtCtx.SET(), SemanticTokenType.KEYWORD)
+                        .add(stmtCtx.EQ(), SemanticTokenType.OPERATOR)
+
+                    val brackCtx: BrackExprContext? = stmtCtx.brackExpr()
+                    if (brackCtx != null) {
+                        expr(brackCtx.expr())
+                    }
                     expr(stmtCtx.expr())
                 }
 
@@ -160,8 +253,29 @@ class VjassState : VexState() {
                     }
                 }
 
+                is StmtLoopContext -> {
+                    semanticHub
+                        .add(stmtCtx.LOOP(), SemanticTokenType.KEYWORD)
+                        .add(stmtCtx.ENDLOOP(), SemanticTokenType.KEYWORD)
+                    stmt(stmtCtx.stmt())
+                }
+
                 is StmtCallContext -> {
-                    semanticHub.add(stmtCtx.CALL(), SemanticTokenType.VARIABLE)
+                    semanticHub
+                        .add(stmtCtx.CALL(), SemanticTokenType.VARIABLE)
+                        .add(stmtCtx.ID(), SemanticTokenType.FUNCTION)
+                    for (exprCtx in stmtCtx.expr()) expr(exprCtx)
+
+                }
+
+                is StmtReturnContext -> {
+                    semanticHub.add(stmtCtx.RETURN(), SemanticTokenType.VARIABLE)
+                    expr(stmtCtx.expr())
+                }
+
+                is StmtExitWhenContext -> {
+                    semanticHub.add(stmtCtx.EXITWHEN(), SemanticTokenType.KEYWORD)
+                    expr(stmtCtx.expr())
                 }
 
                 else -> server?.log("💩stmt: ${stmtCtx.javaClass.simpleName}")

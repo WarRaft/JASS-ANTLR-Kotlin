@@ -121,40 +121,35 @@ fun JassState.function(defCtx: ParserRuleContext) {
             .add(takesCtx.TAKES(), SemanticTokenType.KEYWORD)
 
         if (nctx == null) {
-            val paramsCtx: JassParser.ParamsContext? = takesCtx.params()
-            val paramCtx = paramsCtx?.param()
+            for (paramCtx in takesCtx.param()) {
+                val nameCtx = paramCtx.varname().ID()
+                val typeCtx = paramCtx.typename().ID()
 
-            if (paramCtx != null) {
-                for (paramCtx in paramCtx) {
-                    val nameCtx = paramCtx.varname().ID()
-                    val typeCtx = paramCtx.typename().ID()
-
-                    documentSymbolHub.add(paramCtx, nameCtx, SymbolKind.Variable, sym).also {
-                        it?.detail = typeCtx.text
-                    }
-
-                    semanticHub
-                        .add(typeCtx, SemanticTokenType.TYPE_PARAMETER)
-                        .add(
-                            nameCtx,
-                            SemanticTokenType.PARAMETER,
-                            SemanticTokenModifier.DECLARATION
-                        )
-
-                    f.param.add(
-                        JassVar(
-                            state = this,
-                            name = nameCtx.text,
-                            type = typeFromString(typeCtx.text),
-                            local = true,
-                            param = true,
-                            symbol = nameCtx.symbol,
-                            definition = paramsCtx,
-                        ).also {
-                            tokenTree.add(it)
-                        }
-                    )
+                documentSymbolHub.add(paramCtx, nameCtx, SymbolKind.Variable, sym).also {
+                    it?.detail = typeCtx.text
                 }
+
+                semanticHub
+                    .add(typeCtx, SemanticTokenType.TYPE_PARAMETER)
+                    .add(
+                        nameCtx,
+                        SemanticTokenType.PARAMETER,
+                        SemanticTokenModifier.DECLARATION
+                    )
+
+                f.param.add(
+                    JassVar(
+                        state = this,
+                        name = nameCtx.text,
+                        type = typeFromString(typeCtx.text),
+                        local = true,
+                        param = true,
+                        symbol = nameCtx.symbol,
+                        definition = paramCtx,
+                    ).also {
+                        tokenTree.add(it)
+                    }
+                )
             }
         }
     }

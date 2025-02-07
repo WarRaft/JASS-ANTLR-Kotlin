@@ -14,9 +14,8 @@ globals : GLOBALS stmt* ENDGLOBALS;
 
 // === function
 param : typename varname ;
-params : param (COMMA param)* ;
 
-takes : TAKES (NOTHING|params);
+takes : TAKES (NOTHING|(param (COMMA param)*));
 returnsRule : RETURNS (NOTHING|ID);
 
 nativeRule : CONSTANT? NATIVE ID takes returnsRule;
