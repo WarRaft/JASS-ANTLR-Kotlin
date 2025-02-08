@@ -1,56 +1,20 @@
 package io.github.warraft.languages.lsp4j.service.document
 
 import io.github.warraft.jass.antlr.state.JassState
-import io.github.warraft.languages.lsp4j.LanguageServerEx
 import io.github.warraft.languages.antlr.state.LanguageState
-import io.github.warraft.vex.antlr.state.VexState
+import io.github.warraft.languages.lsp4j.LanguageServerEx
 import io.github.warraft.vex.antlr.state.VjassState
 import io.github.warraft.vex.antlr.state.ZincState
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CharStreams
-import org.eclipse.lsp4j.CompletionItem
-import org.eclipse.lsp4j.CompletionList
-import org.eclipse.lsp4j.CompletionParams
-import org.eclipse.lsp4j.DefinitionParams
-import org.eclipse.lsp4j.DidChangeTextDocumentParams
-import org.eclipse.lsp4j.DidCloseTextDocumentParams
-import org.eclipse.lsp4j.DidOpenTextDocumentParams
-import org.eclipse.lsp4j.DidSaveTextDocumentParams
-import org.eclipse.lsp4j.DocumentDiagnosticParams
-import org.eclipse.lsp4j.DocumentDiagnosticReport
-import org.eclipse.lsp4j.DocumentHighlight
-import org.eclipse.lsp4j.DocumentHighlightParams
-import org.eclipse.lsp4j.DocumentSymbol
-import org.eclipse.lsp4j.DocumentSymbolParams
-import org.eclipse.lsp4j.FoldingRange
-import org.eclipse.lsp4j.FoldingRangeRequestParams
-import org.eclipse.lsp4j.Hover
-import org.eclipse.lsp4j.HoverParams
-import org.eclipse.lsp4j.LinkedEditingRangeParams
-import org.eclipse.lsp4j.LinkedEditingRanges
-import org.eclipse.lsp4j.Location
-import org.eclipse.lsp4j.LocationLink
-import org.eclipse.lsp4j.Range
-import org.eclipse.lsp4j.ReferenceParams
-import org.eclipse.lsp4j.RelatedFullDocumentDiagnosticReport
-import org.eclipse.lsp4j.RenameParams
-import org.eclipse.lsp4j.SemanticTokens
-import org.eclipse.lsp4j.SemanticTokensParams
-import org.eclipse.lsp4j.SignatureHelp
-import org.eclipse.lsp4j.SignatureHelpParams
-import org.eclipse.lsp4j.SymbolInformation
-import org.eclipse.lsp4j.TextDocumentIdentifier
-import org.eclipse.lsp4j.TextDocumentPositionAndWorkDoneProgressAndPartialResultParams
-import org.eclipse.lsp4j.TextDocumentPositionAndWorkDoneProgressParams
-import org.eclipse.lsp4j.WorkspaceEdit
+import org.eclipse.lsp4j.*
 import org.eclipse.lsp4j.jsonrpc.messages.Either
 import org.eclipse.lsp4j.services.TextDocumentService
 import java.net.URI
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.CompletableFuture.*
-import kotlin.io.path.extension
+import java.util.concurrent.CompletableFuture.completedFuture
 import kotlin.io.path.isReadable
 import kotlin.io.path.toPath
 
@@ -90,11 +54,14 @@ class TextDocumentServiceEx(val server: LanguageServerEx) : TextDocumentService 
     private fun getState(uri: String?): LanguageState? = if (uri == null) null else getState(URI(uri).toPath())
     private fun getState(p: Path): LanguageState {
         var state = states[p]
-        when (p.extension) {
-            "j" -> if (state !is JassState) state = JassState()
-            "vj" -> if (state !is VjassState) state = VjassState()
-            "zn" -> if (state !is ZincState) state = ZincState()
+
+        server.log("${lngMap[p]} | ${p.toAbsolutePath()}")
+        when (lngMap[p]) {
+            "jass" -> if (state !is JassState) state = JassState()
+            "vjass" -> if (state !is VjassState) state = VjassState()
+            "zinc" -> if (state !is ZincState) state = ZincState()
         }
+
         if (state == null) return object : LanguageState() {
             override fun nodeCount(): Int = 0
         }
@@ -122,16 +89,17 @@ class TextDocumentServiceEx(val server: LanguageServerEx) : TextDocumentService 
         return s
     }
 
+    private val lngMap = mutableMapOf<Path, String>()
     private val states = mutableMapOf<Path, LanguageState>()
 
-    private fun stateUpdate(uri: String, text: String) {
-        val path = URI(uri).toPath()
+    private fun stateUpdate(path: Path, text: String) {
         val list = mutableListOf<LanguageState>()
 
         val folder = server.args.getOrNull(1)
         if (folder != null) {
             for (f in listOf("common.j", "blizzard.j")) {
                 val p = Paths.get(folder, f)
+                lngMap[path] = "jass"
                 if (p == path) {
                     getStateAndParse(path, CharStreams.fromString(text), list, false)
                     return
@@ -145,19 +113,22 @@ class TextDocumentServiceEx(val server: LanguageServerEx) : TextDocumentService 
     }
 
     override fun didOpen(params: DidOpenTextDocumentParams) {
-        stateUpdate(params.textDocument.uri, params.textDocument.text)
-    }
-
-    override fun didClose(params: DidCloseTextDocumentParams) {
+        val doc = params.textDocument
+        val path = URI(doc.uri).toPath()
+        lngMap[path] = doc.languageId
+        stateUpdate(path, doc.text)
     }
 
     override fun didChange(params: DidChangeTextDocumentParams) {
         if (params.contentChanges.isEmpty()) return
-        val uri = params.textDocument.uri
+        val path = URI(params.textDocument.uri).toPath()
         val e = params.contentChanges.last()
-        stateUpdate(uri, e.text)
+        stateUpdate(path, e.text)
     }
 
     override fun didSave(params: DidSaveTextDocumentParams) {
+    }
+
+    override fun didClose(params: DidCloseTextDocumentParams) {
     }
 }

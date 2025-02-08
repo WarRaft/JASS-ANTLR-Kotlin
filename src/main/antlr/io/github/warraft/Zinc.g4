@@ -21,6 +21,8 @@ function :
     (stmt | LBRACE stmt* RBRACE)
     ;
 
+// === STATEMENT
+
 left
     : ID #leftId
     | ID left #leftType

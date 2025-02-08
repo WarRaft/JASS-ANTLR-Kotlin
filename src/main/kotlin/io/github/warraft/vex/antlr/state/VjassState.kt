@@ -129,6 +129,10 @@ class VjassState : VexState() {
 
             is ExprParenContext -> expr(exprCtx.expr())
 
+            is ExprDotContext -> {
+                for (it in exprCtx.expr()) expr(it)
+            }
+
             is ExprNullContext -> {
                 semanticHub
                     .add(exprCtx.NULL(), SemanticTokenType.KEYWORD)
@@ -191,9 +195,41 @@ class VjassState : VexState() {
         }
     }
 
+    fun left(leftCtx: LeftContext) {
+        when (leftCtx) {
+            is LeftCallContext -> {
+                left(leftCtx.left())
+                for (it in leftCtx.expr()) expr(it)
+            }
+
+            is LeftIdContext -> {
+                semanticHub
+                    .add(leftCtx.ID(), SemanticTokenType.FUNCTION)
+            }
+
+            is LeftArrContext -> {
+                leftCtx.left().forEach { left(it) }
+            }
+
+            else -> server?.log("💩left: ${leftCtx.javaClass.simpleName}")
+        }
+    }
+
     fun stmt(stmtsCtx: List<StmtContext>) {
         for (stmtCtx in stmtsCtx) {
             when (stmtCtx) {
+                is StmtLeftContext -> {
+                    semanticHub
+                        .add(stmtCtx.DEBUG(), SemanticTokenType.KEYWORD)
+                        .add(stmtCtx.SET(), SemanticTokenType.KEYWORD)
+                        .add(stmtCtx.CALL(), SemanticTokenType.KEYWORD)
+                        .add(stmtCtx.CONSTANT(), SemanticTokenType.KEYWORD)
+                        .add(stmtCtx.EQ(), SemanticTokenType.OPERATOR)
+
+                    left(stmtCtx.left())
+                    expr(stmtCtx.expr())
+                }
+
                 is StmtVarContext -> {
                     val varnameCtx: VarnameContext? = stmtCtx.varname()
                     val typenameCtx: TypenameContext? = stmtCtx.typename()
@@ -215,22 +251,10 @@ class VjassState : VexState() {
                     expr(stmtCtx.expr())
                 }
 
-                is StmtSetContext -> {
-                    semanticHub
-                        .add(stmtCtx.ID(), SemanticTokenType.VARIABLE)
-                        .add(stmtCtx.SET(), SemanticTokenType.KEYWORD)
-                        .add(stmtCtx.EQ(), SemanticTokenType.OPERATOR)
-
-                    val brackCtx: BrackExprContext? = stmtCtx.brackExpr()
-                    if (brackCtx != null) {
-                        expr(brackCtx.expr())
-                    }
-                    expr(stmtCtx.expr())
-                }
-
                 is StmtIfContext -> {
                     semanticHub
                         .add(stmtCtx.IF(), SemanticTokenType.KEYWORD)
+                        .add(stmtCtx.STATIC(), SemanticTokenType.KEYWORD)
                         .add(stmtCtx.THEN(), SemanticTokenType.KEYWORD)
                         .add(stmtCtx.ENDIF(), SemanticTokenType.KEYWORD)
 
@@ -258,14 +282,6 @@ class VjassState : VexState() {
                         .add(stmtCtx.LOOP(), SemanticTokenType.KEYWORD)
                         .add(stmtCtx.ENDLOOP(), SemanticTokenType.KEYWORD)
                     stmt(stmtCtx.stmt())
-                }
-
-                is StmtCallContext -> {
-                    semanticHub
-                        .add(stmtCtx.CALL(), SemanticTokenType.VARIABLE)
-                        .add(stmtCtx.ID(), SemanticTokenType.FUNCTION)
-                    for (exprCtx in stmtCtx.expr()) expr(exprCtx)
-
                 }
 
                 is StmtReturnContext -> {

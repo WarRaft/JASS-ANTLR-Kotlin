@@ -2,19 +2,18 @@ grammar Vjass;
 
 root : (library | rootItem)* EOF ;
 
-library : LIBRARY ID (INITIALIZER ID)? ((REQUIRES|NEEDS|USES) ID (COMMA ID)*)? rootItem* ENDLIBRARY;
+rootItem : nativeRule | globals | function | library;
 
-rootItem : nativeRule | globals | function;
+library : (LIBRARY|SCOPE) ID (INITIALIZER ID)? ((REQUIRES|NEEDS|USES) ID (COMMA ID)*)? rootItem* ENDLIBRARY;
 
 typename : ID;
 varname : ID;
 
-// === globals
 globals : GLOBALS stmt* ENDGLOBALS;
 
-// === function
-param : typename varname ;
+// === FUNCTION
 
+param : typename varname ;
 takes : TAKES (NOTHING|(param (COMMA param)*));
 returnsRule : RETURNS (NOTHING|ID);
 
@@ -22,11 +21,18 @@ nativeRule : CONSTANT? NATIVE ID takes returnsRule;
 function : (PUBLIC|PRIVATE)? CONSTANT? FUNCTION ID takes returnsRule stmt* ENDFUNCTION;
 
 // === STATEMENT
+left
+    : ID #leftId
+    | ID left #leftType
+    | left LPAREN (expr (COMMA expr)*)? RPAREN #leftCall
+    | left LBRACK left? RBRACK #leftArr
+    | left DOT left #leftDot
+    ;
+
 stmt
-    : SET ID brackExpr? EQ expr #stmtSet
-    | DEBUG? CALL ID LPAREN (expr (COMMA expr)*)? RPAREN #stmtCall
+    : (DEBUG| SET | CALL | CONSTANT)* left (EQ expr)? #stmtLeft
     | RETURN expr? #stmtReturn
-    | IF expr THEN stmt* elseif* elseRule? ENDIF #stmtIf
+    | STATIC? IF expr THEN stmt* elseif* elseRule? ENDIF #stmtIf
     | LOOP stmt* ENDLOOP #stmtLoop
     | EXITWHEN expr #stmtExitWhen
     | (PUBLIC|PRIVATE)? CONSTANT? LOCAL? typename ARRAY? varname brackExpr* (EQ expr)? #stmtVar
@@ -38,7 +44,8 @@ elseRule : ELSE stmt*;
 
 // === EXPRESSION
 expr
-    : LPAREN expr RPAREN # exprParen // 1
+    : expr DOT expr #exprDot
+    | LPAREN expr RPAREN # exprParen // 1
     | (MINUS|NOT) expr # exprUn // 2
     | expr (MUL|DIV) expr # exprMul  // 3
     | expr (MINUS|PLUS) expr # exprAdd // 4
@@ -96,11 +103,15 @@ REQUIRES: 'requires';
 RETURNS : 'returns';
 RETURN : 'return';
 SET : 'set';
+SCOPE : 'scope';
+STATIC : 'static';
 TAKES : 'takes';
 THEN : 'then';
 TRUE : 'true';
 TYPE : 'type';
 USES: 'uses';
+
+DOT : '.';
 COMMA : ',';
 EQ_EQ: '==';
 EQ : '=';
