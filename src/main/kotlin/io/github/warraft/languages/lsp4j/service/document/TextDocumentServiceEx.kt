@@ -80,7 +80,6 @@ class TextDocumentServiceEx(val server: LanguageServerEx) : TextDocumentService 
         return completedFuture(LinkedEditingRanges(ranges))
     }
 
-
     private fun getState(params: DocumentSymbolParams?): LanguageState? = getState(params?.textDocument)
     private fun getState(params: DocumentDiagnosticParams?): LanguageState? = getState(params?.textDocument)
     private fun getState(params: FoldingRangeRequestParams?): LanguageState? = getState(params?.textDocument)
@@ -93,8 +92,8 @@ class TextDocumentServiceEx(val server: LanguageServerEx) : TextDocumentService 
         var state = states[p]
         when (p.extension) {
             "j" -> if (state !is JassState) state = JassState()
-            "vj" -> if (state !is VexState) state = VjassState()
-            "zn" -> if (state !is VexState) state = ZincState()
+            "vj" -> if (state !is VjassState) state = VjassState()
+            "zn" -> if (state !is ZincState) state = ZincState()
         }
         if (state == null) return object : LanguageState() {
             override fun nodeCount(): Int = 0

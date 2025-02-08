@@ -37,6 +37,14 @@ class SemanticTokenHub {
     )
 
     fun add(
+        list: List<TerminalNode>, type: SemanticTokenType,
+        modifier: SemanticTokenModifier? = null,
+    ): SemanticTokenHub {
+        for (t in list) add(t, type, modifier)
+        return this
+    }
+
+    fun add(
         n: TerminalNode?,
         type: SemanticTokenType,
         modifier: SemanticTokenModifier? = null,
