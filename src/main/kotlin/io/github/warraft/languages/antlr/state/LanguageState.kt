@@ -23,8 +23,7 @@ import java.nio.file.Path
 abstract class LanguageState {
     var path: Path? = null
     var server: LanguageServerEx? = null
-
-    abstract fun nodeCount(): Int
+    var version = -1
 
     open fun completion(): List<CompletionItem> = mutableListOf<CompletionItem>()
     open fun hover(params: HoverParams?): Hover? = null
@@ -41,7 +40,7 @@ abstract class LanguageState {
     val semanticHub = SemanticTokenHub()
     fun semantic(): MutableList<Int> = semanticHub.data()
 
-    open fun parse(stream: CharStream, states: List<LanguageState> = listOf()) {
+    open fun parse(stream: CharStream, states: List<LanguageState> = listOf(), version: Int? = null) {
         foldingHub.clear()
         diagnosticHub.clear()
         documentSymbolHub.clear()

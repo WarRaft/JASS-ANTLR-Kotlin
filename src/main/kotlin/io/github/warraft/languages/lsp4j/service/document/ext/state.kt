@@ -1,0 +1,60 @@
+package io.github.warraft.languages.lsp4j.service.document.ext
+
+import io.github.warraft.jass.antlr.state.JassState
+import io.github.warraft.languages.antlr.state.LanguageState
+import io.github.warraft.languages.lsp4j.service.document.TextDocumentServiceEx
+import io.github.warraft.vex.antlr.state.VjassState
+import io.github.warraft.vex.antlr.state.ZincState
+import org.antlr.v4.runtime.CharStreams
+import org.eclipse.lsp4j.*
+import java.net.URI
+import java.nio.file.Path
+import kotlin.io.path.extension
+import kotlin.io.path.toPath
+
+fun TextDocumentServiceEx.stateGet(params: TextDocumentPositionAndWorkDoneProgressAndPartialResultParams?): LanguageState? = stateGet(params?.textDocument)
+
+fun TextDocumentServiceEx.stateGet(params: TextDocumentPositionAndWorkDoneProgressParams?): LanguageState? = stateGet(params?.textDocument)
+
+fun TextDocumentServiceEx.stateGet(params: SemanticTokensParams?): LanguageState? = stateGet(params?.textDocument)
+
+fun TextDocumentServiceEx.stateGet(params: FoldingRangeRequestParams?): LanguageState? = stateGet(params?.textDocument)
+
+fun TextDocumentServiceEx.stateGet(params: DocumentDiagnosticParams?): LanguageState? = stateGet(params?.textDocument)
+
+fun TextDocumentServiceEx.stateGet(params: DocumentSymbolParams?): LanguageState? = stateGet(params?.textDocument)
+
+fun TextDocumentServiceEx.stateGet(textDocument: TextDocumentIdentifier?): LanguageState? = stateGet(textDocument?.uri)
+
+fun TextDocumentServiceEx.stateGet(uri: String?): LanguageState? = if (uri == null) null else stateGet(URI(uri).toPath())
+fun TextDocumentServiceEx.stateGet(p: Path): LanguageState {
+    var state = stateMap[p]
+
+    when (languageMap[p]) {
+        "jass" -> if (state !is JassState) state = JassState()
+        "vjass" -> if (state !is VjassState) state = VjassState()
+        "zinc" -> if (state !is ZincState) state = ZincState()
+        null -> when (p.extension) {
+            "j" -> if (state !is JassState) state = JassState()
+            "vj" -> if (state !is VjassState) state = VjassState()
+            "zn" -> if (state !is ZincState) state = ZincState()
+        }
+    }
+    if (state == null) return object : LanguageState() {}
+    stateMap[p] = state.also {
+        it.path = p
+        it.server = server
+    }
+    return state
+}
+
+fun TextDocumentServiceEx.stateUpdate(path: Path, text: String, version: Int) {
+    val s = stateGet(path)
+    try {
+        s.parse(CharStreams.fromString(text), sdkStateList, version)
+    } catch (e: Exception) {
+        server.log("Error! ${e.message}")
+        server.log("Trace! ${e.stackTrace}")
+    }
+}
+

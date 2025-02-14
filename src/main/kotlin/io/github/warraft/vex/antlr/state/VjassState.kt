@@ -14,7 +14,7 @@ import org.antlr.v4.runtime.tree.TerminalNode
 
 class VjassState : VexState() {
 
-    override fun parse(stream: CharStream, states: List<LanguageState>) {
+    override fun parse(stream: CharStream, states: List<LanguageState>, version: Int?) {
         super.parse(stream, states)
         val errorJassErrorListener = JassErrorListener()
         val lexer = VjassLexer(stream)

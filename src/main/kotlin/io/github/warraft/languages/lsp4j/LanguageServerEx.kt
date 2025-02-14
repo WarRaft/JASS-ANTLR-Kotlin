@@ -1,38 +1,18 @@
 package io.github.warraft.languages.lsp4j
 
+import com.google.gson.JsonObject
+import io.github.warraft.languages.lsp4j.service.WorkspaceServiceEx
+import io.github.warraft.languages.lsp4j.service.document.TextDocumentServiceEx
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenModifier
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
-import io.github.warraft.languages.lsp4j.service.document.TextDocumentServiceEx
-import io.github.warraft.jass.lsp4j.service.JassWorkspaceService
-import org.eclipse.lsp4j.CompletionOptions
-import org.eclipse.lsp4j.DefinitionOptions
-import org.eclipse.lsp4j.DiagnosticRegistrationOptions
-import org.eclipse.lsp4j.DocumentHighlightOptions
-import org.eclipse.lsp4j.DocumentSymbolOptions
-import org.eclipse.lsp4j.FoldingRangeProviderOptions
-import org.eclipse.lsp4j.HoverOptions
-import org.eclipse.lsp4j.InitializeParams
-import org.eclipse.lsp4j.InitializeResult
-import org.eclipse.lsp4j.MessageParams
-import org.eclipse.lsp4j.MessageType
-import org.eclipse.lsp4j.ReferenceOptions
-import org.eclipse.lsp4j.SemanticTokensLegend
-import org.eclipse.lsp4j.SemanticTokensWithRegistrationOptions
-import org.eclipse.lsp4j.ServerCapabilities
-import org.eclipse.lsp4j.SetTraceParams
-import org.eclipse.lsp4j.TextDocumentSyncKind
-import org.eclipse.lsp4j.TextDocumentSyncOptions
+import org.eclipse.lsp4j.*
 import org.eclipse.lsp4j.jsonrpc.messages.Either
-import org.eclipse.lsp4j.services.LanguageClient
-import org.eclipse.lsp4j.services.LanguageClientAware
-import org.eclipse.lsp4j.services.LanguageServer
-import org.eclipse.lsp4j.services.TextDocumentService
-import org.eclipse.lsp4j.services.WorkspaceService
+import org.eclipse.lsp4j.services.*
 import java.util.concurrent.CompletableFuture
 
 class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClientAware {
-    private val workspaceService = JassWorkspaceService()
-    private val textDocumentService = TextDocumentServiceEx(this)
+    private val workspaceService = WorkspaceServiceEx(this)
+    val textDocumentService = TextDocumentServiceEx(this)
 
     var client: LanguageClient? = null
 
@@ -43,12 +23,20 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
     @Suppress("unused")
     fun log(message: String) = client?.logMessage(MessageParams(MessageType.Log, message))
 
+    var params: InitializeParams? = null
+
     override fun initialize(params: InitializeParams?): CompletableFuture<InitializeResult?> {
+        this.params = params
+
+        val opt = params?.initializationOptions
+        if (opt is JsonObject) workspaceService.didChangeSDK(opt["settings"] as? JsonObject)
+
         val capabilities = ServerCapabilities().apply {
             textDocumentSync = Either.forRight(TextDocumentSyncOptions().apply {
                 openClose = true
                 change = TextDocumentSyncKind.Full
             })
+            workspace = WorkspaceServerCapabilities()
 
             // https://code.visualstudio.com/api/language-extensions/semantic-highlight-guide
             semanticTokensProvider = SemanticTokensWithRegistrationOptions(
@@ -75,6 +63,7 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
             //linkedEditingRangeProvider = Either.forRight(LinkedEditingRangeRegistrationOptions())
             //signatureHelpProvider = SignatureHelpOptions(listOf("(", ","))
         }
+
         return CompletableFuture.completedFuture(InitializeResult(capabilities))
     }
 

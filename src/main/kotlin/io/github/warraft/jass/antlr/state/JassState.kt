@@ -21,7 +21,7 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.eclipse.lsp4j.*
 
 class JassState : LanguageState() {
-    var states: MutableList<JassState> = mutableListOf()
+    val states: MutableList<JassState> = mutableListOf()
 
     val typeMap: MutableMap<String, JassHandleType> = mutableMapOf()
     val types: MutableList<JassHandleType> = mutableListOf()
@@ -31,7 +31,6 @@ class JassState : LanguageState() {
     val functions: MutableList<JassFun> = mutableListOf()
 
     val nodeMap: MutableMap<String, JassNodeBase> = mutableMapOf()
-    override fun nodeCount(): Int = nodeMap.size
 
     override fun completion(): List<CompletionItem> = completionExt()
     override fun hover(params: HoverParams?): Hover? = hoverExt(params)
@@ -42,22 +41,26 @@ class JassState : LanguageState() {
 
     val commentsMap = mutableMapOf<Int, CommonToken>()
 
-    override fun parse(stream: CharStream, states: List<LanguageState>) {
+    override fun parse(stream: CharStream, states: List<LanguageState>, version: Int?) {
+        if (version != null) {
+            if (version == this.version) return
+            this.version = version
+        }
+
         this.states.clear()
         for (s in states) {
             if (s is JassState) this.states.add(s)
         }
 
-        types.clear()
         typeMap.clear()
+        types.clear()
         natives.clear()
         globals.clear()
         functions.clear()
         nodeMap.clear()
-
         commentsMap.clear()
 
-        super.parse(stream, states)
+        super.parse(stream, states, version)
 
         val errorJassErrorListener = JassErrorListener()
 

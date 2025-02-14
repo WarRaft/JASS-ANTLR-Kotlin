@@ -13,7 +13,9 @@ fun JassState.documentHighlightExt(params: DocumentHighlightParams?): List<Docum
     val node = tokenTree.find(position) ?: return highlights
 
     fun addObj(v: JassObjBase<*>) {
-        if (path != v.state.path) return
+        if (path == null || path != v.state.path) return
+        server?.log("${this === v.state}")
+
         highlights.add(
             DocumentHighlight(
                 RangeEx.get(v.symbol),
