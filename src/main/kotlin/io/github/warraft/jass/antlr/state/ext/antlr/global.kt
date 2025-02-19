@@ -11,15 +11,15 @@ import io.github.warraft.languages.lsp4j.service.document.semantic.token.Semanti
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
 import kotlin.collections.set
 
-fun JassState.global(definitionCtx: VariableContext) {
-    val nameCtx = definitionCtx.varname()?.ID()
-    val tctx = definitionCtx.typename()?.ID()
-    val cctx = definitionCtx.CONSTANT()
-    val actx = definitionCtx.ARRAY()
-    val eqctx = definitionCtx.EQ()
+fun JassState.global(variableCtx: VariableContext) {
+    val varnameCtx = variableCtx.varname()?.ID()
+    val tctx = variableCtx.typename()?.ID()
+    val cctx = variableCtx.CONSTANT()
+    val actx = variableCtx.ARRAY()
+    val eqctx = variableCtx.EQ()
 
     semanticHub
-        .add(nameCtx, SemanticTokenType.VARIABLE, SemanticTokenModifier.DECLARATION)
+        .add(varnameCtx, SemanticTokenType.VARIABLE, SemanticTokenModifier.DECLARATION)
         .add(tctx, SemanticTokenType.TYPE)
         .add(cctx, SemanticTokenType.KEYWORD)
         .add(actx, SemanticTokenType.KEYWORD)
@@ -28,19 +28,18 @@ fun JassState.global(definitionCtx: VariableContext) {
 
     val v = JassVar(
         state = this,
-        name = nameCtx?.text ?: "",
+        name = varnameCtx?.text ?: "",
         constant = cctx != null,
         array = actx != null,
         global = true,
-        type = typeFromString(definitionCtx.typename().text),
-        symbol = nameCtx?.symbol,
-        definition = definitionCtx,
+        type = typeFromString(variableCtx.typename().text),
+        symbol = varnameCtx?.symbol,
     ).also {
         tokenTree.add(it)
     }
 
     if (eqctx != null) {
-        v.expr = expr(definitionCtx.expr(), null)
+        v.expr = expr(variableCtx.expr(), null)
         if (v.expr == null) {
             diagnosticHub.add(
                 eqctx,
@@ -53,7 +52,7 @@ fun JassState.global(definitionCtx: VariableContext) {
             val t = ta.op(JassExprOp.Set, tb)
             if (t is JassUndefinedType) {
                 diagnosticHub.add(
-                    definitionCtx.EQ(),
+                    variableCtx.EQ(),
                     JassDiagnosticCode.ERROR,
                     "${ta.name} + ${tb.name} is ${t.name}"
                 )
@@ -63,7 +62,7 @@ fun JassState.global(definitionCtx: VariableContext) {
 
     if (getNode(v.name, null) != null) {
         diagnosticHub.add(
-            nameCtx,
+            varnameCtx,
             JassDiagnosticCode.ERROR,
             "redeclared"
         )

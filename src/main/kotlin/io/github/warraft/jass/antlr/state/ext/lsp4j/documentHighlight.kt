@@ -1,6 +1,9 @@
+@file:Suppress("DuplicatedCode")
+
 package io.github.warraft.jass.antlr.state.ext.lsp4j
 
-import io.github.warraft.jass.antlr.psi.base.JassObjBase
+import io.github.warraft.jass.antlr.psi.JassFun
+import io.github.warraft.jass.antlr.psi.JassVar
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.lsp4j.utils.RangeEx
 import org.eclipse.lsp4j.DocumentHighlight
@@ -12,25 +15,39 @@ fun JassState.documentHighlightExt(params: DocumentHighlightParams?): List<Docum
     val position = params?.position ?: return highlights
     val node = tokenTree.find(position) ?: return highlights
 
-    fun addObj(v: JassObjBase<*>) {
-        if (path == null || path != v.state.path) return
-        server?.log("${this === v.state}")
-
+    fun addFun(f: JassFun) {
+        if (path != f.state.path) return
         highlights.add(
             DocumentHighlight(
-                RangeEx.get(v.symbol),
+                RangeEx.get(f.symbol),
                 DocumentHighlightKind.Write
             )
         )
     }
 
     when (node) {
-        is JassObjBase<*> -> {
+        is JassVar -> {
+            if (path != node.state.path) return highlights
+            val s = node.scope
+            if (s != null) {
+                val list = s.all[node.name]
+                if (list != null) for (v in list) highlights.add(
+                    DocumentHighlight(
+                        RangeEx.get(v.symbol),
+                        DocumentHighlightKind.Write
+                    )
+                )
+            }
+
+        }
+
+        is JassFun -> {
             val root = node.root
-            addObj(root)
-            for (v in root.links) addObj(v)
+            addFun(root)
+            for (v in root.links) addFun(v)
         }
     }
+
 
     return highlights
 }

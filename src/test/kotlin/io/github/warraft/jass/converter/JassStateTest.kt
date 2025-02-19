@@ -8,6 +8,31 @@ import org.junit.jupiter.api.Test
 class JassStateTest {
 
     @Test
+    fun test1() {
+        val s = JassState().apply {
+            parse(
+                CharStreams.fromString(
+                    """
+                globals
+                    real bj_PI = 4     
+                endglobals
+                        
+                function main takes nothing returns nothing
+                    set bj_PI = 1 + DD
+                endfunction
+                """.trimIndent()
+                )
+            )
+        }
+
+        for (e in s.diagnosticHub.diagnostics){
+            println(e.message)
+        }
+
+    }
+
+
+    @Test
     fun funcomment() {
         JassState().apply {
             parse(

@@ -7,6 +7,7 @@ import io.github.warraft.jass.antlr.psi.JassFun
 import io.github.warraft.jass.antlr.psi.JassHandleType
 import io.github.warraft.jass.antlr.psi.JassVar
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
+import io.github.warraft.jass.antlr.psi.utils.JassVarScope
 import io.github.warraft.jass.antlr.state.ext.antlr.function
 import io.github.warraft.jass.antlr.state.ext.antlr.global
 import io.github.warraft.jass.antlr.state.ext.antlr.typedef
@@ -31,6 +32,9 @@ class JassState : LanguageState() {
     val functions: MutableList<JassFun> = mutableListOf()
 
     val nodeMap: MutableMap<String, JassNodeBase> = mutableMapOf()
+
+    val varScope = JassVarScope(null)
+    val funMap: MutableMap<String, JassFun> = mutableMapOf()
 
     override fun completion(): List<CompletionItem> = completionExt()
     override fun hover(params: HoverParams?): Hover? = hoverExt(params)
@@ -58,6 +62,8 @@ class JassState : LanguageState() {
         globals.clear()
         functions.clear()
         nodeMap.clear()
+        varScope.clear()
+        funMap.clear()
         commentsMap.clear()
 
         super.parse(stream, states, version)

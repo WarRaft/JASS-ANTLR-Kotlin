@@ -9,11 +9,11 @@ import io.github.warraft.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import java.nio.file.Path
 
-class JassLua(
+class JassToLua(
     state: JassState,
     output: Path,
     fakename: Boolean = false,
-) : JassBase(
+) : JassTo(
     state = state,
     output = output,
     fakename = fakename,

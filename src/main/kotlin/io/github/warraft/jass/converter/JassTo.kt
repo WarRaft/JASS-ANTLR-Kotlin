@@ -12,7 +12,7 @@ import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.absolute
 
-abstract class JassBase(
+abstract class JassTo(
     val state: JassState,
     val output: Path,
     val fakename: Boolean = false,
@@ -29,9 +29,10 @@ abstract class JassBase(
     abstract fun typename(type: JassTypeBase, array: Boolean = false): String
 
     fun varname(v: JassVar): String {
-        val root = v.root
-        var name = root.name
-        return if (fakename || isKeyword(name)) root.fakename else name
+        //val root = v.root
+        //var name = root.name
+        //return if (fakename || isKeyword(name)) root.fakename else name
+        return v.name
     }
 
     fun funname(f: JassFun): String {

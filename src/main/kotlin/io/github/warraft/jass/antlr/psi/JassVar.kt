@@ -1,36 +1,27 @@
 package io.github.warraft.jass.antlr.psi
 
-import Main.Companion.BLUE
-import Main.Companion.RESET
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
-import io.github.warraft.jass.antlr.psi.base.JassObjBase
 import io.github.warraft.jass.antlr.psi.base.JassTypeBase
+import io.github.warraft.jass.antlr.psi.utils.JassVarScope
 import io.github.warraft.jass.antlr.state.JassState
-import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 
 class JassVar(
-    override val state: JassState,
+    val state: JassState,
     var name: String,
     val constant: Boolean = false,
     val global: Boolean = false,
     val array: Boolean = false,
     val local: Boolean = false,
     val param: Boolean = false,
-    override var base: JassVar? = null,
     var index: JassExpr? = null,
     var expr: JassExpr? = null,
     override val type: JassTypeBase,
-    override val symbol: Token? = null,
-    override val definition: ParserRuleContext? = null,
-) : JassNodeBase(), JassObjBase<JassVar> {
+    val symbol: Token? = null,
+) : JassNodeBase() {
 
     var fakename: String = ""
-
-    override val root: JassVar
-        get() = base ?: this
-
-    override val links = mutableListOf<JassVar>()
+    var scope: JassVarScope? = null
 
     fun clone(
         state: JassState,
@@ -46,12 +37,11 @@ class JassVar(
         local = local,
         param = param,
         type = type,
-        base = this,
         expr = expr ?: this.expr,
         index = index ?: this.index,
         symbol = symbol,
     ).also {
-        links.add(it)
+        scope?.link(it)
     }
 
     override fun toString(): String {
@@ -70,7 +60,6 @@ class JassVar(
         if (array) list.add("[]")
 
         var n = ""
-        if (base == null) n += "${BLUE}base:$RESET"
 
         list.add(n + name)
 

@@ -1,7 +1,7 @@
 import io.github.warraft.jass.antlr.state.JassState
-import io.github.warraft.jass.converter.JassAs
-import io.github.warraft.jass.converter.JassJass
-import io.github.warraft.jass.converter.JassLua
+import io.github.warraft.jass.converter.JassToAs
+import io.github.warraft.jass.converter.JassToJass
+import io.github.warraft.jass.converter.JassToLua
 import io.github.warraft.languages.lsp4j.LanguageServerEx
 import org.antlr.v4.runtime.CharStreams
 import org.eclipse.lsp4j.launch.LSPLauncher.createServerLauncher
@@ -90,7 +90,7 @@ class Main(val args: Array<String>) {
             JASS2JASS -> {
                 val p = ext(path!!, "opt.j")
                 println("Output: $PURPLE${p.toAbsolutePath()}$RESET")
-                JassJass(
+                JassToJass(
                     state = states.last(),
                     output = p,
                     fakename = false
@@ -100,7 +100,7 @@ class Main(val args: Array<String>) {
             JASS2LUA -> {
                 val p = ext(path!!, "lua")
                 println("Output: $PURPLE${p.toAbsolutePath()}$RESET")
-                JassLua(
+                JassToLua(
                     state = states.last(),
                     output = p,
                     fakename = false
@@ -110,7 +110,7 @@ class Main(val args: Array<String>) {
             JASS2AS -> {
                 val p = ext(path!!, "as")
                 println("Output: $PURPLE${p.toAbsolutePath()}$RESET")
-                JassAs(
+                JassToAs(
                     state = states.last(),
                     output = p,
                     fakename = false

@@ -27,18 +27,19 @@ fun TextDocumentServiceEx.stateGet(params: DocumentSymbolParams?): LanguageState
 fun TextDocumentServiceEx.stateGet(textDocument: TextDocumentIdentifier?): LanguageState? = stateGet(textDocument?.uri)
 
 fun TextDocumentServiceEx.stateGet(uri: String?): LanguageState? = if (uri == null) null else stateGet(URI(uri).toPath())
+
 fun TextDocumentServiceEx.stateGet(p: Path): LanguageState {
     var state = stateMap[p]
-
-    when (languageMap[p]) {
+    var lng = languageMap[p] ?: when (p.extension) {
+        "j" -> "jass"
+        "vj" -> "vjass"
+        "zn" -> "zinc"
+        else -> null
+    }
+    when (lng) {
         "jass" -> if (state !is JassState) state = JassState()
         "vjass" -> if (state !is VjassState) state = VjassState()
         "zinc" -> if (state !is ZincState) state = ZincState()
-        null -> when (p.extension) {
-            "j" -> if (state !is JassState) state = JassState()
-            "vj" -> if (state !is VjassState) state = VjassState()
-            "zn" -> if (state !is ZincState) state = ZincState()
-        }
     }
     if (state == null) return object : LanguageState() {}
     stateMap[p] = state.also {
@@ -50,8 +51,13 @@ fun TextDocumentServiceEx.stateGet(p: Path): LanguageState {
 
 fun TextDocumentServiceEx.stateUpdate(path: Path, text: String, version: Int) {
     val s = stateGet(path)
+    val sdk = mutableListOf<LanguageState>()
+    for (state in sdkStateList) {
+        if (s.path == state.path) break
+        sdk.add(state)
+    }
     try {
-        s.parse(CharStreams.fromString(text), sdkStateList, version)
+        s.parse(CharStreams.fromString(text), sdk, version)
     } catch (e: Exception) {
         server.log("Error! ${e.message}")
         server.log("Trace! ${e.stackTrace}")
