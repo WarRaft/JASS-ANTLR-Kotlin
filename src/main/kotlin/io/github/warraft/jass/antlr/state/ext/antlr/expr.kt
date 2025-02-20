@@ -77,30 +77,12 @@ fun JassState.expr(exprCtx: ExprContext?, function: JassFun?): JassExpr? {
     if (exprCtx == null) return null
     when (exprCtx) {
 
-        //region ExprVarContext
-        is ExprVarContext -> {
-            val idCtx = exprCtx.ID()
-            semanticHub.add(idCtx, SemanticTokenType.VARIABLE)
-            val name = idCtx.text
-
-            var v: JassNodeBase? = getNode(name, function)
-            if (v !is JassVar) {
-                diagnosticHub.add(
-                    idCtx,
-                    JassDiagnosticCode.ERROR,
-                    "$name is not declared"
-                )
-                return null
-            }
-            return JassExpr(
-                op = JassExprOp.Get,
-                a = v.clone(
-                    state = this,
-                    symbol = idCtx.symbol,
-                ).also {
-                    tokenTree.add(it)
-                }
-            )
+        //region ExprVarContext, ExprArrContext
+        is ExprVarContext,
+        is ExprArrContext,
+            -> {
+            val v = JassVar.parse(exprCtx, function, this) ?: return null
+            return JassExpr(op = JassExprOp.Get, a = v)
         }
         //endregion
 
@@ -165,33 +147,6 @@ fun JassState.expr(exprCtx: ExprContext?, function: JassFun?): JassExpr? {
             return JassExpr(
                 op = JassExprOp.Get,
                 a = fn
-            )
-        }
-
-        is ExprArrContext -> {
-            val idctx = exprCtx.ID()
-            semanticHub.add(idctx, SemanticTokenType.VARIABLE)
-
-            val name = idctx.text
-            var node: JassNodeBase? = getNode(name, function)
-            if (node !is JassVar) {
-                diagnosticHub.add(
-                    idctx,
-                    JassDiagnosticCode.ERROR,
-                    "$name array is not declared"
-                )
-                return null
-            }
-            return JassExpr(
-                op = JassExprOp.Get,
-                a = node.clone(
-                    state = this,
-                    index = expr(exprCtx.expr(), function),
-                    symbol = idctx.symbol
-                ).also {
-                    tokenTree.add(it)
-                    it.scope?.link(it)
-                },
             )
         }
 

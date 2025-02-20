@@ -6,6 +6,7 @@ import io.github.warraft.jass.antlr.psi.utils.JassVarScope
 import io.github.warraft.jass.antlr.state.JassState
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
+import org.eclipse.lsp4j.DocumentSymbol
 
 class JassFun(
     val state: JassState,
@@ -32,6 +33,8 @@ class JassFun(
     val stmt: MutableList<JassNodeBase> = mutableListOf()
 
     val comments = StringBuilder()
+
+    var documentSymbol: DocumentSymbol? = null
 
     fun clone(
         state: JassState,

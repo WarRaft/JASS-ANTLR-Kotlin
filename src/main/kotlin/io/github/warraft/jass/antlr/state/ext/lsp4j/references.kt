@@ -16,7 +16,7 @@ fun JassState.referencesExt(params: ReferenceParams?): MutableList<out Location?
 
 
     fun addVar(v: JassVar) {
-        val p = v.state.path ?: return
+        val p = v.state?.path ?: return
         refs.add(Location(p.toUri().toString(), RangeEx.get(v.symbol)))
     }
 

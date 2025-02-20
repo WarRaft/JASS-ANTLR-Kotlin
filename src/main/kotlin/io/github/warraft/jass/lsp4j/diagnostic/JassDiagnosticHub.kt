@@ -12,50 +12,30 @@ class JassDiagnosticHub {
     val diagnostics = mutableListOf<Diagnostic>()
 
     fun add(
-
         code: JassDiagnosticCode,
         msg: String,
-    ) {
-        diagnostics.add(
-            Diagnostic(
-                Range(
-                    Position(0, 0),
-                    Position(0, 0),
-                ),
-                msg,
-                DiagnosticSeverity.Error,
-                SOURCE,
-                code.name
-            )
-        )
-    }
-
+    ) = add(Range(Position(0, 0), Position(0, 0)), code, msg)
 
     fun add(
         node: ParserRuleContext?,
         code: JassDiagnosticCode,
         msg: String,
-    ) {
-        diagnostics.add(
-            Diagnostic(
-                RangeEx.get(node),
-                msg,
-                DiagnosticSeverity.Error,
-                SOURCE,
-                code.name
-            )
-        )
-    }
-
+    ) = add(RangeEx.get(node), code, msg)
 
     fun add(
         node: TerminalNode?,
         code: JassDiagnosticCode,
         msg: String,
+    ) = add(RangeEx.get(node), code, msg)
+
+    fun add(
+        range: Range,
+        code: JassDiagnosticCode,
+        msg: String,
     ) {
         diagnostics.add(
             Diagnostic(
-                RangeEx.get(node),
+                range,
                 msg,
                 DiagnosticSeverity.Error,
                 SOURCE,

@@ -26,18 +26,18 @@ class JassToAs(
 
         if (t.parent != null) builder
             .append(" extends ")
-            .append(t.parent!!.name)
+            .append(t.parent.name)
         builder.append("\n")
     }
 
-    override fun typename(type: JassTypeBase, array: Boolean): String {
+    override fun typename(type: JassTypeBase?, array: Boolean): String {
         var s = if (array) "array<" else ""
         s += when (type) {
             is JassBoolType -> "bool"
             is JassIntType -> "int"
             is JassRealType -> "float"
             is JassCodeType -> "CallbackFunc"
-            else -> type.name
+            else -> type?.name ?: "missing"
         }
         return if (array) "$s>" else s
     }

@@ -26,18 +26,18 @@ class JassToLua(
 
         if (t.parent != null) builder
             .append(":")
-            .append(t.parent!!.name)
+            .append(t.parent.name)
         builder.append("\n")
     }
 
-    override fun typename(type: JassTypeBase, array: Boolean): String {
+    override fun typename(type: JassTypeBase?, array: Boolean): String {
         val a = if (array) "[]" else ""
         return when (type) {
             is JassBoolType -> "boolean$a"
             is JassIntType -> "number$a integer"
             is JassRealType -> "number$a real"
             is JassCodeType -> "function"
-            else -> type.name
+            else -> type?.name ?: "missing"
         }
     }
 

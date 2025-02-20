@@ -23,11 +23,11 @@ class JassToJass(
 
         if (t.parent != null) builder
             .append(" extends ")
-            .append(t.parent!!.name)
+            .append(t.parent.name)
         builder.append("\n")
     }
 
-    override fun typename(type: JassTypeBase, array: Boolean): String = type.name
+    override fun typename(type: JassTypeBase?, array: Boolean): String = type?.name ?: "missing"
 
     override fun global(v: JassVar) {
         builder.append("\t")

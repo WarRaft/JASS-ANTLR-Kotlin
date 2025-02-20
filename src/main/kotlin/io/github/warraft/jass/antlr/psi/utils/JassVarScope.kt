@@ -10,20 +10,21 @@ class JassVarScope(val parent: JassFun?) {
 
     val definition: MutableMap<String, JassVar> = mutableMapOf()
     fun definition(v: JassVar?) {
-        if (v == null) return
+        val name = v?.name ?: return
         v.scope = this
-        all.getOrPut(v.name) { mutableListOf() }.add(v)
-        definition[v.name] = v
+        all.getOrPut(name) { mutableListOf() }.add(v)
+        definition[name] = v
     }
 
-    fun definition(name: String): JassVar? = definition[name]
+    fun definition(name: String?): JassVar? = definition[name]
 
     val link: MutableMap<String, MutableList<JassVar>> = mutableMapOf()
+
     fun link(v: JassVar?) {
-        if (v == null) return
+        val name = v?.name ?: return
         v.scope = this
-        all.getOrPut(v.name) { mutableListOf() }.add(v)
-        link.getOrPut(v.name) { mutableListOf() }.add(v)
+        all.getOrPut(name) { mutableListOf() }.add(v)
+        link.getOrPut(name) { mutableListOf() }.add(v)
     }
 
     fun clear() {

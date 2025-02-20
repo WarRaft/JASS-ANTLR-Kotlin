@@ -27,7 +27,7 @@ fun JassState.documentHighlightExt(params: DocumentHighlightParams?): List<Docum
 
     when (node) {
         is JassVar -> {
-            if (path != node.state.path) return highlights
+            if (path != node.state?.path) return highlights
             val s = node.scope
             if (s != null) {
                 val list = s.all[node.name]
@@ -38,6 +38,7 @@ fun JassState.documentHighlightExt(params: DocumentHighlightParams?): List<Docum
                     )
                 )
             }
+            server?.log("$s")
 
         }
 

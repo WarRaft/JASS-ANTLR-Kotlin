@@ -12,7 +12,7 @@ class JassExpr(
 
     init {
         type = JassUndefinedType()
-        if (a != null) {
+        if (a?.type != null) {
             type = a.type!!
         }
         if (a != null && b != null) {

@@ -14,59 +14,7 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
 
             //region StmtSetContext
             is StmtSetContext -> {
-                val nameCtx: TerminalNode? = ctx.ID()
-
-                var node: JassNodeBase? = null
-                if (nameCtx == null) {
-                    diagnosticHub.add(ctx, JassDiagnosticCode.ERROR, "Variable name is missing")
-                } else {
-                    val name = nameCtx.text
-                    node = getNode(name, function)
-                    if (node !is JassVar) {
-                        diagnosticHub.add(nameCtx, JassDiagnosticCode.ERROR, "Set must be a variable")
-                    }
-                }
-
-                semanticHub
-                    .add(nameCtx, SemanticTokenType.VARIABLE)
-                    .add(ctx.SET(), SemanticTokenType.KEYWORD)
-                    .add(ctx.EQ(), SemanticTokenType.OPERATOR)
-
-                val exprCtx = ctx.expr()
-                val e = expr(exprCtx, function)
-                if (e == null) {
-                    diagnosticHub.add(
-                        ctx.SET(),
-                        JassDiagnosticCode.ERROR,
-                        "Missing expression"
-                    )
-                    continue
-                }
-
-                if (node is JassVar) {
-                    val brack: SetBrackContext? = ctx.setBrack()
-                    val eBrack = expr(brack?.expr(), function)
-
-                    val v = node.clone(
-                        state = this,
-                        expr = e,
-                        index = eBrack,
-                        symbol = nameCtx?.symbol
-                    ).also {
-                        tokenTree.add(it)
-                    }
-
-                    if (v.type.op(JassExprOp.Set, e.type) is JassUndefinedType) {
-                        diagnosticHub.add(
-                            exprCtx,
-                            JassDiagnosticCode.ERROR,
-                            "Can't set ${v.type.name} with ${e.type.name}"
-                        )
-                    }
-
-                    list.add(v)
-                }
-
+                JassVar.parse(ctx, function, this)
                 continue
             }
             //endregion

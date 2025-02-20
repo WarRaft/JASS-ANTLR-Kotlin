@@ -9,7 +9,6 @@ import io.github.warraft.jass.antlr.psi.JassVar
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.jass.antlr.psi.utils.JassVarScope
 import io.github.warraft.jass.antlr.state.ext.antlr.function
-import io.github.warraft.jass.antlr.state.ext.antlr.global
 import io.github.warraft.jass.antlr.state.ext.antlr.typedef
 import io.github.warraft.jass.antlr.state.ext.lsp4j.*
 import io.github.warraft.jass.antlr.utils.JassErrorListener
@@ -33,7 +32,7 @@ class JassState : LanguageState() {
 
     val nodeMap: MutableMap<String, JassNodeBase> = mutableMapOf()
 
-    val varScope = JassVarScope(null)
+    val scopeVar = JassVarScope(null)
     val funMap: MutableMap<String, JassFun> = mutableMapOf()
 
     override fun completion(): List<CompletionItem> = completionExt()
@@ -62,7 +61,7 @@ class JassState : LanguageState() {
         globals.clear()
         functions.clear()
         nodeMap.clear()
-        varScope.clear()
+        scopeVar.clear()
         funMap.clear()
         commentsMap.clear()
 
@@ -112,14 +111,15 @@ class JassState : LanguageState() {
         ctx.children.forEach {
             when (it) {
                 is GlobalsContext -> {
-                    val sgctx = it.GLOBALS()
-                    val egctx = it.ENDGLOBALS()
+                    val globalsCtx = it.GLOBALS()
+                    val endglobalsCtx = it.ENDGLOBALS()
 
-                    foldingHub.add(sgctx, egctx)
+                    foldingHub.add(globalsCtx, endglobalsCtx)
                     semanticHub
-                        .add(sgctx, SemanticTokenType.KEYWORD)
-                        .add(egctx, SemanticTokenType.KEYWORD)
-                    it.variable().forEach(::global)
+                        .add(globalsCtx, SemanticTokenType.KEYWORD)
+                        .add(endglobalsCtx, SemanticTokenType.KEYWORD)
+
+                    for (ctx in it.variable()) JassVar.parse(ctx, null, this)
                 }
 
                 is TypeContext -> typedef(it)
