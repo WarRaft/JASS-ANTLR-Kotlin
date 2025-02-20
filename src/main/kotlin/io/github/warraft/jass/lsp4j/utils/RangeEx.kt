@@ -24,5 +24,8 @@ class RangeEx : Range() {
         fun get(ctx: ParserRuleContext?): Range = if (ctx == null) empty else toRange(ctx.start, ctx.stop)
         fun get(node: TerminalNode?): Range = if (node == null) empty else toRange(node.symbol, node.symbol)
         fun get(token: Token?): Range = if (token == null) empty else toRange(token, token)
+
+        fun get(a: TerminalNode?, b: TerminalNode?): Range? = get(a?.symbol, b?.symbol)
+        fun get(a: Token?, b: Token?): Range? = if (a == null || b == null) null else toRange(a, b)
     }
 }

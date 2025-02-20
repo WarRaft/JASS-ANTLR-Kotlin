@@ -8,11 +8,13 @@ import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.antlr.state.ext.antlr.expr
 import io.github.warraft.jass.antlr.state.ext.antlr.typeFromString
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode.ERROR
+import io.github.warraft.jass.lsp4j.utils.RangeEx
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenModifier.DEFINITION
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType.*
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.TerminalNode
+import org.eclipse.lsp4j.Range
 import org.eclipse.lsp4j.SymbolKind
 
 class JassVar(
@@ -73,6 +75,9 @@ class JassVar(
             var nameCtx: TerminalNode? = null
             var exprCtx: ExprContext? = null
             var eqCtx: TerminalNode? = null
+            var indexCtx: ExprContext? = null
+            var lBrackCtx: TerminalNode? = null
+            var rBrackCtx: TerminalNode? = null
 
             var v = JassVar().also {
                 it.state = state
@@ -189,50 +194,31 @@ class JassVar(
                 }
                 //endregion
 
+                //region StmtSetContext
+                is StmtSetContext -> {
+                    nameCtx = ctx.ID()
+                    eqCtx = ctx.EQ()
+                    exprCtx = ctx.expr()
+                    val b: SetBrackContext? = ctx.setBrack()
+                    lBrackCtx = b?.LBRACK()
+                    rBrackCtx = b?.RBRACK()
+                    indexCtx = b?.expr()
+                    state.semanticHub.add(ctx.SET(), KEYWORD)
+                }
+                //endregion
+
                 //region ExprVarContext
                 is ExprVarContext -> {
                     nameCtx = ctx.ID()
                 }
                 //endregion
 
-                //region StmtSetContext
-                is StmtSetContext -> {
-                    nameCtx = ctx.ID()
-                    eqCtx = ctx.EQ()
-                    exprCtx = ctx.expr()
-                }
-                //endregion
-
                 //region ExprArrContext
                 is ExprArrContext -> {
                     nameCtx = ctx.ID()
-                    state.semanticHub.add(nameCtx, VARIABLE)
-
-                    val name = nameCtx.text
-                    var node: JassNodeBase? = state.getNode(name, function)
-                    if (node !is JassVar) {
-                        state.diagnosticHub.add(
-                            nameCtx,
-                            ERROR,
-                            "$name array is not declared"
-                        )
-                        return null
-                    }
-                    return null
-                    /*
-                    return JassExpr(
-                        op = JassExprOp.Get,
-                        a = node.clone(
-                            state = this,
-                            index = expr(exprCtx.expr(), function),
-                            symbol = idctx.symbol
-                        ).also {
-                            tokenTree.add(it)
-                            it.scope?.link(it)
-                        },
-                    )
-
-                     */
+                    lBrackCtx = ctx.LBRACK()
+                    rBrackCtx = ctx.RBRACK()
+                    indexCtx = ctx.expr()
                 }
                 //endregion
             }
@@ -277,62 +263,41 @@ class JassVar(
                 it.global = d.global
                 it.local = d.local
                 it.param = d.param
+                it.expr = state.expr(exprCtx, function)
+                it.index = state.expr(indexCtx, function)
+            }
+
+            var brackRange: Range = RangeEx.get(lBrackCtx, rBrackCtx) ?: RangeEx.get(nameCtx)
+
+            if (d.array) {
+                val i = v.index
+                if (i == null) {
+                    state.diagnosticHub.add(brackRange, ERROR, "Missing index")
+                } else {
+                    if (JassIntType().op(JassExprOp.Set, i.type) !is JassIntType) {
+                        state.diagnosticHub.add(brackRange, ERROR, "Index must be an integer, ${i.type.name} passed")
+                    }
+                }
             }
 
             when (ctx) {
                 is StmtSetContext -> {
-                    state.semanticHub
-                        .add(nameCtx, VARIABLE)
-                        .add(ctx.SET(), KEYWORD)
+                    if (v.expr == null) {
+                        state.diagnosticHub.add(nameCtx, ERROR, "Missing expression")
+                        return v
+                    }
 
+                    val ta = d.type
+                    val tb = v.expr?.type
 
-                    var node: JassNodeBase? = null
-                    if (nameCtx == null) {
-                        state.diagnosticHub.add(ctx, ERROR, "Variable name is missing")
+                    if (ta == null || tb == null) {
+                        state.diagnosticHub.add(ctx, ERROR, "Some type is null")
                     } else {
-                        val name = nameCtx.text
-                        node = state.getNode(name, function)
-                        if (node !is JassVar) {
-                            state.diagnosticHub.add(nameCtx, ERROR, "Set must be a variable")
-                        }
-                    }
-
-                    val exprCtx = ctx.expr()
-                    val e = state.expr(exprCtx, function)
-                    if (e == null) {
-                        state.diagnosticHub.add(
-                            ctx.SET(),
-                            ERROR,
-                            "Missing expression"
-                        )
-                        return null
-                    }
-
-                    if (node is JassVar) {
-                        val brack: SetBrackContext? = ctx.setBrack()
-                        val eBrack = state.expr(brack?.expr(), function)
-
-                        /*
-                        val v = node.clone(
-                            state = this,
-                            expr = e,
-                            index = eBrack,
-                            symbol = nameCtx?.symbol
-                        ).also {
-                            tokenTree.add(it)
-                        }
-
-                        if (v.type.op(JassExprOp.Set, e.type) is JassUndefinedType) {
-                            diagnosticHub.add(
-                                exprCtx,
-                                JassDiagnosticCode.ERROR,
-                                "Can't set ${v.type.name} with ${e.type.name}"
+                        if (ta.op(JassExprOp.Set, tb) is JassUndefinedType) {
+                            state.diagnosticHub.add(
+                                exprCtx, ERROR, "Can't set ${ta.name} with ${tb.name}"
                             )
                         }
-
-                        list.add(v)
-
-                         */
                     }
                 }
             }

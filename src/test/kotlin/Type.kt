@@ -13,10 +13,8 @@ import kotlin.test.assertNotNull
 
 class Type {
 
-    fun state(str: String): JassState {
-        val s = JassState()
-        s.parse(CharStreams.fromString(str))
-        return s
+    fun state(str: String): JassState = JassState().apply {
+        parse(CharStreams.fromString(str))
     }
 
     @Test
@@ -30,11 +28,8 @@ class Type {
         for (op in m) assertIs<JassIntType>(integer.op(op, integer))
         for (op in b) assertIs<JassBoolType>(integer.op(op, integer))
 
-
         for (op in m) assertIs<JassRealType>(integer.op(op, real))
         for (op in m) assertIs<JassRealType>(real.op(op, real))
-
-
     }
 
     @Test
