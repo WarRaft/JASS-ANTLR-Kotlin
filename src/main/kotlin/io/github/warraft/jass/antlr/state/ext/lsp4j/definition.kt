@@ -22,9 +22,12 @@ fun JassState.definitionExt(params: DefinitionParams?): MutableList<LocationLink
     when (node) {
         is JassVar -> {
             val s = node.scope
-            if (s.function != null) for (v in s.definitions(node)) add(v)
-            for (state in states + this) {
-                for (v in state.varScope.definitions(node)) add(v)
+            if (s.function == null) {
+                for (state in states + this) {
+                    for (v in state.varScope.definitions(node)) add(v)
+                }
+            } else {
+                for (v in s.definitions(node)) add(v)
             }
         }
 

@@ -22,7 +22,7 @@ class JassFun(
         state = state,
         function = this
     )
-
+    
     var fakename: String = ""
 
     val root: JassFun

@@ -27,9 +27,12 @@ fun JassState.referencesExt(params: ReferenceParams?): MutableList<out Location?
     when (node) {
         is JassVar -> {
             val s = node.scope
-            if (s.function != null) for (v in s.usages(node)) add(v)
-            for (state in states + this) {
-                for (v in state.varScope.usages(node)) add(v)
+            if (s.function == null) {
+                for (state in states + this) {
+                    for (v in state.varScope.usages(node)) add(v)
+                }
+            } else {
+                for (v in s.usages(node)) add(v)
             }
         }
 

@@ -28,6 +28,7 @@ fun JassState.documentHighlightExt(params: DocumentHighlightParams?): List<Docum
     when (node) {
         is JassVar -> {
             for (v in node.scope.usages(node)) {
+                if (path != v.state.path) continue
                 highlights.add(
                     DocumentHighlight(
                         RangeEx.get(v.symbol),

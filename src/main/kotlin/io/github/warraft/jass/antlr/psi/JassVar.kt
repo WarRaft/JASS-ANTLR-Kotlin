@@ -84,7 +84,6 @@ class JassVar(
             var v = JassVar(
                 state = state,
             ).also {
-                it.scope = function?.varScope ?: state.varScope
                 it.definition = ctx
             }
 
@@ -138,6 +137,7 @@ class JassVar(
                         it.name = nameCtx.text
                         it.type = state.typeFromString(typeName)
                         it.array = arrayCtx != null
+                        it.scope = function?.varScope ?: state.varScope
 
                         if (global) for (s in state.states + state) {
                             val d = s.varScope.definition(it)
@@ -248,12 +248,14 @@ class JassVar(
                 .add(eqCtx, OPERATOR)
                 .add(v.symbol, VARIABLE)
 
-            var d: JassVar? = function?.varScope?.definition(v.name)
-            d.let { function?.varScope?.add(v) }
+            val fscope = function?.varScope
 
+            var d: JassVar? = fscope?.definition(v.name)
             if (d == null) {
                 d = state.varScope.definition(v.name)
                 state.varScope.add(v)
+            } else {
+                fscope?.add(v)
             }
 
             if (d == null) for (s in state.states) {
