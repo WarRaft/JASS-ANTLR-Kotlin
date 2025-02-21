@@ -26,6 +26,13 @@ class JassVarScope(
         return list.lastOrNull()
     }
 
+    fun definitions(v: JassVar?): List<JassVar> = definitions(v?.name)
+    fun definitions(name: String?): List<JassVar> {
+        if (name == null) return emptyList()
+        val list = definitions[name] ?: return emptyList()
+        return list
+    }
+
     fun usages(v: JassVar?): List<JassVar> = usages(v?.name)
     fun usages(name: String?): List<JassVar> {
         if (name == null) return emptyList()

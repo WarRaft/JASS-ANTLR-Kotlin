@@ -14,22 +14,23 @@ fun JassState.referencesExt(params: ReferenceParams?): MutableList<out Location?
     val position = params?.position ?: return refs
     val node = tokenTree.find(position) ?: return refs
 
-
-    fun addVar(v: JassVar) {
+    fun addFun(v: JassFun) {
         val p = v.state.path ?: return
         refs.add(Location(p.toUri().toString(), RangeEx.get(v.symbol)))
     }
 
-    fun addFun(v: JassFun) {
+    fun add(v: JassVar) {
         val p = v.state.path ?: return
         refs.add(Location(p.toUri().toString(), RangeEx.get(v.symbol)))
     }
 
     when (node) {
         is JassVar -> {
-            //val root = node.root
-            //addVar(root)
-            //for (v in root.links) addVar(v)
+            val s = node.scope
+            if (s.function != null) for (v in s.usages(node)) add(v)
+            for (state in states + this) {
+                for (v in state.varScope.usages(node)) add(v)
+            }
         }
 
         is JassFun -> {

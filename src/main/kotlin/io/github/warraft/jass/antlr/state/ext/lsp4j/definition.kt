@@ -14,27 +14,18 @@ fun JassState.definitionExt(params: DefinitionParams?): MutableList<LocationLink
     val position = params?.position ?: return defs
     val node = tokenTree.find(position) ?: return defs
 
-    fun add(v: JassVar?) {
-        if (v == null) return
+    fun add(v: JassVar) {
         val p = v.state.path ?: return
-        if (v.symbol == null || v.definition == null) return
         defs.add(LocationLink(p.toUri().toString(), RangeEx.get(v.definition), RangeEx.get(v.symbol)))
     }
 
     when (node) {
         is JassVar -> {
-            /*
-            val state = node.state ?: return defs
-            var v = node.scope?.definition(node.name)
-            if (v == null) {
-                for (s in state.states) {
-                    v = s.scopeVar.definition(node.name)
-                    if (v != null) break
-                }
+            val s = node.scope
+            if (s.function != null) for (v in s.definitions(node)) add(v)
+            for (state in states + this) {
+                for (v in state.varScope.definitions(node)) add(v)
             }
-            add(v)
-
-             */
         }
 
         is JassFun -> {

@@ -299,6 +299,11 @@ class JassVar(
                         return v
                     }
 
+                    if (v.constant) {
+                        state.diagnosticHub.add(nameCtx, ERROR, "Cannot set constant")
+                        return v
+                    }
+
                     val ta = d.type
                     val tb = v.expr?.type
 
