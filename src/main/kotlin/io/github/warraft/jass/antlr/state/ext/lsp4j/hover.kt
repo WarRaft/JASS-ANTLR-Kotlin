@@ -2,7 +2,6 @@ package io.github.warraft.jass.antlr.state.ext.lsp4j
 
 import io.github.warraft.jass.antlr.psi.JassFun
 import io.github.warraft.jass.antlr.psi.JassUndefinedType
-import io.github.warraft.jass.antlr.psi.JassVar
 import io.github.warraft.jass.antlr.state.JassState
 import org.eclipse.lsp4j.Hover
 import org.eclipse.lsp4j.HoverParams
@@ -20,7 +19,7 @@ fun JassState.hoverExt(params: HoverParams?): Hover? {
 
     when (node) {
         is JassFun -> {
-            val f = node.root
+            val f = node.scope.definition(node) ?: return null
 
             if (f.comments.isNotEmpty()) {
                 b.append(f.comments.toString()).append("\n")
@@ -47,6 +46,7 @@ fun JassState.hoverExt(params: HoverParams?): Hover? {
             } else {
                 b.append("**${f.type.name}**")
             }
+
 
         }
     }

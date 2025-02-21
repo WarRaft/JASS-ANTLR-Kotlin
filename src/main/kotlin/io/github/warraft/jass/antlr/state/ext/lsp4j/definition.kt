@@ -6,6 +6,8 @@ import io.github.warraft.jass.antlr.psi.JassFun
 import io.github.warraft.jass.antlr.psi.JassVar
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.languages.lsp4j.utils.RangeEx
+import org.antlr.v4.runtime.ParserRuleContext
+import org.antlr.v4.runtime.Token
 import org.eclipse.lsp4j.DefinitionParams
 import org.eclipse.lsp4j.LocationLink
 
@@ -14,10 +16,13 @@ fun JassState.definitionExt(params: DefinitionParams?): MutableList<LocationLink
     val position = params?.position ?: return defs
     val node = tokenTree.find(position) ?: return defs
 
-    fun add(v: JassVar) {
-        val p = v.state.path ?: return
-        defs.add(LocationLink(p.toUri().toString(), RangeEx.get(v.definition), RangeEx.get(v.symbol)))
+    fun add(s: JassState, symbol: Token?, definition: ParserRuleContext?) {
+        val p = s.path ?: return
+        defs.add(LocationLink(p.toUri().toString(), RangeEx.get(definition), RangeEx.get(symbol)))
     }
+
+    fun add(v: JassVar) = add(v.state, v.symbol, v.definition)
+    fun add(f: JassFun) = add(f.state, f.symbol, f.definition)
 
     when (node) {
         is JassVar -> {
@@ -32,11 +37,9 @@ fun JassState.definitionExt(params: DefinitionParams?): MutableList<LocationLink
         }
 
         is JassFun -> {
-            if (node.base == null) return defs
-            val root = node.root
-            if (root.definition == null) return defs
-            val p = root.state.path ?: return defs
-            defs.add(LocationLink(p.toUri().toString(), RangeEx.get(root.symbol), RangeEx.get(root.definition)))
+            for (s in states + this) {
+                for (f in s.funScope.definitions(node)) add(f)
+            }
         }
     }
 

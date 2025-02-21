@@ -207,7 +207,6 @@ class JassToJass(
                 }
 
                 is JassFun -> {
-                    if (!node.call) continue
                     tab(level).append("call ").append(funname(node))
 
                     builder.append("(")

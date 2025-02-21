@@ -11,7 +11,7 @@ class JassFakeName(val state: JassState) {
     private fun valid(name: String): Boolean {
         if (name in AllKeywords) return false
         if (name in generated) return false
-        return state.getNode(name, null) == null
+        return true
     }
 
     fun next(): String {

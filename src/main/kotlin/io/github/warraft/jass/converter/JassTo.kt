@@ -36,9 +36,10 @@ abstract class JassTo(
     }
 
     fun funname(f: JassFun): String {
-        val root = f.root
-        var name = root.name ?: ""
-        return if ((fakename || isKeyword(name)) && !f.native) root.fakename else name
+        //val root = f.root
+        //var name = root.name ?: ""
+        //return if ((fakename || isKeyword(name)) && !f.native) root.fakename else name
+        return f.name ?: "missing"
     }
 
     abstract fun type(t: JassHandleType)

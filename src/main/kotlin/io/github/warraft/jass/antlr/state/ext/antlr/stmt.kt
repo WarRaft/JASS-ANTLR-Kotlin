@@ -6,7 +6,6 @@ import io.github.warraft.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
-import org.antlr.v4.runtime.tree.TerminalNode
 
 fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, function: JassFun) {
     for (ctx in ctxs) {
@@ -19,64 +18,12 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
             }
             //endregion
 
+            //region StmtCallContext
             is StmtCallContext -> {
-                val nameCtx: TerminalNode? = ctx.ID()
-
-                semanticHub
-                    .add(nameCtx, SemanticTokenType.FUNCTION)
-                    .add(ctx.CALL(), SemanticTokenType.KEYWORD)
-
-                if (nameCtx == null) {
-                    diagnosticHub.add(
-                        ctx,
-                        JassDiagnosticCode.ERROR,
-                        "Function name is missing"
-                    )
-                    continue
-                }
-
-                val name = nameCtx.text
-                var node = getNode(name, function)
-
-                var fn = JassFun(
-                    state = this,
-                    call = true,
-                    name = name
-                )
-
-                when (node) {
-                    is JassFun -> fn = node.clone(
-                        state = this,
-                        call = true,
-                        symbol = nameCtx.symbol
-                    ).also { tokenTree.add(it) }
-
-                    null -> {
-                        diagnosticHub.add(
-                            nameCtx,
-                            JassDiagnosticCode.ERROR,
-                            "Function not exists"
-                        )
-                    }
-
-                    else -> {
-                        diagnosticHub.add(
-                            nameCtx,
-                            JassDiagnosticCode.ERROR,
-                            "Target is not a function"
-                        )
-                    }
-                }
-
-                semanticHub
-                    .add(nameCtx, SemanticTokenType.FUNCTION)
-                    .add(ctx.DEBUG(), SemanticTokenType.KEYWORD)
-                    .add(ctx.CALL(), SemanticTokenType.KEYWORD)
-
-                argument(fn, function, ctx.expr(), ctx.LPAREN(), ctx.RPAREN())
-
-                list.add(fn)
+                val f = JassFun.parse(ctx, function, this) ?: continue
+                list.add(f)
             }
+            //endregion
 
             is StmtLoopContext -> {
                 semanticHub
@@ -122,6 +69,7 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
             }
             //endregion
 
+            //region StmtIfContext
             is StmtIfContext -> {
                 val e = expr(ctx.expr(), function)
                 if (e == null) {
@@ -168,6 +116,7 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
                     stmt(elsectx.stmt(), elser.stmt, function)
                 }
             }
+            //endregion
 
             else -> diagnosticHub.add(JassDiagnosticCode.PLUGIN, "Udeclared statement")
         }

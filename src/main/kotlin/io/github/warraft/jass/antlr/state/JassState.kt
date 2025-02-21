@@ -4,11 +4,11 @@ import io.github.warraft.JassLexer
 import io.github.warraft.JassParser
 import io.github.warraft.JassParser.*
 import io.github.warraft.jass.antlr.psi.JassFun
+import io.github.warraft.jass.antlr.psi.JassFunScope
 import io.github.warraft.jass.antlr.psi.JassHandleType
 import io.github.warraft.jass.antlr.psi.JassVar
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.jass.antlr.psi.JassVarScope
-import io.github.warraft.jass.antlr.state.ext.antlr.function
 import io.github.warraft.jass.antlr.state.ext.antlr.typedef
 import io.github.warraft.jass.antlr.state.ext.lsp4j.*
 import io.github.warraft.jass.antlr.utils.JassErrorListener
@@ -30,9 +30,9 @@ class JassState : LanguageState() {
     val globals: MutableList<JassVar> = mutableListOf()
     val functions: MutableList<JassFun> = mutableListOf()
 
-    val nodeMap: MutableMap<String, JassNodeBase> = mutableMapOf()
-
     val varScope = JassVarScope(this)
+    val funScope = JassFunScope(this)
+
     val funMap: MutableMap<String, JassFun> = mutableMapOf()
 
     override fun completion(): List<CompletionItem> = completionExt()
@@ -60,8 +60,8 @@ class JassState : LanguageState() {
         natives.clear()
         globals.clear()
         functions.clear()
-        nodeMap.clear()
         varScope.clear()
+        funScope.clear()
         funMap.clear()
         commentsMap.clear()
 
@@ -90,23 +90,6 @@ class JassState : LanguageState() {
         diagnosticHub.diagnostics.addAll(errorJassErrorListener.diagnostics)
     }
 
-    fun getNode(key: String, f: JassFun?): JassNodeBase? {
-        if (f != null) {
-            for (p in f.param.asReversed()) {
-                if (p.name == key) return p
-            }
-        }
-        states.forEach {
-            if (it.nodeMap.containsKey(key)) {
-                return it.nodeMap[key]
-            }
-        }
-        if (nodeMap.containsKey(key)) {
-            return nodeMap[key]
-        }
-        return null
-    }
-
     fun root(ctx: RootContext): JassNodeBase? {
         ctx.children.forEach {
             when (it) {
@@ -123,8 +106,8 @@ class JassState : LanguageState() {
                 }
 
                 is TypeContext -> typedef(it)
-                is NativeRuleContext -> function(it)
-                is FunctionContext -> function(it)
+                is NativeRuleContext -> JassFun.parse(it, null, this)
+                is FunctionContext -> JassFun.parse(it, null, this)
             }
         }
         return null

@@ -15,16 +15,6 @@ fun JassState.documentHighlightExt(params: DocumentHighlightParams?): List<Docum
     val position = params?.position ?: return highlights
     val node = tokenTree.find(position) ?: return highlights
 
-    fun addFun(f: JassFun) {
-        if (path != f.state.path) return
-        highlights.add(
-            DocumentHighlight(
-                RangeEx.get(f.symbol),
-                DocumentHighlightKind.Write
-            )
-        )
-    }
-
     when (node) {
         is JassVar -> {
             for (v in node.scope.usages(node)) {
@@ -39,12 +29,17 @@ fun JassState.documentHighlightExt(params: DocumentHighlightParams?): List<Docum
         }
 
         is JassFun -> {
-            val root = node.root
-            addFun(root)
-            for (v in root.links) addFun(v)
+            for (f in node.scope.usages(node)) {
+                if (path != f.state.path) continue
+                highlights.add(
+                    DocumentHighlight(
+                        RangeEx.get(f.symbol),
+                        DocumentHighlightKind.Write
+                    )
+                )
+            }
         }
     }
-
 
     return highlights
 }
