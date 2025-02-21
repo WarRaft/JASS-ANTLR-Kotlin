@@ -103,24 +103,24 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
                 }
             }
 
+            //region StmtReturnContext
             is StmtReturnContext -> {
                 semanticHub.add(ctx.RETURN(), SemanticTokenType.KEYWORD)
 
                 val e = expr(ctx.expr(), function)
                 if (e != null) {
                     val v = e.a
-                    if (v is JassVar) {
-                        if (v.array) {
-                            diagnosticHub.add(
-                                ctx.RETURN(),
-                                JassDiagnosticCode.ARRAY_RETURN,
-                                "Array return"
-                            )
-                        }
+                    if (v is JassVar && v.array && v.index == null) {
+                        diagnosticHub.add(
+                            v.definition,
+                            JassDiagnosticCode.ARRAY_RETURN,
+                            "Array return"
+                        )
                     }
                 }
                 list.add(JassReturn(expr = e))
             }
+            //endregion
 
             is StmtIfContext -> {
                 val e = expr(ctx.expr(), function)

@@ -5,7 +5,7 @@ package io.github.warraft.jass.antlr.state.ext.lsp4j
 import io.github.warraft.jass.antlr.psi.JassFun
 import io.github.warraft.jass.antlr.psi.JassVar
 import io.github.warraft.jass.antlr.state.JassState
-import io.github.warraft.jass.lsp4j.utils.RangeEx
+import io.github.warraft.languages.lsp4j.utils.RangeEx
 import org.eclipse.lsp4j.Location
 import org.eclipse.lsp4j.ReferenceParams
 
@@ -16,7 +16,7 @@ fun JassState.referencesExt(params: ReferenceParams?): MutableList<out Location?
 
 
     fun addVar(v: JassVar) {
-        val p = v.state?.path ?: return
+        val p = v.state.path ?: return
         refs.add(Location(p.toUri().toString(), RangeEx.get(v.symbol)))
     }
 

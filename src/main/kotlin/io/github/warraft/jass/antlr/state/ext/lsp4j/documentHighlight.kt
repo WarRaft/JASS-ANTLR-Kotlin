@@ -5,7 +5,7 @@ package io.github.warraft.jass.antlr.state.ext.lsp4j
 import io.github.warraft.jass.antlr.psi.JassFun
 import io.github.warraft.jass.antlr.psi.JassVar
 import io.github.warraft.jass.antlr.state.JassState
-import io.github.warraft.jass.lsp4j.utils.RangeEx
+import io.github.warraft.languages.lsp4j.utils.RangeEx
 import org.eclipse.lsp4j.DocumentHighlight
 import org.eclipse.lsp4j.DocumentHighlightKind
 import org.eclipse.lsp4j.DocumentHighlightParams
@@ -27,19 +27,14 @@ fun JassState.documentHighlightExt(params: DocumentHighlightParams?): List<Docum
 
     when (node) {
         is JassVar -> {
-            if (path != node.state?.path) return highlights
-            val s = node.scope
-            if (s != null) {
-                val list = s.all[node.name]
-                if (list != null) for (v in list) highlights.add(
+            for (v in node.scope.usages(node)) {
+                highlights.add(
                     DocumentHighlight(
                         RangeEx.get(v.symbol),
                         DocumentHighlightKind.Write
                     )
                 )
             }
-            server?.log("$s")
-
         }
 
         is JassFun -> {

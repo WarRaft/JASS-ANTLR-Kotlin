@@ -7,7 +7,7 @@ import io.github.warraft.jass.antlr.psi.JassFun
 import io.github.warraft.jass.antlr.psi.JassHandleType
 import io.github.warraft.jass.antlr.psi.JassVar
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
-import io.github.warraft.jass.antlr.psi.utils.JassVarScope
+import io.github.warraft.jass.antlr.psi.JassVarScope
 import io.github.warraft.jass.antlr.state.ext.antlr.function
 import io.github.warraft.jass.antlr.state.ext.antlr.typedef
 import io.github.warraft.jass.antlr.state.ext.lsp4j.*
@@ -32,7 +32,7 @@ class JassState : LanguageState() {
 
     val nodeMap: MutableMap<String, JassNodeBase> = mutableMapOf()
 
-    val scopeVar = JassVarScope(null)
+    val varScope = JassVarScope(this)
     val funMap: MutableMap<String, JassFun> = mutableMapOf()
 
     override fun completion(): List<CompletionItem> = completionExt()
@@ -61,7 +61,7 @@ class JassState : LanguageState() {
         globals.clear()
         functions.clear()
         nodeMap.clear()
-        scopeVar.clear()
+        varScope.clear()
         funMap.clear()
         commentsMap.clear()
 

@@ -2,7 +2,6 @@ package io.github.warraft.jass.antlr.psi
 
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.jass.antlr.psi.base.JassTypeBase
-import io.github.warraft.jass.antlr.psi.utils.JassVarScope
 import io.github.warraft.jass.antlr.state.JassState
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
@@ -19,15 +18,17 @@ class JassFun(
     var symbol: Token? = null,
     var definition: ParserRuleContext? = null,
 ) : JassNodeBase() {
+    val varScope: JassVarScope = JassVarScope(
+        state = state,
+        function = this
+    )
+
     var fakename: String = ""
 
     val root: JassFun
         get() = base ?: this
 
     val links = mutableListOf<JassFun>()
-
-    var scopeVar: JassVarScope? = null
-
     val param: MutableList<JassVar> = mutableListOf()
     val arg: MutableList<JassExpr> = mutableListOf()
     val stmt: MutableList<JassNodeBase> = mutableListOf()

@@ -19,24 +19,6 @@ fun JassState.hoverExt(params: HoverParams?): Hover? {
     val uri = "https://warraft.github.io/JASS-doc"
 
     when (node) {
-        is JassVar -> {
-            val v = node
-            b
-                .append("- `type` ")
-                .append(if (v.type == null) "*missing*" else v.type!!.name)
-                .append("\n")
-
-                .append("- `name` ")
-                .append(if (v.name == null) "*missing*" else v.name)
-                .append("\n")
-
-            if (v.constant) b.append("- `constant`\n")
-            if (v.global) b.append("- `global`\n")
-            if (v.local) b.append("- `local`\n")
-            if (v.param) b.append("- `param`\n")
-            if (v.array) b.append("- `array`\n")
-        }
-
         is JassFun -> {
             val f = node.root
 

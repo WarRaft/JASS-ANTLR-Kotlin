@@ -4,16 +4,15 @@ import io.github.warraft.JassParser.*
 import io.github.warraft.jass.antlr.psi.JassFun
 import io.github.warraft.jass.antlr.psi.JassUndefinedType
 import io.github.warraft.jass.antlr.psi.JassVar
-import io.github.warraft.jass.antlr.psi.utils.JassVarScope
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenModifier.DECLARATION
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenModifier.DOCUMENTATION
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
-import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType.*
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType.COMMENT
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType.KEYWORD
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
-import org.eclipse.lsp4j.DocumentSymbol
 import org.eclipse.lsp4j.SymbolKind
 
 fun JassState.function(defCtx: ParserRuleContext) {
@@ -23,9 +22,7 @@ fun JassState.function(defCtx: ParserRuleContext) {
 
     val function = JassFun(
         state = this
-    ).also {
-        it.scopeVar = JassVarScope(it)
-    }
+    )
 
     //region Comments
     val comments = mutableListOf<String>()

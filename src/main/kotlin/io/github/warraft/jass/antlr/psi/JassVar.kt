@@ -3,24 +3,26 @@ package io.github.warraft.jass.antlr.psi
 import io.github.warraft.JassParser.*
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.jass.antlr.psi.base.JassTypeBase
-import io.github.warraft.jass.antlr.psi.utils.JassVarScope
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.antlr.state.ext.antlr.expr
 import io.github.warraft.jass.antlr.state.ext.antlr.typeFromString
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode.ERROR
-import io.github.warraft.jass.lsp4j.utils.RangeEx
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenModifier.DEFINITION
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType.*
+import io.github.warraft.languages.lsp4j.utils.DiagnosticRelatedInformationEx
+import io.github.warraft.languages.lsp4j.utils.RangeEx
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.TerminalNode
 import org.eclipse.lsp4j.Range
 import org.eclipse.lsp4j.SymbolKind
 
+
 class JassVar(
+    val state: JassState,
 ) : JassNodeBase() {
-    var state: JassState? = null
-    var scope: JassVarScope? = null
+    lateinit var scope: JassVarScope
+
     var symbol: Token? = null
 
     override var type: JassTypeBase? = null
@@ -79,9 +81,10 @@ class JassVar(
             var lBrackCtx: TerminalNode? = null
             var rBrackCtx: TerminalNode? = null
 
-            var v = JassVar().also {
-                it.state = state
-                it.scope = function?.scopeVar ?: state.scopeVar
+            var v = JassVar(
+                state = state,
+            ).also {
+                it.scope = function?.varScope ?: state.varScope
                 it.definition = ctx
             }
 
@@ -90,8 +93,8 @@ class JassVar(
                 is ParamContext,
                 is VariableContext,
                     -> {
-                    var typeCtx: TerminalNode? = null
                     val global = function == null
+                    var typeCtx: TerminalNode? = null
                     var arrayCtx: TerminalNode? = null
                     var constantCtx: TerminalNode? = null
                     when (ctx) {
@@ -135,13 +138,25 @@ class JassVar(
                         it.name = nameCtx.text
                         it.type = state.typeFromString(typeName)
                         it.array = arrayCtx != null
+
+                        if (global) for (s in state.states + state) {
+                            val d = s.varScope.definition(it)
+                            if (d == null) continue
+                            state
+                                .diagnosticHub
+                                .add(
+                                    nameCtx, ERROR, "Variable redeclared",
+                                    listOf(DiagnosticRelatedInformationEx.get(d, "First declaration of '${d.name}' is here"))
+                                )
+                        }
+
+                        it.scope.add(it, true)
                     }
 
                     when (ctx) {
                         is ParamContext -> {
                             if (function?.documentSymbol != null) state.documentSymbolHub.add(ctx, nameCtx, SymbolKind.Variable, function.documentSymbol).also { it?.detail = typeName }
                             v.also {
-                                it.local = true
                                 it.param = true
                             }
                         }
@@ -170,12 +185,6 @@ class JassVar(
                                     }
                                 }
                             }
-
-                            if (global) for (s in state.states) {
-                                val d = s.scopeVar.definition(v.name)
-                                if (d == null) continue
-                                state.diagnosticHub.add(nameCtx, ERROR, "redeclared")
-                            }
                         }
                     }
 
@@ -184,12 +193,8 @@ class JassVar(
                         v.local = !global
                         it.symbol = nameCtx.symbol
                         state.tokenTree.add(it)
-                        it.scope?.definition(it)
-                        if (global) {
-                            state.globals.add(v)
-                        } else {
-                            function.param.add(it)
-                        }
+                        if (global) state.globals.add(v)
+                        else function.param.add(it)
                     }
                 }
                 //endregion
@@ -223,6 +228,11 @@ class JassVar(
                 //endregion
             }
 
+            v.also {
+                it.expr = state.expr(exprCtx, function)
+                it.index = state.expr(indexCtx, function)
+            }
+
             if (nameCtx == null) {
                 state.diagnosticHub.add(ctx, ERROR, "Missing name")
                 return null
@@ -238,16 +248,16 @@ class JassVar(
                 .add(eqCtx, OPERATOR)
                 .add(v.symbol, VARIABLE)
 
-            var d: JassVar? = function?.scopeVar?.definition(v.name)
-            d.let { function?.scopeVar?.link(v) }
+            var d: JassVar? = function?.varScope?.definition(v.name)
+            d.let { function?.varScope?.add(v) }
 
             if (d == null) {
-                d = state.scopeVar.definition(v.name)
-                state.scopeVar.link(v)
+                d = state.varScope.definition(v.name)
+                state.varScope.add(v)
             }
 
             if (d == null) for (s in state.states) {
-                d = s.scopeVar.definition(v.name)
+                d = s.varScope.definition(v.name)
                 if (d != null) break
             }
 
@@ -263,8 +273,6 @@ class JassVar(
                 it.global = d.global
                 it.local = d.local
                 it.param = d.param
-                it.expr = state.expr(exprCtx, function)
-                it.index = state.expr(indexCtx, function)
             }
 
             var brackRange: Range = RangeEx.get(lBrackCtx, rBrackCtx) ?: RangeEx.get(nameCtx)
@@ -277,6 +285,10 @@ class JassVar(
                     if (JassIntType().op(JassExprOp.Set, i.type) !is JassIntType) {
                         state.diagnosticHub.add(brackRange, ERROR, "Index must be an integer, ${i.type.name} passed")
                     }
+                }
+            } else {
+                if (lBrackCtx != null || rBrackCtx != null) {
+                    state.diagnosticHub.add(brackRange, ERROR, "Array access to non array variable")
                 }
             }
 

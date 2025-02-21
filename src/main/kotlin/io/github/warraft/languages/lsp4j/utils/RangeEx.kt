@@ -1,4 +1,4 @@
-package io.github.warraft.jass.lsp4j.utils
+package io.github.warraft.languages.lsp4j.utils
 
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
