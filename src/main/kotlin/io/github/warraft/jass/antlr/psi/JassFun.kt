@@ -235,10 +235,9 @@ class JassFun(
                 }
             }
 
-            val exprs = mutableListOf<JassExpr>()
+            val exprs = mutableListOf<JassExpr?>()
             if (exprsCtx != null) for (ectx in exprsCtx) {
-                val e = state.expr(ectx, function) ?: continue
-                exprs.add(e)
+                exprs.add(state.expr(ectx, function))
             }
 
             if (nameCtx == null) {
@@ -269,53 +268,44 @@ class JassFun(
                     it.type = d.type
                 }
 
-            }
-
-            /*
-            val root: JassFun? = if (fn.base == null) null else fn.root
-
-            val params = mutableListOf<JassVar>()
-            root?.param?.forEach {
-                if (it.param) params.add(it)
-            }
-            val need = params.size
-
-            val paren = rp ?: lp
-
-            if (root != null && exprs.size < need) {
-                diagnosticHub.add(
-                    paren,
-                    JassDiagnosticCode.ERROR,
-                    "No enought argument. Need $need, pass ${exprs.size}."
-                )
-            }
-
-            for ((index, it) in exprs.withIndex()) {
-                val e = expr(it, scope) ?: continue
-                if (index >= need) {
-                    diagnosticHub.add(
-                        it,
-                        JassDiagnosticCode.ERROR,
-                        "Redudant argument. Need $need, pass ${exprs.size}."
-                    )
-                    continue
+                val params = mutableListOf<JassVar>()
+                d.param.forEach {
+                    if (it.param) params.add(it)
                 }
-                fn.arg.add(e)
+                val need = params.size
 
-                val a = params.getOrNull(index)?.type ?: JassUndefinedType()
-                val b = e.type
-                if (b is JassNullType) continue
+                val paren = rParenCtx ?: lParenCtx
 
-                if (a.op(JassExprOp.Set, b) is JassUndefinedType) {
-                    diagnosticHub.add(
-                        it,
-                        JassDiagnosticCode.ERROR,
-                        "Wrong type. Need ${a.name}, pass ${b.name}."
-                    )
+                if (exprs.size < need) {
+                    state.diagnosticHub.add(paren, ERROR, "No enought argument. Need $need, pass ${exprs.size}.")
+                }
+
+                for ((index, it) in exprs.withIndex()) {
+                    val ectx = exprsCtx[index]
+                    if (it == null) {
+                        state.diagnosticHub.add(ectx, ERROR, "Unknown expression")
+                        continue
+                    }
+
+                    if (index >= need) {
+                        state.diagnosticHub.add(exprsCtx[index], ERROR, "Redudant argument. Need $need, pass ${exprs.size}.")
+                        continue
+                    }
+                    f.arg.add(it)
+
+                    val ta = params.getOrNull(index)?.type ?: JassUndefinedType()
+                    val tb = it.type
+                    if (tb is JassNullType) continue
+
+                    if (ta.op(JassExprOp.Set, tb) is JassUndefinedType) {
+                        state.diagnosticHub.add(
+                            ectx,
+                            ERROR,
+                            "Wrong type. Need ${ta.name}, pass ${tb.name}."
+                        )
+                    }
                 }
             }
-             */
-
 
             return f
         }
