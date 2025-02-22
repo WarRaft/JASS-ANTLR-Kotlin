@@ -30,6 +30,7 @@ class TextDocumentServiceEx(val server: LanguageServerEx) : TextDocumentService 
     override fun definition(params: DefinitionParams?): CompletableFuture<Either<MutableList<out Location?>?, MutableList<out LocationLink?>?>?>? = completedFuture(Either.forRight(stateGet(params)?.definition(params)))
     override fun documentHighlight(params: DocumentHighlightParams?): CompletableFuture<List<DocumentHighlight>> = completedFuture(stateGet(params)?.documentHighlight(params))
     override fun references(params: ReferenceParams?): CompletableFuture<MutableList<out Location?>?>? = completedFuture(stateGet(params)?.references(params))
+    override fun formatting(params: DocumentFormattingParams?): CompletableFuture<List<TextEdit?>?>? = completedFuture(stateGet(params)?.formatting(params))
 
     override fun rename(params: RenameParams?): CompletableFuture<WorkspaceEdit?>? {
         val edit = WorkspaceEdit()

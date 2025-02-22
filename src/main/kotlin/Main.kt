@@ -67,7 +67,7 @@ class Main(val args: Array<String>) {
 
             val stream = CharStreams.fromPath(path)
             val s = JassState()
-            s.parse(stream, states)
+            s.parse(stream, states, null)
             states.add(s)
 
             if (s.diagnosticHub.diagnostics.isEmpty()) {

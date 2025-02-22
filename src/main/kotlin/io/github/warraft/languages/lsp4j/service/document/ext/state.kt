@@ -13,19 +13,13 @@ import kotlin.io.path.extension
 import kotlin.io.path.toPath
 
 fun TextDocumentServiceEx.stateGet(params: TextDocumentPositionAndWorkDoneProgressAndPartialResultParams?): LanguageState? = stateGet(params?.textDocument)
-
 fun TextDocumentServiceEx.stateGet(params: TextDocumentPositionAndWorkDoneProgressParams?): LanguageState? = stateGet(params?.textDocument)
-
+fun TextDocumentServiceEx.stateGet(params: DocumentFormattingParams?): LanguageState? = stateGet(params?.textDocument)
 fun TextDocumentServiceEx.stateGet(params: SemanticTokensParams?): LanguageState? = stateGet(params?.textDocument)
-
 fun TextDocumentServiceEx.stateGet(params: FoldingRangeRequestParams?): LanguageState? = stateGet(params?.textDocument)
-
 fun TextDocumentServiceEx.stateGet(params: DocumentDiagnosticParams?): LanguageState? = stateGet(params?.textDocument)
-
 fun TextDocumentServiceEx.stateGet(params: DocumentSymbolParams?): LanguageState? = stateGet(params?.textDocument)
-
 fun TextDocumentServiceEx.stateGet(textDocument: TextDocumentIdentifier?): LanguageState? = stateGet(textDocument?.uri)
-
 fun TextDocumentServiceEx.stateGet(uri: String?): LanguageState? = if (uri == null) null else stateGet(URI(uri).toPath())
 
 fun TextDocumentServiceEx.stateGet(p: Path): LanguageState {
@@ -41,6 +35,7 @@ fun TextDocumentServiceEx.stateGet(p: Path): LanguageState {
         "vjass" -> if (state !is VjassState) state = VjassState()
         "zinc" -> if (state !is ZincState) state = ZincState()
     }
+
     if (state == null) return object : LanguageState() {}
     stateMap[p] = state.also {
         it.path = p

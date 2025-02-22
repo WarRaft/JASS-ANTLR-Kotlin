@@ -55,10 +55,6 @@ fun JassState.typedef(defCtx: TypeContext) {
 
     val eKeyCtxt = defCtx.extendsRule()
 
-    semanticHub
-        .add(nameCtx, SemanticTokenType.TYPE, SemanticTokenModifier.DECLARATION)
-        .add(eKeyCtxt.EXTENDS(), SemanticTokenType.KEYWORD)
-
     if (eKeyCtxt == null) {
         diagnosticHub.add(
             keyCtx,
@@ -69,6 +65,11 @@ fun JassState.typedef(defCtx: TypeContext) {
     }
 
     val parentCtx = eKeyCtxt.ID()
+
+    semanticHub
+        .add(nameCtx, SemanticTokenType.TYPE, SemanticTokenModifier.DECLARATION)
+        .add(parentCtx, SemanticTokenType.TYPE)
+        .add(eKeyCtxt.EXTENDS(), SemanticTokenType.KEYWORD)
 
     if (parentCtx == null) {
         diagnosticHub.add(

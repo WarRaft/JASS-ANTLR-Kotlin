@@ -15,7 +15,8 @@ import org.antlr.v4.runtime.tree.TerminalNode
 class ZincState : VexState() {
 
     override fun parse(stream: CharStream, states: List<LanguageState>, version: Int?) {
-        super.parse(stream, states)
+        super.parse(stream, states, version)
+
         val errorJassErrorListener = JassErrorListener()
         val lexer = ZincLexer(stream)
         lexer.removeErrorListeners()
@@ -33,6 +34,7 @@ class ZincState : VexState() {
         for (c in f.comments) {
             semanticHub.add(c, SemanticTokenType.COMMENT)
         }
+
     }
 
     fun root(ctx: RootContext) {

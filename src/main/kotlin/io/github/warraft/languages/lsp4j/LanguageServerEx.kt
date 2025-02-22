@@ -59,6 +59,8 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
             referencesProvider = Either.forRight(ReferenceOptions())
             definitionProvider = Either.forRight(DefinitionOptions())
 
+            documentFormattingProvider = Either.forRight(DocumentFormattingOptions())
+
             //renameProvider = Either.forRight(RenameOptions())
             //linkedEditingRangeProvider = Either.forRight(LinkedEditingRangeRegistrationOptions())
             //signatureHelpProvider = SignatureHelpOptions(listOf("(", ","))

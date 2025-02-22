@@ -3,21 +3,18 @@ package io.github.warraft.jass.antlr.state
 import io.github.warraft.JassLexer
 import io.github.warraft.JassParser
 import io.github.warraft.JassParser.*
-import io.github.warraft.jass.antlr.psi.JassFun
-import io.github.warraft.jass.antlr.psi.JassFunScope
-import io.github.warraft.jass.antlr.psi.JassHandleType
-import io.github.warraft.jass.antlr.psi.JassVar
+import io.github.warraft.jass.antlr.psi.*
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
-import io.github.warraft.jass.antlr.psi.JassVarScope
 import io.github.warraft.jass.antlr.state.ext.antlr.typedef
 import io.github.warraft.jass.antlr.state.ext.lsp4j.*
 import io.github.warraft.jass.antlr.utils.JassErrorListener
+import io.github.warraft.languages.antlr.state.LanguageState
 import io.github.warraft.languages.antlr.utils.LanguageTokenFactory
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
-import io.github.warraft.languages.antlr.state.LanguageState
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonToken
 import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.ParserRuleContext
 import org.eclipse.lsp4j.*
 
 class JassState : LanguageState() {
@@ -41,8 +38,11 @@ class JassState : LanguageState() {
     override fun definition(params: DefinitionParams?): MutableList<LocationLink> = definitionExt(params)
     override fun documentHighlight(params: DocumentHighlightParams?): List<DocumentHighlight> = documentHighlightExt(params)
     override fun references(params: ReferenceParams?): MutableList<out Location?> = referencesExt(params)
+    override fun formatting(params: DocumentFormattingParams?): List<TextEdit> = formattingEx(params)
 
     val commentsMap = mutableMapOf<Int, CommonToken>()
+
+    lateinit var root: RootContext
 
     override fun parse(stream: CharStream, states: List<LanguageState>, version: Int?) {
         if (version != null) {
@@ -80,7 +80,9 @@ class JassState : LanguageState() {
         val parser = JassParser(tokens)
         parser.removeErrorListeners()
         parser.addErrorListener(errorJassErrorListener)
-        root(parser.root())
+
+        root = parser.root()
+        root()
 
         for (c in f.comments) {
             if (!commentsMap.containsKey(c.line)) continue
@@ -90,8 +92,8 @@ class JassState : LanguageState() {
         diagnosticHub.diagnostics.addAll(errorJassErrorListener.diagnostics)
     }
 
-    fun root(ctx: RootContext): JassNodeBase? {
-        ctx.children.forEach {
+    fun root(): JassNodeBase? {
+        root.children.forEach {
             when (it) {
                 is GlobalsContext -> {
                     val globalsCtx = it.GLOBALS()
@@ -113,4 +115,3 @@ class JassState : LanguageState() {
         return null
     }
 }
-

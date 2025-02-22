@@ -9,6 +9,7 @@ import io.github.warraft.languages.lsp4j.LanguageServerEx
 import org.antlr.v4.runtime.CharStream
 import org.eclipse.lsp4j.CompletionItem
 import org.eclipse.lsp4j.DefinitionParams
+import org.eclipse.lsp4j.DocumentFormattingParams
 import org.eclipse.lsp4j.DocumentHighlight
 import org.eclipse.lsp4j.DocumentHighlightParams
 import org.eclipse.lsp4j.Hover
@@ -18,6 +19,7 @@ import org.eclipse.lsp4j.LocationLink
 import org.eclipse.lsp4j.ReferenceParams
 import org.eclipse.lsp4j.SignatureHelp
 import org.eclipse.lsp4j.SignatureHelpParams
+import org.eclipse.lsp4j.TextEdit
 import java.nio.file.Path
 
 abstract class LanguageState {
@@ -31,6 +33,7 @@ abstract class LanguageState {
     open fun definition(params: DefinitionParams?): MutableList<LocationLink> = mutableListOf()
     open fun documentHighlight(params: DocumentHighlightParams?): List<DocumentHighlight> = listOf()
     open fun references(params: ReferenceParams?): MutableList<out Location?> = mutableListOf()
+    open fun formatting(params: DocumentFormattingParams?): List<TextEdit> = listOf()
 
     val foldingHub = JassFoldingHub()
     val diagnosticHub = JassDiagnosticHub()
@@ -40,7 +43,7 @@ abstract class LanguageState {
     val semanticHub = SemanticTokenHub()
     fun semantic(): MutableList<Int> = semanticHub.data()
 
-    open fun parse(stream: CharStream, states: List<LanguageState> = listOf(), version: Int? = null) {
+    open fun parse(stream: CharStream, states: List<LanguageState> = listOf(), version: Int?) {
         foldingHub.clear()
         diagnosticHub.clear()
         documentSymbolHub.clear()
