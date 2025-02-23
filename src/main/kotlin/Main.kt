@@ -151,12 +151,20 @@ class Main(val args: Array<String>) {
 }
 
 fun main(args: Array<String>) {
-    if (args.firstOrNull() == "-lsp4j") {
-        val server = LanguageServerEx(args)
-        val launcher = createServerLauncher(server, System.`in`, System.out)
-        server.connect(launcher.remoteProxy)
-        launcher.startListening().get()
-    } else {
-        Main(args)
+    when (args.firstOrNull()) {
+        "-lsp4j" -> {
+            val server = LanguageServerEx(args)
+            val launcher = createServerLauncher(server, System.`in`, System.out)
+            server.connect(launcher.remoteProxy)
+            launcher.startListening().get()
+        }
+
+        "-ping" -> {
+            print("pong")
+        }
+
+        else -> {
+            Main(args)
+        }
     }
 }

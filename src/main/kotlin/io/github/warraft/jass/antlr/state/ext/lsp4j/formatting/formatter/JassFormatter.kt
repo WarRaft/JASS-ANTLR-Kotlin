@@ -2,8 +2,10 @@ package io.github.warraft.jass.antlr.state.ext.lsp4j.formatting.formatter
 
 import io.github.warraft.JassParser.*
 import io.github.warraft.jass.antlr.state.JassState
+import io.github.warraft.jass.antlr.state.ext.lsp4j.formatting.formatter.ext.expr
 import io.github.warraft.jass.antlr.state.ext.lsp4j.formatting.formatter.ext.function
 import io.github.warraft.jass.antlr.state.ext.lsp4j.formatting.formatter.ext.type
+import io.github.warraft.jass.antlr.state.ext.lsp4j.formatting.formatter.ext.variable
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.TerminalNode
@@ -17,11 +19,13 @@ class JassFormatter(val state: JassState, val root: ParserRuleContext) {
 
     fun token(i: Int): Token? = state.tokenStream.tokens.getOrNull(i)
 
+    fun prev(ctx: ParserRuleContext): Token? = prev(ctx.start)
     fun prev(symbol: Token?): Token? {
         val i = symbol?.tokenIndex ?: return null
         return token(i - 1)
     }
 
+    fun next(ctx: ParserRuleContext): Token? = next(ctx.stop)
     fun next(node: TerminalNode?): Token? = next(node?.symbol)
     fun next(symbol: Token?): Token? {
         val i = symbol?.tokenIndex ?: return null
@@ -49,68 +53,59 @@ class JassFormatter(val state: JassState, val root: ParserRuleContext) {
     fun tab(node: TerminalNode?, num: Int) = tab(node?.symbol, num)
     fun tab(ctx: ParserRuleContext?, num: Int) = tab(ctx?.start, num)
 
-    fun between(s: ParserRuleContext?, e: TerminalNode?, text: String) = between(s?.start, e?.symbol, text)
-    fun between(s: TerminalNode?, e: ParserRuleContext?, text: String) = between(s?.symbol, e?.start, text)
-    fun between(s: TerminalNode?, e: TerminalNode?, text: String) = between(s?.symbol, e?.symbol, text)
-    fun between(s: Token?, e: Token?, text: String) {
+    fun between(s: ParserRuleContext?, e: ParserRuleContext?, count: Int) = between(s?.stop, e?.start, count)
+    fun between(s: ParserRuleContext?, e: TerminalNode?, count: Int) = between(s?.stop, e?.symbol, count)
+    fun between(s: ParserRuleContext?, e: Token?, count: Int) = between(s?.stop, e, count)
+
+    fun between(s: TerminalNode?, e: ParserRuleContext?, count: Int) = between(s?.symbol, e?.start, count)
+    fun between(s: Token?, e: ParserRuleContext?, count: Int) = between(s, e?.start, count)
+
+    fun between(s: TerminalNode?, e: TerminalNode?, count: Int) = between(s?.symbol, e?.symbol, count)
+    fun between(s: Token?, e: Token?, count: Int) {
         if (s == null || e == null) return
+        var t = ""
+        repeat(count) { t += " " }
+
+        if (next(s) != e || prev(e) != s) {
+            state.server?.log("🔥 between: ${s.line} | ${e.line} ")
+            return
+        }
+
         fmt.add(
             TextEdit(
                 Range(
                     Position(s.line - 1, s.charPositionInLine + (s.stopIndex - s.startIndex) + 1),
                     Position(e.line - 1, e.charPositionInLine)
-                ), text
+                ), t
             )
         )
     }
 
-    fun variable(ctx: VariableContext?) {
-        if (ctx == null) return
-        tab(ctx, 1)
-    }
-
-    fun stmt(list: List<StmtContext>?, level: Int) {
-        if (list == null) return
-        for (s in list) stmt(s, level)
-    }
-
-    fun stmt(ctx: ParserRuleContext?, level: Int) {
-        if (ctx == null) return
-        tab(ctx, level)
-        when (ctx) {
-            is StmtLoopContext -> {
-                stmt(ctx.stmt(), level + 1)
-                tab(ctx.ENDLOOP(), level)
+    fun paren(list: List<ExprContext>, lpCtx: TerminalNode?, rpCtx: TerminalNode?) {
+        if (list.isEmpty()) {
+            between(lpCtx, rpCtx, 0)
+            return
+        }
+        for (eCtx in list) {
+            val prev = prev(eCtx)
+            when (prev?.type) {
+                COMMA -> between(prev, eCtx, 1)
+                LPAREN -> between(prev, eCtx, 0)
             }
-
-            is StmtIfContext -> {
-                tab(ctx.ENDIF(), level)
-                stmt(ctx.stmt(), level + 1)
-
-                for (elseIfCtx in ctx.elseif()) {
-                    tab(elseIfCtx, level)
-                    stmt(elseIfCtx.stmt(), level + 1)
-                }
-
-                val elseCtx: ElseRuleContext? = ctx.elseRule()
-                if (elseCtx != null) {
-                    tab(elseCtx, level)
-                    stmt(elseCtx.stmt(), level + 1)
-                }
+            val next = next(eCtx)
+            when (next?.type) {
+                COMMA, RPAREN -> between(eCtx, next, 0)
             }
-
-            is StmtCallContext,
-            is StmtSetContext,
-            is StmtExitWhenContext,
-            is StmtReturnContext,
-                -> null
-
-            else -> state.server?.log("stmt: ${ctx.javaClass.simpleName}")
+            expr(eCtx)
         }
     }
 
-    fun expr() {
-
+    fun trail(ctx: ParserRuleContext?) {
+        val stop = ctx?.stop ?: return
+        val next = next(stop) ?: return
+        if (next.type != LINE_COMMENT) return
+        if (stop.line != next.line) return
+        between(stop, next, 1)
     }
 
     fun format() {
@@ -127,7 +122,6 @@ class JassFormatter(val state: JassState, val root: ParserRuleContext) {
                 is FunctionContext -> function(ctx)
             }
         }
-
     }
 
     init {

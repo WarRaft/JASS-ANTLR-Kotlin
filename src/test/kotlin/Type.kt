@@ -14,7 +14,7 @@ import kotlin.test.assertNotNull
 class Type {
 
     fun state(str: String): JassState = JassState().apply {
-        parse(CharStreams.fromString(str))
+        parse(CharStreams.fromString(str), emptyList(), null)
     }
 
     @Test
@@ -43,7 +43,9 @@ class Type {
                 type c extends b
                 type d extends handle
             """.trimIndent()
-            )
+            ),
+            emptyList(),
+            null,
         )
         val a = state.typeGet("a")
         assertNotNull(a)

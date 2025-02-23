@@ -53,6 +53,10 @@ fun TextDocumentServiceEx.stateUpdate(path: Path, text: String, version: Int) {
         if (s.path == state.path) break
         sdk.add(state)
     }
-    s.parse(CharStreams.fromString(text), sdk, version)
+    try {
+        s.parse(CharStreams.fromString(text), sdk, version)
+    } catch (e: Throwable) {
+        server.client?.showMessage(MessageParams(MessageType.Error, e.stackTraceToString()))
+    }
 }
 
