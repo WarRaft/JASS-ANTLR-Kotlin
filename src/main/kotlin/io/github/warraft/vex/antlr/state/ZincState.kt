@@ -3,42 +3,28 @@ package io.github.warraft.vex.antlr.state
 import io.github.warraft.ZincLexer
 import io.github.warraft.ZincParser
 import io.github.warraft.ZincParser.*
-import io.github.warraft.jass.antlr.utils.JassErrorListener
 import io.github.warraft.languages.antlr.state.LanguageState
-import io.github.warraft.languages.antlr.utils.LanguageTokenFactory
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
 import org.antlr.v4.runtime.CharStream
-import org.antlr.v4.runtime.CommonToken
 import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.Lexer
+import org.antlr.v4.runtime.Parser
 import org.antlr.v4.runtime.tree.TerminalNode
 
 class ZincState : VexState() {
+    override fun lexer(stream: CharStream): Lexer = ZincLexer(stream)
+    override fun parser(stream: CommonTokenStream): Parser = ZincParser(stream)
 
     override fun parse(stream: CharStream, states: List<LanguageState>, version: Int?) {
         super.parse(stream, states, version)
 
-        val errorJassErrorListener = JassErrorListener()
-        val lexer = ZincLexer(stream)
-        lexer.removeErrorListeners()
-        lexer.addErrorListener(errorJassErrorListener)
-        val f = LanguageTokenFactory(mutableMapOf<Int, CommonToken>())
-        lexer.tokenFactory = f
-
-        val tokens = CommonTokenStream(lexer)
-
-        val parser = ZincParser(tokens)
-        parser.removeErrorListeners()
-        parser.addErrorListener(errorJassErrorListener)
-        root(parser.root())
-
-        for (c in f.comments) {
-            semanticHub.add(c, SemanticTokenType.COMMENT)
+        rootCtx = (parser as ZincParser).root().also {
+            for (itemCtx in it.rootItem()) rootItems(itemCtx)
         }
 
-    }
-
-    fun root(ctx: RootContext) {
-        for (itemCtx in ctx.rootItem()) rootItems(itemCtx)
+        for (c in languageTokenFactory.commentList) {
+            semanticHub.add(c, SemanticTokenType.COMMENT)
+        }
     }
 
     fun rootItems(itemCtx: RootItemContext) {

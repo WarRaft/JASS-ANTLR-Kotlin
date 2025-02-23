@@ -1,4 +1,4 @@
-package io.github.warraft.jass.antlr.utils
+package io.github.warraft.languages.antlr.utils
 
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode
 import org.antlr.v4.runtime.BaseErrorListener
@@ -11,9 +11,9 @@ import org.eclipse.lsp4j.Diagnostic
 import org.eclipse.lsp4j.DiagnosticSeverity
 import org.eclipse.lsp4j.Position
 import org.eclipse.lsp4j.Range
-import java.util.BitSet
+import java.util.*
 
-class JassErrorListener : BaseErrorListener() {
+class LanguageErrorListener() : BaseErrorListener() {
     val diagnostics = mutableListOf<Diagnostic>()
 
     override fun syntaxError(
@@ -64,5 +64,9 @@ class JassErrorListener : BaseErrorListener() {
         prediction: Int,
         configs: ATNConfigSet?,
     ) {
+    }
+
+    fun clear(){
+        diagnostics.clear()
     }
 }

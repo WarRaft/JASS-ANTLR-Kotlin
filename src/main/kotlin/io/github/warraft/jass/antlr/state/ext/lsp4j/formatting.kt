@@ -11,7 +11,7 @@ import org.eclipse.lsp4j.Position
 import org.eclipse.lsp4j.Range
 import org.eclipse.lsp4j.TextEdit
 
-private class Formatter(@Suppress("unused") val server: LanguageServerEx?, val root: RootContext) {
+private class Formatter(@Suppress("unused") val server: LanguageServerEx?, val root: ParserRuleContext) {
     val fmt = mutableListOf<TextEdit>()
 
     fun tab(symbol: Token?, num: Int) {
@@ -112,6 +112,6 @@ private class Formatter(@Suppress("unused") val server: LanguageServerEx?, val r
 
 
 fun JassState.formattingEx(@Suppress("unused") params: DocumentFormattingParams?): List<TextEdit> {
-    return Formatter(server, root).fmt
+    return Formatter(server, rootCtx).fmt
 }
 

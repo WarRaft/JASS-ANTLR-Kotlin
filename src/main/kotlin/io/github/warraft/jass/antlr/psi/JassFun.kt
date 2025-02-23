@@ -74,9 +74,10 @@ class JassFun(
                     //region Comments
                     val comments = mutableListOf<String>()
                     for (i in ctx.start.line - 1 downTo 0) {
-                        val t = state.commentsMap[i]
+                        val m = state.languageTokenFactory.commentMap
+                        val t = m[i]
                         if (t == null) break
-                        state.commentsMap.remove(i)
+                        m.remove(i)
                         comments.addFirst(t.text.replaceFirst("^//\\s?".toRegex(), ""))
                         state.semanticHub.add(t, COMMENT, DOCUMENTATION)
                     }

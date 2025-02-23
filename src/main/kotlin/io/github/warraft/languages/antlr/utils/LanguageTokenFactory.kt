@@ -6,8 +6,9 @@ import org.antlr.v4.runtime.CommonTokenFactory
 import org.antlr.v4.runtime.TokenSource
 import org.antlr.v4.runtime.misc.Pair
 
-class LanguageTokenFactory(val map: MutableMap<Int, CommonToken>) : CommonTokenFactory() {
-    val comments = mutableListOf<CommonToken>()
+class LanguageTokenFactory() : CommonTokenFactory() {
+    val commentList = mutableListOf<CommonToken>()
+    val commentMap = mutableMapOf<Int, CommonToken>()
 
     override fun create(
         source: Pair<TokenSource?, CharStream?>?,
@@ -21,9 +22,15 @@ class LanguageTokenFactory(val map: MutableMap<Int, CommonToken>) : CommonTokenF
     ): CommonToken? {
         var t = super.create(source, type, text, channel, start, stop, line, charPositionInLine)
         if (t.channel == 2) {
-            map[line] = t
-            comments.add(t)
+            commentList.add(t)
+            commentMap[line] = t
+
         }
         return t
+    }
+
+    fun clear() {
+        commentList.clear()
+        commentMap.clear()
     }
 }

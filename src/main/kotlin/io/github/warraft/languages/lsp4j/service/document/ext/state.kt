@@ -22,7 +22,7 @@ fun TextDocumentServiceEx.stateGet(params: DocumentSymbolParams?): LanguageState
 fun TextDocumentServiceEx.stateGet(textDocument: TextDocumentIdentifier?): LanguageState? = stateGet(textDocument?.uri)
 fun TextDocumentServiceEx.stateGet(uri: String?): LanguageState? = if (uri == null) null else stateGet(URI(uri).toPath())
 
-fun TextDocumentServiceEx.stateGet(p: Path): LanguageState {
+fun TextDocumentServiceEx.stateGet(p: Path): LanguageState? {
     var state = stateMap[p]
     var lng = languageMap[p] ?: when (p.extension) {
         "j" -> "jass"
@@ -36,7 +36,8 @@ fun TextDocumentServiceEx.stateGet(p: Path): LanguageState {
         "zinc" -> if (state !is ZincState) state = ZincState()
     }
 
-    if (state == null) return object : LanguageState() {}
+    if (state == null) return null
+
     stateMap[p] = state.also {
         it.path = p
         it.server = server
@@ -46,6 +47,7 @@ fun TextDocumentServiceEx.stateGet(p: Path): LanguageState {
 
 fun TextDocumentServiceEx.stateUpdate(path: Path, text: String, version: Int) {
     val s = stateGet(path)
+    if (s == null) return
     val sdk = mutableListOf<LanguageState>()
     for (state in sdkStateList) {
         if (s.path == state.path) break

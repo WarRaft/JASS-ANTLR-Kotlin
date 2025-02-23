@@ -9,7 +9,8 @@ fun TextDocumentServiceEx.didChangeSDK(paths: List<Path>) {
     sdkStateList.clear()
     for (path in paths) {
         if (!path.isReadable()) continue
-        sdkStateList.add(stateGet(path).also {
+        val s = stateGet(path) ?: continue
+        sdkStateList.add(s.also {
             it.path = path
             it.path = path
             it.server = server

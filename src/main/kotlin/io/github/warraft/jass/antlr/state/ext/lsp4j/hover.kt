@@ -15,39 +15,27 @@ fun JassState.hoverExt(params: HoverParams?): Hover? {
 
     // https://warraft.github.io/JASS-doc/function.html
 
-    val uri = "https://warraft.github.io/JASS-doc"
-
     when (node) {
         is JassFun -> {
-            val f = node.scope.definition(node) ?: return null
+            var f: JassFun? = null
+            for (s in states + this) {
+                f = s.funScope.definition(node)
+                if (f != null) break
+            }
+            if (f == null) return null
 
             if (f.comments.isNotEmpty()) {
                 b.append(f.comments.toString()).append("\n")
             }
 
-            if (f.native) {
-                b.append("[native]($uri/native.html)")
-            } else {
-                b.append("[function]($uri/native.html)")
-            }
-            b.append(" **${node.name}** _takes_ ")
-            if (f.param.isEmpty()) {
-                b.append(" **nothing** ")
-            } else {
-                val list = mutableListOf<String>()
-                for (p in f.param) {
-                    list.add("**${p.type?.name}** ${p.name}")
-                }
-                b.append(list.joinToString(", "))
-            }
-            b.append(" _returns_ ")
-            if (f.type is JassUndefinedType) {
-                b.append("**nothing**")
-            } else {
-                b.append("**${f.type.name}**")
-            }
-
-
+            if (f.native) b.append("**native**")
+            else b.append("**function**")
+            b.append(" `${f.name}`  \n**takes**:  \n")
+            if (f.param.isEmpty()) b.append("- *nothing*  \n")
+            else for (p in f.param) b.append("- `${p.type?.name}` ${p.name}  \n")
+            b.append("  \n**returns**:  \n")
+            if (f.type is JassUndefinedType) b.append("- *nothing*  \n")
+            else b.append("- `${f.type.name}`  \n")
         }
     }
 

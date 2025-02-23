@@ -3,48 +3,35 @@ package io.github.warraft.vex.antlr.state
 import io.github.warraft.VjassLexer
 import io.github.warraft.VjassParser
 import io.github.warraft.VjassParser.*
-import io.github.warraft.jass.antlr.utils.JassErrorListener
-import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
 import io.github.warraft.languages.antlr.state.LanguageState
-import io.github.warraft.languages.antlr.utils.LanguageTokenFactory
+import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
 import org.antlr.v4.runtime.CharStream
-import org.antlr.v4.runtime.CommonToken
 import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.Lexer
+import org.antlr.v4.runtime.Parser
 import org.antlr.v4.runtime.tree.TerminalNode
 
 class VjassState : VexState() {
+    override fun lexer(stream: CharStream): Lexer = VjassLexer(stream)
+    override fun parser(stream: CommonTokenStream): Parser = VjassParser(stream)
 
     override fun parse(stream: CharStream, states: List<LanguageState>, version: Int?) {
         super.parse(stream, states, version)
 
-        val errorJassErrorListener = JassErrorListener()
-        val lexer = VjassLexer(stream)
-        lexer.removeErrorListeners()
-        lexer.addErrorListener(errorJassErrorListener)
-        val f = LanguageTokenFactory(mutableMapOf<Int, CommonToken>())
-        lexer.tokenFactory = f
-
-        val tokens = CommonTokenStream(lexer)
-
-        val parser = VjassParser(tokens)
-        parser.removeErrorListeners()
-        parser.addErrorListener(errorJassErrorListener)
-        root(parser.root())
-
-        for (c in f.comments) {
-            semanticHub.add(c, SemanticTokenType.COMMENT)
-        }
-
-    }
-
-    fun root(ctx: RootContext) {
-        for (item in ctx.children) {
-            when (item) {
-                is LibraryContext -> library(item)
-                is RootItemContext -> rootItem(item)
+        rootCtx = (parser as VjassParser).root().also {
+            for (item in it.children) {
+                when (item) {
+                    is LibraryContext -> library(item)
+                    is RootItemContext -> rootItem(item)
+                }
             }
         }
+
+        for (c in languageTokenFactory.commentList) {
+            semanticHub.add(c, SemanticTokenType.COMMENT)
+        }
     }
+
 
     fun library(ctx: LibraryContext) {
         for (idCtx in ctx.ID()) {
