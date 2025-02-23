@@ -2,7 +2,6 @@ package io.github.warraft.jass.antlr.state.ext.lsp4j
 
 import io.github.warraft.JassParser.*
 import io.github.warraft.jass.antlr.state.JassState
-import io.github.warraft.languages.lsp4j.LanguageServerEx
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.TerminalNode
@@ -11,19 +10,25 @@ import org.eclipse.lsp4j.Position
 import org.eclipse.lsp4j.Range
 import org.eclipse.lsp4j.TextEdit
 
-private class Formatter(@Suppress("unused") val server: LanguageServerEx?, val root: ParserRuleContext) {
+private class Formatter(val state: JassState, val root: ParserRuleContext) {
     val fmt = mutableListOf<TextEdit>()
 
     fun tab(symbol: Token?, num: Int) {
         if (symbol == null) return
         var t = ""
         repeat(num) { t += "\t" }
-        val char = symbol.charPositionInLine
-        val l = symbol.line - 1
 
-        //val p = num * 4
-        //if (char == p) return
-        fmt.add(TextEdit(Range(Position(l, 0), Position(l, char)), t))
+        var start = 0
+        val stop = symbol.charPositionInLine
+        val line = symbol.line - 1
+
+        val prev = state.tokenStream.tokens.getOrNull(symbol.tokenIndex - 1)
+
+        if (prev != null && prev.line == symbol.line) {
+            t = "\n" + t
+            start = prev.charPositionInLine + (prev.stopIndex - prev.startIndex) + 1
+        }
+        fmt.add(TextEdit(Range(Position(line, start), Position(line, stop)), t))
     }
 
     fun tab(node: TerminalNode?, num: Int) = tab(node?.symbol, num)
@@ -70,7 +75,7 @@ private class Formatter(@Suppress("unused") val server: LanguageServerEx?, val r
             is StmtReturnContext,
                 -> null
 
-            else -> server?.log("stmt: ${ctx.javaClass.simpleName}")
+            else -> state.server?.log("stmt: ${ctx.javaClass.simpleName}")
         }
     }
 
@@ -110,8 +115,5 @@ private class Formatter(@Suppress("unused") val server: LanguageServerEx?, val r
     }
 }
 
-
-fun JassState.formattingEx(@Suppress("unused") params: DocumentFormattingParams?): List<TextEdit> {
-    return Formatter(server, rootCtx).fmt
-}
+fun JassState.formattingEx(@Suppress("unused") params: DocumentFormattingParams?): List<TextEdit> = Formatter(this, rootCtx).fmt
 

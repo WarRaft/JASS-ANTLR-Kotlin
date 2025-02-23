@@ -27,7 +27,7 @@ class VjassState : VexState() {
             }
         }
 
-        for (c in languageTokenFactory.commentList) {
+        for (c in tokenFactory.commentList) {
             semanticHub.add(c, SemanticTokenType.COMMENT)
         }
     }

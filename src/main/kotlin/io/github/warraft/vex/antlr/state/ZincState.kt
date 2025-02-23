@@ -22,7 +22,7 @@ class ZincState : VexState() {
             for (itemCtx in it.rootItem()) rootItems(itemCtx)
         }
 
-        for (c in languageTokenFactory.commentList) {
+        for (c in tokenFactory.commentList) {
             semanticHub.add(c, SemanticTokenType.COMMENT)
         }
     }

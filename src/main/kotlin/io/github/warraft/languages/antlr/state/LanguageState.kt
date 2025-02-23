@@ -33,27 +33,19 @@ abstract class LanguageState {
     val semanticHub = SemanticTokenHub()
     fun semantic(): MutableList<Int> = semanticHub.data()
 
-    val languageErrorListener = LanguageErrorListener()
-    val languageTokenFactory = LanguageTokenFactory()
-
-    fun needParse(version: Int?): Boolean {
-        if (version == null) return true
-        if (version == this.version) return false
-        this.version = version
-        return true
-    }
-
     lateinit var lexer: Lexer
 
     abstract fun lexer(stream: CharStream): Lexer
-
-    lateinit var tokenStream: CommonTokenStream
 
     lateinit var parser: Parser
 
     abstract fun parser(stream: CommonTokenStream): Parser
 
     lateinit var rootCtx: ParserRuleContext
+
+    val errorListener = LanguageErrorListener()
+    val tokenFactory = LanguageTokenFactory()
+    lateinit var tokenStream: CommonTokenStream
 
     open fun parse(stream: CharStream, states: List<LanguageState> = listOf(), version: Int?) {
         foldingHub.clear()
@@ -62,20 +54,27 @@ abstract class LanguageState {
         tokenTree.clear()
         semanticHub.clear()
 
-        languageErrorListener.clear()
-        languageTokenFactory.clear()
+        errorListener.clear()
+        tokenFactory.clear()
 
         lexer = lexer(stream).also {
-            it.tokenFactory = languageTokenFactory
+            it.tokenFactory = tokenFactory
             it.removeErrorListeners()
-            it.addErrorListener(languageErrorListener)
+            it.addErrorListener(errorListener)
         }
 
         tokenStream = CommonTokenStream(lexer)
 
         parser = parser(tokenStream).also {
             it.removeErrorListeners()
-            it.addErrorListener(languageErrorListener)
+            it.addErrorListener(errorListener)
         }
+    }
+
+    fun needParse(version: Int?): Boolean {
+        if (version == null) return true
+        if (version == this.version) return false
+        this.version = version
+        return true
     }
 }

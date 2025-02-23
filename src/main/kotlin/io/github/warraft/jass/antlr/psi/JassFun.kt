@@ -74,7 +74,7 @@ class JassFun(
                     //region Comments
                     val comments = mutableListOf<String>()
                     for (i in ctx.start.line - 1 downTo 0) {
-                        val m = state.languageTokenFactory.commentMap
+                        val m = state.tokenFactory.commentMap
                         val t = m[i]
                         if (t == null) break
                         m.remove(i)

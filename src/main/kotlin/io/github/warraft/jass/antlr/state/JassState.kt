@@ -79,11 +79,11 @@ class JassState : LanguageState() {
             }
         }
 
-        for (c in languageTokenFactory.commentList) {
-            if (!languageTokenFactory.commentMap.containsKey(c.line)) continue
+        for (c in tokenFactory.commentList) {
+            if (!tokenFactory.commentMap.containsKey(c.line)) continue
             semanticHub.add(c, SemanticTokenType.COMMENT)
         }
 
-        diagnosticHub.diagnostics.addAll(languageErrorListener.diagnostics)
+        diagnosticHub.diagnostics.addAll(errorListener.diagnostics)
     }
 }
