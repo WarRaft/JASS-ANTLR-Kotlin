@@ -6,6 +6,7 @@ import io.github.warraft.JassParser.*
 import io.github.warraft.jass.antlr.psi.*
 import io.github.warraft.jass.antlr.state.ext.antlr.typedef
 import io.github.warraft.jass.antlr.state.ext.lsp4j.*
+import io.github.warraft.jass.antlr.state.ext.lsp4j.formatting.formattingEx
 import io.github.warraft.languages.antlr.state.LanguageState
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
 import org.antlr.v4.runtime.*

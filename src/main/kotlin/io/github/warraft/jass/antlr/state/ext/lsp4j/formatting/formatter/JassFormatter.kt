@@ -1,17 +1,32 @@
-package io.github.warraft.jass.antlr.state.ext.lsp4j
+package io.github.warraft.jass.antlr.state.ext.lsp4j.formatting.formatter
 
 import io.github.warraft.JassParser.*
 import io.github.warraft.jass.antlr.state.JassState
+import io.github.warraft.jass.antlr.state.ext.lsp4j.formatting.formatter.ext.function
+import io.github.warraft.jass.antlr.state.ext.lsp4j.formatting.formatter.ext.type
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.TerminalNode
-import org.eclipse.lsp4j.DocumentFormattingParams
+
 import org.eclipse.lsp4j.Position
 import org.eclipse.lsp4j.Range
 import org.eclipse.lsp4j.TextEdit
 
-private class Formatter(val state: JassState, val root: ParserRuleContext) {
+class JassFormatter(val state: JassState, val root: ParserRuleContext) {
     val fmt = mutableListOf<TextEdit>()
+
+    fun token(i: Int): Token? = state.tokenStream.tokens.getOrNull(i)
+
+    fun prev(symbol: Token?): Token? {
+        val i = symbol?.tokenIndex ?: return null
+        return token(i - 1)
+    }
+
+    fun next(node: TerminalNode?): Token? = next(node?.symbol)
+    fun next(symbol: Token?): Token? {
+        val i = symbol?.tokenIndex ?: return null
+        return token(i + 1)
+    }
 
     fun tab(symbol: Token?, num: Int) {
         if (symbol == null) return
@@ -22,7 +37,7 @@ private class Formatter(val state: JassState, val root: ParserRuleContext) {
         val stop = symbol.charPositionInLine
         val line = symbol.line - 1
 
-        val prev = state.tokenStream.tokens.getOrNull(symbol.tokenIndex - 1)
+        val prev = prev(symbol)
 
         if (prev != null && prev.line == symbol.line) {
             t = "\n" + t
@@ -33,6 +48,21 @@ private class Formatter(val state: JassState, val root: ParserRuleContext) {
 
     fun tab(node: TerminalNode?, num: Int) = tab(node?.symbol, num)
     fun tab(ctx: ParserRuleContext?, num: Int) = tab(ctx?.start, num)
+
+    fun between(s: ParserRuleContext?, e: TerminalNode?, text: String) = between(s?.start, e?.symbol, text)
+    fun between(s: TerminalNode?, e: ParserRuleContext?, text: String) = between(s?.symbol, e?.start, text)
+    fun between(s: TerminalNode?, e: TerminalNode?, text: String) = between(s?.symbol, e?.symbol, text)
+    fun between(s: Token?, e: Token?, text: String) {
+        if (s == null || e == null) return
+        fmt.add(
+            TextEdit(
+                Range(
+                    Position(s.line - 1, s.charPositionInLine + (s.stopIndex - s.startIndex) + 1),
+                    Position(e.line - 1, e.charPositionInLine)
+                ), text
+            )
+        )
+    }
 
     fun variable(ctx: VariableContext?) {
         if (ctx == null) return
@@ -92,19 +122,9 @@ private class Formatter(val state: JassState, val root: ParserRuleContext) {
                     for (v in ctx.variable()) variable(v)
                 }
 
-                is TypeContext -> {
-                    tab(ctx, 0)
-                }
-
-                is NativeRuleContext -> {
-                    tab(ctx, 0)
-                }
-
-                is FunctionContext -> {
-                    tab(ctx, 0)
-                    for (v in ctx.variable()) variable(v)
-                    stmt(ctx.stmt(), 1)
-                }
+                is TypeContext -> type(ctx)
+                is NativeRuleContext -> function(ctx)
+                is FunctionContext -> function(ctx)
             }
         }
 
@@ -114,6 +134,3 @@ private class Formatter(val state: JassState, val root: ParserRuleContext) {
         format()
     }
 }
-
-fun JassState.formattingEx(@Suppress("unused") params: DocumentFormattingParams?): List<TextEdit> = Formatter(this, rootCtx).fmt
-

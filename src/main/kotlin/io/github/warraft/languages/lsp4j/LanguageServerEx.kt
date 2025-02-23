@@ -29,7 +29,12 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
         this.params = params
 
         val opt = params?.initializationOptions
-        if (opt is JsonObject) workspaceService.didChangeSDK(opt["settings"] as? JsonObject)
+
+        try {
+            if (opt is JsonObject) workspaceService.didChangeSDK(opt["settings"] as? JsonObject)
+        } catch (e: Throwable) {
+            client?.showMessage(MessageParams(MessageType.Error, e.stackTraceToString()))
+        }
 
         val capabilities = ServerCapabilities().apply {
             textDocumentSync = Either.forRight(TextDocumentSyncOptions().apply {
