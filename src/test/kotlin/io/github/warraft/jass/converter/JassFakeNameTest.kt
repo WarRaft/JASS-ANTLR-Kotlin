@@ -16,7 +16,9 @@ class JassFakeNameTest {
                     int a = 1
                 endglobals
                 """.trimIndent()
-            )
+            ),
+            emptyList(),
+            null,
         )
 
         val b = JassState()
@@ -26,7 +28,9 @@ class JassFakeNameTest {
                 function b takes nothing returns nothing
                 endfunction
                 """.trimIndent()
-            )
+            ),
+            emptyList(),
+            null,
         )
 
         val c = JassState()

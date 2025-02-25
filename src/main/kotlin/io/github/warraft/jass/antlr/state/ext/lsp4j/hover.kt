@@ -1,7 +1,6 @@
 package io.github.warraft.jass.antlr.state.ext.lsp4j
 
 import io.github.warraft.jass.antlr.psi.JassFun
-import io.github.warraft.jass.antlr.psi.JassUndefinedType
 import io.github.warraft.jass.antlr.state.JassState
 import org.eclipse.lsp4j.Hover
 import org.eclipse.lsp4j.HoverParams
@@ -34,8 +33,8 @@ fun JassState.hoverExt(params: HoverParams?): Hover? {
             if (f.param.isEmpty()) b.append("- *nothing*  \n")
             else for (p in f.param) b.append("- `${p.type?.name}` ${p.name}  \n")
             b.append("  \n**returns**:  \n")
-            if (f.type is JassUndefinedType) b.append("- *nothing*  \n")
-            else b.append("- `${f.type.name}`  \n")
+            //if (f.type is JassUndefinedType) b.append("- *nothing*  \n")
+            //else b.append("- `${f.type?.name}`  \n")
         }
     }
 

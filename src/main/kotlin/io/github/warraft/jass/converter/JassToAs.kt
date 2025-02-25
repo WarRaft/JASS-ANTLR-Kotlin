@@ -6,7 +6,6 @@ import io.github.warraft.jass.antlr.utils.JassFakeName.Companion.AsKeywords
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.antlr.psi.*
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
-import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import java.nio.file.Path
 
 class JassToAs(
@@ -21,22 +20,10 @@ class JassToAs(
 
     override fun isKeyword(name: String): Boolean = AsKeywords.contains(name)
 
-    override fun type(t: JassHandleType) {
-        builder.append("// type ${t.name}")
-
-        if (t.parent != null) builder
-            .append(" extends ")
-            .append(t.parent.name)
-        builder.append("\n")
-    }
-
-    override fun typename(type: JassTypeBase?, array: Boolean): String {
+    override fun typename(type: JassTypeName?, array: Boolean): String {
         var s = if (array) "array<" else ""
+        // "CallbackFunc"
         s += when (type) {
-            is JassBoolType -> "bool"
-            is JassIntType -> "int"
-            is JassRealType -> "float"
-            is JassCodeType -> "CallbackFunc"
             else -> type?.name ?: "missing"
         }
         return if (array) "$s>" else s
@@ -61,7 +48,7 @@ class JassToAs(
     override fun function(f: JassFun) {
         if (f.native) builder.append("funcdef ")
 
-        if (f.type is JassUndefinedType) {
+        if (f.type == null) {
             builder.append("void")
         } else {
             builder.append(typename(f.type))
@@ -110,8 +97,8 @@ class JassToAs(
     }
 
     override fun opname(op: JassExprOp, a: JassNodeBase, b: JassNodeBase): String = when (op) {
-        JassExprOp.And -> "&&"
-        JassExprOp.Or -> "||"
+        JassExprOp.AND -> "&&"
+        JassExprOp.OR -> "||"
 
         else -> super.opname(op, a, b)
     }
@@ -120,11 +107,11 @@ class JassToAs(
         var aa: JassNodeBase = a
         var bb: JassNodeBase = b
         when (op) {
-            JassExprOp.Eq,
-            JassExprOp.Neq,
+            JassExprOp.EQ,
+            JassExprOp.NEQ,
                 -> {
-                if (aa.type is JassStrType && bb.type is JassNullType) bb = JassStr("\"\"")
-                if (bb.type is JassStrType && aa.type is JassNullType) aa = JassStr("\"\"")
+                //if (aa.type is JassStrType && bb.type is JassNullType) bb = JassStr("\"\"")
+                //if (bb.type is JassStrType && aa.type is JassNullType) aa = JassStr("\"\"")
             }
 
             else -> null
@@ -151,35 +138,36 @@ class JassToAs(
             }
 
             is JassExpr -> when (e.op) {
-                JassExprOp.Get -> expr(e.a)
-                JassExprOp.Set -> {
+                JassExprOp.GET -> expr(e.a)
+                JassExprOp.SET -> {
                     println("🍒AS: expr Set!!!")
                 }
 
-                JassExprOp.Add, JassExprOp.Sub,
-                JassExprOp.Mul, JassExprOp.Div,
-                JassExprOp.Lt, JassExprOp.LtEq, JassExprOp.Gt, JassExprOp.GtEq,
-                JassExprOp.Eq, JassExprOp.Neq,
-                JassExprOp.And, JassExprOp.Or,
+                JassExprOp.ADD, JassExprOp.SUB,
+                JassExprOp.MUL, JassExprOp.DIV,
+                JassExprOp.LT, JassExprOp.LTEQ, JassExprOp.GT, JassExprOp.GTEQ,
+                JassExprOp.EQ, JassExprOp.NEQ,
+                JassExprOp.AND, JassExprOp.OR,
                     -> if (e.a != null && e.b != null)
                     expr(e.op, e.a, e.b)
 
-                JassExprOp.Paren -> {
+                JassExprOp.PAREN -> {
                     builder.append("(")
                     expr(e.a)
                     builder.append(")")
                 }
 
-                JassExprOp.UnSub -> {
+                JassExprOp.UNSUB -> {
                     builder.append("-")
                     expr(e.a)
                 }
 
-                JassExprOp.UnNot -> {
+                JassExprOp.UNNOT -> {
                     builder.append("!")
                     expr(e.a)
                 }
 
+                else -> {}
             }
 
             is JassFun -> {

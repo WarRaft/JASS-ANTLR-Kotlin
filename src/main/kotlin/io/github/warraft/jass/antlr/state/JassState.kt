@@ -4,7 +4,6 @@ import io.github.warraft.JassLexer
 import io.github.warraft.JassParser
 import io.github.warraft.JassParser.*
 import io.github.warraft.jass.antlr.psi.*
-import io.github.warraft.jass.antlr.state.ext.antlr.typedef
 import io.github.warraft.jass.antlr.state.ext.lsp4j.*
 import io.github.warraft.jass.antlr.state.ext.lsp4j.formatting.formattingEx
 import io.github.warraft.languages.antlr.state.LanguageState
@@ -15,17 +14,9 @@ import org.eclipse.lsp4j.*
 class JassState : LanguageState() {
     val states: MutableList<JassState> = mutableListOf()
 
-    val typeMap: MutableMap<String, JassHandleType> = mutableMapOf()
-    val types: MutableList<JassHandleType> = mutableListOf()
-
-    val natives: MutableList<JassFun> = mutableListOf()
-    val globals: MutableList<JassVar> = mutableListOf()
-    val functions: MutableList<JassFun> = mutableListOf()
-
+    val typeScope = JassTypeScope(this)
     val varScope = JassVarScope(this)
     val funScope = JassFunScope(this)
-
-    val funMap: MutableMap<String, JassFun> = mutableMapOf()
 
     override fun completion(): List<CompletionItem> = completionExt()
     override fun hover(params: HoverParams?): Hover? = hoverExt(params)
@@ -34,7 +25,6 @@ class JassState : LanguageState() {
     override fun documentHighlight(params: DocumentHighlightParams?): List<DocumentHighlight> = documentHighlightExt(params)
     override fun references(params: ReferenceParams?): MutableList<out Location?> = referencesExt(params)
     override fun formatting(params: DocumentFormattingParams?): List<TextEdit> = formattingEx(params)
-
 
     override fun lexer(stream: CharStream): Lexer = JassLexer(stream)
     override fun parser(stream: CommonTokenStream): Parser = JassParser(stream)
@@ -47,14 +37,9 @@ class JassState : LanguageState() {
             if (s is JassState) this.states.add(s)
         }
 
-        typeMap.clear()
-        types.clear()
-        natives.clear()
-        globals.clear()
-        functions.clear()
+        typeScope.clear()
         varScope.clear()
         funScope.clear()
-        funMap.clear()
 
         super.parse(stream, states, version)
 
@@ -73,7 +58,7 @@ class JassState : LanguageState() {
                         for (ctx in it.variable()) JassVar.parse(ctx, null, this)
                     }
 
-                    is TypeContext -> typedef(it)
+                    is TypeContext -> JassType.parse(it, this)
                     is NativeRuleContext -> JassFun.parse(it, null, this)
                     is FunctionContext -> JassFun.parse(it, null, this)
                 }

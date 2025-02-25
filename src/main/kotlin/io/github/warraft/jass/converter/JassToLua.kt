@@ -6,7 +6,6 @@ import io.github.warraft.jass.antlr.utils.JassFakeName.Companion.LuaKeywords
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.antlr.psi.*
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
-import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import java.nio.file.Path
 
 class JassToLua(
@@ -21,22 +20,14 @@ class JassToLua(
 
     override fun isKeyword(name: String): Boolean = LuaKeywords.contains(name)
 
-    override fun type(t: JassHandleType) {
-        builder.append("---@class ${t.name}")
 
-        if (t.parent != null) builder
-            .append(":")
-            .append(t.parent.name)
-        builder.append("\n")
-    }
-
-    override fun typename(type: JassTypeBase?, array: Boolean): String {
+    override fun typename(type: JassTypeName?, array: Boolean): String {
         val a = if (array) "[]" else ""
         return when (type) {
-            is JassBoolType -> "boolean$a"
-            is JassIntType -> "number$a integer"
-            is JassRealType -> "number$a real"
-            is JassCodeType -> "function"
+            //is JassBoolType -> "boolean$a"
+            //is JassIntType -> "number$a integer"
+            //is JassRealType -> "number$a real"
+            //is JassCodeType -> "function"
             else -> type?.name ?: "missing"
         }
     }
@@ -69,7 +60,7 @@ class JassToLua(
             }
         }
 
-        if (f.type !is JassUndefinedType) {
+        if (f.type == null) {
             builder.append("---@return ${typename(f.type)}\n")
         }
 
@@ -109,8 +100,8 @@ class JassToLua(
     }
 
     override fun opname(op: JassExprOp, a: JassNodeBase, b: JassNodeBase): String = when (op) {
-        JassExprOp.Add -> {
-            if (a.type is JassStrType || b.type is JassStrType) ".."
+        JassExprOp.ADD -> {
+            if (a.type == b.type) ".."
             else "+"
         }
 
@@ -145,35 +136,36 @@ class JassToLua(
             }
 
             is JassExpr -> when (e.op) {
-                JassExprOp.Get -> expr(e.a)
-                JassExprOp.Set -> {
+                JassExprOp.GET -> expr(e.a)
+                JassExprOp.SET -> {
                     println("🍒Lua: expr Set!!!")
                 }
 
-                JassExprOp.Add, JassExprOp.Sub,
-                JassExprOp.Mul, JassExprOp.Div,
-                JassExprOp.Lt, JassExprOp.LtEq, JassExprOp.Gt, JassExprOp.GtEq,
-                JassExprOp.Eq, JassExprOp.Neq,
-                JassExprOp.And, JassExprOp.Or,
+                JassExprOp.ADD, JassExprOp.SUB,
+                JassExprOp.MUL, JassExprOp.DIV,
+                JassExprOp.LT, JassExprOp.LTEQ, JassExprOp.GT, JassExprOp.GTEQ,
+                JassExprOp.EQ, JassExprOp.NEQ,
+                JassExprOp.AND, JassExprOp.OR,
                     -> if (e.a != null && e.b != null)
                     expr(e.op, e.a, e.b)
 
-                JassExprOp.Paren -> {
+                JassExprOp.PAREN -> {
                     builder.append("(")
                     expr(e.a)
                     builder.append(")")
                 }
 
-                JassExprOp.UnSub -> {
+                JassExprOp.UNSUB -> {
                     builder.append("-")
                     expr(e.a)
                 }
 
-                JassExprOp.UnNot -> {
+                JassExprOp.UNNOT -> {
                     builder.append("not ")
                     expr(e.a)
                 }
 
+                else -> {}
             }
 
             is JassFun -> {

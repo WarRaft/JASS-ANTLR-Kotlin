@@ -5,7 +5,6 @@ package io.github.warraft.jass.converter
 import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.antlr.psi.*
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
-import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import java.nio.file.Path
 
 class JassToJass(
@@ -18,16 +17,7 @@ class JassToJass(
     fakename = fakename,
 ) {
 
-    override fun type(t: JassHandleType) {
-        builder.append("type ${t.name}")
-
-        if (t.parent != null) builder
-            .append(" extends ")
-            .append(t.parent.name)
-        builder.append("\n")
-    }
-
-    override fun typename(type: JassTypeBase?, array: Boolean): String = type?.name ?: "missing"
+    override fun typename(type: JassTypeName?, array: Boolean): String = type?.name ?: "missing"
 
     override fun global(v: JassVar) {
         builder.append("\t")
@@ -46,9 +36,9 @@ class JassToJass(
     }
 
     override fun globals() {
-        if (state.globals.isEmpty()) return
+        if (state.varScope.globals.isEmpty()) return
         builder.append("globals\n")
-        state.globals.forEach(::global)
+        state.varScope.globals.forEach(::global)
         builder.append("endglobals\n")
     }
 
@@ -73,7 +63,7 @@ class JassToJass(
         }
 
         builder.append(" returns ")
-        if (f.type is JassUndefinedType) {
+        if (f.type == null) {
             builder.append("nothing")
         } else {
             builder.append(typename(f.type))
@@ -118,35 +108,36 @@ class JassToJass(
             }
 
             is JassExpr -> when (e.op) {
-                JassExprOp.Get -> expr(e.a)
-                JassExprOp.Set -> {
+                JassExprOp.GET -> expr(e.a)
+                JassExprOp.SET -> {
                     println("⚠️JassExprOp.Set")
                 }
 
-                JassExprOp.Add, JassExprOp.Sub,
-                JassExprOp.Mul, JassExprOp.Div,
-                JassExprOp.Lt, JassExprOp.LtEq, JassExprOp.Gt, JassExprOp.GtEq,
-                JassExprOp.Eq, JassExprOp.Neq,
-                JassExprOp.And, JassExprOp.Or,
+                JassExprOp.ADD, JassExprOp.SUB,
+                JassExprOp.MUL, JassExprOp.DIV,
+                JassExprOp.LT, JassExprOp.LTEQ, JassExprOp.GT, JassExprOp.GTEQ,
+                JassExprOp.EQ, JassExprOp.NEQ,
+                JassExprOp.AND, JassExprOp.OR,
                     -> if (e.a != null && e.b != null)
                     expr(e.op, e.a, e.b)
 
-                JassExprOp.Paren -> {
+                JassExprOp.PAREN -> {
                     builder.append("(")
                     expr(e.a)
                     builder.append(")")
                 }
 
-                JassExprOp.UnSub -> {
+                JassExprOp.UNSUB -> {
                     builder.append("-")
                     expr(e.a)
                 }
 
-                JassExprOp.UnNot -> {
+                JassExprOp.UNNOT -> {
                     builder.append("not ")
                     expr(e.a)
                 }
 
+                else -> {}
             }
 
             is JassFun -> {

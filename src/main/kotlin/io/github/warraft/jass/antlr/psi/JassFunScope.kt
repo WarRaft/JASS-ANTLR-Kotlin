@@ -5,12 +5,14 @@ import io.github.warraft.jass.antlr.state.JassState
 class JassFunScope(
     val state: JassState,
 ) {
+    val natives: MutableList<JassFun> = mutableListOf()
+    val functions: MutableList<JassFun> = mutableListOf()
+
     val definitions: MutableMap<String, MutableList<JassFun>> = mutableMapOf()
     val usages: MutableMap<String, MutableList<JassFun>> = mutableMapOf()
 
     fun add(f: JassFun?, definition: Boolean = false) {
-        val name = f?.name
-        if (name == null) return
+        val name = f?.name ?: return
         f.scope = this
         usages.getOrPut(name) { mutableListOf() }.add(f)
         if (definition) {
@@ -40,6 +42,9 @@ class JassFunScope(
     }
 
     fun clear() {
+        natives.clear()
+        functions.clear()
+
         definitions.clear()
         usages.clear()
     }

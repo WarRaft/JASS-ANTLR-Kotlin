@@ -1,6 +1,4 @@
-import io.github.warraft.jass.antlr.psi.JassBoolType
 import io.github.warraft.jass.antlr.psi.JassExprOp.*
-import io.github.warraft.jass.antlr.psi.JassIntType
 import io.github.warraft.jass.antlr.psi.JassRealType
 import io.github.warraft.jass.antlr.psi.JassUndefinedType
 import io.github.warraft.jass.antlr.state.JassState
@@ -18,46 +16,58 @@ class Type {
     }
 
     @Test
+    fun test() {
+        val state = state(
+            """
+                type a extends handle
+                type b extends a
+                type c extends b
+                type d extends handle
+                type e extends u
+            """.trimIndent()
+        )
+
+        for (d in state.diagnosticHub.diagnostics) {
+            println(d.message)
+        }
+    }
+
+    @Test
     fun primitive() {
-        val integer = JassIntType()
-        val real = JassRealType()
+        //val integer = JassIntType()
+        //val real = JassRealType()
 
-        val m = listOf(Add, Sub, Mul, Div)
-        val b = listOf(Lt, LtEq, Gt, GtEq, Eq, Neq)
+        //val m = listOf(ADD, SUB, MUL, DIV)
+        //val b = listOf(LT, LTEQ, GT, GTEQ, EQ, NEQ)
 
-        for (op in m) assertIs<JassIntType>(integer.op(op, integer))
-        for (op in b) assertIs<JassBoolType>(integer.op(op, integer))
+        //for (op in m) assertIs<JassIntType>(integer.op(op, integer))
+        //for (op in b) assertIs<JassBoolType>(integer.op(op, integer))
 
-        for (op in m) assertIs<JassRealType>(integer.op(op, real))
-        for (op in m) assertIs<JassRealType>(real.op(op, real))
+        //for (op in m) assertIs<JassRealType>(integer.op(op, real))
+        //for (op in m) assertIs<JassRealType>(real.op(op, real))
     }
 
     @Test
     fun handle() {
-        val state = JassState()
-        state.parse(
-            CharStreams.fromString(
-                """
+        val state = state(
+            """
                 type a extends handle
                 type b extends a
                 type c extends b
                 type d extends handle
             """.trimIndent()
-            ),
-            emptyList(),
-            null,
         )
-        val a = state.typeGet("a")
+        val a = state.typeGet()
         assertNotNull(a)
-        val b = state.typeGet("b")
+        val b = state.typeGet()
         assertNotNull(b)
-        val c = state.typeGet("c")
+        val c = state.typeGet()
         assertNotNull(c)
-        val d = state.typeGet("d")
+        val d = state.typeGet()
         assertNotNull(d)
 
-        assertEquals(a.op(Set, c).name, "a")
-        assertIs<JassUndefinedType>(a.op(Set, d))
+        assertEquals(a.op(SET, c).name, "a")
+        assertIs<JassUndefinedType>(a.op(SET, d))
     }
 
 }

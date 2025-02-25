@@ -21,11 +21,13 @@ class JassStateTest {
                     set bj_PI = 1 + DD
                 endfunction
                 """.trimIndent()
-                )
+                ),
+                emptyList(),
+                null,
             )
         }
 
-        for (e in s.diagnosticHub.diagnostics){
+        for (e in s.diagnosticHub.diagnostics) {
             println(e.message)
         }
 
@@ -45,7 +47,9 @@ class JassStateTest {
                 function main takes nothing returns nothing
                 endfunction
                 """.trimIndent()
-                )
+                ),
+                emptyList(),
+                null,
             )
         }
     }
@@ -66,23 +70,12 @@ class JassStateTest {
                 endfunction
                 
                 """.trimIndent()
-            )
+            ),
+            emptyList(),
+            null,
         )
         println("🔥")
-        for (g in state.globals) {
-            println(g)
-        }
 
-        for (f in state.functions) {
-            for (s in f.stmt) {
-                println(s)
-            }
-
-        }
-
-        for (g in state.diagnosticHub.diagnostics) {
-            println(g)
-        }
 
         //assert(state.errors.size == 1)
     }
@@ -97,7 +90,9 @@ class JassStateTest {
                     call
                 endfunction
                 """.trimIndent()
-            )
+            ),
+            emptyList(),
+            null,
         )
 
         print(SemanticTokenType.entries.map { it ->
@@ -121,7 +116,8 @@ class JassStateTest {
                     set anal = 2
                 endfunction
                 """.trimIndent()
-            )
+            ),emptyList(),
+            null,
         )
     }
 
@@ -153,7 +149,8 @@ class JassStateTest {
                     set l__Array[3] = -1
                 endfunction
                 """.trimIndent()
-            )
+            ),emptyList(),
+            null,
         )
 
         /*
@@ -175,17 +172,12 @@ class JassStateTest {
                     boolean b = null == "b"   
                 endglobals
                 """.trimIndent()
-            )
+            ),emptyList(),
+            null,
         )
 
         //state.errors.forEach { println("⚠️ $it") }
 
-        for (f in state.functions) {
-            println("=== ${f.name}")
-            for (p in f.param) {
-                println(p)
-            }
-        }
 
         //assert(state.errors.isEmpty())
     }
@@ -208,17 +200,13 @@ class JassStateTest {
                     return SquareRoot(dx * dx + dy * dy)
                 endfunction
                 """.trimIndent()
-            )
+            ),emptyList(),
+            null,
         )
 
         //state.errors.forEach { println("⚠️ $it") }
 
-        for (f in state.functions) {
-            println("=== ${f.name}")
-            for (p in f.param) {
-                println(p)
-            }
-        }
+
 
         //assert(state.errors.isEmpty())
     }

@@ -40,15 +40,21 @@ fun JassState.completionExt(): List<CompletionItem> {
     }
 
     fun get(state: JassState) {
+        /*
         for (g in state.types) type(g.name)
-        for (g in state.globals) {
+
+         */
+        for (g in state.varScope.globals) {
             list.add(CompletionItem(g.name).apply {
                 kind = CompletionItemKind.Variable
                 detail = "global"
             })
         }
-        for (f in state.natives) function(f)
-        for (f in state.functions) function(f)
+
+        state.funScope.also {
+            for (f in it.natives) function(f)
+            for (f in it.functions) function(f)
+        }
     }
 
     for (state in states) get(state)

@@ -39,6 +39,7 @@ class JassFakeName(val state: JassState) {
     }
 
     fun generate() {
+        /*
         for (g in state.globals) {
             g.fakename = next()
         }
@@ -55,6 +56,8 @@ class JassFakeName(val state: JassState) {
                 p.fakename = next()
             }
         }
+
+         */
     }
 
     init {

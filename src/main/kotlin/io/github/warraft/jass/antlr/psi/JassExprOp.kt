@@ -1,31 +1,31 @@
 package io.github.warraft.jass.antlr.psi
 
 enum class JassExprOp {
-    UnSub,
-    UnNot,
-    Mul, Div,
-    Add, Sub,
-    Lt, LtEq, Gt, GtEq,
-    Eq, Neq,
-    And, Or,
-    Get,
-    Set,
-    Paren;
+    UNSUB,
+    UNNOT,
+    MUL, DIV,
+    ADD, SUB,
+    LT, LTEQ, GT, GTEQ,
+    EQ, NEQ,
+    AND, OR,
+    GET,
+    SET,
+    PAREN;
 
     companion object {
-        fun fromSymbol(symbol: String?): JassExprOp? = when (symbol) {
-            "*" -> Mul
-            "/" -> Div
-            "+" -> Add
-            "-" -> Sub
-            "<" -> Lt
-            "<=" -> LtEq
-            ">" -> Gt
-            ">=" -> GtEq
-            "==" -> Eq
-            "!=" -> Neq
-            "and" -> And
-            "or" -> Or
+        fun parse(symbol: String?): JassExprOp? = when (symbol) {
+            "*" -> MUL
+            "/" -> DIV
+            "+" -> ADD
+            "-" -> SUB
+            "<" -> LT
+            "<=" -> LTEQ
+            ">" -> GT
+            ">=" -> GTEQ
+            "==" -> EQ
+            "!=" -> NEQ
+            "and" -> AND
+            "or" -> OR
             else -> null
         }
     }

@@ -2,32 +2,19 @@ package io.github.warraft.jass.antlr.psi
 
 import io.github.warraft.JassParser.*
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
-import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import io.github.warraft.jass.antlr.state.JassState
-import io.github.warraft.jass.antlr.state.ext.antlr.expr
-import io.github.warraft.jass.antlr.state.ext.antlr.typeFromString
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode.ERROR
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenModifier.DEFINITION
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType.*
 import io.github.warraft.languages.lsp4j.utils.DiagnosticRelatedInformationEx
 import io.github.warraft.languages.lsp4j.utils.RangeEx
 import org.antlr.v4.runtime.ParserRuleContext
-import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.TerminalNode
 import org.eclipse.lsp4j.Range
 import org.eclipse.lsp4j.SymbolKind
 
-
-class JassVar(
-    val state: JassState,
-) : JassNodeBase() {
+class JassVar(override val state: JassState) : JassNodeBase() {
     lateinit var scope: JassVarScope
-
-    var symbol: Token? = null
-
-    override var type: JassTypeBase? = null
-    var name: String? = null
-    var fakename: String = ""
 
     var array: Boolean = false
 
@@ -38,8 +25,6 @@ class JassVar(
 
     var index: JassExpr? = null
     var expr: JassExpr? = null
-
-    var definition: ParserRuleContext? = null
 
     override fun toString(): String {
         val list: MutableList<String> = mutableListOf()
@@ -52,7 +37,7 @@ class JassVar(
         if (param) list.add("param")
         else if (local) list.add("local")
 
-        type?.let { list.add(type!!.name) }
+        //type?.let { list.add(type!!.name) }
 
         if (array) list.add("[]")
 
@@ -135,7 +120,7 @@ class JassVar(
                     v.also {
                         it.constant = constantCtx != null
                         it.name = nameCtx.text
-                        it.type = state.typeFromString(typeName)
+                        //it.type = state.typeFromString(typeName)
                         it.array = arrayCtx != null
                         it.scope = function?.varScope ?: state.varScope
 
@@ -164,7 +149,7 @@ class JassVar(
                         is VariableContext -> {
                             if (eqCtx != null) {
                                 exprCtx = ctx.expr()
-                                v.expr = state.expr(exprCtx, function)
+                                v.expr = JassExpr.parse(state, exprCtx, function)
                                 if (v.expr == null) {
                                     if (v.array) state.diagnosticHub.add(eqCtx, ERROR, "Cannot set array")
                                     else state.diagnosticHub.add(eqCtx, ERROR, "Missing expression")
@@ -172,6 +157,7 @@ class JassVar(
                                     if (v.array) {
                                         state.diagnosticHub.add(exprCtx, ERROR, "Cannot set array")
                                     } else {
+                                        /*
                                         val ta: JassTypeBase? = v.type
                                         val tb: JassTypeBase? = v.expr?.type
                                         if (ta == null || tb == null) {
@@ -182,6 +168,8 @@ class JassVar(
                                                 state.diagnosticHub.add(exprCtx, ERROR, "Cannot set ${ta.name} with ${tb.name}")
                                             }
                                         }
+
+                                         */
                                     }
                                 }
                             }
@@ -193,7 +181,7 @@ class JassVar(
                         v.local = !global
                         it.symbol = nameCtx.symbol
                         state.tokenTree.add(it)
-                        if (global) state.globals.add(v)
+                        if (global) state.varScope.globals.add(v)
                         else function.param.add(it)
                     }
                 }
@@ -229,8 +217,8 @@ class JassVar(
             }
 
             v.also {
-                it.expr = state.expr(exprCtx, function)
-                it.index = state.expr(indexCtx, function)
+                it.expr = JassExpr.parse(state, exprCtx, function)
+                it.index = JassExpr.parse(state, indexCtx, function)
             }
 
             if (nameCtx == null) {
@@ -284,9 +272,12 @@ class JassVar(
                 if (i == null) {
                     state.diagnosticHub.add(brackRange, ERROR, "Missing index")
                 } else {
+                    /*
                     if (JassIntType().op(JassExprOp.Set, i.type) !is JassIntType) {
                         state.diagnosticHub.add(brackRange, ERROR, "Index must be an integer, ${i.type.name} passed")
                     }
+
+                     */
                 }
             } else {
                 if (lBrackCtx != null || rBrackCtx != null) {
@@ -306,9 +297,9 @@ class JassVar(
                         return v
                     }
 
+                    /*
                     val ta = d.type
                     val tb = v.expr?.type
-
                     if (ta == null || tb == null) {
                         state.diagnosticHub.add(ctx, ERROR, "Some type is null")
                     } else {
@@ -318,6 +309,8 @@ class JassVar(
                             )
                         }
                     }
+
+                     */
                 }
             }
 

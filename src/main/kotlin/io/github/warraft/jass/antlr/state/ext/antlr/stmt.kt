@@ -30,7 +30,7 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
                     .add(ctx.LOOP(), SemanticTokenType.KEYWORD)
                     .add(ctx.ENDLOOP(), SemanticTokenType.KEYWORD)
 
-                val l = JassLoop()
+                val l = JassLoop(state = this)
                 list.add(l)
                 stmt(ctx.stmt(), l.stmt, function)
             }
@@ -38,7 +38,7 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
             is StmtExitWhenContext -> {
                 semanticHub.add(ctx.EXITWHEN(), SemanticTokenType.KEYWORD)
 
-                val exp = expr(ctx.expr(), function)
+                val exp = JassExpr.parse(this, ctx.expr(), function)
                 if (exp == null) {
                     diagnosticHub.add(
                         ctx.EXITWHEN(),
@@ -46,7 +46,7 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
                         "Missing expression"
                     )
                 } else {
-                    list.add(JassExitWhen(expr = exp))
+                    list.add(JassExitWhen(state = this, expr = exp))
                 }
             }
 
@@ -54,7 +54,7 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
             is StmtReturnContext -> {
                 semanticHub.add(ctx.RETURN(), SemanticTokenType.KEYWORD)
 
-                val e = expr(ctx.expr(), function)
+                val e = JassExpr.parse(this, ctx.expr(), function)
                 if (e != null) {
                     val v = e.a
                     if (v is JassVar && v.array && v.index == null) {
@@ -65,13 +65,13 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
                         )
                     }
                 }
-                list.add(JassReturn(expr = e))
+                list.add(JassReturn(state = this, expr = e))
             }
             //endregion
 
             //region StmtIfContext
             is StmtIfContext -> {
-                val e = expr(ctx.expr(), function)
+                val e = JassExpr.parse(this, ctx.expr(), function)
                 if (e == null) {
                     diagnosticHub.add(
                         ctx.IF(),
@@ -80,7 +80,7 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
                     )
                     continue
                 }
-                val nodeIf = JassIf(expr = e)
+                val nodeIf = JassIf(state = this, expr = e)
 
                 semanticHub
                     .add(ctx.IF(), SemanticTokenType.KEYWORD)
@@ -91,7 +91,7 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
                 stmt(ctx.stmt(), nodeIf.stmt, function)
 
                 for (elseifctx: ElseifContext in ctx.elseif()) {
-                    val e = expr(elseifctx.expr(), function)
+                    val e = JassExpr.parse(this, elseifctx.expr(), function)
                     semanticHub
                         .add(elseifctx.ELSEIF(), SemanticTokenType.KEYWORD)
                         .add(elseifctx.THEN(), SemanticTokenType.KEYWORD)
@@ -103,7 +103,7 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
                         )
                         continue
                     }
-                    val nodeElseif = JassIf(expr = e)
+                    val nodeElseif = JassIf(state = this, expr = e)
                     nodeIf.elseifs.add(nodeElseif)
                     stmt(elseifctx.stmt(), nodeElseif.stmt, function)
                 }
@@ -111,7 +111,7 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
                 val elsectx: ElseRuleContext? = ctx.elseRule()
                 if (elsectx != null) {
                     semanticHub.add(elsectx.ELSE(), SemanticTokenType.KEYWORD)
-                    val elser = JassIf()
+                    val elser = JassIf(state = this)
                     nodeIf.elser = elser
                     stmt(elsectx.stmt(), elser.stmt, function)
                 }

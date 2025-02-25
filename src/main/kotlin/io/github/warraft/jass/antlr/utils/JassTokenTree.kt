@@ -1,28 +1,17 @@
 package io.github.warraft.jass.antlr.utils
 
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
-import io.github.warraft.jass.antlr.psi.JassFun
-import io.github.warraft.jass.antlr.psi.JassVar
 import org.antlr.v4.runtime.Token
-import org.antlr.v4.runtime.tree.TerminalNode
 import org.eclipse.lsp4j.Position
-import java.util.TreeMap
+import java.util.*
 
 class JassTokenTree {
     private val lines = mutableMapOf<Int, TreeMap<Int, Holder>>()
 
-    fun add(v: JassFun?) = add(v, v?.symbol)
-    fun add(v: JassVar?) = add(v, v?.symbol)
-
-    fun add(node: JassNodeBase?, token: Token?) {
-        if (node == null || token == null) return
+    fun add(node: JassNodeBase?) {
+        val token = node?.symbol ?: return
         val l = lines.getOrPut(token.line) { TreeMap<Int, Holder>() }
         l[token.charPositionInLine] = Holder(node, token)
-    }
-
-    fun add(node: JassNodeBase?, token: TerminalNode?) {
-        if (node == null || token == null) return
-        add(node, token.symbol)
     }
 
     fun find(pos: Position?): JassNodeBase? {

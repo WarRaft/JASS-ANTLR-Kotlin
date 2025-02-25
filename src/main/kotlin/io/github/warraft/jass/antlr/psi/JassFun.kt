@@ -1,12 +1,10 @@
 package io.github.warraft.jass.antlr.psi
 
 import io.github.warraft.JassParser.*
+import io.github.warraft.jass.antlr.psi.JassTypeName.Companion.CODE
 import io.github.warraft.jass.antlr.psi.base.JassNodeBase
-import io.github.warraft.jass.antlr.psi.base.JassTypeBase
 import io.github.warraft.jass.antlr.state.JassState
-import io.github.warraft.jass.antlr.state.ext.antlr.expr
 import io.github.warraft.jass.antlr.state.ext.antlr.stmt
-import io.github.warraft.jass.antlr.state.ext.antlr.typeFromString
 import io.github.warraft.jass.lsp4j.diagnostic.JassDiagnosticCode.ERROR
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenModifier.DECLARATION
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenModifier.DOCUMENTATION
@@ -15,27 +13,17 @@ import io.github.warraft.languages.lsp4j.service.document.semantic.token.Semanti
 import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType.KEYWORD
 import io.github.warraft.languages.lsp4j.utils.DiagnosticRelatedInformationEx
 import org.antlr.v4.runtime.ParserRuleContext
-import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.TerminalNode
 import org.eclipse.lsp4j.DocumentSymbol
 import org.eclipse.lsp4j.SymbolKind
 
-class JassFun(
-    val state: JassState,
-    var name: String? = null,
-    var native: Boolean = false,
-    var ref: Boolean = false,
-    override var type: JassTypeBase = JassUndefinedType(),
-    var symbol: Token? = null,
-    var definition: ParserRuleContext? = null,
-) : JassNodeBase() {
+class JassFun(override val state: JassState) : JassNodeBase() {
+
     val varScope: JassVarScope = JassVarScope(
         state = state,
         function = this
     )
     lateinit var scope: JassFunScope
-
-    var fakename: String = ""
 
     val param: MutableList<JassVar> = mutableListOf()
     val arg: MutableList<JassExpr> = mutableListOf()
@@ -44,6 +32,9 @@ class JassFun(
     val comments = StringBuilder()
 
     var documentSymbol: DocumentSymbol? = null
+
+    var native: Boolean = false
+    var ref: Boolean = false
 
     override fun toString(): String = "JassFun(name='$name'):$type"
 
@@ -60,9 +51,7 @@ class JassFun(
             var rParenCtx: TerminalNode? = null
             var exprsCtx: List<ExprContext>? = null
 
-            val f = JassFun(
-                state = state
-            )
+            val f = JassFun(state)
 
             when (ctx) {
                 is NativeRuleContext,
@@ -157,8 +146,10 @@ class JassFun(
                     //endregion
 
                     //region Holder
-                    if (f.native) state.natives.add(f)
-                    else state.functions.add(f)
+                    state.funScope.also {
+                        if (f.native) it.natives.add(f)
+                        else it.functions.add(f)
+                    }
                     //endregion
 
                     //region Takes
@@ -187,8 +178,9 @@ class JassFun(
                                 state.semanticHub.add(idCtx, SemanticTokenType.TYPE)
                                 f.documentSymbol?.detail = idCtx.text
 
-                                f.type = state.typeFromString(idCtx.text)
-                                if (f.type is JassUndefinedType) state.diagnosticHub.add(idCtx, ERROR, "Unknown type: ${idCtx.text}")
+
+                                //f.type = state.typeFromString(idCtx.text)
+                                //if (f.type is JassUndefinedType) state.diagnosticHub.add(idCtx, ERROR, "Unknown type: ${idCtx.text}")
                             }
                         }
                     }
@@ -230,7 +222,7 @@ class JassFun(
                     state.semanticHub.add(ctx.FUNCTION(), KEYWORD)
 
                     f.also {
-                        it.type = JassCodeType()
+                        it.type = JassTypeName(CODE)
                         it.ref = true
                     }
                 }
@@ -238,7 +230,7 @@ class JassFun(
 
             val exprs = mutableListOf<JassExpr?>()
             if (exprsCtx != null) for (ectx in exprsCtx) {
-                exprs.add(state.expr(ectx, function))
+                exprs.add(JassExpr.parse(state, ectx, function))
             }
 
             if (nameCtx == null) {
@@ -293,18 +285,21 @@ class JassFun(
                         continue
                     }
                     f.arg.add(it)
+                    /*
+                                        val ta = params.getOrNull(index)?.type ?: JassUndefinedType()
+                                        val tb = it.type
+                                        if (tb is JassNullType) continue
 
-                    val ta = params.getOrNull(index)?.type ?: JassUndefinedType()
-                    val tb = it.type
-                    if (tb is JassNullType) continue
 
-                    if (ta.op(JassExprOp.Set, tb) is JassUndefinedType) {
-                        state.diagnosticHub.add(
-                            ectx,
-                            ERROR,
-                            "Wrong type. Need ${ta.name}, pass ${tb.name}."
-                        )
-                    }
+                                        if (ta.op(JassExprOp.Set, tb) is JassUndefinedType) {
+                                            state.diagnosticHub.add(
+                                                ectx,
+                                                ERROR,
+                                                "Wrong type. Need ${ta.name}, pass ${tb.name}."
+                                            )
+                                        }
+
+                                         */
                 }
             }
 
