@@ -46,8 +46,6 @@ fun TextDocumentServiceEx.stateGet(p: Path): LanguageState? {
 }
 
 fun TextDocumentServiceEx.stateUpdate(path: Path, text: String, version: Int) {
-    if (text != null) return
-
     val s = stateGet(path)
     if (s == null) return
     val sdk = mutableListOf<LanguageState>()

@@ -5,6 +5,8 @@ plugins {
     antlr
     // https://kotlinlang.org/docs/gradle-configure-project.html
     kotlin("jvm") version "2.1.0"
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlin.plugin.serialization/org.jetbrains.kotlin.plugin.serialization.gradle.plugin
+    kotlin("plugin.serialization") version "2.1.10"
     // https://mvnrepository.com/artifact/com.vanniktech/gradle-maven-publish-plugin
     id("com.vanniktech.maven.publish") version "0.30.0"
 }
@@ -19,6 +21,9 @@ dependencies {
     // https://docs.gradle.org/current/userguide/antlr_plugin.html#sec:antlr_dependency_management
     // https://mvnrepository.com/artifact/org.antlr/antlr4-maven-plugin
     antlr("org.antlr:antlr4:4.13.2")
+
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
     implementation("org.eclipse.lsp4j:org.eclipse.lsp4j:0.23.1")
     implementation("org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.23.1")

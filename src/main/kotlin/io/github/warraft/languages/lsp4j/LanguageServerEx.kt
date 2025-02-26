@@ -25,8 +25,6 @@ class tds : TextDocumentService {
     }
 }
 
-// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#headerPart
-
 class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClientAware {
     private val workspaceService = WorkspaceServiceEx(this)
 

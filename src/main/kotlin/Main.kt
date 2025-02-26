@@ -2,9 +2,8 @@ import io.github.warraft.jass.antlr.state.JassState
 import io.github.warraft.jass.converter.JassToAs
 import io.github.warraft.jass.converter.JassToJass
 import io.github.warraft.jass.converter.JassToLua
-import io.github.warraft.languages.lsp4j.LanguageServerEx
+import io.github.warraft.lsp.LanguageServer
 import org.antlr.v4.runtime.CharStreams
-import org.eclipse.lsp4j.launch.LSPLauncher.createServerLauncher
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.isReadable
@@ -152,19 +151,8 @@ class Main(val args: Array<String>) {
 
 fun main(args: Array<String>) {
     when (args.firstOrNull()) {
-        "-lsp4j" -> {
-            val server = LanguageServerEx(args)
-            val launcher = createServerLauncher(server, System.`in`, System.out)
-            server.connect(launcher.remoteProxy)
-            launcher.startListening().get()
-        }
-
-        "-ping" -> {
-            print("pong")
-        }
-
-        else -> {
-            Main(args)
-        }
+        "-lsp" -> LanguageServer()
+        "-ping" -> print("pong")
+        else -> Main(args)
     }
 }
