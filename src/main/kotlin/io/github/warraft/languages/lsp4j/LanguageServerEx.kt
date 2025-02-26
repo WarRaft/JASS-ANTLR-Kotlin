@@ -10,9 +10,28 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either
 import org.eclipse.lsp4j.services.*
 import java.util.concurrent.CompletableFuture
 
+class tds : TextDocumentService {
+    override fun didOpen(params: DidOpenTextDocumentParams?) {
+    }
+
+    override fun didChange(params: DidChangeTextDocumentParams?) {
+    }
+
+    override fun didClose(params: DidCloseTextDocumentParams?) {
+    }
+
+    override fun didSave(params: DidSaveTextDocumentParams?) {
+
+    }
+}
+
+// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#headerPart
+
 class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClientAware {
     private val workspaceService = WorkspaceServiceEx(this)
-    val textDocumentService = TextDocumentServiceEx(this)
+
+    //val textDocumentService = TextDocumentServiceEx(this)
+    val textDocumentService = tds()
 
     var client: LanguageClient? = null
 
@@ -41,9 +60,11 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
                 openClose = true
                 change = TextDocumentSyncKind.Full
             })
-            workspace = WorkspaceServerCapabilities()
+
+            //workspace = WorkspaceServerCapabilities()
 
             // https://code.visualstudio.com/api/language-extensions/semantic-highlight-guide
+            /*
             semanticTokensProvider = SemanticTokensWithRegistrationOptions(
                 SemanticTokensLegend(
                     SemanticTokenType.entries.map { it -> case(it.name) },
@@ -52,19 +73,25 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
                 true,
             )
 
+             */
+
+            /*
             completionProvider = CompletionOptions().apply {
                 resolveProvider = true
                 triggerCharacters = listOf()
             }
-            documentHighlightProvider = Either.forRight(DocumentHighlightOptions())
-            foldingRangeProvider = Either.forRight(FoldingRangeProviderOptions())
-            documentSymbolProvider = Either.forRight(DocumentSymbolOptions())
-            diagnosticProvider = DiagnosticRegistrationOptions()
-            hoverProvider = Either.forRight(HoverOptions())
-            referencesProvider = Either.forRight(ReferenceOptions())
-            definitionProvider = Either.forRight(DefinitionOptions())
 
-            documentFormattingProvider = Either.forRight(DocumentFormattingOptions())
+             */
+            //documentHighlightProvider = Either.forRight(DocumentHighlightOptions())
+            //foldingRangeProvider = Either.forRight(FoldingRangeProviderOptions())
+            //documentSymbolProvider = Either.forRight(DocumentSymbolOptions())
+            //diagnosticProvider = DiagnosticRegistrationOptions()
+            //hoverProvider = Either.forRight(HoverOptions())
+            //referencesProvider = Either.forRight(ReferenceOptions())
+            //definitionProvider = Either.forRight(DefinitionOptions())
+
+            //documentFormattingProvider = Either.forRight(DocumentFormattingOptions())
+
 
             //renameProvider = Either.forRight(RenameOptions())
             //linkedEditingRangeProvider = Either.forRight(LinkedEditingRangeRegistrationOptions())

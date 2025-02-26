@@ -25,7 +25,7 @@ class WorkspaceServiceEx(val server: LanguageServerEx) : WorkspaceService {
             list.add(Path.of(script.asJsonPrimitive.asString))
         }
 
-        server.textDocumentService.didChangeSDK(list)
+        //server.textDocumentService.didChangeSDK(list)
     }
 
     override fun didChangeConfiguration(params: DidChangeConfigurationParams) {

@@ -46,6 +46,8 @@ fun TextDocumentServiceEx.stateGet(p: Path): LanguageState? {
 }
 
 fun TextDocumentServiceEx.stateUpdate(path: Path, text: String, version: Int) {
+    if (text != null) return
+
     val s = stateGet(path)
     if (s == null) return
     val sdk = mutableListOf<LanguageState>()
@@ -54,7 +56,9 @@ fun TextDocumentServiceEx.stateUpdate(path: Path, text: String, version: Int) {
         sdk.add(state)
     }
     try {
-        s.parse(CharStreams.fromString(text), sdk, version)
+        s.parse(CharStreams.fromString(""), sdk, version)
+        // TODO
+        //s.parse(CharStreams.fromString(text), sdk, version)
     } catch (e: Throwable) {
         server.client?.showMessage(MessageParams(MessageType.Error, e.stackTraceToString()))
     }

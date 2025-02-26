@@ -14,7 +14,9 @@ fun TextDocumentServiceEx.didChangeSDK(paths: List<Path>) {
             it.path = path
             it.path = path
             it.server = server
-            it.parse(CharStreams.fromPath(path), sdkStateList, 1)
+            // TODO
+            //it.parse(CharStreams.fromPath(path), sdkStateList, 1)
+            it.parse(CharStreams.fromString(""), sdkStateList, 1)
         })
     }
 }
