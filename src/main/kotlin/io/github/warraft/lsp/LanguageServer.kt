@@ -1,15 +1,25 @@
 package io.github.warraft.lsp
 
+import io.github.warraft.language._.antlr.state.LanguageState
 import io.github.warraft.lsp.data.*
+import io.github.warraft.lsp.ext.cancel
+import io.github.warraft.lsp.ext.didChange
+import io.github.warraft.lsp.ext.didOpen
 import io.github.warraft.lsp.ext.initialize
+import io.github.warraft.lsp.ext.semanticTokens
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import java.io.*
+import java.lang.management.ManagementFactory
+import java.nio.file.Path
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#headerPart
 class LanguageServer {
     private val reader = BufferedInputStream(System.`in`)
     private val writer = BufferedOutputStream(System.`out`)
+
+    internal val languageMap = mutableMapOf<Path, String>()
+    internal val stateMap = mutableMapOf<Path, LanguageState>()
 
     val json = Json {
         classDiscriminator = "AnalClassDiscriminator"
@@ -91,7 +101,12 @@ class LanguageServer {
 
             when (message.method) {
                 InitializeParams.METHOD -> initialize(message)
+                "textDocument/didChange" -> didChange(message)
+                "textDocument/didOpen" -> didOpen(message)
+                "textDocument/semanticTokens/full" -> semanticTokens(message)
+                "$/cancelRequest" -> cancel(message)
                 "$/setTrace" -> {}
+
                 else -> log("${message.id} - ${message.method}")
             }
         }
@@ -100,6 +115,19 @@ class LanguageServer {
     init {
         start()
     }
+
+    @Suppress("unused")
+    fun getHeapMemoryUsage(): String {
+        val memoryMXBean = ManagementFactory.getMemoryMXBean()
+        val heapUsage = memoryMXBean.heapMemoryUsage
+        val nonHeapUsage = memoryMXBean.nonHeapMemoryUsage
+
+        return """
+        Heap Memory: Used = ${heapUsage.used / 1024 / 1024}MB, Max = ${heapUsage.max / 1024 / 1024}MB
+        Non-Heap Memory: Used = ${nonHeapUsage.used / 1024 / 1024}MB
+    """.trimIndent()
+    }
+
 
     companion object {
         const val CONTENT_LENGTH = "Content-Length"

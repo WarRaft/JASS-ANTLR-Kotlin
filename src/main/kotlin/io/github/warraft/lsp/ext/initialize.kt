@@ -19,11 +19,11 @@ fun LanguageServer.initialize(message: Message) {
         capabilities = ServerCapabilities(
             textDocumentSync = TextDocumentSyncOptions(
                 openClose = true,
-                change = TextDocumentSyncKind.Incremental
+                change = TextDocumentSyncKind.Full
             ),
             semanticTokensProvider = SemanticTokensOptions(
-                range = true,
-                fool = true,
+                range = false,
+                full = true,
                 legend = SemanticTokensLegend(
                     SemanticTokenType.entries.map { it -> case(it.name) },
                     SemanticTokenModifier.entries.map { it -> case(it.name) },

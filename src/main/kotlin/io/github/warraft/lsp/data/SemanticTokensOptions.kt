@@ -7,6 +7,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SemanticTokensOptions(
     val range: Boolean? = null,
-    val fool: Boolean? = null,
+    val full: Boolean? = null,
     val legend : SemanticTokensLegend,
 )

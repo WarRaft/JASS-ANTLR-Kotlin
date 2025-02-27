@@ -19,7 +19,6 @@ class TextDocumentServiceEx(val server: LanguageServerEx) : TextDocumentService 
     internal val languageMap = mutableMapOf<Path, String>()
     internal val stateMap = mutableMapOf<Path, LanguageState>()
 
-    override fun semanticTokensFull(params: SemanticTokensParams?): CompletableFuture<SemanticTokens> = completedFuture(SemanticTokens(stateGet(params)?.semantic()))
     override fun foldingRange(params: FoldingRangeRequestParams?): CompletableFuture<List<FoldingRange>> = completedFuture(stateGet(params)?.foldingHub?.ranges)
     override fun diagnostic(params: DocumentDiagnosticParams?): CompletableFuture<DocumentDiagnosticReport?> = completedFuture(DocumentDiagnosticReport(RelatedFullDocumentDiagnosticReport(stateGet(params)?.diagnosticHub?.diagnostics)))
     override fun documentSymbol(params: DocumentSymbolParams?): CompletableFuture<List<Either<SymbolInformation?, DocumentSymbol?>?>?>? = completedFuture(stateGet(params)?.documentSymbolHub?.symbols)

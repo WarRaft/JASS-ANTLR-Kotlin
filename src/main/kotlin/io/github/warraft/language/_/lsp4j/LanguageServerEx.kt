@@ -46,16 +46,6 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
             //workspace = WorkspaceServerCapabilities()
 
             // https://code.visualstudio.com/api/language-extensions/semantic-highlight-guide
-            /*
-            semanticTokensProvider = SemanticTokensWithRegistrationOptions(
-                SemanticTokensLegend(
-                    SemanticTokenType.entries.map { it -> case(it.name) },
-                    SemanticTokenModifier.entries.map { it -> case(it.name) },
-                ),
-                true,
-            )
-
-             */
 
             /*
             completionProvider = CompletionOptions().apply {

@@ -17,10 +17,14 @@ import kotlinx.serialization.*
 @Serializable(with = IntOrStringSerializer::class)
 sealed class IntOrString {
     @Serializable
-    data class Ival(val value: Int) : IntOrString()
+    data class Ival(val value: Int) : IntOrString() {
+        override fun toString(): String = "$value"
+    }
 
     @Serializable
-    data class Sval(val value: String) : IntOrString()
+    data class Sval(val value: String) : IntOrString() {
+        override fun toString(): String = "'$value'"
+    }
 
     companion object {
         fun from(value: Any): IntOrString = when (value) {
