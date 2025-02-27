@@ -1,7 +1,7 @@
-import io.github.warraft.jass.antlr.state.JassState
-import io.github.warraft.jass.converter.JassToAs
-import io.github.warraft.jass.converter.JassToJass
-import io.github.warraft.jass.converter.JassToLua
+import io.github.warraft.language.jass.antlr.state.JassState
+import io.github.warraft.language.jass.converter.JassToAs
+import io.github.warraft.language.jass.converter.JassToJass
+import io.github.warraft.language.jass.converter.JassToLua
 import io.github.warraft.lsp.LanguageServer
 import org.antlr.v4.runtime.CharStreams
 import java.nio.file.Path
@@ -69,6 +69,7 @@ class Main(val args: Array<String>) {
             s.parse(stream, states, null)
             states.add(s)
 
+            /*
             if (s.diagnosticHub.diagnostics.isEmpty()) {
                 println("Checking: ${GREEN}No errors$RESET")
             } else {
@@ -78,6 +79,8 @@ class Main(val args: Array<String>) {
             for (e in s.diagnosticHub.diagnostics) {
                 println("⚠️$e")
             }
+
+             */
         }
 
         if (path == null) {

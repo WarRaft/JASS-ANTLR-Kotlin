@@ -1,7 +1,7 @@
 package io.github.warraft.jass.converter
 
-import io.github.warraft.jass.antlr.state.JassState
-import io.github.warraft.languages.lsp4j.service.document.semantic.token.SemanticTokenType
+import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenType
+import io.github.warraft.language.jass.antlr.state.JassState
 import org.antlr.v4.runtime.CharStreams
 import org.junit.jupiter.api.Test
 
@@ -27,9 +27,12 @@ class JassStateTest {
             )
         }
 
+        /*
         for (e in s.diagnosticHub.diagnostics) {
             println(e.message)
         }
+
+         */
 
     }
 

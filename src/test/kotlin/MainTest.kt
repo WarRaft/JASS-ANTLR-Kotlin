@@ -1,3 +1,7 @@
+import io.github.warraft.lsp.ResponseMessage
+import io.github.warraft.lsp.method.window.logMessage.LogMessageParams
+import io.github.warraft.lsp.method.window.MessageType
+import kotlinx.serialization.json.Json
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.absolute
@@ -16,6 +20,21 @@ class MainTest {
                 path.absolute().toString(),
             )
         )
+    }
+
+    @Test
+    fun json(){
+        val r = ResponseMessage(
+            method = "window/logMessage",
+            params = LogMessageParams(
+                type = MessageType.Info,
+                message = "mEaaaaaadff "
+            )
+        )
+
+        val m = Json.encodeToString(r)
+
+        println(m)
     }
 
     @Test
