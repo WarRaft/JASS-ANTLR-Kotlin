@@ -1,6 +1,5 @@
-package io.github.warraft.lsp.method.initialize
+package io.github.warraft.lsp.data
 
-import io.github.warraft.lsp.utils.Params
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 

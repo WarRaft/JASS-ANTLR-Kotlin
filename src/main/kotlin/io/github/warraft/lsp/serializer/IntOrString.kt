@@ -17,15 +17,15 @@ import kotlinx.serialization.*
 @Serializable(with = IntOrStringSerializer::class)
 sealed class IntOrString {
     @Serializable
-    data class IntVal(val value: Int) : IntOrString()
+    data class Ival(val value: Int) : IntOrString()
 
     @Serializable
-    data class StringVal(val value: String) : IntOrString()
+    data class Sval(val value: String) : IntOrString()
 
     companion object {
         fun from(value: Any): IntOrString = when (value) {
-            is Int -> IntVal(value)
-            is String -> StringVal(value)
+            is Int -> Ival(value)
+            is String -> Sval(value)
             else -> throw IllegalArgumentException("Unsupported type for IntOrString: $value")
         }
     }
@@ -37,8 +37,8 @@ object IntOrStringSerializer : KSerializer<IntOrString> {
 
     override fun serialize(encoder: Encoder, value: IntOrString) {
         when (value) {
-            is IntOrString.IntVal -> encoder.encodeInt(value.value)
-            is IntOrString.StringVal -> encoder.encodeString(value.value)
+            is IntOrString.Ival -> encoder.encodeInt(value.value)
+            is IntOrString.Sval -> encoder.encodeString(value.value)
         }
     }
 
@@ -46,8 +46,8 @@ object IntOrStringSerializer : KSerializer<IntOrString> {
         return when (val element = (decoder as JsonDecoder).decodeJsonElement()) {
             is JsonPrimitive -> {
                 when {
-                    element.isString -> IntOrString.StringVal(element.content)
-                    element.intOrNull != null -> IntOrString.IntVal(element.int)
+                    element.isString -> IntOrString.Sval(element.content)
+                    element.intOrNull != null -> IntOrString.Ival(element.int)
                     else -> throw SerializationException("Invalid IntOrString format: $element")
                 }
             }

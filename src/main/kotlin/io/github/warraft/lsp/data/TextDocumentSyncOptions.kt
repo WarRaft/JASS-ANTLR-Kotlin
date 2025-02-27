@@ -1,4 +1,4 @@
-package io.github.warraft.lsp.capabilities
+package io.github.warraft.lsp.data
 
 import kotlinx.serialization.Serializable
 
@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TextDocumentSyncOptions(
-    val openClose: Boolean?,
-    val change: TextDocumentSyncKind?,
+    val openClose: Boolean? = null,
+    val change: TextDocumentSyncKind? = null,
 )

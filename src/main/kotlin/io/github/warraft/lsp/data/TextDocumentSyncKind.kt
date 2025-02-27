@@ -1,4 +1,4 @@
-package io.github.warraft.lsp.capabilities
+package io.github.warraft.lsp.data
 
 import io.github.warraft.lsp.serializer.EnumAsIntSerializer
 import kotlinx.serialization.Serializable

@@ -1,4 +1,4 @@
-package io.github.warraft.lsp.capabilities
+package io.github.warraft.lsp.data
 
 import kotlinx.serialization.Serializable
 
@@ -7,7 +7,17 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ServerCapabilities(
     val textDocumentSync: TextDocumentSyncOptions? = null,
+    val semanticTokensProvider: SemanticTokensOptions? = null,
 ) {
+
+    /*
+     * The server provides semantic tokens support.
+     *
+     * @since 3.16.0
+
+    semanticTokensProvider?: SemanticTokensOptions | SemanticTokensRegistrationOptions;
+     */
+
     /*
     /**
 	 * The position encoding the server picked from the encodings offered
@@ -173,13 +183,6 @@ data class ServerCapabilities(
 	callHierarchyProvider?: boolean | CallHierarchyOptions
 		| CallHierarchyRegistrationOptions;
 
-	/**
-	 * The server provides semantic tokens support.
-	 *
-	 * @since 3.16.0
-	 */
-	semanticTokensProvider?: SemanticTokensOptions
-		| SemanticTokensRegistrationOptions;
 
 	/**
 	 * Whether server provides moniker support.

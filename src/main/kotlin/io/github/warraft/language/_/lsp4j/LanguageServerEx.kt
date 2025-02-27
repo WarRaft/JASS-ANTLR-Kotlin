@@ -2,31 +2,18 @@ package io.github.warraft.language._.lsp4j
 
 import com.google.gson.JsonObject
 import io.github.warraft.language._.lsp4j.service.WorkspaceServiceEx
+import io.github.warraft.language._.lsp4j.service.document.TextDocumentServiceEx
 import org.eclipse.lsp4j.*
 import org.eclipse.lsp4j.jsonrpc.messages.Either
 import org.eclipse.lsp4j.services.*
 import java.util.concurrent.CompletableFuture
 
-class tds : TextDocumentService {
-    override fun didOpen(params: DidOpenTextDocumentParams?) {
-    }
-
-    override fun didChange(params: DidChangeTextDocumentParams?) {
-    }
-
-    override fun didClose(params: DidCloseTextDocumentParams?) {
-    }
-
-    override fun didSave(params: DidSaveTextDocumentParams?) {
-
-    }
-}
 
 class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClientAware {
     private val workspaceService = WorkspaceServiceEx(this)
 
-    //val textDocumentService = TextDocumentServiceEx(this)
-    val textDocumentService = tds()
+    val textDocumentService = TextDocumentServiceEx(this)
+
 
     var client: LanguageClient? = null
 
@@ -102,8 +89,4 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
     override fun getWorkspaceService(): WorkspaceService = workspaceService
     override fun setTrace(params: SetTraceParams?) = Unit
 
-    companion object {
-        private fun case(str: String): String = str.split("_")
-            .mapIndexed { index, s -> if (index == 0) s.lowercase() else s.lowercase().replaceFirstChar { it.uppercaseChar() } }.joinToString("")
-    }
 }

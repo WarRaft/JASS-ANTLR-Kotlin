@@ -1,94 +1,98 @@
 package io.github.warraft.lsp
 
-import io.github.warraft.lsp.message.RequestMessage
-import io.github.warraft.lsp.message.ResponseMessage
-import io.github.warraft.lsp.method.initialize.InitializeParams
-import io.github.warraft.lsp.method.window.MessageType
-import io.github.warraft.lsp.method.window.logMessage.LogMessageParams
-import io.github.warraft.lsp.method.window.showMessage.ShowMessageParams
-import io.github.warraft.lsp.serializer.IntOrString
-import io.github.warraft.lsp.serializer.IntOrString.IntVal
-import io.github.warraft.lsp.utils.Params
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.ExperimentalSerializationApi
+import io.github.warraft.lsp.data.*
+import io.github.warraft.lsp.ext.initialize
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
-import kotlinx.serialization.modules.subclass
-import java.io.BufferedReader
-import java.io.BufferedWriter
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
+import java.io.*
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#headerPart
 class LanguageServer {
-    private val reader = BufferedReader(InputStreamReader(System.`in`))
-    private val writer = BufferedWriter(OutputStreamWriter(System.`out`))
+    private val reader = BufferedInputStream(System.`in`)
+    private val writer = BufferedOutputStream(System.`out`)
 
-    @OptIn(ExperimentalSerializationApi::class)
     val json = Json {
         classDiscriminator = "AnalClassDiscriminator"
         ignoreUnknownKeys = true
-        prettyPrint = true
-        prettyPrintIndent = "  "
-        serializersModule = SerializersModule {
-            polymorphic(Params::class) {
-                subclass(LogMessageParams::class)
-                subclass(ShowMessageParams::class)
-            }
-        }
     }
 
-    fun send(params: Params) {
-        val string = json.encodeToString(
-            ResponseMessage(
-                //id = IntVal(0),
-                method = params.method,
-                params = params
-            )
-        )
-        val length = string.toByteArray(Charsets.UTF_8).size
-        writer.write("Content-Length: $length\r\n\r\n$string")
+    fun send(string: String) {
+        val ba = string.toByteArray(Charsets.UTF_8)
+        writer.write("$CONTENT_LENGTH:${ba.size}\r\n\r\n".toByteArray(Charsets.UTF_8))
+        writer.write(ba)
         writer.flush()
     }
 
-    fun log(message: String, type: MessageType = MessageType.Log) = send(LogMessageParams(type = type, message = message))
-    fun show(message: String, type: MessageType = MessageType.Log) = send(ShowMessageParams(type = type, message = message))
+    fun request(element: JsonElement, method: String) = send(
+        json.encodeToString(
+            Message(
+                method = method,
+                params = element
+            )
+        )
+    )
 
-    fun initialize(params: InitializeParams) {
-        log(json.encodeToString(params))
+    fun message(params: MessageLogParams, method: String) = request(json.encodeToJsonElement(MessageLogParams.serializer(), params), method)
+    fun log(msg: String, type: MessageLogType = MessageLogType.Log) = message(MessageLogParams(type = type, message = msg), MessageLogParams.LOG)
+    fun show(msg: String, type: MessageLogType = MessageLogType.Log) = message(MessageLogParams(type = type, message = msg), MessageLogParams.SHOW)
+
+    fun readLine(): String? {
+        val buffer = StringBuilder()
+        var lastFourChars = ""
+
+        while (true) {
+            val byte = reader.read()
+            if (byte == -1 && buffer.isEmpty()) return null
+            if (byte == -1) break
+
+            val char = byte.toChar()
+            buffer.append(char)
+
+            lastFourChars = (lastFourChars + char).takeLast(4)
+            if (lastFourChars == "\r\n\r\n") break
+        }
+
+        return buffer.toString().trimEnd()
     }
 
     fun start() {
         while (true) {
-            val line = reader.readLine() ?: break
-            val empty = reader.readLine() ?: break
-            if (empty.isNotEmpty()) {
-                log("Not Empty: $empty", MessageType.Error)
-                continue
-            }
+            val line = readLine() ?: break
 
             val parts = line.split(":", limit = 2)
             if (parts.size != 2) continue
-            if (parts.first() != "Content-Length") continue
+            if (parts.first().trim() != CONTENT_LENGTH) {
+                log("Missing Content-Length header: $line", MessageLogType.Error)
+                continue
+            }
             val contentLength = parts.last().trim().toIntOrNull() ?: continue
 
-            val buffer = CharArray(contentLength)
-            reader.read(buffer, 0, contentLength)
-            val content = String(buffer)
+            val buffer = ByteArray(contentLength)
+            var totalBytesRead = 0
+
+            while (totalBytesRead < contentLength) {
+                val bytesRead = reader.read(buffer, totalBytesRead, contentLength - totalBytesRead)
+                if (bytesRead == -1) {
+                    log("Unexpected end of stream. Bytes read: $totalBytesRead / $contentLength", MessageLogType.Error)
+                    break
+                }
+                totalBytesRead += bytesRead
+            }
+
+            val content = String(buffer, 0, totalBytesRead)
 
             val message = try {
-                json.decodeFromString<RequestMessage>(content)
+                json.decodeFromString<Message>(content)
             } catch (e: Exception) {
-                log(e.stackTraceToString())
+                log("Invalid Message: ${e.message}", MessageLogType.Error)
                 log(content)
                 continue
             }
 
-            val p = message.params
-            if (p != null) when (message.method) {
-                InitializeParams.METHOD -> initialize(json.decodeFromJsonElement<InitializeParams>(InitializeParams.serializer(), message.params))
+            when (message.method) {
+                InitializeParams.METHOD -> initialize(message)
+                "$/setTrace" -> {}
+                else -> log("${message.id} - ${message.method}")
             }
         }
     }
@@ -96,4 +100,9 @@ class LanguageServer {
     init {
         start()
     }
+
+    companion object {
+        const val CONTENT_LENGTH = "Content-Length"
+    }
 }
+
