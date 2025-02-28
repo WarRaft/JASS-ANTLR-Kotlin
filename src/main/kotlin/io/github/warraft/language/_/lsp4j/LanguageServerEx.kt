@@ -3,14 +3,12 @@ package io.github.warraft.language._.lsp4j
 import io.github.warraft.language._.lsp4j.service.WorkspaceServiceEx
 import io.github.warraft.language._.lsp4j.service.document.TextDocumentServiceEx
 import org.eclipse.lsp4j.*
-import org.eclipse.lsp4j.jsonrpc.messages.Either
 import org.eclipse.lsp4j.services.*
 import java.util.concurrent.CompletableFuture
 
 
 class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClientAware {
     private val workspaceService = WorkspaceServiceEx(this)
-
     val textDocumentService = TextDocumentServiceEx(this)
 
     var client: LanguageClient? = null
@@ -27,20 +25,7 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
     override fun initialize(params: InitializeParams?): CompletableFuture<InitializeResult?> {
         this.params = params
 
-        //val opt = params?.initializationOptions
-
-        try {
-            //if (opt is JsonObject) workspaceService.didChangeSDK(opt["settings"] as? JsonObject)
-        } catch (e: Throwable) {
-            client?.showMessage(MessageParams(MessageType.Error, e.stackTraceToString()))
-        }
-
         val capabilities = ServerCapabilities().apply {
-            textDocumentSync = Either.forRight(TextDocumentSyncOptions().apply {
-                openClose = true
-                change = TextDocumentSyncKind.Full
-            })
-
             //documentHighlightProvider = Either.forRight(DocumentHighlightOptions())
             //foldingRangeProvider = Either.forRight(FoldingRangeProviderOptions())
             //documentSymbolProvider = Either.forRight(DocumentSymbolOptions())
@@ -50,7 +35,6 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
             //definitionProvider = Either.forRight(DefinitionOptions())
 
             //documentFormattingProvider = Either.forRight(DocumentFormattingOptions())
-
 
             //renameProvider = Either.forRight(RenameOptions())
             //linkedEditingRangeProvider = Either.forRight(LinkedEditingRangeRegistrationOptions())

@@ -4,9 +4,11 @@ import io.github.warraft.language.jass.antlr.psi.JassFun
 import io.github.warraft.language.jass.antlr.state.JassState
 import io.github.warraft.lsp.data.CompletionItem
 import io.github.warraft.lsp.data.CompletionItemKind
+import io.github.warraft.lsp.data.CompletionList
 
-fun JassState.completionExt() {
-    val list = completion.items.apply { clear() }
+fun JassState.completionExt(): CompletionList? {
+    val list = CompletionList()
+    val items = list.items
 
     for (k in listOf(
         "set", "call",
@@ -16,7 +18,7 @@ fun JassState.completionExt() {
         "if", "then", "else", "elseif", "endif",
         "loop", "exitwhen", "endloop",
     )) {
-        list.add(
+        items.add(
             CompletionItem(
                 label = k,
                 kind = CompletionItemKind.Keyword,
@@ -25,7 +27,7 @@ fun JassState.completionExt() {
     }
 
     fun type(t: String) {
-        list.add(
+        items.add(
             CompletionItem(
                 label = t,
                 kind = CompletionItemKind.TypeParameter,
@@ -37,7 +39,7 @@ fun JassState.completionExt() {
 
     fun function(f: JassFun) {
         val name = f.name ?: return
-        list.add(
+        items.add(
             CompletionItem(
                 label = name,
                 kind = CompletionItemKind.Variable,
@@ -53,7 +55,7 @@ fun JassState.completionExt() {
          */
         for (g in s.varScope.globals) {
             val name = g.name ?: continue
-            list.add(
+            items.add(
                 CompletionItem(
                     label = name,
                     kind = CompletionItemKind.Variable,
@@ -67,4 +69,6 @@ fun JassState.completionExt() {
             for (f in it.functions) function(f)
         }
     }
+
+    return list
 }

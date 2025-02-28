@@ -26,7 +26,6 @@ class TextDocumentServiceEx(val server: LanguageServerEx) : TextDocumentService 
     override fun hover(params: HoverParams?): CompletableFuture<Hover> = completedFuture(stateGet(params)?.hover(params))
     override fun signatureHelp(params: SignatureHelpParams?): CompletableFuture<SignatureHelp?>? = completedFuture(stateGet(params)?.signatureHelp(params))
     override fun definition(params: DefinitionParams?): CompletableFuture<Either<MutableList<out Location?>?, MutableList<out LocationLink?>?>?>? = completedFuture(Either.forRight(stateGet(params)?.definition(params)))
-    override fun documentHighlight(params: DocumentHighlightParams?): CompletableFuture<List<DocumentHighlight>> = completedFuture(stateGet(params)?.documentHighlight(params))
     override fun references(params: ReferenceParams?): CompletableFuture<MutableList<out Location?>?>? = completedFuture(stateGet(params)?.references(params))
     override fun formatting(params: DocumentFormattingParams?): CompletableFuture<List<TextEdit?>?>? = completedFuture(stateGet(params)?.formatting(params))
 

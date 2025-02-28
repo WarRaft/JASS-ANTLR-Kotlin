@@ -105,6 +105,7 @@ class LanguageServer {
             "textDocument/didOpen" -> didOpen(message)
             "textDocument/semanticTokens/full" -> semanticTokens(message)
             "textDocument/completion" -> completion(message)
+            "textDocument/documentHighlight" -> documentHighlight(message)
             "$/cancelRequest" -> cancel(message)
             "$/setTrace" -> {}
 

@@ -11,15 +11,15 @@ fun LanguageServer.completion(message: Message) {
     val params = message.params ?: return
     val p = json.decodeFromJsonElement<CompletionParams>(CompletionParams.serializer(), params)
     val path = URI(p.textDocument.uri).toPath()
-    val list = stateGet(path)?.also {
-        it.completion()
-    }?.completion ?: dummy
 
     send(
         json.encodeToString(
             Message(
                 id = message.id,
-                result = json.encodeToJsonElement(CompletionList.serializer(), list)
+                result = json.encodeToJsonElement(
+                    CompletionList.serializer(),
+                    stateGet(path)?.completion() ?: dummy
+                )
             )
         )
     )

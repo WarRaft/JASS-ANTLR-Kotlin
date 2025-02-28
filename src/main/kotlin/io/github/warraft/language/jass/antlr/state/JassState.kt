@@ -18,8 +18,20 @@ import io.github.warraft.language.jass.antlr.state.ext.lsp4j.formatting.formatti
 import io.github.warraft.language.jass.antlr.state.ext.lsp4j.hoverExt
 import io.github.warraft.language.jass.antlr.state.ext.lsp4j.referencesExt
 import io.github.warraft.language.jass.antlr.state.ext.lsp4j.signatureHelpExt
+import io.github.warraft.lsp.data.CompletionList
+import io.github.warraft.lsp.data.DocumentHighlight
+import io.github.warraft.lsp.data.Position
 import org.antlr.v4.runtime.*
-import org.eclipse.lsp4j.*
+import org.eclipse.lsp4j.DefinitionParams
+import org.eclipse.lsp4j.DocumentFormattingParams
+import org.eclipse.lsp4j.Hover
+import org.eclipse.lsp4j.HoverParams
+import org.eclipse.lsp4j.Location
+import org.eclipse.lsp4j.LocationLink
+import org.eclipse.lsp4j.ReferenceParams
+import org.eclipse.lsp4j.SignatureHelp
+import org.eclipse.lsp4j.SignatureHelpParams
+import org.eclipse.lsp4j.TextEdit
 
 class JassState : LanguageState() {
     val states: MutableList<JassState> = mutableListOf()
@@ -28,11 +40,14 @@ class JassState : LanguageState() {
     val varScope = JassVarScope(this)
     val funScope = JassFunScope(this)
 
-    override fun completion() = completionExt()
+    override fun completion(): CompletionList? = completionExt()
+    override fun documentHighlight(position: Position): List<DocumentHighlight>? = documentHighlightExt(position)
+
+
     override fun hover(params: HoverParams?): Hover? = hoverExt(params)
     override fun signatureHelp(params: SignatureHelpParams?): SignatureHelp? = signatureHelpExt(params)
     override fun definition(params: DefinitionParams?): MutableList<LocationLink> = definitionExt(params)
-    override fun documentHighlight(params: DocumentHighlightParams?): List<DocumentHighlight> = documentHighlightExt(params)
+
     override fun references(params: ReferenceParams?): MutableList<out Location?> = referencesExt(params)
     override fun formatting(params: DocumentFormattingParams?): List<TextEdit> = formattingEx(params)
 

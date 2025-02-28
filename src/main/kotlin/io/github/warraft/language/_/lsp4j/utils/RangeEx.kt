@@ -13,7 +13,10 @@ class RangeEx : Range() {
 
         private fun toRange(start: Token, stop: Token): Range {
             return Range(
-                Position(start.line - 1, start.charPositionInLine),
+                Position(
+                    start.line - 1,
+                    start.charPositionInLine
+                ),
                 Position(
                     stop.line - 1,
                     stop.charPositionInLine + (stop.stopIndex - stop.startIndex) + 1

@@ -37,7 +37,8 @@ fun LanguageServer.initialize(message: Message) {
                                 completionItem = CompletionItem(
                                     labelDetailsSupport = true
                                 )
-                            )
+                            ),
+                            documentHighlightProvider = true,
                         )
                     )
                 )

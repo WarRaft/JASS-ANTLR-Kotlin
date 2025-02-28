@@ -7,25 +7,21 @@ import io.github.warraft.language.jass.antlr.psi.JassType
 import io.github.warraft.language.jass.antlr.psi.JassVar
 import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language._.lsp4j.utils.RangeEx
-import org.eclipse.lsp4j.DocumentHighlight
-import org.eclipse.lsp4j.DocumentHighlightKind
-import org.eclipse.lsp4j.DocumentHighlightParams
+import io.github.warraft.lsp.data.DocumentHighlight
+import io.github.warraft.lsp.data.DocumentHighlightKind
+import io.github.warraft.lsp.data.Position
+import io.github.warraft.lsp.data.Range
 
-fun JassState.documentHighlightExt(params: DocumentHighlightParams?): List<DocumentHighlight> {
+fun JassState.documentHighlightExt(position: Position): List<DocumentHighlight>? {
+    val node = tokenTree.find(position) ?: return null
+
     val highlights = mutableListOf<DocumentHighlight>()
-    val position = params?.position ?: return highlights
-    val node = tokenTree.find(position) ?: return highlights
 
     fun base(list: List<JassNodeBase>) {
         for (v in list) {
             if (path != v.state.path) continue
-            highlights.add(
-                DocumentHighlight(
-                    RangeEx.get(v.symbol),
-                    DocumentHighlightKind.Write
-                )
-            )
+            val r = Range.of(v.symbol) ?: continue
+            highlights.add(DocumentHighlight(r, DocumentHighlightKind.Write))
         }
     }
 

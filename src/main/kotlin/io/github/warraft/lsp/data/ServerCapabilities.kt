@@ -9,6 +9,7 @@ data class ServerCapabilities(
     val textDocumentSync: TextDocumentSyncOptions? = null,
     val semanticTokensProvider: SemanticTokensOptions? = null,
     val completionProvider: CompletionOptions? = null,
+    val documentHighlightProvider: Boolean? = null,
 ) {
 
     /*
@@ -77,11 +78,6 @@ data class ServerCapabilities(
 	 * The server provides find references support.
 	 */
 	referencesProvider?: boolean | ReferenceOptions;
-
-	/**
-	 * The server provides document highlight support.
-	 */
-	documentHighlightProvider?: boolean | DocumentHighlightOptions;
 
 	/**
 	 * The server provides document symbol support.
