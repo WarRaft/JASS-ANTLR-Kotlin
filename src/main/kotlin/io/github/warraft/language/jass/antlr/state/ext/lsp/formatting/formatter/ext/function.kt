@@ -1,7 +1,7 @@
-package io.github.warraft.language.jass.antlr.state.ext.lsp4j.formatting.formatter.ext
+package io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.ext
 
 import io.github.warraft.JassParser.*
-import io.github.warraft.language.jass.antlr.state.ext.lsp4j.formatting.formatter.JassFormatter
+import io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.JassFormatter
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
 

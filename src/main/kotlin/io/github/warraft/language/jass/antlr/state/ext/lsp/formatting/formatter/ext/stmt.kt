@@ -1,4 +1,4 @@
-package io.github.warraft.language.jass.antlr.state.ext.lsp4j.formatting.formatter.ext
+package io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.ext
 
 import io.github.warraft.JassParser.ElseRuleContext
 import io.github.warraft.JassParser.StmtCallContext
@@ -8,7 +8,7 @@ import io.github.warraft.JassParser.StmtIfContext
 import io.github.warraft.JassParser.StmtLoopContext
 import io.github.warraft.JassParser.StmtReturnContext
 import io.github.warraft.JassParser.StmtSetContext
-import io.github.warraft.language.jass.antlr.state.ext.lsp4j.formatting.formatter.JassFormatter
+import io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.JassFormatter
 import org.antlr.v4.runtime.ParserRuleContext
 
 fun JassFormatter.stmt(list: List<StmtContext>?, level: Int) {

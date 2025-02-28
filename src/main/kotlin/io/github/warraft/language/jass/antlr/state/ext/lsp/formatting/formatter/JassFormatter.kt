@@ -1,11 +1,11 @@
-package io.github.warraft.language.jass.antlr.state.ext.lsp4j.formatting.formatter
+package io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter
 
 import io.github.warraft.JassParser.*
 import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language.jass.antlr.state.ext.lsp4j.formatting.formatter.ext.expr
-import io.github.warraft.language.jass.antlr.state.ext.lsp4j.formatting.formatter.ext.function
-import io.github.warraft.language.jass.antlr.state.ext.lsp4j.formatting.formatter.ext.type
-import io.github.warraft.language.jass.antlr.state.ext.lsp4j.formatting.formatter.ext.variable
+import io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.ext.expr
+import io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.ext.function
+import io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.ext.type
+import io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.ext.variable
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.TerminalNode

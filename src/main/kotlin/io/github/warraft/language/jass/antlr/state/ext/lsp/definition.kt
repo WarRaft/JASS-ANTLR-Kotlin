@@ -1,24 +1,33 @@
 @file:Suppress("DuplicatedCode")
 
-package io.github.warraft.language.jass.antlr.state.ext.lsp4j
+package io.github.warraft.language.jass.antlr.state.ext.lsp
 
 import io.github.warraft.language.jass.antlr.psi.JassFun
 import io.github.warraft.language.jass.antlr.psi.JassVar
 import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language._.lsp4j.utils.RangeEx
+import io.github.warraft.lsp.data.LocationLink
+import io.github.warraft.lsp.data.Position
+import io.github.warraft.lsp.data.Range
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
-import org.eclipse.lsp4j.DefinitionParams
-import org.eclipse.lsp4j.LocationLink
 
-fun JassState.definitionExt(params: DefinitionParams?): MutableList<LocationLink> {
+fun JassState.definitionExt(position: Position): MutableList<LocationLink>? {
+    val node = tokenTree.find(position) ?: return null
     val defs = mutableListOf<LocationLink>()
-    val position = params?.position ?: return defs
-    val node = tokenTree.find(position) ?: return defs
 
     fun add(s: JassState, symbol: Token?, definition: ParserRuleContext?) {
         val p = s.path ?: return
-        defs.add(LocationLink(p.toUri().toString(), RangeEx.get(definition), RangeEx.get(symbol)))
+
+        val targetRange = Range.of(definition) ?: return
+        val targetSelectionRange = Range.of(symbol) ?: return
+
+        defs.add(
+            LocationLink(
+                targetUri = p.toUri().toString(),
+                targetRange = targetRange,
+                targetSelectionRange = targetSelectionRange
+            )
+        )
     }
 
     fun add(v: JassVar) = add(v.state, v.symbol, v.definition)

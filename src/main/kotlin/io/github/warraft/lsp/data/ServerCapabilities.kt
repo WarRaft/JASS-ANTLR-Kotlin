@@ -10,10 +10,11 @@ data class ServerCapabilities(
     val semanticTokensProvider: SemanticTokensOptions? = null,
     val completionProvider: CompletionOptions? = null,
     val documentHighlightProvider: Boolean? = null,
-    val hoverProvider: Boolean? = null,
-    val foldingRangeProvider: Boolean? = null,
     val documentSymbolProvider: Boolean? = null,
     val diagnosticProvider: DiagnosticOptions? = null,
+    val hoverProvider: Boolean? = null,
+    val foldingRangeProvider: Boolean? = null,
+    val definitionProvider: Boolean? = null,
 ) {
 
     /*
@@ -51,11 +52,6 @@ data class ServerCapabilities(
 	 */
 	declarationProvider?: boolean | DeclarationOptions
 		| DeclarationRegistrationOptions;
-
-	/**
-	 * The server provides goto definition support.
-	 */
-	definitionProvider?: boolean | DefinitionOptions;
 
 	/**
 	 * The server provides goto type definition support.

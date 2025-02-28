@@ -11,12 +11,11 @@ import io.github.warraft.language.jass.lsp.symbol.JassDocumentSymbolHub
 import io.github.warraft.lsp.data.CompletionList
 import io.github.warraft.lsp.data.DocumentHighlight
 import io.github.warraft.lsp.data.Hover
+import io.github.warraft.lsp.data.LocationLink
 import io.github.warraft.lsp.data.Position
 import org.antlr.v4.runtime.*
-import org.eclipse.lsp4j.DefinitionParams
 import org.eclipse.lsp4j.DocumentFormattingParams
 import org.eclipse.lsp4j.Location
-import org.eclipse.lsp4j.LocationLink
 import org.eclipse.lsp4j.ReferenceParams
 import org.eclipse.lsp4j.SignatureHelp
 import org.eclipse.lsp4j.SignatureHelpParams
@@ -33,10 +32,10 @@ abstract class LanguageState {
     fun semantic(): MutableList<Int> = semanticHub.data()
 
     open fun completion(): CompletionList? = null
-    open fun documentHighlight(position: Position): List<DocumentHighlight>? = null
     open fun hover(position: Position): Hover? = null
+    open fun documentHighlight(position: Position): List<DocumentHighlight>? = null
+    open fun definition(position: Position): List<LocationLink>? = null
 
-    open fun definition(params: DefinitionParams?): MutableList<LocationLink> = mutableListOf()
     open fun references(params: ReferenceParams?): MutableList<out Location?> = mutableListOf()
     open fun formatting(params: DocumentFormattingParams?): List<TextEdit> = listOf()
 

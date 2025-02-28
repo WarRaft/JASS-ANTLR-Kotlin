@@ -22,18 +22,12 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
 
         val capabilities = ServerCapabilities().apply {
 
-            //definitionProvider = Either.forRight(DefinitionOptions())
-
             //referencesProvider = Either.forRight(ReferenceOptions())
-
 
             //documentFormattingProvider = Either.forRight(DocumentFormattingOptions())
 
-            //renameProvider = Either.forRight(RenameOptions())
+            
 
-            //linkedEditingRangeProvider = Either.forRight(LinkedEditingRangeRegistrationOptions())
-
-            //signatureHelpProvider = SignatureHelpOptions(listOf("(", ","))
         }
 
         return CompletableFuture.completedFuture(InitializeResult(capabilities))

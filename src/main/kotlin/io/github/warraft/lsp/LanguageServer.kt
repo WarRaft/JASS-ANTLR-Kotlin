@@ -112,6 +112,7 @@ class LanguageServer {
             "textDocument/foldingRange" -> foldingRange(message)
             "textDocument/documentSymbol" -> documentSymbol(message)
             "textDocument/diagnostic" -> diagnostic(message)
+            "textDocument/definition" -> definition(message)
             "$/cancelRequest" -> cancel(message)
             "$/setTrace" -> {}
             "shutdown" -> {

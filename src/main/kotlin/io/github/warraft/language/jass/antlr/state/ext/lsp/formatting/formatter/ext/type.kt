@@ -1,8 +1,8 @@
-package io.github.warraft.language.jass.antlr.state.ext.lsp4j.formatting.formatter.ext
+package io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.ext
 
 import io.github.warraft.JassParser.ExtendsRuleContext
 import io.github.warraft.JassParser.TypeContext
-import io.github.warraft.language.jass.antlr.state.ext.lsp4j.formatting.formatter.JassFormatter
+import io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.JassFormatter
 import org.antlr.v4.runtime.tree.TerminalNode
 
 fun JassFormatter.type(ctx: TypeContext?) {

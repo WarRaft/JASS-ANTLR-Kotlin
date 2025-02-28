@@ -1,4 +1,4 @@
-package io.github.warraft.language.jass.antlr.state.ext.lsp4j
+package io.github.warraft.language.jass.antlr.state.ext.lsp
 
 import io.github.warraft.language.jass.antlr.state.JassState
 import org.eclipse.lsp4j.ParameterInformation

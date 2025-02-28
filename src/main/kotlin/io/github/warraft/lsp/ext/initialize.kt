@@ -42,7 +42,8 @@ fun LanguageServer.initialize(message: Message) {
                             documentHighlightProvider = true,
                             hoverProvider = true,
                             foldingRangeProvider = true,
-                            documentSymbolProvider = true
+                            documentSymbolProvider = true,
+                            definitionProvider = true,
                         )
                     )
                 )
