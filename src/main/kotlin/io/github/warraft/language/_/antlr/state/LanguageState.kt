@@ -8,6 +8,7 @@ import io.github.warraft.language.jass.antlr.utils.JassTokenTree
 import io.github.warraft.language.jass.lsp4j.diagnostic.JassDiagnosticHub
 import io.github.warraft.language.jass.lsp4j.folding.JassFoldingHub
 import io.github.warraft.language.jass.lsp4j.symbol.JassDocumentSymbolHub
+import io.github.warraft.lsp.data.CompletionList
 import org.antlr.v4.runtime.*
 import org.eclipse.lsp4j.*
 import java.nio.file.Path
@@ -17,7 +18,9 @@ abstract class LanguageState {
     var server: LanguageServerEx? = null
     var version = -1
 
-    open fun completion(): List<CompletionItem> = mutableListOf<CompletionItem>()
+    val completion = CompletionList()
+    abstract fun completion()
+
     open fun hover(params: HoverParams?): Hover? = null
     open fun signatureHelp(params: SignatureHelpParams?): SignatureHelp? = null
     open fun definition(params: DefinitionParams?): MutableList<LocationLink> = mutableListOf()

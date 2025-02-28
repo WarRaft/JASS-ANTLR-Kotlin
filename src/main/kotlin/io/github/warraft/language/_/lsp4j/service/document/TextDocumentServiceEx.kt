@@ -22,7 +22,6 @@ class TextDocumentServiceEx(val server: LanguageServerEx) : TextDocumentService 
     override fun foldingRange(params: FoldingRangeRequestParams?): CompletableFuture<List<FoldingRange>> = completedFuture(stateGet(params)?.foldingHub?.ranges)
     override fun diagnostic(params: DocumentDiagnosticParams?): CompletableFuture<DocumentDiagnosticReport?> = completedFuture(DocumentDiagnosticReport(RelatedFullDocumentDiagnosticReport(stateGet(params)?.diagnosticHub?.diagnostics)))
     override fun documentSymbol(params: DocumentSymbolParams?): CompletableFuture<List<Either<SymbolInformation?, DocumentSymbol?>?>?>? = completedFuture(stateGet(params)?.documentSymbolHub?.symbols)
-    override fun completion(params: CompletionParams?): CompletableFuture<Either<List<CompletionItem>, CompletionList>> = completedFuture(Either.forLeft(stateGet(params)?.completion()))
     override fun resolveCompletionItem(unresolved: CompletionItem?): CompletableFuture<CompletionItem> = completedFuture(unresolved)
     override fun hover(params: HoverParams?): CompletableFuture<Hover> = completedFuture(stateGet(params)?.hover(params))
     override fun signatureHelp(params: SignatureHelpParams?): CompletableFuture<SignatureHelp?>? = completedFuture(stateGet(params)?.signatureHelp(params))

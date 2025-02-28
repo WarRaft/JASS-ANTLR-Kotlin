@@ -5,7 +5,7 @@ import io.github.warraft.lsp.data.CancelParams
 import io.github.warraft.lsp.data.Message
 
 fun LanguageServer.cancel(message: Message) {
-    val p = message.params ?: return
-    val c = json.decodeFromJsonElement<CancelParams>(CancelParams.serializer(), p)
+    val params = message.params ?: return
+    val p = json.decodeFromJsonElement<CancelParams>(CancelParams.serializer(), params)
     //log("Cancel: ${c.id}")
 }

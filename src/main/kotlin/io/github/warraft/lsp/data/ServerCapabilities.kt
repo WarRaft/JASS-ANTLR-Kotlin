@@ -8,17 +8,11 @@ import kotlinx.serialization.Serializable
 data class ServerCapabilities(
     val textDocumentSync: TextDocumentSyncOptions? = null,
     val semanticTokensProvider: SemanticTokensOptions? = null,
+    val completionProvider: CompletionOptions? = null,
 ) {
 
     /*
-     * The server provides semantic tokens support.
-     *
-     * @since 3.16.0
 
-    semanticTokensProvider?: SemanticTokensOptions | SemanticTokensRegistrationOptions;
-     */
-
-    /*
     /**
 	 * The position encoding the server picked from the encodings offered
 	 * by the client via the client capability `general.positionEncodings`.
@@ -39,11 +33,6 @@ data class ServerCapabilities(
 	 */
 	notebookDocumentSync?: NotebookDocumentSyncOptions
 		| NotebookDocumentSyncRegistrationOptions;
-
-	/**
-	 * The server provides completion support.
-	 */
-	completionProvider?: CompletionOptions;
 
 	/**
 	 * The server provides hover support.

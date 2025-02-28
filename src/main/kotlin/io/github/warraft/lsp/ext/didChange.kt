@@ -11,7 +11,6 @@ fun LanguageServer.didChange(message: Message) {
     val p = json.decodeFromJsonElement<DidChangeTextDocumentParams>(DidChangeTextDocumentParams.serializer(), params)
     if (p.contentChanges.isEmpty()) return
     val doc = p.textDocument
-    log(getHeapMemoryUsage())
     stateUpdate(
         URI(doc.uri).toPath(),
         p.contentChanges.last().text,

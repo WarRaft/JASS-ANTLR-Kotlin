@@ -43,17 +43,6 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
                 change = TextDocumentSyncKind.Full
             })
 
-            //workspace = WorkspaceServerCapabilities()
-
-            // https://code.visualstudio.com/api/language-extensions/semantic-highlight-guide
-
-            /*
-            completionProvider = CompletionOptions().apply {
-                resolveProvider = true
-                triggerCharacters = listOf()
-            }
-
-             */
             //documentHighlightProvider = Either.forRight(DocumentHighlightOptions())
             //foldingRangeProvider = Either.forRight(FoldingRangeProviderOptions())
             //documentSymbolProvider = Either.forRight(DocumentSymbolOptions())

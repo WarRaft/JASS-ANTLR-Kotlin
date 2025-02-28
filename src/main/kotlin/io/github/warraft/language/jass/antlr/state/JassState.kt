@@ -28,7 +28,7 @@ class JassState : LanguageState() {
     val varScope = JassVarScope(this)
     val funScope = JassFunScope(this)
 
-    override fun completion(): List<CompletionItem> = completionExt()
+    override fun completion() = completionExt()
     override fun hover(params: HoverParams?): Hover? = hoverExt(params)
     override fun signatureHelp(params: SignatureHelpParams?): SignatureHelp? = signatureHelpExt(params)
     override fun definition(params: DefinitionParams?): MutableList<LocationLink> = definitionExt(params)

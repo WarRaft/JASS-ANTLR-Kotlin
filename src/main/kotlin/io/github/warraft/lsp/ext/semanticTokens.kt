@@ -11,7 +11,6 @@ fun LanguageServer.semanticTokens(message: Message) {
     val params = message.params ?: return
     val p = json.decodeFromJsonElement<SemanticTokensParams>(SemanticTokensParams.serializer(), params)
     val path = URI(p.textDocument.uri).toPath()
-    log("${message.id} ST | $path")
     send(
         json.encodeToString(
             Message(
