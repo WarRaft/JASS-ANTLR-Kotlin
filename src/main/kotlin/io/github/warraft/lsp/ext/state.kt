@@ -38,9 +38,9 @@ fun LanguageServer.stateUpdate(path: Path, text: String, version: Int?) {
     val s = stateGet(path)
     if (s == null) return
     val sdk = mutableListOf<LanguageState>()
-    //for (state in sdkStateList) {
-//        if (s.path == state.path) break
-    //      sdk.add(state)
-//    }
+    for (state in sdkStateList) {
+        if (s.path == state.path) break
+        sdk.add(state)
+    }
     s.parse(CharStreams.fromString(text), sdk, version)
 }

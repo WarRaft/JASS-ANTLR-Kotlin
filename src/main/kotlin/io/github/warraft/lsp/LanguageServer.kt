@@ -18,6 +18,7 @@ class LanguageServer {
     private val writer = BufferedOutputStream(System.`out`)
 
     internal val languageMap = mutableMapOf<Path, String>()
+    internal val sdkStateList = mutableListOf<LanguageState>()
     internal val stateMap = mutableMapOf<Path, LanguageState>()
 
     val json = Json {
@@ -99,6 +100,7 @@ class LanguageServer {
 
         when (message.method) {
             InitializeParams.METHOD -> initialize(message)
+            "workspace/didChangeConfiguration" -> didChangeConfiguration(message)
             "textDocument/didChange" -> didChange(message)
             "textDocument/didOpen" -> didOpen(message)
             "textDocument/semanticTokens/full" -> semanticTokens(message)

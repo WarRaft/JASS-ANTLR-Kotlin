@@ -1,6 +1,5 @@
 package io.github.warraft.language._.lsp4j
 
-import com.google.gson.JsonObject
 import io.github.warraft.language._.lsp4j.service.WorkspaceServiceEx
 import io.github.warraft.language._.lsp4j.service.document.TextDocumentServiceEx
 import org.eclipse.lsp4j.*
@@ -13,7 +12,6 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
     private val workspaceService = WorkspaceServiceEx(this)
 
     val textDocumentService = TextDocumentServiceEx(this)
-
 
     var client: LanguageClient? = null
 
@@ -29,10 +27,10 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
     override fun initialize(params: InitializeParams?): CompletableFuture<InitializeResult?> {
         this.params = params
 
-        val opt = params?.initializationOptions
+        //val opt = params?.initializationOptions
 
         try {
-            if (opt is JsonObject) workspaceService.didChangeSDK(opt["settings"] as? JsonObject)
+            //if (opt is JsonObject) workspaceService.didChangeSDK(opt["settings"] as? JsonObject)
         } catch (e: Throwable) {
             client?.showMessage(MessageParams(MessageType.Error, e.stackTraceToString()))
         }
