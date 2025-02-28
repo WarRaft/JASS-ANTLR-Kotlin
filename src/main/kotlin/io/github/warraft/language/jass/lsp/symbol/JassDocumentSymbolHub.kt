@@ -1,4 +1,4 @@
-package io.github.warraft.language.jass.lsp4j.symbol
+package io.github.warraft.language.jass.lsp.symbol
 
 import io.github.warraft.lsp.data.DocumentSymbol
 import io.github.warraft.lsp.data.Range

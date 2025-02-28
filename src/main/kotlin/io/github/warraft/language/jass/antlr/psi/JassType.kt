@@ -2,8 +2,8 @@ package io.github.warraft.language.jass.antlr.psi
 
 import io.github.warraft.JassParser.ExtendsRuleContext
 import io.github.warraft.JassParser.TypeContext
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenModifier
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenType
+import io.github.warraft.lsp.data.semantic.SemanticTokenModifier
+import io.github.warraft.lsp.data.semantic.SemanticTokenType
 import io.github.warraft.language._.lsp4j.utils.DiagnosticRelatedInformationEx
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.BOOLEAN
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.CODE
@@ -13,8 +13,13 @@ import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.REAL
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.STRING
 import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language.jass.lsp4j.diagnostic.JassDiagnosticCode.ERROR
-import io.github.warraft.language.jass.lsp4j.diagnostic.JassDiagnosticCode.PLUGIN
+import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode.ERROR
+import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode.PLUGIN
+import io.github.warraft.lsp.data.Diagnostic
+import io.github.warraft.lsp.data.DiagnosticRelatedInformation
+import io.github.warraft.lsp.data.DiagnosticSeverity
+import io.github.warraft.lsp.data.Location
+import io.github.warraft.lsp.data.Range
 import org.antlr.v4.runtime.tree.TerminalNode
 
 class JassType(override val state: JassState) : JassNodeBase() {
@@ -69,10 +74,23 @@ class JassType(override val state: JassState) : JassNodeBase() {
                     for (s in state.states + state) {
                         val d = s.typeScope.definition(type)
                         if (d == null) continue
-                        state.diagnosticHub.add(
-                            idCtx, ERROR, "Type redeclared",
-                            listOf(DiagnosticRelatedInformationEx.get(d, "First declaration of '${d.name}' is here"))
-                        )
+                        Diagnostic(
+                            range = Range.of(idCtx) ?: Range.zero,
+                            severity = DiagnosticSeverity.Error,
+                            code = ERROR.name,
+                            message = "Type redeclared",
+                            relatedInformation = listOf(
+                                DiagnosticRelatedInformation(
+                                    location = Location(
+                                        uri = state.path?.toUri().toString(),
+                                        range = Range.of(d.symbol) ?: Range.zero,
+                                    ),
+                                    message = "First declaration of '${d.name}' is here"
+                                )
+                            )
+                        ).also {
+                            state.diagnosticHub.add(it)
+                        }
                         return
                     }
                 }

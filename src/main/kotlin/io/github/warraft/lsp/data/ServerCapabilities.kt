@@ -13,7 +13,9 @@ data class ServerCapabilities(
     val hoverProvider: Boolean? = null,
     val foldingRangeProvider: Boolean? = null,
     val documentSymbolProvider: Boolean? = null,
+    val diagnosticProvider: DiagnosticOptions? = null,
 ) {
+
     /*
 
     /**
@@ -187,12 +189,7 @@ data class ServerCapabilities(
 	inlayHintProvider?: boolean | InlayHintOptions
 		 | InlayHintRegistrationOptions;
 
-	/**
-	 * The server has support for pull model diagnostics.
-	 *
-	 * @since 3.17.0
-	 */
-	diagnosticProvider?: DiagnosticOptions | DiagnosticRegistrationOptions;
+
 
 	/**
 	 * The server provides workspace symbol support.

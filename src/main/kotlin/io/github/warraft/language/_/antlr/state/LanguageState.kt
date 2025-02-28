@@ -3,11 +3,11 @@ package io.github.warraft.language._.antlr.state
 import io.github.warraft.language._.antlr.utils.LanguageErrorListener
 import io.github.warraft.language._.antlr.utils.LanguageTokenFactory
 import io.github.warraft.language._.lsp4j.LanguageServerEx
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenHub
+import io.github.warraft.lsp.data.semantic.SemanticTokenHub
 import io.github.warraft.language.jass.antlr.utils.JassTokenTree
-import io.github.warraft.language.jass.lsp4j.diagnostic.JassDiagnosticHub
-import io.github.warraft.language.jass.lsp4j.folding.JassFoldingHub
-import io.github.warraft.language.jass.lsp4j.symbol.JassDocumentSymbolHub
+import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticHub
+import io.github.warraft.language.jass.lsp.folding.JassFoldingHub
+import io.github.warraft.language.jass.lsp.symbol.JassDocumentSymbolHub
 import io.github.warraft.lsp.data.CompletionList
 import io.github.warraft.lsp.data.DocumentHighlight
 import io.github.warraft.lsp.data.Hover

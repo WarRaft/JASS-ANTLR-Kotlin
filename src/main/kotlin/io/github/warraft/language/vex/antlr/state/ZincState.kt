@@ -4,7 +4,7 @@ import io.github.warraft.ZincLexer
 import io.github.warraft.ZincParser
 import io.github.warraft.ZincParser.*
 import io.github.warraft.language._.antlr.state.LanguageState
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenType
+import io.github.warraft.lsp.data.semantic.SemanticTokenType
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.Lexer

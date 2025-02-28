@@ -1,4 +1,4 @@
-package io.github.warraft.language._.lsp4j.service.document.semantic.token
+package io.github.warraft.lsp.data.semantic
 
 // https://code.visualstudio.com/api/language-extensions/semantic-highlight-guide#standard-token-types-and-modifiers
 enum class SemanticTokenType {

@@ -3,15 +3,12 @@ package io.github.warraft.language.jass.antlr.psi
 import io.github.warraft.JassParser.*
 import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language.jass.lsp4j.diagnostic.JassDiagnosticCode.ERROR
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenModifier.DEFINITION
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenType.*
-import io.github.warraft.language._.lsp4j.utils.DiagnosticRelatedInformationEx
-import io.github.warraft.language._.lsp4j.utils.RangeEx
-import io.github.warraft.lsp.data.SymbolKind
+import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode.ERROR
+import io.github.warraft.lsp.data.*
+import io.github.warraft.lsp.data.semantic.SemanticTokenModifier.DEFINITION
+import io.github.warraft.lsp.data.semantic.SemanticTokenType.*
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
-import org.eclipse.lsp4j.Range
 
 class JassVar(override val state: JassState) : JassNodeBase() {
     lateinit var scope: JassVarScope
@@ -127,12 +124,23 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                         if (global) for (s in state.states + state) {
                             val d = s.varScope.definition(it)
                             if (d == null) continue
-                            state
-                                .diagnosticHub
-                                .add(
-                                    nameCtx, ERROR, "Variable redeclared",
-                                    listOf(DiagnosticRelatedInformationEx.get(d, "First declaration of '${d.name}' is here"))
+                            Diagnostic(
+                                range = Range.of(nameCtx) ?: Range.zero,
+                                severity = DiagnosticSeverity.Error,
+                                code = ERROR.name,
+                                message = "Variable redeclared",
+                                relatedInformation = listOf(
+                                    DiagnosticRelatedInformation(
+                                        location = Location(
+                                            uri = state.path?.toUri().toString(),
+                                            range = Range.of(d.symbol) ?: Range.zero,
+                                        ),
+                                        message = "First declaration of '${d.name}' is here"
+                                    )
                                 )
+                            ).also {
+                                state.diagnosticHub.add(it)
+                            }
                         }
 
                         it.scope.add(it, true)
@@ -265,12 +273,19 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                 it.param = d.param
             }
 
-            var brackRange: Range = RangeEx.get(lBrackCtx, rBrackCtx) ?: RangeEx.get(nameCtx)
+            var brackRange: Range = Range.of(lBrackCtx, rBrackCtx) ?: Range.zero
 
             if (d.array) {
                 val i = v.index
                 if (i == null) {
-                    state.diagnosticHub.add(brackRange, ERROR, "Missing index")
+                    Diagnostic(
+                        range = brackRange,
+                        severity = DiagnosticSeverity.Error,
+                        code = ERROR.name,
+                        message = "Missing index",
+                    ).also {
+                        state.diagnosticHub.add(it)
+                    }
                 } else {
                     /*
                     if (JassIntType().op(JassExprOp.Set, i.type) !is JassIntType) {
@@ -281,7 +296,14 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                 }
             } else {
                 if (lBrackCtx != null || rBrackCtx != null) {
-                    state.diagnosticHub.add(brackRange, ERROR, "Array access to non array variable")
+                    Diagnostic(
+                        range = brackRange,
+                        severity = DiagnosticSeverity.Error,
+                        code = ERROR.name,
+                        message = "Array access to non array variable",
+                    ).also {
+                        state.diagnosticHub.add(it)
+                    }
                 }
             }
 

@@ -1,16 +1,16 @@
 package io.github.warraft.language._.antlr.utils
 
-import io.github.warraft.language.jass.lsp4j.diagnostic.JassDiagnosticCode
+import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode
+import io.github.warraft.lsp.data.Diagnostic
+import io.github.warraft.lsp.data.DiagnosticSeverity
+import io.github.warraft.lsp.data.Position
+import io.github.warraft.lsp.data.Range
 import org.antlr.v4.runtime.BaseErrorListener
 import org.antlr.v4.runtime.Parser
 import org.antlr.v4.runtime.RecognitionException
 import org.antlr.v4.runtime.Recognizer
 import org.antlr.v4.runtime.atn.ATNConfigSet
 import org.antlr.v4.runtime.dfa.DFA
-import org.eclipse.lsp4j.Diagnostic
-import org.eclipse.lsp4j.DiagnosticSeverity
-import org.eclipse.lsp4j.Position
-import org.eclipse.lsp4j.Range
 import java.util.*
 
 class LanguageErrorListener() : BaseErrorListener() {
@@ -24,13 +24,18 @@ class LanguageErrorListener() : BaseErrorListener() {
         msg: String?,
         e: RecognitionException?,
     ) {
+        val l = (line - 1).toUInt()
+        val ch = charPositionInLine.toUInt()
         diagnostics.add(
+
             Diagnostic(
-                Range(Position(line - 1, charPositionInLine), Position(line - 1, charPositionInLine + 1)),
-                msg ?: "Uknown error",
-                DiagnosticSeverity.Error,
-                "",
-                JassDiagnosticCode.SYNTAX.name
+                range = Range(
+                    Position(l, ch),
+                    Position(l, ch + 1u)
+                ),
+                severity = DiagnosticSeverity.Error,
+                code = JassDiagnosticCode.SYNTAX.name,
+                message = msg ?: "Uknown error",
             )
         )
     }
@@ -66,7 +71,7 @@ class LanguageErrorListener() : BaseErrorListener() {
     ) {
     }
 
-    fun clear(){
+    fun clear() {
         diagnostics.clear()
     }
 }

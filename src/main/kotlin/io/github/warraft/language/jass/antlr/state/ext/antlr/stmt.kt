@@ -4,8 +4,8 @@ import io.github.warraft.JassParser.*
 import io.github.warraft.language.jass.antlr.psi.*
 import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language.jass.lsp4j.diagnostic.JassDiagnosticCode
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenType
+import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode
+import io.github.warraft.lsp.data.semantic.SemanticTokenType
 
 fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, function: JassFun) {
     for (ctx in ctxs) {

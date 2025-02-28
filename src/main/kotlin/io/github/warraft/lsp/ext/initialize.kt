@@ -1,7 +1,7 @@
 package io.github.warraft.lsp.ext
 
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenModifier
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenType
+import io.github.warraft.lsp.data.semantic.SemanticTokenModifier
+import io.github.warraft.lsp.data.semantic.SemanticTokenType
 import io.github.warraft.lsp.LanguageServer
 import io.github.warraft.lsp.data.*
 import io.github.warraft.lsp.data.CompletionOptions.CompletionItem
@@ -38,10 +38,11 @@ fun LanguageServer.initialize(message: Message) {
                                     labelDetailsSupport = true
                                 )
                             ),
+                            diagnosticProvider = DiagnosticOptions(),
                             documentHighlightProvider = true,
                             hoverProvider = true,
                             foldingRangeProvider = true,
-                            documentSymbolProvider = true,
+                            documentSymbolProvider = true
                         )
                     )
                 )

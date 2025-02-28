@@ -1,4 +1,5 @@
 package io.github.warraft.lsp.data
+
 import kotlinx.serialization.Serializable
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
@@ -12,6 +13,8 @@ data class Range(
     val end: Position,
 ) {
     companion object {
+        val zero = Range(Position(0u, 0u), Position(0u, 0u))
+
         private fun get(start: Token?, stop: Token?): Range? {
             if (start == null || stop == null) return null
             return Range(
@@ -29,5 +32,6 @@ data class Range(
         fun of(token: Token?): Range? = get(token, token)
         fun of(ctx: ParserRuleContext?): Range? = get(ctx?.start, ctx?.stop)
         fun of(node: TerminalNode?): Range? = get(node?.symbol, node?.symbol)
+        fun of(a: TerminalNode?, b: TerminalNode?): Range? = get(a?.symbol, b?.symbol)
     }
 }

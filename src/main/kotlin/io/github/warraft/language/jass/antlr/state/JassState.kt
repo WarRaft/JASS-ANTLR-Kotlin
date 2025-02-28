@@ -4,7 +4,7 @@ import io.github.warraft.JassLexer
 import io.github.warraft.JassParser
 import io.github.warraft.JassParser.*
 import io.github.warraft.language._.antlr.state.LanguageState
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenType
+import io.github.warraft.lsp.data.semantic.SemanticTokenType
 import io.github.warraft.language.jass.antlr.psi.JassFun
 import io.github.warraft.language.jass.antlr.psi.JassFunScope
 import io.github.warraft.language.jass.antlr.psi.JassType

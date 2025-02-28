@@ -1,4 +1,4 @@
-package io.github.warraft.language.jass.lsp4j.diagnostic
+package io.github.warraft.language.jass.lsp.diagnostic
 
 enum class JassDiagnosticCode {
     SYNTAX,

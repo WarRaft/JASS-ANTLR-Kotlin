@@ -1,4 +1,4 @@
-package io.github.warraft.language.jass.lsp4j.folding
+package io.github.warraft.language.jass.lsp.folding
 
 import io.github.warraft.lsp.data.FoldingRange
 import io.github.warraft.lsp.data.FoldingRangeKind

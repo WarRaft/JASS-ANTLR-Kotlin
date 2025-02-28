@@ -1,13 +1,11 @@
 package io.github.warraft.language._.lsp4j
 
-import io.github.warraft.language._.lsp4j.service.document.TextDocumentServiceEx
 import org.eclipse.lsp4j.*
 import org.eclipse.lsp4j.services.*
 import java.util.concurrent.CompletableFuture
 
 
 class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClientAware {
-    val textDocumentService = TextDocumentServiceEx(this)
 
     var client: LanguageClient? = null
 
@@ -24,13 +22,10 @@ class LanguageServerEx(val args: Array<String>) : LanguageServer, LanguageClient
 
         val capabilities = ServerCapabilities().apply {
 
-            //documentSymbolProvider = Either.forRight(DocumentSymbolOptions())
-
-        //diagnosticProvider = DiagnosticRegistrationOptions()
+            //definitionProvider = Either.forRight(DefinitionOptions())
 
             //referencesProvider = Either.forRight(ReferenceOptions())
 
-        //definitionProvider = Either.forRight(DefinitionOptions())
 
             //documentFormattingProvider = Either.forRight(DocumentFormattingOptions())
 

@@ -1,4 +1,4 @@
-package io.github.warraft.language._.lsp4j.service.document.semantic.token
+package io.github.warraft.lsp.data.semantic
 
 enum class SemanticTokenModifier {
     DECLARATION,

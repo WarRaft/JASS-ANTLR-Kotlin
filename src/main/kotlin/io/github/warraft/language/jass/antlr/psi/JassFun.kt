@@ -1,18 +1,22 @@
 package io.github.warraft.language.jass.antlr.psi
 
 import io.github.warraft.JassParser.*
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenModifier.DECLARATION
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenModifier.DOCUMENTATION
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenType
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenType.COMMENT
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenType.KEYWORD
-import io.github.warraft.language._.lsp4j.utils.DiagnosticRelatedInformationEx
+import io.github.warraft.lsp.data.semantic.SemanticTokenModifier.DECLARATION
+import io.github.warraft.lsp.data.semantic.SemanticTokenModifier.DOCUMENTATION
+import io.github.warraft.lsp.data.semantic.SemanticTokenType
+import io.github.warraft.lsp.data.semantic.SemanticTokenType.COMMENT
+import io.github.warraft.lsp.data.semantic.SemanticTokenType.KEYWORD
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.CODE
 import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.language.jass.antlr.state.JassState
 import io.github.warraft.language.jass.antlr.state.ext.antlr.stmt
-import io.github.warraft.language.jass.lsp4j.diagnostic.JassDiagnosticCode.ERROR
+import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode.ERROR
+import io.github.warraft.lsp.data.Diagnostic
+import io.github.warraft.lsp.data.DiagnosticRelatedInformation
+import io.github.warraft.lsp.data.DiagnosticSeverity
 import io.github.warraft.lsp.data.DocumentSymbol
+import io.github.warraft.lsp.data.Location
+import io.github.warraft.lsp.data.Range
 import io.github.warraft.lsp.data.SymbolKind
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
@@ -133,12 +137,23 @@ class JassFun(override val state: JassState) : JassNodeBase() {
                         for (s in state.states + state) {
                             val d = s.funScope.definition(f)
                             if (d == null) continue
-                            state
-                                .diagnosticHub
-                                .add(
-                                    nameCtx, ERROR, "Function redeclared",
-                                    listOf(DiagnosticRelatedInformationEx.get(d, "First declaration of '${d.name}' is here"))
+                            Diagnostic(
+                                range = Range.of(nameCtx) ?: Range.zero,
+                                severity = DiagnosticSeverity.Error,
+                                code = ERROR.name,
+                                message = "Function redeclared",
+                                relatedInformation = listOf(
+                                    DiagnosticRelatedInformation(
+                                        location = Location(
+                                            uri = state.path?.toUri().toString(),
+                                            range = Range.of(d.symbol) ?: Range.zero,
+                                        ),
+                                        message = "First declaration of '${d.name}' is here"
+                                    )
                                 )
+                            ).also {
+                                state.diagnosticHub.add(it)
+                            }
                         }
 
                         state.funScope.add(f, true)

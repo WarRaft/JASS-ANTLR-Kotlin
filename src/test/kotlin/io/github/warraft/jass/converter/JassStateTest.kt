@@ -1,7 +1,11 @@
 package io.github.warraft.jass.converter
 
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenType
 import io.github.warraft.language.jass.antlr.state.JassState
+import io.github.warraft.lsp.data.FullDocumentDiagnosticReport
+import io.github.warraft.lsp.data.Message
+import io.github.warraft.lsp.data.semantic.SemanticTokenType
+import io.github.warraft.lsp.serializer.IntOrString
+import kotlinx.serialization.json.Json
 import org.antlr.v4.runtime.CharStreams
 import org.junit.jupiter.api.Test
 
@@ -9,31 +13,17 @@ class JassStateTest {
 
     @Test
     fun test1() {
-        val s = JassState().apply {
-            parse(
-                CharStreams.fromString(
-                    """
-                globals
-                    real bj_PI = 4     
-                endglobals
-                        
-                function main takes nothing returns nothing
-                    set bj_PI = 1 + DD
-                endfunction
-                """.trimIndent()
-                ),
-                emptyList(),
-                null,
+        val s = Json.encodeToString(
+            Message(
+                id = IntOrString.Ival(1),
+                result = Json.encodeToJsonElement(
+                    FullDocumentDiagnosticReport.serializer(), FullDocumentDiagnosticReport(
+                        items = emptyList(),
+                    )
+                )
             )
-        }
-
-        /*
-        for (e in s.diagnosticHub.diagnostics) {
-            println(e.message)
-        }
-
-         */
-
+        )
+        println(s)
     }
 
 
@@ -119,7 +109,8 @@ class JassStateTest {
                     set anal = 2
                 endfunction
                 """.trimIndent()
-            ),emptyList(),
+            ),
+            emptyList(),
             null,
         )
     }
@@ -152,7 +143,8 @@ class JassStateTest {
                     set l__Array[3] = -1
                 endfunction
                 """.trimIndent()
-            ),emptyList(),
+            ),
+            emptyList(),
             null,
         )
 
@@ -175,7 +167,8 @@ class JassStateTest {
                     boolean b = null == "b"   
                 endglobals
                 """.trimIndent()
-            ),emptyList(),
+            ),
+            emptyList(),
             null,
         )
 
@@ -203,12 +196,12 @@ class JassStateTest {
                     return SquareRoot(dx * dx + dy * dy)
                 endfunction
                 """.trimIndent()
-            ),emptyList(),
+            ),
+            emptyList(),
             null,
         )
 
         //state.errors.forEach { println("⚠️ $it") }
-
 
 
         //assert(state.errors.isEmpty())

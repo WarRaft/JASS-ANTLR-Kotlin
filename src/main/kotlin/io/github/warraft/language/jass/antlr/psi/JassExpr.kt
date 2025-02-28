@@ -17,11 +17,11 @@ import io.github.warraft.JassParser.ExprRealContext
 import io.github.warraft.JassParser.ExprStrContext
 import io.github.warraft.JassParser.ExprUnContext
 import io.github.warraft.JassParser.ExprVarContext
-import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenType
+import io.github.warraft.lsp.data.semantic.SemanticTokenType
 import io.github.warraft.language.jass.antlr.psi.JassExprOp.*
 import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language.jass.lsp4j.diagnostic.JassDiagnosticCode
+import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
 

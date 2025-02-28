@@ -8,9 +8,11 @@ import io.github.warraft.lsp.data.MessageLogType
 import io.github.warraft.lsp.ext.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.nio.file.Path
+import kotlin.system.exitProcess
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#headerPart
 class LanguageServer {
@@ -109,8 +111,12 @@ class LanguageServer {
             "textDocument/hover" -> hover(message)
             "textDocument/foldingRange" -> foldingRange(message)
             "textDocument/documentSymbol" -> documentSymbol(message)
+            "textDocument/diagnostic" -> diagnostic(message)
             "$/cancelRequest" -> cancel(message)
             "$/setTrace" -> {}
+            "shutdown" -> {
+                send(json.encodeToString(Message(id = message.id, result = JsonNull)))
+            }
 
             "exit" -> exit = true
             else -> log("${message.id} - ${message.method}")
@@ -121,7 +127,10 @@ class LanguageServer {
 
     fun start() {
         while (true) {
-            if (exit) break
+            if (exit) {
+                exitProcess(0)
+                break
+            }
             try {
                 loop()
             } catch (e: Exception) {
