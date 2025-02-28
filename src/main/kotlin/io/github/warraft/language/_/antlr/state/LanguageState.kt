@@ -10,12 +10,11 @@ import io.github.warraft.language.jass.lsp4j.folding.JassFoldingHub
 import io.github.warraft.language.jass.lsp4j.symbol.JassDocumentSymbolHub
 import io.github.warraft.lsp.data.CompletionList
 import io.github.warraft.lsp.data.DocumentHighlight
+import io.github.warraft.lsp.data.Hover
 import io.github.warraft.lsp.data.Position
 import org.antlr.v4.runtime.*
 import org.eclipse.lsp4j.DefinitionParams
 import org.eclipse.lsp4j.DocumentFormattingParams
-import org.eclipse.lsp4j.Hover
-import org.eclipse.lsp4j.HoverParams
 import org.eclipse.lsp4j.Location
 import org.eclipse.lsp4j.LocationLink
 import org.eclipse.lsp4j.ReferenceParams
@@ -35,12 +34,13 @@ abstract class LanguageState {
 
     open fun completion(): CompletionList? = null
     open fun documentHighlight(position: Position): List<DocumentHighlight>? = null
+    open fun hover(position: Position): Hover? = null
 
-    open fun hover(params: HoverParams?): Hover? = null
-    open fun signatureHelp(params: SignatureHelpParams?): SignatureHelp? = null
     open fun definition(params: DefinitionParams?): MutableList<LocationLink> = mutableListOf()
     open fun references(params: ReferenceParams?): MutableList<out Location?> = mutableListOf()
     open fun formatting(params: DocumentFormattingParams?): List<TextEdit> = listOf()
+
+    open fun signatureHelp(params: SignatureHelpParams?): SignatureHelp? = null
 
     val foldingHub = JassFoldingHub()
     val diagnosticHub = JassDiagnosticHub()

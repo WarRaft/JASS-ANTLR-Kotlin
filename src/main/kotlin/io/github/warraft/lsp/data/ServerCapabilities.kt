@@ -10,6 +10,8 @@ data class ServerCapabilities(
     val semanticTokensProvider: SemanticTokensOptions? = null,
     val completionProvider: CompletionOptions? = null,
     val documentHighlightProvider: Boolean? = null,
+    val hoverProvider: Boolean? = null,
+    val foldingRangeProvider: Boolean? = null,
 ) {
 
     /*
@@ -34,11 +36,6 @@ data class ServerCapabilities(
 	 */
 	notebookDocumentSync?: NotebookDocumentSyncOptions
 		| NotebookDocumentSyncRegistrationOptions;
-
-	/**
-	 * The server provides hover support.
-	 */
-	hoverProvider?: boolean | HoverOptions;
 
 	/**
 	 * The server provides signature help support.
@@ -131,13 +128,6 @@ data class ServerCapabilities(
 	 */
 	renameProvider?: boolean | RenameOptions;
 
-	/**
-	 * The server provides folding provider support.
-	 *
-	 * @since 3.10.0
-	 */
-	foldingRangeProvider?: boolean | FoldingRangeOptions
-		| FoldingRangeRegistrationOptions;
 
 	/**
 	 * The server provides execute command support.

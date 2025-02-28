@@ -2,17 +2,14 @@ package io.github.warraft.language.jass.antlr.state.ext.lsp4j
 
 import io.github.warraft.language.jass.antlr.psi.JassFun
 import io.github.warraft.language.jass.antlr.state.JassState
-import org.eclipse.lsp4j.Hover
-import org.eclipse.lsp4j.HoverParams
-import org.eclipse.lsp4j.MarkupContent
-import org.eclipse.lsp4j.MarkupKind
+import io.github.warraft.lsp.data.Hover
+import io.github.warraft.lsp.data.MarkupContent
+import io.github.warraft.lsp.data.MarkupKind
+import io.github.warraft.lsp.data.Position
 
-fun JassState.hoverExt(params: HoverParams?): Hover? {
-    val pos = params?.position ?: return null
-    val node = tokenTree.find(pos) ?: return null
+fun JassState.hoverExt(position: Position?): Hover? {
+    val node = tokenTree.find(position) ?: return null
     val b = StringBuilder()
-
-    // https://warraft.github.io/JASS-doc/function.html
 
     when (node) {
         is JassFun -> {
@@ -39,5 +36,5 @@ fun JassState.hoverExt(params: HoverParams?): Hover? {
     }
 
     if (b.isEmpty()) return null
-    return Hover(MarkupContent(MarkupKind.MARKDOWN, b.toString()))
+    return Hover(MarkupContent(MarkupKind.Markdown, b.toString()))
 }

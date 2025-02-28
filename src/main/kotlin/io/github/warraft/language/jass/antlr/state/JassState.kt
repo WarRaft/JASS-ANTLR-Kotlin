@@ -20,12 +20,11 @@ import io.github.warraft.language.jass.antlr.state.ext.lsp4j.referencesExt
 import io.github.warraft.language.jass.antlr.state.ext.lsp4j.signatureHelpExt
 import io.github.warraft.lsp.data.CompletionList
 import io.github.warraft.lsp.data.DocumentHighlight
+import io.github.warraft.lsp.data.Hover
 import io.github.warraft.lsp.data.Position
 import org.antlr.v4.runtime.*
 import org.eclipse.lsp4j.DefinitionParams
 import org.eclipse.lsp4j.DocumentFormattingParams
-import org.eclipse.lsp4j.Hover
-import org.eclipse.lsp4j.HoverParams
 import org.eclipse.lsp4j.Location
 import org.eclipse.lsp4j.LocationLink
 import org.eclipse.lsp4j.ReferenceParams
@@ -42,14 +41,12 @@ class JassState : LanguageState() {
 
     override fun completion(): CompletionList? = completionExt()
     override fun documentHighlight(position: Position): List<DocumentHighlight>? = documentHighlightExt(position)
+    override fun hover(position: Position): Hover? = hoverExt(position)
 
-
-    override fun hover(params: HoverParams?): Hover? = hoverExt(params)
-    override fun signatureHelp(params: SignatureHelpParams?): SignatureHelp? = signatureHelpExt(params)
     override fun definition(params: DefinitionParams?): MutableList<LocationLink> = definitionExt(params)
-
     override fun references(params: ReferenceParams?): MutableList<out Location?> = referencesExt(params)
     override fun formatting(params: DocumentFormattingParams?): List<TextEdit> = formattingEx(params)
+    override fun signatureHelp(params: SignatureHelpParams?): SignatureHelp? = signatureHelpExt(params)
 
     override fun lexer(stream: CharStream): Lexer = JassLexer(stream)
     override fun parser(stream: CommonTokenStream): Parser = JassParser(stream)

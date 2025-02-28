@@ -106,6 +106,8 @@ class LanguageServer {
             "textDocument/semanticTokens/full" -> semanticTokens(message)
             "textDocument/completion" -> completion(message)
             "textDocument/documentHighlight" -> documentHighlight(message)
+            "textDocument/hover" -> hover(message)
+            "textDocument/foldingRange" -> foldingRange(message)
             "$/cancelRequest" -> cancel(message)
             "$/setTrace" -> {}
 
