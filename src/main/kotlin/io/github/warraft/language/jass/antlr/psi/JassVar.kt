@@ -8,10 +8,10 @@ import io.github.warraft.language._.lsp4j.service.document.semantic.token.Semant
 import io.github.warraft.language._.lsp4j.service.document.semantic.token.SemanticTokenType.*
 import io.github.warraft.language._.lsp4j.utils.DiagnosticRelatedInformationEx
 import io.github.warraft.language._.lsp4j.utils.RangeEx
+import io.github.warraft.lsp.data.SymbolKind
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
 import org.eclipse.lsp4j.Range
-import org.eclipse.lsp4j.SymbolKind
 
 class JassVar(override val state: JassState) : JassNodeBase() {
     lateinit var scope: JassVarScope

@@ -1,15 +1,13 @@
 package io.github.warraft.language.jass.lsp4j.symbol
 
-import io.github.warraft.language._.lsp4j.utils.RangeEx
+import io.github.warraft.lsp.data.DocumentSymbol
+import io.github.warraft.lsp.data.Range
+import io.github.warraft.lsp.data.SymbolKind
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
-import org.eclipse.lsp4j.DocumentSymbol
-import org.eclipse.lsp4j.SymbolInformation
-import org.eclipse.lsp4j.SymbolKind
-import org.eclipse.lsp4j.jsonrpc.messages.Either
 
 class JassDocumentSymbolHub {
-    val symbols = mutableListOf<Either<SymbolInformation?, DocumentSymbol?>>()
+    val symbols = mutableListOf<DocumentSymbol>()
 
     fun add(
         range: ParserRuleContext?,
@@ -17,24 +15,21 @@ class JassDocumentSymbolHub {
         kind: SymbolKind,
         parent: DocumentSymbol? = null,
     ): DocumentSymbol? {
-        if (range == null || selectionRange == null) return null
+        val name = selectionRange?.text ?: return null
+
+        val r = Range.of(range) ?: return null
+        val sr = Range.of(selectionRange) ?: return null
 
         val s = DocumentSymbol(
-            selectionRange.text,
-            kind,
-            RangeEx.get(range),
-            RangeEx.get(selectionRange),
+            name = name,
+            detail = null,
+            kind = kind,
+            range = r,
+            selectionRange = sr,
         )
 
-        if (parent == null) {
-            symbols.add(Either.forRight(s))
-        } else {
-            if (parent.children == null) {
-                parent.children = mutableListOf<DocumentSymbol>()
-            }
-            parent.children.add(s)
-        }
-
+        if (parent == null) symbols.add(s)
+        else parent.append(s)
         return s
     }
 
@@ -43,3 +38,4 @@ class JassDocumentSymbolHub {
     }
 
 }
+

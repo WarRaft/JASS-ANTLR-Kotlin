@@ -108,6 +108,7 @@ class LanguageServer {
             "textDocument/documentHighlight" -> documentHighlight(message)
             "textDocument/hover" -> hover(message)
             "textDocument/foldingRange" -> foldingRange(message)
+            "textDocument/documentSymbol" -> documentSymbol(message)
             "$/cancelRequest" -> cancel(message)
             "$/setTrace" -> {}
 

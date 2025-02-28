@@ -12,8 +12,8 @@ data class ServerCapabilities(
     val documentHighlightProvider: Boolean? = null,
     val hoverProvider: Boolean? = null,
     val foldingRangeProvider: Boolean? = null,
+    val documentSymbolProvider: Boolean? = null,
 ) {
-
     /*
 
     /**
@@ -76,10 +76,7 @@ data class ServerCapabilities(
 	 */
 	referencesProvider?: boolean | ReferenceOptions;
 
-	/**
-	 * The server provides document symbol support.
-	 */
-	documentSymbolProvider?: boolean | DocumentSymbolOptions;
+
 
 	/**
 	 * The server provides code actions. The `CodeActionOptions` return type is

@@ -12,10 +12,10 @@ import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.language.jass.antlr.state.JassState
 import io.github.warraft.language.jass.antlr.state.ext.antlr.stmt
 import io.github.warraft.language.jass.lsp4j.diagnostic.JassDiagnosticCode.ERROR
+import io.github.warraft.lsp.data.DocumentSymbol
+import io.github.warraft.lsp.data.SymbolKind
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
-import org.eclipse.lsp4j.DocumentSymbol
-import org.eclipse.lsp4j.SymbolKind
 
 class JassFun(override val state: JassState) : JassNodeBase() {
 
@@ -177,7 +177,6 @@ class JassFun(override val state: JassState) : JassNodeBase() {
                             if (idCtx != null) {
                                 state.semanticHub.add(idCtx, SemanticTokenType.TYPE)
                                 f.documentSymbol?.detail = idCtx.text
-
 
                                 //f.type = state.typeFromString(idCtx.text)
                                 //if (f.type is JassUndefinedType) state.diagnosticHub.add(idCtx, ERROR, "Unknown type: ${idCtx.text}")
