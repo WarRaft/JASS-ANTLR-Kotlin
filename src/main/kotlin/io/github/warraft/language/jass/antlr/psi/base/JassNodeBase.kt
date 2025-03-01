@@ -23,7 +23,7 @@ abstract class JassNodeBase() {
     var symbol: Token? = null
     var definition: ParserRuleContext? = null
 
-    fun typecheck(op: JassExprOp?, node: JassNodeBase?): JassTypeName? {
+    fun typeCheck(op: JassExprOp?, node: JassNodeBase?): JassTypeName? {
         val a = type?.name ?: return null
         val b = node?.type?.name ?: return null
 

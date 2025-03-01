@@ -16,11 +16,11 @@ class Type {
     fun test() {
         val state = state(
             """
-                type a extends handle
-                type b extends a
-                type c extends b
-                type d extends handle
-                type e extends u
+                globals
+	integer a = 2
+	anal b = 3
+	integer c = a
+endglobals
             """.trimIndent()
         )
 

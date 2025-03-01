@@ -103,12 +103,13 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                         state.diagnosticHub.add(ctx, ERROR, "Missing name")
                         return null
                     }
-                    if (typeCtx == null) {
+
+                    val type = JassType.part(typeCtx, state)
+
+                    if (type == null) {
                         state.diagnosticHub.add(ctx, ERROR, "Missing type")
                         return null
                     }
-
-                    val typeName = typeCtx.text
 
                     state.semanticHub
                         .add(nameCtx, PARAMETER, DEFINITION)
@@ -116,8 +117,8 @@ class JassVar(override val state: JassState) : JassNodeBase() {
 
                     v.also {
                         it.constant = constantCtx != null
+                        it.type = type.type
                         it.name = nameCtx.text
-                        //it.type = state.typeFromString(typeName)
                         it.array = arrayCtx != null
                         it.scope = function?.varScope ?: state.varScope
 
@@ -148,7 +149,7 @@ class JassVar(override val state: JassState) : JassNodeBase() {
 
                     when (ctx) {
                         is ParamContext -> {
-                            if (function?.documentSymbol != null) state.documentSymbolHub.add(ctx, nameCtx, SymbolKind.Variable, function.documentSymbol).also { it?.detail = typeName }
+                            if (function?.documentSymbol != null) state.documentSymbolHub.add(ctx, nameCtx, SymbolKind.Variable, function.documentSymbol).also { it?.detail = type.name }
                             v.also {
                                 it.param = true
                             }
@@ -230,7 +231,14 @@ class JassVar(override val state: JassState) : JassNodeBase() {
             }
 
             if (nameCtx == null) {
-                state.diagnosticHub.add(ctx, ERROR, "Missing name")
+                Diagnostic(
+                    range = Range.of(ctx) ?: Range.zero,
+                    message = "Missing name",
+                    severity = DiagnosticSeverity.Error,
+                    code = ERROR.name
+                ).also {
+                    state.diagnosticHub.add(it)
+                }
                 return null
             }
 

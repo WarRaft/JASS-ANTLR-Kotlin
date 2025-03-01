@@ -61,7 +61,7 @@ class JassState : LanguageState() {
                         for (ctx in it.variable()) JassVar.parse(ctx, null, this)
                     }
 
-                    is TypeContext -> JassType.parse(it, this)
+                    is TypeContext -> JassType.definition(it, this)
                     is NativeRuleContext -> JassFun.parse(it, null, this)
                     is FunctionContext -> JassFun.parse(it, null, this)
                 }

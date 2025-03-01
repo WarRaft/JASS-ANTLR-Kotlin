@@ -40,11 +40,15 @@ class JassExpr(
             EQ, NEQ,
             AND, OR,
             SET,
-                -> a?.typecheck(op, b)
+                -> a?.typeCheck(op, b)
+
+            GET -> when (a) {
+                is JassNodeBase -> a.type
+                else -> null
+            }
 
             UNSUB,
             UNNOT,
-            GET,
             PAREN,
                 -> a?.type
 
@@ -85,36 +89,7 @@ class JassExpr(
             val a = parse(state, aCtx, function)
             val b = parse(state, bCtx, function)
 
-            val e = JassExpr(state = state, op = op, a = a, b = b)
-
-
-            /*
-
-            init {
-                /*
-                type = JassUndefinedType()
-                if (a?.type != null) {
-                    type = a.type!!
-                }
-                if (a != null && b != null) {
-                    type = a.type?.op(op, b.type!!) ?: JassUndefinedType()
-                }
-
-                 */
-            }
-
-
-            if (e.type is JassUndefinedType) {
-                diagnosticHub.add(
-                    ctx,
-                    JassDiagnosticCode.ERROR,
-                    "Operation not exists: (${a?.text})->${e.a?.type?.name} $optext (${b?.text})->${e.b?.type?.name}"
-                )
-            }
-
-             */
-
-            return e
+            return JassExpr(state = state, op = op, a = a, b = b)
         }
 
 

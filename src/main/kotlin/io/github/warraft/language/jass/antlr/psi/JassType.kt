@@ -25,7 +25,45 @@ class JassType(override val state: JassState) : JassNodeBase() {
     var base: String? = null
 
     companion object {
-        fun parse(ctx: TypeContext, state: JassState) {
+        fun part(ctx: TerminalNode?, state: JassState): JassType? {
+            val name = ctx?.text ?: return null
+
+            val type = JassType(state).also {
+                it.name = name
+                it.symbol = ctx.symbol
+                state.typeScope.add(it)
+            }
+
+            if (JassTypeName.isBase(name)) {
+                type.type = JassTypeName(name)
+            } else for (s in state.states + state) {
+                val d = s.typeScope.definition(type) ?: continue
+                type.also {
+                    it.type = d.type
+                    it.base = d.base
+                }
+                break
+            }
+
+            if (type.type == null) {
+                Diagnostic(
+                    range = Range.of(ctx) ?: Range.zero,
+                    message = "Type $name is not defined",
+                    severity = DiagnosticSeverity.Error,
+                    code = ERROR.name
+                ).also {
+                    state.diagnosticHub.add(it)
+                }
+                type.type = JassTypeName(JassTypeName.UNDEFINED)
+            }
+
+            return type.also {
+                state.typeScope.add(it)
+                state.tokenTree.add(it)
+            }
+        }
+
+        fun definition(ctx: TypeContext, state: JassState) {
             val typeCtx: TerminalNode? = ctx.TYPE()
             val idCtx: TerminalNode? = ctx.ID()
 
@@ -122,9 +160,10 @@ class JassType(override val state: JassState) : JassNodeBase() {
                 return
             }
 
-            state.typeScope.add(type.also {
+            type.also {
+                state.typeScope.add(it, true)
                 state.tokenTree.add(it)
-            }, true)
+            }
         }
     }
 }

@@ -11,5 +11,12 @@ class JassTypeName(var name: String) {
         const val HANDLE = "handle"
         const val NOTHING = "nothing"
         const val UNDEFINED = "undefined"
+
+        fun isBase(str: String?): Boolean = when (str) {
+            INTEGER, REAL, STRING, BOOLEAN, CODE, HANDLE -> true
+            else -> false
+        }
     }
+
+    override fun toString(): String = "JassTypeName(name=$name)"
 }

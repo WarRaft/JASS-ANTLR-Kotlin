@@ -115,6 +115,12 @@ class LanguageServer {
             "textDocument/definition" -> definition(message)
             "textDocument/references" -> references(message)
             "textDocument/formatting" -> formatting(message)
+
+            "textDocument/didClose",
+            "completionItem/resolve",
+                -> {
+            }
+
             "$/cancelRequest" -> cancel(message)
             "$/setTrace" -> {}
             "shutdown" -> {
