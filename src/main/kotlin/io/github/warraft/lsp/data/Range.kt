@@ -33,5 +33,10 @@ data class Range(
         fun of(ctx: ParserRuleContext?): Range? = get(ctx?.start, ctx?.stop)
         fun of(node: TerminalNode?): Range? = get(node?.symbol, node?.symbol)
         fun of(a: TerminalNode?, b: TerminalNode?): Range? = get(a?.symbol, b?.symbol)
+
+        fun of(la: Int, ca: Int, lb: Int, cb: Int): Range = Range(
+            Position(la.toUInt(), ca.toUInt()),
+            Position(lb.toUInt(), cb.toUInt()),
+        )
     }
 }

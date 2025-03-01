@@ -44,6 +44,8 @@ fun LanguageServer.initialize(message: Message) {
                             foldingRangeProvider = true,
                             documentSymbolProvider = true,
                             definitionProvider = true,
+                            referencesProvider = true,
+                            documentFormattingProvider = true,
                         )
                     )
                 )

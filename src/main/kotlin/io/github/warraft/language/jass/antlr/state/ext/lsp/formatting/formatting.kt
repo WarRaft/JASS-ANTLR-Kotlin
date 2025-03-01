@@ -2,7 +2,6 @@ package io.github.warraft.language.jass.antlr.state.ext.lsp.formatting
 
 import io.github.warraft.language.jass.antlr.state.JassState
 import io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.JassFormatter
-import org.eclipse.lsp4j.DocumentFormattingParams
-import org.eclipse.lsp4j.TextEdit
+import io.github.warraft.lsp.data.TextEdit
 
-fun JassState.formattingEx(@Suppress("unused") params: DocumentFormattingParams?): List<TextEdit> = JassFormatter(this, rootCtx).fmt
+fun JassState.formattingEx(): List<TextEdit>? = JassFormatter(this, rootCtx).fmt

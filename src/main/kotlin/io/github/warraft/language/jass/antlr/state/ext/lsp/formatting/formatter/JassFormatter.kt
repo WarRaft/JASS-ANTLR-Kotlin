@@ -6,13 +6,12 @@ import io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.
 import io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.ext.function
 import io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.ext.type
 import io.github.warraft.language.jass.antlr.state.ext.lsp.formatting.formatter.ext.variable
+import io.github.warraft.lsp.data.Range
+import io.github.warraft.lsp.data.TextEdit
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.TerminalNode
 
-import org.eclipse.lsp4j.Position
-import org.eclipse.lsp4j.Range
-import org.eclipse.lsp4j.TextEdit
 
 class JassFormatter(val state: JassState, val root: ParserRuleContext) {
     val fmt = mutableListOf<TextEdit>()
@@ -47,7 +46,7 @@ class JassFormatter(val state: JassState, val root: ParserRuleContext) {
             t = "\n" + t
             start = prev.charPositionInLine + (prev.stopIndex - prev.startIndex) + 1
         }
-        fmt.add(TextEdit(Range(Position(line, start), Position(line, stop)), t))
+        fmt.add(TextEdit(Range.of(line, start, line, stop), t))
     }
 
     fun tab(node: TerminalNode?, num: Int) = tab(node?.symbol, num)
@@ -73,9 +72,9 @@ class JassFormatter(val state: JassState, val root: ParserRuleContext) {
 
         fmt.add(
             TextEdit(
-                Range(
-                    Position(s.line - 1, s.charPositionInLine + (s.stopIndex - s.startIndex) + 1),
-                    Position(e.line - 1, e.charPositionInLine)
+                Range.of(
+                    s.line - 1, s.charPositionInLine + (s.stopIndex - s.startIndex) + 1,
+                    e.line - 1, e.charPositionInLine
                 ), t
             )
         )

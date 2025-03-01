@@ -15,8 +15,9 @@ data class ServerCapabilities(
     val hoverProvider: Boolean? = null,
     val foldingRangeProvider: Boolean? = null,
     val definitionProvider: Boolean? = null,
+    val referencesProvider: Boolean? = null,
+    val documentFormattingProvider: Boolean? = null,
 ) {
-
     /*
 
     /**
@@ -69,12 +70,6 @@ data class ServerCapabilities(
 	implementationProvider?: boolean | ImplementationOptions
 		| ImplementationRegistrationOptions;
 
-	/**
-	 * The server provides find references support.
-	 */
-	referencesProvider?: boolean | ReferenceOptions;
-
-
 
 	/**
 	 * The server provides code actions. The `CodeActionOptions` return type is
@@ -100,11 +95,6 @@ data class ServerCapabilities(
 	 */
 	colorProvider?: boolean | DocumentColorOptions
 		| DocumentColorRegistrationOptions;
-
-	/**
-	 * The server provides document formatting.
-	 */
-	documentFormattingProvider?: boolean | DocumentFormattingOptions;
 
 	/**
 	 * The server provides document range formatting.

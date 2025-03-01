@@ -5,19 +5,21 @@ package io.github.warraft.language.jass.antlr.state.ext.lsp
 import io.github.warraft.language.jass.antlr.psi.JassFun
 import io.github.warraft.language.jass.antlr.psi.JassVar
 import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language._.lsp4j.utils.RangeEx
+import io.github.warraft.lsp.data.Location
+import io.github.warraft.lsp.data.Position
+import io.github.warraft.lsp.data.Range
 import org.antlr.v4.runtime.Token
-import org.eclipse.lsp4j.Location
-import org.eclipse.lsp4j.ReferenceParams
 
-fun JassState.referencesExt(params: ReferenceParams?): MutableList<out Location?> {
+fun JassState.referencesExt(position: Position): MutableList<Location>? {
+    val node = tokenTree.find(position) ?: return null
+
     val refs = mutableListOf<Location>()
-    val position = params?.position ?: return refs
-    val node = tokenTree.find(position) ?: return refs
 
     fun add(s: JassState, symbol: Token?) {
         val p = s.path ?: return
-        refs.add(Location(p.toUri().toString(), RangeEx.get(symbol)))
+        val r = Range.of(symbol) ?: return
+
+        refs.add(Location(uri = p.toUri().toString(), range = r))
     }
 
     fun add(v: JassVar) = add(v.state, v.symbol)

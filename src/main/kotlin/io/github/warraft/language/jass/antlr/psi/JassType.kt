@@ -4,7 +4,6 @@ import io.github.warraft.JassParser.ExtendsRuleContext
 import io.github.warraft.JassParser.TypeContext
 import io.github.warraft.lsp.data.semantic.SemanticTokenModifier
 import io.github.warraft.lsp.data.semantic.SemanticTokenType
-import io.github.warraft.language._.lsp4j.utils.DiagnosticRelatedInformationEx
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.BOOLEAN
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.CODE
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.HANDLE

@@ -113,6 +113,8 @@ class LanguageServer {
             "textDocument/documentSymbol" -> documentSymbol(message)
             "textDocument/diagnostic" -> diagnostic(message)
             "textDocument/definition" -> definition(message)
+            "textDocument/references" -> references(message)
+            "textDocument/formatting" -> formatting(message)
             "$/cancelRequest" -> cancel(message)
             "$/setTrace" -> {}
             "shutdown" -> {

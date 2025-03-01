@@ -29,7 +29,7 @@ fun LanguageServer.stateGet(p: Path): LanguageState? {
 
     stateMap[p] = state.also {
         it.path = p
-        //it.server = server
+        it.server = this
     }
     return state
 }
