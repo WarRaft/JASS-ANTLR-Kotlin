@@ -15,14 +15,6 @@ class JassTokenTree {
         l[token.charPositionInLine] = Holder(node, token)
     }
 
-    fun find(pos: org.eclipse.lsp4j.Position?): JassNodeBase? {
-        if (pos == null) return null
-        val l = lines[pos.line + 1] ?: return null
-
-        val entry = l.floorEntry(pos.character) ?: return null
-        return entry.value.takeIf { it.token.charPositionInLine + it.token.stopIndex - it.token.startIndex + 1 >= pos.character }?.node
-    }
-
     fun find(pos: Position?): JassNodeBase? {
         if (pos == null) return null
         val ll = pos.line.toInt()
