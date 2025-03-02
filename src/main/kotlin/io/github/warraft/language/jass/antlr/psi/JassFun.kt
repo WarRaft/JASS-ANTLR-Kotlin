@@ -1,23 +1,17 @@
 package io.github.warraft.language.jass.antlr.psi
 
 import io.github.warraft.JassParser.*
-import io.github.warraft.lsp.data.semantic.SemanticTokenModifier.DECLARATION
-import io.github.warraft.lsp.data.semantic.SemanticTokenModifier.DOCUMENTATION
-import io.github.warraft.lsp.data.semantic.SemanticTokenType
-import io.github.warraft.lsp.data.semantic.SemanticTokenType.COMMENT
-import io.github.warraft.lsp.data.semantic.SemanticTokenType.KEYWORD
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.CODE
 import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.language.jass.antlr.state.JassState
 import io.github.warraft.language.jass.antlr.state.ext.antlr.stmt
 import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode.ERROR
-import io.github.warraft.lsp.data.Diagnostic
-import io.github.warraft.lsp.data.DiagnosticRelatedInformation
-import io.github.warraft.lsp.data.DiagnosticSeverity
-import io.github.warraft.lsp.data.DocumentSymbol
-import io.github.warraft.lsp.data.Location
-import io.github.warraft.lsp.data.Range
-import io.github.warraft.lsp.data.SymbolKind
+import io.github.warraft.lsp.data.*
+import io.github.warraft.lsp.data.semantic.SemanticTokenModifier.DECLARATION
+import io.github.warraft.lsp.data.semantic.SemanticTokenModifier.DOCUMENTATION
+import io.github.warraft.lsp.data.semantic.SemanticTokenType
+import io.github.warraft.lsp.data.semantic.SemanticTokenType.COMMENT
+import io.github.warraft.lsp.data.semantic.SemanticTokenType.KEYWORD
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
 

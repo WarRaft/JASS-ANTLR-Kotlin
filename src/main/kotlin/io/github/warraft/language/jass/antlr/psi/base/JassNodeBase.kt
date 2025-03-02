@@ -14,8 +14,6 @@ import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.UNDEFINE
 import io.github.warraft.language.jass.antlr.state.JassState
 import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode
 import io.github.warraft.lsp.data.Diagnostic
-import io.github.warraft.lsp.data.DiagnosticRelatedInformation
-import io.github.warraft.lsp.data.Location
 import io.github.warraft.lsp.data.Range
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
