@@ -1,15 +1,9 @@
-a = 1 ---@type number real
-do_ = 2 ---@type number real
-keyword = 2 ---@type number real
-
-
----@param f number real
----@return number real
-function d(f)
-	local e = a + f + keyword ---@type number real
-	return e
+---@param until real
+function end(until)
+	local in = do + until + keyword ---@type real
+	return in
 end
 
 function main()
-	local h = d(a) + d(keyword) ---@type number real
+	local repeat = end(do) .. end(keyword) ---@type real
 end

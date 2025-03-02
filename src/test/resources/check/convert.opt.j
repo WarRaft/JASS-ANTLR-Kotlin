@@ -1,6 +1,3 @@
-type anal extends handle
-
-
 native UnitAlive takes unit u returns unit
 
 globals
@@ -22,14 +19,10 @@ function Ba takes nothing returns nothing
 endfunction
 
 function A takes real a, code d returns real
-	call TimerStart(15., true, function Ba)
-	set s["00"] = "00"
-	set s["11"] = "11"
+	call TimerStart(t, 15., true, function Ba)
 	if a > b then
-		set s[s + "e"] = s + "e"
 	endif
 	loop
-		set s[s + "g"] = s + "g"
 		exitwhen b > a
 	endloop
 	call UnitAlive(null)

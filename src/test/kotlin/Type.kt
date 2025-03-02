@@ -21,7 +21,7 @@ endglobals
             """.trimIndent()
         )
 
-        for (d in state.diagnostic.diagnostics) {
+        for (d in state.diagnostic) {
             println(d.message)
         }
     }

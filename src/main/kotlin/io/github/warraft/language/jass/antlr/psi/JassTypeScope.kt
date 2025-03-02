@@ -4,7 +4,6 @@ import io.github.warraft.language.jass.antlr.state.JassState
 class JassTypeScope(
     val state: JassState,
 ) {
-
     val definitions: MutableMap<String, MutableList<JassType>> = mutableMapOf()
     val usages: MutableMap<String, MutableList<JassType>> = mutableMapOf()
 

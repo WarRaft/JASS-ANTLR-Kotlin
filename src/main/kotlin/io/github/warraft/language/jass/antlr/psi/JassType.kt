@@ -25,6 +25,32 @@ class JassType(override val state: JassState) : JassNodeBase() {
     override fun toString(): String = "JassType(name=$name, base=$base)"
 
     companion object {
+        fun handleTree(s: String?, state: JassState): MutableList<String> {
+            val out = mutableListOf<String>()
+            if (s == null) return out
+
+            out.add(s)
+
+            var typeBase = s
+            var i = 0
+            while (typeBase != HANDLE) {
+                if (++i == 100) {
+                    state.server?.log("Many loops when type found")
+                    break
+                }
+                var d: JassType? = null
+                for (s in state.states + state) {
+                    d = s.typeScope.definition(typeBase) ?: continue
+                    typeBase = d.base
+                }
+                if (d == null) break
+                if (typeBase == null) break
+                out.add(typeBase)
+            }
+
+            return out
+        }
+
         fun part(ctx: TerminalNode?, state: JassState): JassType? {
             val name = ctx?.text ?: return null
 
@@ -149,27 +175,7 @@ class JassType(override val state: JassState) : JassNodeBase() {
                 state.tokenTree.add(it)
             })
 
-            var typeBase = type.base
-            var i = 0
-            while (typeBase != HANDLE) {
-                if (++i == 100) {
-                    Diagnostic(
-                        range = Range.of(ctx) ?: Range.zero,
-                        message = "Many loops when type found",
-                        code = PLUGIN,
-                    ).also {
-                        state.diagnostic.add(it)
-                    }
-                    break
-                }
-                var d: JassType? = null
-                for (s in state.states + state) {
-                    d = s.typeScope.definition(typeBase) ?: continue
-                    typeBase = d.base
-                }
-                if (d == null) break
-                if (typeBase == null) break
-            }
+            val typeBase = handleTree(type.base, state).lastOrNull()
 
             if (typeBase != HANDLE) {
                 Diagnostic(

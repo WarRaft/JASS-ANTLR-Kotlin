@@ -2,6 +2,7 @@ package io.github.warraft.language.jass.antlr.psi.base
 
 import io.github.warraft.language.jass.antlr.psi.JassExprOp
 import io.github.warraft.language.jass.antlr.psi.JassExprOp.*
+import io.github.warraft.language.jass.antlr.psi.JassType
 import io.github.warraft.language.jass.antlr.psi.JassTypeName
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.BOOLEAN
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.CODE
@@ -92,6 +93,8 @@ abstract class JassNodeBase() {
             NULL -> when (op) {
                 EQ, NEQ -> when (b) {
                     NULL, INTEGER, REAL, STRING, HANDLE -> type = BOOLEAN
+                    else -> if (JassType.handleTree(b, state).lastOrNull() == HANDLE) type = BOOLEAN
+
                 }
 
                 else -> {}
@@ -111,7 +114,7 @@ abstract class JassNodeBase() {
                 }
 
                 EQ, NEQ -> when (b) {
-                    STRING, NULL -> type = STRING
+                    STRING, NULL -> type = BOOLEAN
                 }
 
                 SET -> when (b) {
@@ -120,6 +123,33 @@ abstract class JassNodeBase() {
 
                 else -> {}
             }
+
+            else -> {
+                val aa = JassType.handleTree(a, state)
+                if (aa.lastOrNull() == HANDLE) {
+                    when (op) {
+                        EQ, NEQ -> when (b) {
+                            a, NULL -> type = BOOLEAN
+                        }
+
+                        SET -> {
+                            when (b) {
+                                NULL -> type = BOOLEAN
+                                else -> {
+                                    val bb = JassType.handleTree(b, state)
+                                    for (b in bb) {
+                                        if (b != a) continue
+                                        type = BOOLEAN
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                        else -> {}
+                    }
+                }
+            }
+
         }
 
         if (type == null) {
@@ -128,7 +158,7 @@ abstract class JassNodeBase() {
                     SET -> Range.of(node.definition) ?: Range.zero
                     else -> Range.of(definition, node.definition) ?: Range.zero
                 },
-                message = "Cannot resolve operation $op between: ${this.type?.base} | ${node.type?.base}",
+                message = "Cannot resolve operation $op between:",
                 code = DiagnosticCode.ERROR,
             ).also {
                 it.relatedInformation(this, a)
