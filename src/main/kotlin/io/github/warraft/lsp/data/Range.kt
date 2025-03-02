@@ -31,6 +31,8 @@ data class Range(
 
         fun of(token: Token?): Range? = get(token, token)
         fun of(ctx: ParserRuleContext?): Range? = get(ctx?.start, ctx?.stop)
+        fun of(ca: ParserRuleContext?, cb: ParserRuleContext?): Range? = get(ca?.start, cb?.stop)
+
         fun of(node: TerminalNode?): Range? = get(node?.symbol, node?.symbol)
         fun of(a: TerminalNode?, b: TerminalNode?): Range? = get(a?.symbol, b?.symbol)
 

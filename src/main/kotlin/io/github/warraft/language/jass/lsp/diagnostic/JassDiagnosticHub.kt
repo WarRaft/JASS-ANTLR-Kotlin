@@ -18,28 +18,28 @@ class JassDiagnosticHub {
     fun add(
         code: JassDiagnosticCode,
         msg: String,
-        related: List<DiagnosticRelatedInformation> = emptyList(),
+        related: MutableList<DiagnosticRelatedInformation> = mutableListOf(),
     ) = add(Range(Position(0u, 0u), Position(0u, 0u)), code, msg, related)
 
     fun add(
         node: ParserRuleContext?,
         code: JassDiagnosticCode,
         msg: String,
-        related: List<DiagnosticRelatedInformation> = emptyList(),
+        related: MutableList<DiagnosticRelatedInformation> = mutableListOf(),
     ) = add(Range.of(node), code, msg, related)
 
     fun add(
         node: TerminalNode?,
         code: JassDiagnosticCode,
         msg: String,
-        related: List<DiagnosticRelatedInformation> = emptyList(),
+        related: MutableList<DiagnosticRelatedInformation> = mutableListOf(),
     ) = add(Range.of(node), code, msg, related)
 
     fun add(
         range: Range?,
         code: JassDiagnosticCode,
         msg: String,
-        related: List<DiagnosticRelatedInformation> = emptyList(),
+        related: MutableList<DiagnosticRelatedInformation> = mutableListOf(),
     ) {
         if (range == null) return
         diagnostics.add(

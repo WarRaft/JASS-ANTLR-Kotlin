@@ -116,16 +116,8 @@ class JassType(override val state: JassState) : JassNodeBase() {
                             severity = DiagnosticSeverity.Error,
                             code = ERROR.name,
                             message = "Type redeclared",
-                            relatedInformation = listOf(
-                                DiagnosticRelatedInformation(
-                                    location = Location(
-                                        uri = state.path?.toUri().toString(),
-                                        range = Range.of(d.symbol) ?: Range.zero,
-                                    ),
-                                    message = "First declaration of '${d.name}' is here"
-                                )
-                            )
                         ).also {
+                            it.relatedInformation(d, "First declaration of '${d.name}' is here")
                             state.diagnosticHub.add(it)
                         }
                         return

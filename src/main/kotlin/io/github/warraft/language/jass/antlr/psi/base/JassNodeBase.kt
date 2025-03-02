@@ -12,6 +12,11 @@ import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.REAL
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.STRING
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.UNDEFINED
 import io.github.warraft.language.jass.antlr.state.JassState
+import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode
+import io.github.warraft.lsp.data.Diagnostic
+import io.github.warraft.lsp.data.DiagnosticRelatedInformation
+import io.github.warraft.lsp.data.Location
+import io.github.warraft.lsp.data.Range
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 
@@ -24,118 +29,114 @@ abstract class JassNodeBase() {
     var definition: ParserRuleContext? = null
 
     fun typeCheck(op: JassExprOp?, node: JassNodeBase?): JassTypeName? {
-        val a = type?.name ?: return null
+        val a = this.type?.name ?: return null
         val b = node?.type?.name ?: return null
 
-        val out: String? = when (a) {
+        var type: String? = null
+        when (a) {
             INTEGER -> when (op) {
                 ADD, SUB, MUL, DIV -> when (b) {
-                    INTEGER -> INTEGER
-                    REAL -> REAL
-                    else -> UNDEFINED
+                    INTEGER -> type = INTEGER
+                    REAL -> type = REAL
                 }
 
                 LT, LTEQ, GT, GTEQ -> when (b) {
-                    INTEGER, REAL -> BOOLEAN
-                    else -> UNDEFINED
+                    INTEGER, REAL -> type = BOOLEAN
                 }
 
                 EQ, NEQ -> when (b) {
-                    INTEGER, REAL, NULL -> BOOLEAN
-                    else -> UNDEFINED
+                    INTEGER, REAL, NULL -> type = BOOLEAN
                 }
 
                 SET -> when (b) {
-                    INTEGER -> INTEGER
-                    else -> UNDEFINED
+                    INTEGER -> type = INTEGER
                 }
 
-                else -> UNDEFINED
+                else -> {}
             }
 
             REAL -> when (op) {
                 ADD, SUB, MUL, DIV -> when (b) {
-                    INTEGER, REAL -> REAL
-                    else -> UNDEFINED
+                    INTEGER, REAL -> type = REAL
                 }
 
                 LT, LTEQ, GT, GTEQ -> when (b) {
-                    INTEGER, REAL -> BOOLEAN
-                    else -> UNDEFINED
+                    INTEGER, REAL -> type = BOOLEAN
                 }
 
                 EQ, NEQ -> when (b) {
-                    INTEGER, REAL, NULL -> BOOLEAN
-                    else -> UNDEFINED
+                    INTEGER, REAL, NULL -> type = BOOLEAN
                 }
 
                 SET -> when (b) {
-                    INTEGER, REAL -> REAL
-                    else -> UNDEFINED
+                    INTEGER, REAL -> type = REAL
                 }
 
-                else -> UNDEFINED
+                else -> {}
             }
 
             BOOLEAN -> when (op) {
                 SET -> when (b) {
-                    BOOLEAN -> BOOLEAN
-                    else -> UNDEFINED
+                    BOOLEAN -> type = BOOLEAN
                 }
 
                 AND, OR -> when (b) {
-                    BOOLEAN -> BOOLEAN
-                    else -> UNDEFINED
+                    BOOLEAN -> type = BOOLEAN
                 }
 
                 EQ, NEQ -> when (b) {
-                    BOOLEAN, NULL -> BOOLEAN
-                    else -> UNDEFINED
+                    BOOLEAN, NULL -> type = BOOLEAN
                 }
 
-                else -> UNDEFINED
+                else -> {}
             }
 
             NULL -> when (op) {
                 EQ, NEQ -> when (b) {
-                    NULL, INTEGER, REAL, STRING, HANDLE -> BOOLEAN
-                    else -> UNDEFINED
+                    NULL, INTEGER, REAL, STRING, HANDLE -> type = BOOLEAN
                 }
 
-                else -> UNDEFINED
+                else -> {}
             }
 
             CODE -> when (op) {
                 SET -> when (b) {
-                    CODE, NULL -> CODE
-                    else -> UNDEFINED
+                    CODE, NULL -> type = CODE
                 }
 
-                else -> UNDEFINED
+                else -> {}
             }
 
             STRING -> when (op) {
                 ADD -> when (b) {
-                    STRING -> STRING
-                    else -> UNDEFINED
+                    STRING -> type = STRING
                 }
 
                 EQ, NEQ -> when (b) {
-                    STRING, NULL -> STRING
-                    else -> UNDEFINED
+                    STRING, NULL -> type = STRING
                 }
 
                 SET -> when (b) {
-                    STRING, NULL -> STRING
-                    else -> UNDEFINED
+                    STRING, NULL -> type = STRING
                 }
 
-                else -> UNDEFINED
+                else -> {}
             }
-
-            else -> UNDEFINED
         }
 
-        return if (out == null) null else JassTypeName(out)
+        if (type == null) {
+            Diagnostic(
+                range = Range.of(definition, node.definition) ?: Range.zero,
+                message = "Cannot resolve operation $op between:",
+                code = JassDiagnosticCode.ERROR.name,
+            ).also {
+                it.relatedInformation(this, a)
+                it.relatedInformation(node, b)
+                state.diagnosticHub.add(it)
+            }
+            type = UNDEFINED
+        }
+
+        return JassTypeName(type)
     }
 }

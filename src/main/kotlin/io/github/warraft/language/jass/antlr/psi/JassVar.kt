@@ -130,16 +130,8 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                                 severity = DiagnosticSeverity.Error,
                                 code = ERROR.name,
                                 message = "Variable redeclared",
-                                relatedInformation = listOf(
-                                    DiagnosticRelatedInformation(
-                                        location = Location(
-                                            uri = state.path?.toUri().toString(),
-                                            range = Range.of(d.symbol) ?: Range.zero,
-                                        ),
-                                        message = "First declaration of '${d.name}' is here"
-                                    )
-                                )
                             ).also {
+                                it.relatedInformation(d, "First declaration of '${d.name}' is here")
                                 state.diagnosticHub.add(it)
                             }
                         }
@@ -159,6 +151,8 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                             if (eqCtx != null) {
                                 exprCtx = ctx.expr()
                                 v.expr = JassExpr.parse(state, exprCtx, function)
+
+                                /*
                                 if (v.expr == null) {
                                     if (v.array) state.diagnosticHub.add(eqCtx, ERROR, "Cannot set array")
                                     else state.diagnosticHub.add(eqCtx, ERROR, "Missing expression")
@@ -166,6 +160,7 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                                     if (v.array) {
                                         state.diagnosticHub.add(exprCtx, ERROR, "Cannot set array")
                                     } else {
+                                        state.diagnosticHub.add(exprCtx, ERROR, "Bullshit!")
                                         /*
                                         val ta: JassTypeBase? = v.type
                                         val tb: JassTypeBase? = v.expr?.type
@@ -181,6 +176,8 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                                          */
                                     }
                                 }
+
+                                 */
                             }
                         }
                     }
