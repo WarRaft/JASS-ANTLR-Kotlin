@@ -39,6 +39,7 @@ fun LanguageServer.initialize(message: Message) {
                                 )
                             ),
                             diagnosticProvider = DiagnosticOptions(),
+                            renameProvider = RenameOptions(),
                             documentHighlightProvider = true,
                             hoverProvider = true,
                             foldingRangeProvider = true,
@@ -46,6 +47,7 @@ fun LanguageServer.initialize(message: Message) {
                             definitionProvider = true,
                             referencesProvider = true,
                             documentFormattingProvider = true,
+                            linkedEditingRangeProvider = true,
                         )
                     )
                 )

@@ -115,6 +115,7 @@ class LanguageServer {
             "textDocument/definition" -> definition(message)
             "textDocument/references" -> references(message)
             "textDocument/formatting" -> formatting(message)
+            "textDocument/rename" -> rename(message)
 
             "initialized",
             "$/setTrace",

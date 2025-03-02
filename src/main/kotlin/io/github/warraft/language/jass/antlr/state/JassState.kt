@@ -27,6 +27,7 @@ class JassState : LanguageState() {
     override fun definition(position: Position): List<LocationLink>? = definitionExt(position)
     override fun references(position: Position): List<Location>? = referencesExt(position)
     override fun formatting(): List<TextEdit>? = formattingEx()
+    override fun rename(params: RenameParams): WorkspaceEdit? = renameEx(params)
 
 
     override fun lexer(stream: CharStream): Lexer = JassLexer(stream)

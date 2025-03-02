@@ -20,6 +20,7 @@ abstract class LanguageState {
     open fun definition(position: Position): List<LocationLink>? = null
     open fun references(position: Position): List<Location>? = null
     open fun formatting(): List<TextEdit>? = null
+    open fun rename(params: RenameParams): WorkspaceEdit? = null
 
     val semanticHub = SemanticTokenHub()
 

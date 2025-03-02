@@ -1,7 +1,8 @@
-import io.github.warraft.language.jass.antlr.psi.JassExprOp.*
+import io.github.warraft.language.jass.antlr.psi.JassExprOp.SET
 import io.github.warraft.language.jass.antlr.state.JassState
 import org.antlr.v4.runtime.CharStreams
 import org.junit.jupiter.api.Test
+import kotlin.test.assertNotNull
 
 class Type {
 
@@ -51,20 +52,19 @@ endglobals
                 type d extends handle
             """.trimIndent()
         )
-        /*
-        val a = state.typeGet()
+
+        val a = state.typeScope.definition("a")
         assertNotNull(a)
-        val b = state.typeGet()
+        val b = state.typeScope.definition("b")
         assertNotNull(b)
-        val c = state.typeGet()
+        val c = state.typeScope.definition("c")
         assertNotNull(c)
-        val d = state.typeGet()
+        val d = state.typeScope.definition("d")
         assertNotNull(d)
 
-        assertEquals(a.op(SET, c).name, "a")
-        assertIs<JassUndefinedType>(a.op(SET, d))
+        a.typeCheck(SET, c)
+        assert(state.diagnostic.isEmpty())
 
-         */
     }
 
 }

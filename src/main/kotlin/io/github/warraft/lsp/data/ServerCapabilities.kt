@@ -17,6 +17,8 @@ data class ServerCapabilities(
     val definitionProvider: Boolean? = null,
     val referencesProvider: Boolean? = null,
     val documentFormattingProvider: Boolean? = null,
+    val linkedEditingRangeProvider: Boolean? = null,
+    val renameProvider: RenameOptions? = null,
 ) {
     /*
 
@@ -106,13 +108,6 @@ data class ServerCapabilities(
 	 */
 	documentOnTypeFormattingProvider?: DocumentOnTypeFormattingOptions;
 
-	/**
-	 * The server provides rename support. RenameOptions may only be
-	 * specified if the client states that it supports
-	 * `prepareSupport` in its initial `initialize` request.
-	 */
-	renameProvider?: boolean | RenameOptions;
-
 
 	/**
 	 * The server provides execute command support.
@@ -127,13 +122,6 @@ data class ServerCapabilities(
 	selectionRangeProvider?: boolean | SelectionRangeOptions
 		| SelectionRangeRegistrationOptions;
 
-	/**
-	 * The server provides linked editing range support.
-	 *
-	 * @since 3.16.0
-	 */
-	linkedEditingRangeProvider?: boolean | LinkedEditingRangeOptions
-		| LinkedEditingRangeRegistrationOptions;
 
 	/**
 	 * The server provides call hierarchy support.
