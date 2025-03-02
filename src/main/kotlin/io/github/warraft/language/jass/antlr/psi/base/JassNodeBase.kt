@@ -27,8 +27,8 @@ abstract class JassNodeBase() {
     var definition: ParserRuleContext? = null
 
     fun typeCheck(op: JassExprOp?, node: JassNodeBase?): JassTypeName? {
-        val a = this.type?.name ?: return null
-        val b = node?.type?.name ?: return null
+        var a = this.type?.name ?: return null
+        var b = node?.type?.name ?: return null
 
         var type: String? = null
         when (a) {
@@ -124,8 +124,11 @@ abstract class JassNodeBase() {
 
         if (type == null) {
             Diagnostic(
-                range = Range.of(definition, node.definition) ?: Range.zero,
-                message = "Cannot resolve operation $op between:",
+                range = when (op) {
+                    SET -> Range.of(node.definition) ?: Range.zero
+                    else -> Range.of(definition, node.definition) ?: Range.zero
+                },
+                message = "Cannot resolve operation $op between: ${this.type?.base} | ${node.type?.base}",
                 code = DiagnosticCode.ERROR,
             ).also {
                 it.relatedInformation(this, a)

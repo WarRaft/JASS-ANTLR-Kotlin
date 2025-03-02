@@ -1,6 +1,8 @@
 package io.github.warraft.language.jass.antlr.psi
 
 class JassTypeName(var name: String) {
+    val base: MutableList<String>? = null
+
     companion object {
         const val NULL = "null"
         const val INTEGER = "integer"

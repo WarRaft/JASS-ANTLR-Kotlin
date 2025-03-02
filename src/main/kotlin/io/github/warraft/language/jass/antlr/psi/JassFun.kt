@@ -14,7 +14,6 @@ import io.github.warraft.lsp.data.semantic.SemanticTokenType.COMMENT
 import io.github.warraft.lsp.data.semantic.SemanticTokenType.KEYWORD
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
-import kotlin.contracts.ExperimentalContracts
 
 class JassFun(override val state: JassState) : JassNodeBase() {
 
@@ -198,14 +197,30 @@ class JassFun(override val state: JassState) : JassNodeBase() {
                             .add(returnsCtx.RETURNS(), KEYWORD)
 
                         if (nothingCtx == null) {
-                            val idCtx: TerminalNode? = returnsCtx.ID()
-                            if (idCtx != null) {
-                                state.semanticHub.add(idCtx, SemanticTokenType.TYPE)
-                                f.documentSymbol?.detail = idCtx.text
+                            val typeCtx: TerminalNode? = returnsCtx.ID()
+                            state.semanticHub.add(typeCtx, SemanticTokenType.TYPE)
+                            val type = JassType.part(typeCtx, state)
 
-                                //f.type = state.typeFromString(idCtx.text)
-                                //if (f.type is JassUndefinedType) state.diagnosticHub.add(idCtx, ERROR, "Unknown type: ${idCtx.text}")
+                            if (type == null) {
+                                Diagnostic(
+                                    range = Range.of(returnsCtx) ?: Range.zero,
+                                    message = "Missing return type",
+                                    code = ERROR,
+                                ).also {
+                                    state.diagnostic.add(it)
+                                }
+                            } else {
+                                f.also {
+                                    it.type = type.type
+                                    it.documentSymbol?.detail = type.name
+                                }
+
+                                if (f.name == "BB") {
+                                    state.server?.log("t: ${type}")
+                                }
                             }
+                        } else {
+                            f.type = JassTypeName(JassTypeName.NOTHING)
                         }
                     }
                     //endregion

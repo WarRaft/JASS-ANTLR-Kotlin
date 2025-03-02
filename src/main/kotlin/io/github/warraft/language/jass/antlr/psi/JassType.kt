@@ -22,6 +22,8 @@ import org.antlr.v4.runtime.tree.TerminalNode
 class JassType(override val state: JassState) : JassNodeBase() {
     var base: String? = null
 
+    override fun toString(): String = "JassType(name=$name, base=$base)"
+
     companion object {
         fun part(ctx: TerminalNode?, state: JassState): JassType? {
             val name = ctx?.text ?: return null

@@ -22,7 +22,7 @@ data class Diagnostic(
     }
 
     fun relatedInformation(node: JassNodeBase?, message: String) {
-        val l = Location.of(node) ?: return
+        val l = Location.of(node, node?.definition) ?: return
         relatedInformation(
             DiagnosticRelatedInformation(
                 location = l,

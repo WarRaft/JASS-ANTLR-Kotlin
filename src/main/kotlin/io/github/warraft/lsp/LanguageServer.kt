@@ -116,13 +116,14 @@ class LanguageServer {
             "textDocument/references" -> references(message)
             "textDocument/formatting" -> formatting(message)
 
+            "initialized",
+            "$/setTrace",
             "textDocument/didClose",
             "completionItem/resolve",
                 -> {
             }
 
             "$/cancelRequest" -> cancel(message)
-            "$/setTrace" -> {}
             "shutdown" -> {
                 send(json.encodeToString(Message(id = message.id, result = JsonNull)))
             }

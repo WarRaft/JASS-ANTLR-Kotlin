@@ -1,6 +1,7 @@
 package io.github.warraft.language.jass.antlr.psi
 
 import io.github.warraft.JassParser.*
+import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.INTEGER
 import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.language.jass.antlr.state.JassState
 import io.github.warraft.lsp.data.DiagnosticCode.ERROR
@@ -34,7 +35,7 @@ class JassVar(override val state: JassState) : JassNodeBase() {
         if (param) list.add("param")
         else if (local) list.add("local")
 
-        //type?.let { list.add(type!!.name) }
+        type?.let { list.add(type!!.name) }
 
         if (array) list.add("[]")
 
@@ -173,32 +174,27 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                                 exprCtx = ctx.expr()
                                 v.expr = JassExpr.parse(state, exprCtx, function)
 
-                                /*
-                                if (v.expr == null) {
-                                    if (v.array) state.diagnosticHub.add(eqCtx, ERROR, "Cannot set array")
-                                    else state.diagnosticHub.add(eqCtx, ERROR, "Missing expression")
+                                if (v.array) {
+                                    Diagnostic(
+                                        range = Range.of(exprCtx) ?: Range.of(eqCtx) ?: Range.zero,
+                                        message = "Cannot set array",
+                                        code = ERROR,
+                                    ).also {
+                                        state.diagnostic.add(it)
+                                    }
                                 } else {
-                                    if (v.array) {
-                                        state.diagnosticHub.add(exprCtx, ERROR, "Cannot set array")
-                                    } else {
-                                        state.diagnosticHub.add(exprCtx, ERROR, "Bullshit!")
-                                        /*
-                                        val ta: JassTypeBase? = v.type
-                                        val tb: JassTypeBase? = v.expr?.type
-                                        if (ta == null || tb == null) {
-                                            state.diagnosticHub.add(nameCtx, ERROR, "Type error")
-                                        } else {
-                                            val t = ta.op(JassExprOp.Set, tb)
-                                            if (t is JassUndefinedType) {
-                                                state.diagnosticHub.add(exprCtx, ERROR, "Cannot set ${ta.name} with ${tb.name}")
-                                            }
+                                    if (v.expr == null) {
+                                        Diagnostic(
+                                            range = Range.of(eqCtx) ?: Range.zero,
+                                            message = "Missing expression",
+                                            code = ERROR,
+                                        ).also {
+                                            state.diagnostic.add(it)
                                         }
-
-                                         */
+                                    } else {
+                                        v.typeCheck(JassExprOp.SET, v.expr)
                                     }
                                 }
-
-                                 */
                             }
                         }
                     }
@@ -319,12 +315,17 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                         state.diagnostic.add(it)
                     }
                 } else {
-                    /*
-                    if (JassIntType().op(JassExprOp.Set, i.type) !is JassIntType) {
-                        state.diagnosticHub.add(brackRange, ERROR, "Index must be an integer, ${i.type.name} passed")
+                    val itype = i.type?.name
+                    if (itype != INTEGER) {
+                        Diagnostic(
+                            range = brackRange,
+                            severity = DiagnosticSeverity.Error,
+                            code = ERROR,
+                            message = "Index must be an integer, $itype passed",
+                        ).also {
+                            state.diagnostic.add(it)
+                        }
                     }
-
-                     */
                 }
             } else {
                 if (lBrackCtx != null || rBrackCtx != null) {
@@ -363,20 +364,7 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                         return v
                     }
 
-                    /*
-                    val ta = d.type
-                    val tb = v.expr?.type
-                    if (ta == null || tb == null) {
-                        state.diagnosticHub.add(ctx, ERROR, "Some type is null")
-                    } else {
-                        if (ta.op(JassExprOp.Set, tb) is JassUndefinedType) {
-                            state.diagnosticHub.add(
-                                exprCtx, ERROR, "Can't set ${ta.name} with ${tb.name}"
-                            )
-                        }
-                    }
-
-                     */
+                    d.typeCheck(JassExprOp.SET, v.expr)
                 }
             }
 
