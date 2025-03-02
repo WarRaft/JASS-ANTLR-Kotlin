@@ -15,7 +15,7 @@ fun LanguageServer.semanticTokens(message: Message) {
         json.encodeToString(
             Message(
                 id = message.id,
-                result = json.encodeToJsonElement(SemanticTokens.serializer(), SemanticTokens(data = stateGet(path)?.semantic() ?: emptyList()))
+                result = json.encodeToJsonElement(SemanticTokens.serializer(), SemanticTokens(data = stateGet(path)?.semanticHub?.data() ?: emptyList()))
             )
         )
     )

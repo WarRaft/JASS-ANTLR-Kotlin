@@ -14,6 +14,7 @@ import io.github.warraft.lsp.data.semantic.SemanticTokenType.COMMENT
 import io.github.warraft.lsp.data.semantic.SemanticTokenType.KEYWORD
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
+import kotlin.contracts.ExperimentalContracts
 
 class JassFun(override val state: JassState) : JassNodeBase() {
 
@@ -133,13 +134,21 @@ class JassFun(override val state: JassState) : JassNodeBase() {
                     if (nameCtx != null) {
                         var name = nameCtx.text
 
-                        f.documentSymbol = state.documentSymbolHub.add(ctx, nameCtx, SymbolKind.Function)
-
-                        state.tokenTree.add(f.also {
+                        f.also {
                             it.symbol = nameCtx.symbol
                             it.name = name
                             it.definition = ctx
-                        })
+                            state.tokenTree.add(it)
+
+                            f.documentSymbol = DocumentSymbol(
+                                name = name,
+                                kind = SymbolKind.Function,
+                                range = Range.of(ctx) ?: Range.zero,
+                                selectionRange = Range.of(nameCtx) ?: Range.zero,
+                            ).also {
+                                state.documentSymbol.add(it)
+                            }
+                        }
 
                         state.semanticHub.add(nameCtx, SemanticTokenType.FUNCTION, DECLARATION)
 

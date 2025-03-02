@@ -1,12 +1,11 @@
-package io.github.warraft.language.jass.antlr.utils
+package io.github.warraft.lsp.data.utils
 
 import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.lsp.data.Position
 import org.antlr.v4.runtime.Token
+import java.util.TreeMap
 
-import java.util.*
-
-class JassTokenTree {
+class TokenTree {
     private val lines = mutableMapOf<Int, TreeMap<Int, Holder>>()
 
     fun add(node: JassNodeBase?) {

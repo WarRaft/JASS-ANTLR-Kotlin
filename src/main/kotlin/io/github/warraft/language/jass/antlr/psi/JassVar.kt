@@ -153,7 +153,16 @@ class JassVar(override val state: JassState) : JassNodeBase() {
 
                     when (ctx) {
                         is ParamContext -> {
-                            if (function?.documentSymbol != null) state.documentSymbolHub.add(ctx, nameCtx, SymbolKind.Variable, function.documentSymbol).also { it?.detail = type.name }
+
+                            function?.documentSymbol?.append(
+                                DocumentSymbol(
+                                    name = v.name ?: "unnamed",
+                                    kind = SymbolKind.Variable,
+                                    range = Range.of(ctx) ?: Range.zero,
+                                    selectionRange = Range.of(nameCtx) ?: Range.zero,
+                                    detail = type.name,
+                                )
+                            )
                             v.also {
                                 it.param = true
                             }

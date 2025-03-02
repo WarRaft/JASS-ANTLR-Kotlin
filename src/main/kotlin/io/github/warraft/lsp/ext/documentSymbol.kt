@@ -12,7 +12,7 @@ fun LanguageServer.documentSymbol(message: Message) {
     val params = message.params ?: return
     val p = json.decodeFromJsonElement<DocumentSymbolParams>(DocumentSymbolParams.serializer(), params)
     val path = URI(p.textDocument.uri).toPath()
-    val symbols = stateGet(path)?.documentSymbolHub?.symbols
+    val symbols = stateGet(path)?.documentSymbol
     send(
         json.encodeToString(
             Message(
