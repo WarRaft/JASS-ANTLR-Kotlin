@@ -1,8 +1,5 @@
 package io.github.warraft.lsp.data.semantic
 
-import io.github.warraft.lsp.data.semantic.SemanticTokenLine
-import io.github.warraft.lsp.data.semantic.SemanticTokenModifier
-import io.github.warraft.lsp.data.semantic.SemanticTokenType
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.TerminalNode
 

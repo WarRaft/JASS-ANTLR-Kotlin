@@ -21,7 +21,9 @@ import io.github.warraft.lsp.data.semantic.SemanticTokenType
 import io.github.warraft.language.jass.antlr.psi.JassExprOp.*
 import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode
+import io.github.warraft.lsp.data.Diagnostic
+import io.github.warraft.lsp.data.DiagnosticCode
+import io.github.warraft.lsp.data.Range
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.TerminalNode
 
@@ -82,7 +84,13 @@ class JassExpr(
             }
 
             if (op == null) {
-                state.diagnosticHub.add(aCtx ?: bCtx ?: ctx, JassDiagnosticCode.PLUGIN, "Missing operator")
+                Diagnostic(
+                    range = Range.of(aCtx ?: bCtx ?: ctx) ?: Range.zero,
+                    message = "Missing operator",
+                    code = DiagnosticCode.PLUGIN,
+                ).also {
+                    state.diagnostic.add(it)
+                }
                 return null
             }
 
@@ -187,9 +195,22 @@ class JassExpr(
             }
 
             if (e == null) {
-                state.diagnosticHub.add(ctx, JassDiagnosticCode.PLUGIN, "Undeclared expression")
+                Diagnostic(
+                    range = Range.of(ctx) ?: Range.zero,
+                    message = "Undeclared expression",
+                    code = DiagnosticCode.PLUGIN,
+                ).also {
+                    state.diagnostic.add(it)
+                }
+
             } else if (e.type == null) {
-                state.diagnosticHub.add(ctx, JassDiagnosticCode.PLUGIN, "Expression type not found")
+                Diagnostic(
+                    range = Range.of(ctx) ?: Range.zero,
+                    message = "Expression type not found",
+                    code = DiagnosticCode.PLUGIN,
+                ).also {
+                    state.diagnostic.add(it)
+                }
             }
 
             return e

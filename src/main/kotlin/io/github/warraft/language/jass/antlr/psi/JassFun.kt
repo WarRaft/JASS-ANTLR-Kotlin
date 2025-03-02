@@ -5,7 +5,7 @@ import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.CODE
 import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.language.jass.antlr.state.JassState
 import io.github.warraft.language.jass.antlr.state.ext.antlr.stmt
-import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode.ERROR
+import io.github.warraft.lsp.data.DiagnosticCode.ERROR
 import io.github.warraft.lsp.data.*
 import io.github.warraft.lsp.data.semantic.SemanticTokenModifier.DECLARATION
 import io.github.warraft.lsp.data.semantic.SemanticTokenModifier.DOCUMENTATION
@@ -84,7 +84,13 @@ class JassFun(override val state: JassState) : JassNodeBase() {
                             returnsCtx = ctx.returnsRule()
 
                             val nativeCtx = ctx.NATIVE()
-                            if (nameCtx == null) state.diagnosticHub.add(nativeCtx, ERROR, "Native name is missing")
+                            if (nameCtx == null) Diagnostic(
+                                range = Range.of(nativeCtx) ?: Range.zero,
+                                message = "Native name is missing",
+                                code = ERROR,
+                            ).also {
+                                state.diagnostic.add(it)
+                            }
 
                             state.semanticHub
                                 .add(nativeCtx, KEYWORD)
@@ -101,14 +107,23 @@ class JassFun(override val state: JassState) : JassNodeBase() {
                             val functionCtx = ctx.FUNCTION()
                             val enfunctionCtx = ctx.ENDFUNCTION()
 
-                            if (nameCtx == null) state.diagnosticHub.add(functionCtx, ERROR, "Function name is missing")
+                            if (nameCtx == null) Diagnostic(
+                                range = Range.of(functionCtx) ?: Range.zero,
+                                message = "Function name is missing",
+                                code = ERROR,
+                            ).also {
+                                state.diagnostic.add(it)
+                            }
 
                             state.semanticHub
                                 .add(ctx.CONSTANT(), KEYWORD)
                                 .add(functionCtx, KEYWORD)
                                 .add(enfunctionCtx, KEYWORD)
 
-                            state.foldingHub.add(functionCtx, enfunctionCtx)
+                            FoldingRange.of(functionCtx, enfunctionCtx)?.also {
+                                it.kind = FoldingRangeKind.Region
+                                state.foldingRange.add(it)
+                            }
                         }
                         //endregion
                     }
@@ -134,11 +149,11 @@ class JassFun(override val state: JassState) : JassNodeBase() {
                             Diagnostic(
                                 range = Range.of(nameCtx) ?: Range.zero,
                                 severity = DiagnosticSeverity.Error,
-                                code = ERROR.name,
+                                code = ERROR,
                                 message = "Function redeclared",
                             ).also {
                                 it.relatedInformation(d, "First declaration of '${d.name}' is here")
-                                state.diagnosticHub.add(it)
+                                state.diagnostic.add(it)
                             }
                         }
 
@@ -234,7 +249,13 @@ class JassFun(override val state: JassState) : JassNodeBase() {
             }
 
             if (nameCtx == null) {
-                state.diagnosticHub.add(ctx, ERROR, "Function name is missing")
+                Diagnostic(
+                    range = Range.of(ctx) ?: Range.zero,
+                    message = "Function name is missing",
+                    code = ERROR,
+                ).also {
+                    state.diagnostic.add(it)
+                }
                 return null
             }
 
@@ -255,8 +276,15 @@ class JassFun(override val state: JassState) : JassNodeBase() {
                 if (d != null) break
             }
 
-            if (d == null) state.diagnosticHub.add(nameCtx, ERROR, "Function not exists")
-            else if (exprsCtx != null) {
+            if (d == null) {
+                Diagnostic(
+                    range = Range.of(nameCtx) ?: Range.zero,
+                    message = "Function not exists",
+                    code = ERROR,
+                ).also {
+                    state.diagnostic.add(it)
+                }
+            } else if (exprsCtx != null) {
                 f.also {
                     it.type = d.type
                 }
@@ -267,21 +295,39 @@ class JassFun(override val state: JassState) : JassNodeBase() {
                 }
                 val need = params.size
 
-                val paren = rParenCtx ?: lParenCtx
+                val parenCtx = rParenCtx ?: lParenCtx
 
                 if (exprs.size < need) {
-                    state.diagnosticHub.add(paren, ERROR, "No enought argument. Need $need, pass ${exprs.size}.")
+                    Diagnostic(
+                        range = Range.of(parenCtx) ?: Range.zero,
+                        message = "No enought argument. Need $need, pass ${exprs.size}.",
+                        code = ERROR,
+                    ).also {
+                        state.diagnostic.add(it)
+                    }
                 }
 
                 for ((index, it) in exprs.withIndex()) {
                     val ectx = exprsCtx[index]
                     if (it == null) {
-                        state.diagnosticHub.add(ectx, ERROR, "Unknown expression")
+                        Diagnostic(
+                            range = Range.of(ectx) ?: Range.zero,
+                            message = "Unknown expression",
+                            code = ERROR,
+                        ).also {
+                            state.diagnostic.add(it)
+                        }
                         continue
                     }
 
                     if (index >= need) {
-                        state.diagnosticHub.add(exprsCtx[index], ERROR, "Redudant argument. Need $need, pass ${exprs.size}.")
+                        Diagnostic(
+                            range = Range.of(exprsCtx[index]) ?: Range.zero,
+                            message = "Redudant argument. Need $need, pass ${exprs.size}.",
+                            code = ERROR,
+                        ).also {
+                            state.diagnostic.add(it)
+                        }
                         continue
                     }
                     f.arg.add(it)

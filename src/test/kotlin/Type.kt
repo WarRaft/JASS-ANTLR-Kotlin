@@ -2,9 +2,6 @@ import io.github.warraft.language.jass.antlr.psi.JassExprOp.*
 import io.github.warraft.language.jass.antlr.state.JassState
 import org.antlr.v4.runtime.CharStreams
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertIs
-import kotlin.test.assertNotNull
 
 class Type {
 
@@ -24,7 +21,7 @@ endglobals
             """.trimIndent()
         )
 
-        for (d in state.diagnosticHub.diagnostics) {
+        for (d in state.diagnostic.diagnostics) {
             println(d.message)
         }
     }

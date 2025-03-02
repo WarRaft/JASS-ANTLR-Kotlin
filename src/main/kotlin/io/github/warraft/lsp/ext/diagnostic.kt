@@ -12,7 +12,7 @@ fun LanguageServer.diagnostic(message: Message) {
     val params = message.params ?: return
     val p = json.decodeFromJsonElement<DocumentDiagnosticParams>(DocumentDiagnosticParams.serializer(), params)
     val path = URI(p.textDocument.uri).toPath()
-    val diagnostics = stateGet(path)?.diagnosticHub?.diagnostics
+    val diagnostics = stateGet(path)?.diagnostic
 
     send(
         json.encodeToString(

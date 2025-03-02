@@ -12,7 +12,7 @@ import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.REAL
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.STRING
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.UNDEFINED
 import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode
+import io.github.warraft.lsp.data.DiagnosticCode
 import io.github.warraft.lsp.data.Diagnostic
 import io.github.warraft.lsp.data.Range
 import org.antlr.v4.runtime.ParserRuleContext
@@ -126,11 +126,11 @@ abstract class JassNodeBase() {
             Diagnostic(
                 range = Range.of(definition, node.definition) ?: Range.zero,
                 message = "Cannot resolve operation $op between:",
-                code = JassDiagnosticCode.ERROR.name,
+                code = DiagnosticCode.ERROR,
             ).also {
                 it.relatedInformation(this, a)
                 it.relatedInformation(node, b)
-                state.diagnosticHub.add(it)
+                state.diagnostic.add(it)
             }
             type = UNDEFINED
         }

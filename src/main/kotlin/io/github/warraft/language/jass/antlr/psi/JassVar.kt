@@ -3,7 +3,7 @@ package io.github.warraft.language.jass.antlr.psi
 import io.github.warraft.JassParser.*
 import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode.ERROR
+import io.github.warraft.lsp.data.DiagnosticCode.ERROR
 import io.github.warraft.lsp.data.*
 import io.github.warraft.lsp.data.semantic.SemanticTokenModifier.DEFINITION
 import io.github.warraft.lsp.data.semantic.SemanticTokenType.*
@@ -100,14 +100,26 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                     }
 
                     if (nameCtx == null) {
-                        state.diagnosticHub.add(ctx, ERROR, "Missing name")
+                        Diagnostic(
+                            range = Range.of(ctx) ?: Range.zero,
+                            message = "Missing name",
+                            code = ERROR,
+                        ).also {
+                            state.diagnostic.add(it)
+                        }
                         return null
                     }
 
                     val type = JassType.part(typeCtx, state)
 
                     if (type == null) {
-                        state.diagnosticHub.add(ctx, ERROR, "Missing type")
+                        Diagnostic(
+                            range = Range.of(ctx) ?: Range.zero,
+                            message = "Missing type",
+                            code = ERROR,
+                        ).also {
+                            state.diagnostic.add(it)
+                        }
                         return null
                     }
 
@@ -128,11 +140,11 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                             Diagnostic(
                                 range = Range.of(nameCtx) ?: Range.zero,
                                 severity = DiagnosticSeverity.Error,
-                                code = ERROR.name,
+                                code = ERROR,
                                 message = "Variable redeclared",
                             ).also {
                                 it.relatedInformation(d, "First declaration of '${d.name}' is here")
-                                state.diagnosticHub.add(it)
+                                state.diagnostic.add(it)
                             }
                         }
 
@@ -232,9 +244,9 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                     range = Range.of(ctx) ?: Range.zero,
                     message = "Missing name",
                     severity = DiagnosticSeverity.Error,
-                    code = ERROR.name
+                    code = ERROR
                 ).also {
-                    state.diagnosticHub.add(it)
+                    state.diagnostic.add(it)
                 }
                 return null
             }
@@ -265,7 +277,13 @@ class JassVar(override val state: JassState) : JassNodeBase() {
             }
 
             if (d == null) {
-                state.diagnosticHub.add(ctx, ERROR, "Variable is not declared")
+                Diagnostic(
+                    range = Range.of(ctx) ?: Range.zero,
+                    message = "Variable is not declared",
+                    code = ERROR,
+                ).also {
+                    state.diagnostic.add(it)
+                }
                 return v
             }
 
@@ -286,10 +304,10 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                     Diagnostic(
                         range = brackRange,
                         severity = DiagnosticSeverity.Error,
-                        code = ERROR.name,
+                        code = ERROR,
                         message = "Missing index",
                     ).also {
-                        state.diagnosticHub.add(it)
+                        state.diagnostic.add(it)
                     }
                 } else {
                     /*
@@ -304,10 +322,10 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                     Diagnostic(
                         range = brackRange,
                         severity = DiagnosticSeverity.Error,
-                        code = ERROR.name,
+                        code = ERROR,
                         message = "Array access to non array variable",
                     ).also {
-                        state.diagnosticHub.add(it)
+                        state.diagnostic.add(it)
                     }
                 }
             }
@@ -315,12 +333,24 @@ class JassVar(override val state: JassState) : JassNodeBase() {
             when (ctx) {
                 is StmtSetContext -> {
                     if (v.expr == null) {
-                        state.diagnosticHub.add(nameCtx, ERROR, "Missing expression")
+                        Diagnostic(
+                            range = Range.of(nameCtx) ?: Range.zero,
+                            message = "Missing expression",
+                            code = ERROR,
+                        ).also {
+                            state.diagnostic.add(it)
+                        }
                         return v
                     }
 
                     if (v.constant) {
-                        state.diagnosticHub.add(nameCtx, ERROR, "Cannot set constant")
+                        Diagnostic(
+                            range = Range.of(nameCtx) ?: Range.zero,
+                            message = "Cannot set constant",
+                            code = ERROR,
+                        ).also {
+                            state.diagnostic.add(it)
+                        }
                         return v
                     }
 

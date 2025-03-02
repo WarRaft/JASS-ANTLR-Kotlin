@@ -12,12 +12,10 @@ import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.REAL
 import io.github.warraft.language.jass.antlr.psi.JassTypeName.Companion.STRING
 import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode.ERROR
-import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode.PLUGIN
+import io.github.warraft.lsp.data.DiagnosticCode.ERROR
+import io.github.warraft.lsp.data.DiagnosticCode.PLUGIN
 import io.github.warraft.lsp.data.Diagnostic
-import io.github.warraft.lsp.data.DiagnosticRelatedInformation
 import io.github.warraft.lsp.data.DiagnosticSeverity
-import io.github.warraft.lsp.data.Location
 import io.github.warraft.lsp.data.Range
 import org.antlr.v4.runtime.tree.TerminalNode
 
@@ -50,9 +48,9 @@ class JassType(override val state: JassState) : JassNodeBase() {
                     range = Range.of(ctx) ?: Range.zero,
                     message = "Type $name is not defined",
                     severity = DiagnosticSeverity.Error,
-                    code = ERROR.name
+                    code = ERROR
                 ).also {
-                    state.diagnosticHub.add(it)
+                    state.diagnostic.add(it)
                 }
                 type.type = JassTypeName(JassTypeName.UNDEFINED)
             }
@@ -78,12 +76,24 @@ class JassType(override val state: JassState) : JassNodeBase() {
                 .add(baseIdCtx, SemanticTokenType.TYPE)
 
             if (idCtx == null) {
-                state.diagnosticHub.add(ctx, ERROR, "Missing type name")
+                Diagnostic(
+                    range = Range.of(ctx) ?: Range.zero,
+                    message = "Missing type name",
+                    code = ERROR,
+                ).also {
+                    state.diagnostic.add(it)
+                }
                 return
             }
 
             if (baseIdCtx == null) {
-                state.diagnosticHub.add(ctx, ERROR, "Missing base type")
+                Diagnostic(
+                    range = Range.of(ctx) ?: Range.zero,
+                    message = "Missing base type",
+                    code = ERROR,
+                ).also {
+                    state.diagnostic.add(it)
+                }
                 return
             }
 
@@ -103,7 +113,13 @@ class JassType(override val state: JassState) : JassNodeBase() {
                 CODE,
                 HANDLE,
                     -> {
-                    state.diagnosticHub.add(idCtx, ERROR, "Base type redeclared")
+                    Diagnostic(
+                        range = Range.of(idCtx) ?: Range.zero,
+                        message = "Base type redeclared",
+                        code = ERROR,
+                    ).also {
+                        state.diagnostic.add(it)
+                    }
                     return
                 }
 
@@ -114,11 +130,11 @@ class JassType(override val state: JassState) : JassNodeBase() {
                         Diagnostic(
                             range = Range.of(idCtx) ?: Range.zero,
                             severity = DiagnosticSeverity.Error,
-                            code = ERROR.name,
+                            code = ERROR,
                             message = "Type redeclared",
                         ).also {
                             it.relatedInformation(d, "First declaration of '${d.name}' is here")
-                            state.diagnosticHub.add(it)
+                            state.diagnostic.add(it)
                         }
                         return
                     }
@@ -135,7 +151,13 @@ class JassType(override val state: JassState) : JassNodeBase() {
             var i = 0
             while (typeBase != HANDLE) {
                 if (++i == 100) {
-                    state.diagnosticHub.add(ctx, PLUGIN, "Many loops when type found")
+                    Diagnostic(
+                        range = Range.of(ctx) ?: Range.zero,
+                        message = "Many loops when type found",
+                        code = PLUGIN,
+                    ).also {
+                        state.diagnostic.add(it)
+                    }
                     break
                 }
                 var d: JassType? = null
@@ -148,7 +170,13 @@ class JassType(override val state: JassState) : JassNodeBase() {
             }
 
             if (typeBase != HANDLE) {
-                state.diagnosticHub.add(baseIdCtx, ERROR, "Base type not extends handle")
+                Diagnostic(
+                    range = Range.of(ctx) ?: Range.zero,
+                    message = "Base type not extends handle",
+                    code = ERROR,
+                ).also {
+                    state.diagnostic.add(it)
+                }
                 return
             }
 

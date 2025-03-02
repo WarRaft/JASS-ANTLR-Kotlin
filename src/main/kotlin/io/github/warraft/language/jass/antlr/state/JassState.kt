@@ -53,7 +53,11 @@ class JassState : LanguageState() {
                         val globalsCtx = it.GLOBALS()
                         val endglobalsCtx = it.ENDGLOBALS()
 
-                        foldingHub.add(globalsCtx, endglobalsCtx)
+                        FoldingRange.of(globalsCtx, endglobalsCtx)?.also {
+                            it.kind = FoldingRangeKind.Region
+                            foldingRange.add(it)
+                        }
+
                         semanticHub
                             .add(globalsCtx, SemanticTokenType.KEYWORD)
                             .add(endglobalsCtx, SemanticTokenType.KEYWORD)
@@ -73,6 +77,6 @@ class JassState : LanguageState() {
             semanticHub.add(c, SemanticTokenType.COMMENT)
         }
 
-        diagnosticHub.diagnostics.addAll(errorListener.diagnostics)
+        diagnostic.addAll(errorListener.diagnostics)
     }
 }

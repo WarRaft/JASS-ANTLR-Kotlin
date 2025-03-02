@@ -24,6 +24,7 @@ fun LanguageServer.didChangeSDK(element: JsonElement?) {
         if (!script.isString) continue
         val path = Path.of(script.jsonPrimitive.content)
         if (!path.isReadable()) {
+            log(path.toAbsolutePath().toString(), MessageLogType.Error)
             show(path.toAbsolutePath().toString(), MessageLogType.Error)
             continue
         }
@@ -31,7 +32,7 @@ fun LanguageServer.didChangeSDK(element: JsonElement?) {
         sdkStateList.add(s.also {
             it.path = path
             it.path = path
-            //it.server = server
+            it.server = this
             it.parse(CharStreams.fromPath(path), sdkStateList, 1)
         })
     }

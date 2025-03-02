@@ -12,7 +12,7 @@ fun LanguageServer.foldingRange(message: Message) {
     val params = message.params ?: return
     val p = json.decodeFromJsonElement<FoldingRangeParams>(FoldingRangeParams.serializer(), params)
     val path = URI(p.textDocument.uri).toPath()
-    val folding = stateGet(path)?.foldingHub?.ranges
+    val folding = stateGet(path)?.foldingRange
     send(
         json.encodeToString(
             Message(

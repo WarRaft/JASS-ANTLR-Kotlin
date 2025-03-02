@@ -4,7 +4,9 @@ import io.github.warraft.JassParser.*
 import io.github.warraft.language.jass.antlr.psi.*
 import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
 import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode
+import io.github.warraft.lsp.data.Diagnostic
+import io.github.warraft.lsp.data.DiagnosticCode
+import io.github.warraft.lsp.data.Range
 import io.github.warraft.lsp.data.semantic.SemanticTokenType
 
 fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, function: JassFun) {
@@ -40,11 +42,13 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
 
                 val exp = JassExpr.parse(this, ctx.expr(), function)
                 if (exp == null) {
-                    diagnosticHub.add(
-                        ctx.EXITWHEN(),
-                        JassDiagnosticCode.ERROR,
-                        "Missing expression"
-                    )
+                    Diagnostic(
+                        range = Range.of(ctx.EXITWHEN()) ?: Range.zero,
+                        message = "Missing expression",
+                        code = DiagnosticCode.ERROR,
+                    ).also {
+                        diagnostic.add(it)
+                    }
                 } else {
                     list.add(JassExitWhen(state = this, expr = exp))
                 }
@@ -58,11 +62,13 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
                 if (e != null) {
                     val v = e.a
                     if (v is JassVar && v.array && v.index == null) {
-                        diagnosticHub.add(
-                            v.definition,
-                            JassDiagnosticCode.ARRAY_RETURN,
-                            "Array return"
-                        )
+                        Diagnostic(
+                            range = Range.of(v.definition) ?: Range.zero,
+                            message = "Array return",
+                            code = DiagnosticCode.ARRAY_RETURN,
+                        ).also {
+                            diagnostic.add(it)
+                        }
                     }
                 }
                 list.add(JassReturn(state = this, expr = e))
@@ -73,11 +79,13 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
             is StmtIfContext -> {
                 val e = JassExpr.parse(this, ctx.expr(), function)
                 if (e == null) {
-                    diagnosticHub.add(
-                        ctx.IF(),
-                        JassDiagnosticCode.ERROR,
-                        "Missing expression"
-                    )
+                    Diagnostic(
+                        range = Range.of(ctx.IF()) ?: Range.zero,
+                        message = "Missing expression",
+                        code = DiagnosticCode.ERROR,
+                    ).also {
+                        diagnostic.add(it)
+                    }
                     continue
                 }
                 val nodeIf = JassIf(state = this, expr = e)
@@ -96,11 +104,13 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
                         .add(elseifctx.ELSEIF(), SemanticTokenType.KEYWORD)
                         .add(elseifctx.THEN(), SemanticTokenType.KEYWORD)
                     if (e == null) {
-                        diagnosticHub.add(
-                            elseifctx.ELSEIF(),
-                            JassDiagnosticCode.ERROR,
-                            "Missing expression"
-                        )
+                        Diagnostic(
+                            range = Range.of(elseifctx.ELSEIF()) ?: Range.zero,
+                            message = "Missing expression",
+                            code = DiagnosticCode.ERROR,
+                        ).also {
+                            diagnostic.add(it)
+                        }
                         continue
                     }
                     val nodeElseif = JassIf(state = this, expr = e)
@@ -118,7 +128,15 @@ fun JassState.stmt(ctxs: List<StmtContext>, list: MutableList<JassNodeBase>, fun
             }
             //endregion
 
-            else -> diagnosticHub.add(JassDiagnosticCode.PLUGIN, "Udeclared statement")
+            else -> {
+                Diagnostic(
+                    range = Range.of(ctx) ?: Range.zero,
+                    message = "Udeclared statement",
+                    code = DiagnosticCode.PLUGIN
+                ).also {
+                    diagnostic.add(it)
+                }
+            }
         }
     }
 }

@@ -4,12 +4,12 @@ import io.github.warraft.language._.antlr.utils.LanguageErrorListener
 import io.github.warraft.language._.antlr.utils.LanguageTokenFactory
 import io.github.warraft.lsp.data.semantic.SemanticTokenHub
 import io.github.warraft.language.jass.antlr.utils.JassTokenTree
-import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticHub
-import io.github.warraft.language.jass.lsp.folding.JassFoldingHub
 import io.github.warraft.language.jass.lsp.symbol.JassDocumentSymbolHub
 import io.github.warraft.lsp.LanguageServer
 import io.github.warraft.lsp.data.CompletionList
+import io.github.warraft.lsp.data.Diagnostic
 import io.github.warraft.lsp.data.DocumentHighlight
+import io.github.warraft.lsp.data.FoldingRange
 import io.github.warraft.lsp.data.Hover
 import io.github.warraft.lsp.data.Location
 import io.github.warraft.lsp.data.LocationLink
@@ -34,8 +34,9 @@ abstract class LanguageState {
     open fun references(position: Position): List<Location>? = null
     open fun formatting(): List<TextEdit>? = null
 
-    val foldingHub = JassFoldingHub()
-    val diagnosticHub = JassDiagnosticHub()
+    val foldingRange = mutableListOf<FoldingRange>()
+    val diagnostic = mutableListOf<Diagnostic>()
+
     val documentSymbolHub = JassDocumentSymbolHub()
     val tokenTree = JassTokenTree()
 
@@ -52,8 +53,8 @@ abstract class LanguageState {
     lateinit var tokenStream: CommonTokenStream
 
     open fun parse(stream: CharStream, states: List<LanguageState> = listOf(), version: Int?) {
-        foldingHub.clear()
-        diagnosticHub.clear()
+        foldingRange.clear()
+        diagnostic.clear()
         documentSymbolHub.clear()
         tokenTree.clear()
         semanticHub.clear()

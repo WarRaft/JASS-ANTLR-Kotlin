@@ -1,6 +1,6 @@
 package io.github.warraft.language._.antlr.utils
 
-import io.github.warraft.language.jass.lsp.diagnostic.JassDiagnosticCode
+import io.github.warraft.lsp.data.DiagnosticCode
 import io.github.warraft.lsp.data.Diagnostic
 import io.github.warraft.lsp.data.DiagnosticSeverity
 import io.github.warraft.lsp.data.Position
@@ -34,7 +34,7 @@ class LanguageErrorListener() : BaseErrorListener() {
                     Position(l, ch + 1u)
                 ),
                 severity = DiagnosticSeverity.Error,
-                code = JassDiagnosticCode.SYNTAX.name,
+                code = DiagnosticCode.SYNTAX,
                 message = msg ?: "Uknown error",
             )
         )
