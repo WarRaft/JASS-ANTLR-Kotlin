@@ -145,6 +145,7 @@ abstract class JassNodeBase() {
                                 }
                             }
                         }
+
                         else -> {}
                     }
                 }
@@ -158,7 +159,7 @@ abstract class JassNodeBase() {
                     SET -> Range.of(node.definition) ?: Range.zero
                     else -> Range.of(definition, node.definition) ?: Range.zero
                 },
-                message = "Cannot resolve operation $op between:",
+                message = "Cannot resolve operation $op between $a and $b",
                 code = DiagnosticCode.ERROR,
             ).also {
                 it.relatedInformation(this, a)
