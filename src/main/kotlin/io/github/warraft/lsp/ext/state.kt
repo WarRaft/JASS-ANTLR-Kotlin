@@ -6,6 +6,7 @@ import io.github.warraft.language._.state.LanguageState
 import io.github.warraft.language.jass.state.JassState
 import io.github.warraft.language.vex.state.VjassState
 import io.github.warraft.language.vex.state.ZincState
+import io.github.warraft.language.wts.state.WtsState
 import io.github.warraft.lsp.LanguageServer
 import org.antlr.v4.runtime.CharStreams
 import java.nio.file.Path
@@ -17,12 +18,14 @@ fun LanguageServer.stateGet(p: Path): LanguageState? {
         "j" -> "jass"
         "vj" -> "vjass"
         "zn" -> "zinc"
+        "wts" -> "wts"
         else -> null
     }
     when (lng) {
         "jass" -> if (state !is JassState) state = JassState()
         "vjass" -> if (state !is VjassState) state = VjassState()
         "zinc" -> if (state !is ZincState) state = ZincState()
+        "wts" -> if (state !is WtsState) state = WtsState()
     }
 
     if (state == null) return null

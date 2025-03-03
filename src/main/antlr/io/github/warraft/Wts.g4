@@ -6,7 +6,11 @@ item : STRING NUMBER BLOCK;
 
 STRING : 'STRING';
 NUMBER: ('0' .. '9')+;
-BLOCK: '{' (~'}')* '}' ;
+
+LBRACE : '{';
+RBRACE : '}';
+
+BLOCK: LBRACE (~'}')* RBRACE ;
 
 LINE_COMMENT: '//' ~[\r\n]* -> channel(2);
 

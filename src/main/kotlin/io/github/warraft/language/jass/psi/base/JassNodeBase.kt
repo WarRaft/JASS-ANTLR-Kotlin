@@ -129,19 +129,31 @@ abstract class JassNodeBase() {
                 if (aa.lastOrNull() == HANDLE) {
                     when (op) {
                         EQ, NEQ -> when (b) {
-                            a, NULL -> type = BOOLEAN
-                        }
-
-                        SET -> {
-                            when (b) {
-                                NULL -> type = BOOLEAN
-                                else -> {
-                                    val bb = JassType.handleTree(b, state)
-                                    for (b in bb) {
-                                        if (b != a) continue
-                                        type = BOOLEAN
+                            NULL -> type = BOOLEAN
+                            else -> {
+                                val bb = JassType.handleTree(b, state)
+                                var r = false
+                                for (c in bb) if (c == a) {
+                                    r = true
+                                    break
+                                }
+                                if (!r) {
+                                    for (c in aa) if (c == b) {
+                                        r = true
                                         break
                                     }
+                                }
+                                if (r) type = BOOLEAN
+                            }
+                        }
+
+                        SET -> when (b) {
+                            NULL -> type = BOOLEAN
+                            else -> {
+                                val bb = JassType.handleTree(b, state)
+                                for (b in bb) if (b == a) {
+                                    type = BOOLEAN
+                                    break
                                 }
                             }
                         }
