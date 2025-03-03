@@ -1,4 +1,4 @@
-import io.github.warraft.language.jass.antlr.state.JassState
+import io.github.warraft.language.jass.state.JassState
 import io.github.warraft.language.jass.converter.JassToAs
 import io.github.warraft.language.jass.converter.JassToJass
 import io.github.warraft.language.jass.converter.JassToLua

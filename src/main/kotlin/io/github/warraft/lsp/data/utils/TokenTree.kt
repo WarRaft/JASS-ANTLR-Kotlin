@@ -1,6 +1,6 @@
 package io.github.warraft.lsp.data.utils
 
-import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
+import io.github.warraft.language.jass.psi.base.JassNodeBase
 import io.github.warraft.lsp.data.Position
 import org.antlr.v4.runtime.Token
 import java.util.TreeMap

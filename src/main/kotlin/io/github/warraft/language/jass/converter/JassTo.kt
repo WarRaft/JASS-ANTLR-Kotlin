@@ -1,13 +1,13 @@
 package io.github.warraft.language.jass.converter
 
-import io.github.warraft.language.jass.antlr.utils.JassFakeName
-import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
-import io.github.warraft.language.jass.antlr.psi.JassExprOp
-import io.github.warraft.language.jass.antlr.psi.JassFun
-import io.github.warraft.language.jass.antlr.psi.JassType
-import io.github.warraft.language.jass.antlr.psi.JassTypeName
-import io.github.warraft.language.jass.antlr.psi.JassVar
+import io.github.warraft.language.jass.state.JassState
+import io.github.warraft.language.jass.psi.base.JassNodeBase
+import io.github.warraft.language.jass.psi.JassExprOp
+import io.github.warraft.language.jass.psi.JassFun
+import io.github.warraft.language.jass.psi.JassType
+import io.github.warraft.language.jass.psi.JassTypeName
+import io.github.warraft.language.jass.psi.JassVar
+import io.github.warraft.language.jass.state.utils.JassFakeName
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.absolute

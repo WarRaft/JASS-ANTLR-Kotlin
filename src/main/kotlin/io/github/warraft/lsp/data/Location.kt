@@ -1,7 +1,7 @@
 package io.github.warraft.lsp.data
 
-import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
-import io.github.warraft.language.jass.antlr.state.JassState
+import io.github.warraft.language.jass.psi.base.JassNodeBase
+import io.github.warraft.language.jass.state.JassState
 import kotlinx.serialization.Serializable
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token

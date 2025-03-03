@@ -1,5 +1,5 @@
-import io.github.warraft.language.jass.antlr.psi.JassExprOp.SET
-import io.github.warraft.language.jass.antlr.state.JassState
+import io.github.warraft.language.jass.psi.JassExprOp.SET
+import io.github.warraft.language.jass.state.JassState
 import org.antlr.v4.runtime.CharStreams
 import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull

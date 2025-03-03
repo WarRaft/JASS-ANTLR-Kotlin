@@ -1,6 +1,6 @@
 package io.github.warraft.jass.converter
 
-import io.github.warraft.language.jass.antlr.state.JassState
+import io.github.warraft.language.jass.state.JassState
 import io.github.warraft.lsp.data.FullDocumentDiagnosticReport
 import io.github.warraft.lsp.data.Message
 import io.github.warraft.lsp.data.semantic.SemanticTokenType

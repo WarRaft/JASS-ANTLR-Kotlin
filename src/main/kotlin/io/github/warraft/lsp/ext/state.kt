@@ -2,10 +2,10 @@
 
 package io.github.warraft.lsp.ext
 
-import io.github.warraft.language._.antlr.state.LanguageState
-import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language.vex.antlr.state.VjassState
-import io.github.warraft.language.vex.antlr.state.ZincState
+import io.github.warraft.language._.state.LanguageState
+import io.github.warraft.language.jass.state.JassState
+import io.github.warraft.language.vex.state.VjassState
+import io.github.warraft.language.vex.state.ZincState
 import io.github.warraft.lsp.LanguageServer
 import org.antlr.v4.runtime.CharStreams
 import java.nio.file.Path

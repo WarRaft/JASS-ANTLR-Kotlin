@@ -2,9 +2,9 @@
 
 package io.github.warraft.language.jass.converter
 
-import io.github.warraft.language.jass.antlr.state.JassState
-import io.github.warraft.language.jass.antlr.psi.*
-import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
+import io.github.warraft.language.jass.state.JassState
+import io.github.warraft.language.jass.psi.*
+import io.github.warraft.language.jass.psi.base.JassNodeBase
 import java.nio.file.Path
 
 class JassToJass(

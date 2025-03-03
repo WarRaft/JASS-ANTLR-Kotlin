@@ -1,6 +1,6 @@
 package io.github.warraft.lsp
 
-import io.github.warraft.language._.antlr.state.LanguageState
+import io.github.warraft.language._.state.LanguageState
 import io.github.warraft.lsp.data.InitializeParams
 import io.github.warraft.lsp.data.Message
 import io.github.warraft.lsp.data.MessageLogParams

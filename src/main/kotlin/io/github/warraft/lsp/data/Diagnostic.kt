@@ -1,6 +1,6 @@
 package io.github.warraft.lsp.data
 
-import io.github.warraft.language.jass.antlr.psi.base.JassNodeBase
+import io.github.warraft.language.jass.psi.base.JassNodeBase
 import kotlinx.serialization.Serializable
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#diagnostic
