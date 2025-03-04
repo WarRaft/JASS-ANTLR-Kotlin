@@ -30,8 +30,18 @@ class WtsState : LanguageState() {
         val s = blockCtx.symbol
 
         //val sl = blockCtx.symbol.line
+        for ((i, lineItem) in blockText.lines().withIndex()) {
+            val l = s.line + i
+            var pos = 0
+            if (l == s.line) pos = s.charPositionInLine
+            val len = lineItem.length
 
-        for ((i, line) in blockText.lines().withIndex()) {
+            semanticHub.add(
+                line = l - 1,
+                pos = pos,
+                len = len,
+                type = SemanticTokenType.STRING,
+            )
             //server?.log("$lines")
         }
     }

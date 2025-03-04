@@ -7,10 +7,7 @@ item : STRING NUMBER BLOCK;
 STRING : 'STRING';
 NUMBER: ('0' .. '9')+;
 
-LBRACE : '{';
-RBRACE : '}';
-
-BLOCK: LBRACE (~'}')* RBRACE ;
+BLOCK: '{' (~'}')* '}' ;
 
 LINE_COMMENT: '//' ~[\r\n]* -> channel(2);
 

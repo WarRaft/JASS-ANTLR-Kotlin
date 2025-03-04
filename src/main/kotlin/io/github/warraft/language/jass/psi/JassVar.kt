@@ -301,7 +301,7 @@ class JassVar(override val state: JassState) : JassNodeBase() {
                 it.param = d.param
             }
 
-            var brackRange: Range = Range.of(lBrackCtx, rBrackCtx) ?: Range.zero
+            var brackRange: Range = Range.of(lBrackCtx, rBrackCtx) ?: Range.of(v.symbol) ?: Range.zero
 
             if (d.array) {
                 val i = v.index
