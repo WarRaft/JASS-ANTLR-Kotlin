@@ -2,8 +2,8 @@ package io.github.warraft.language.vex.state
 
 import io.github.warraft.ZincLexer
 import io.github.warraft.ZincParser
+import io.github.warraft.ZincParser.*
 import io.github.warraft.language._.state.LanguageState
-import io.github.warraft.language.vex.state.VexState
 import io.github.warraft.lsp.data.semantic.SemanticTokenType
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonTokenStream
@@ -27,19 +27,19 @@ class ZincState : VexState() {
         }
     }
 
-    fun rootItems(itemCtx: ZincParser.RootItemContext) {
+    fun rootItems(itemCtx: RootItemContext) {
         for (ctx in itemCtx.children) {
             when (ctx) {
-                is ZincParser.LibContext -> lib(ctx)
-                is ZincParser.VisContext -> vis(ctx)
-                is ZincParser.StmtLeftContext -> leftStmt(ctx)
-                is ZincParser.FunctionContext -> function(ctx)
-                else -> server?.log("root:${ctx.javaClass.simpleName}")
+                is LibContext -> lib(ctx)
+                is VisContext -> vis(ctx)
+                is StmtLeftContext -> leftStmt(ctx)
+                is FunctionContext -> function(ctx)
+                else -> server?.log("$path |root:${ctx.javaClass.simpleName}")
             }
         }
     }
 
-    fun function(ctx: ZincParser.FunctionContext) {
+    fun function(ctx: FunctionContext) {
         semanticHub
             .add(ctx.NATIVE(), SemanticTokenType.KEYWORD)
             .add(ctx.FUNCTION(), SemanticTokenType.KEYWORD)
@@ -51,8 +51,8 @@ class ZincState : VexState() {
             .add(ctx.ID(1), SemanticTokenType.TYPE)
 
         for (paramCtx in ctx.param()) {
-            val typenameCtx: ZincParser.TypenameContext? = paramCtx.typename()
-            val varnameCtx: ZincParser.VarnameContext? = paramCtx.varname()
+            val typenameCtx: TypenameContext? = paramCtx.typename()
+            val varnameCtx: VarnameContext? = paramCtx.varname()
 
             semanticHub
                 .add(typenameCtx?.ID(), SemanticTokenType.TYPE_PARAMETER)
@@ -64,7 +64,7 @@ class ZincState : VexState() {
         }
     }
 
-    fun lib(ctx: ZincParser.LibContext) {
+    fun lib(ctx: LibContext) {
         for (idCtx in ctx.ID()) {
             semanticHub.add(idCtx, SemanticTokenType.NAMESPACE)
         }
@@ -78,7 +78,7 @@ class ZincState : VexState() {
         }
     }
 
-    fun vis(ctx: ZincParser.VisContext) {
+    fun vis(ctx: VisContext) {
         semanticHub
             .add(ctx.PUBLIC(), SemanticTokenType.KEYWORD)
             .add(ctx.PRIVATE(), SemanticTokenType.KEYWORD)
@@ -88,7 +88,7 @@ class ZincState : VexState() {
         }
     }
 
-    fun leftStmt(ctx: ZincParser.StmtLeftContext) {
+    fun leftStmt(ctx: StmtLeftContext) {
         semanticHub
             .add(ctx.DEBUG(), SemanticTokenType.KEYWORD)
             .add(ctx.STATIC(), SemanticTokenType.KEYWORD)
@@ -96,33 +96,43 @@ class ZincState : VexState() {
         left(ctx.left())
     }
 
-    fun left(ctx: ZincParser.LeftContext?) {
+    fun left(list: List<LeftContext>) {
+        for (ctx in list) left(ctx)
+    }
+
+    fun left(ctx: LeftContext?) {
         when (ctx) {
-            is ZincParser.LeftTypeContext -> {
+            is LeftTypeContext -> {
                 semanticHub.add(ctx.ID(), SemanticTokenType.TYPE)
                 left(ctx.left())
             }
 
-            is ZincParser.LeftIdContext -> {
+            is LeftIdContext -> {
                 semanticHub.add(ctx.ID(), SemanticTokenType.VARIABLE)
             }
 
-            is ZincParser.LeftDotContext -> {
+            is LeftDotContext -> {
                 for (it in ctx.left()) left(it)
             }
 
-            is ZincParser.LeftCallContext -> {
+            is LeftCallContext -> {
                 left(ctx.left())
                 for (it in ctx.expr()) expr(it)
             }
 
-            else -> server?.log("left:${ctx?.javaClass?.simpleName}")
+            is LeftArrContext -> {
+                left(ctx.left())
+            }
+
+            is LeftContext -> {}
         }
     }
 
-    fun stmt(stmtCtx: ZincParser.StmtContext) {
+    fun stmt(list: List<StmtContext>) = list.forEach { stmt(it) }
+
+    fun stmt(stmtCtx: StmtContext) {
         when (stmtCtx) {
-            is ZincParser.StmtLeftContext -> {
+            is StmtLeftContext -> {
                 leftStmt(stmtCtx)
                 semanticHub
                     .add(stmtCtx.DEBUG(), SemanticTokenType.VARIABLE)
@@ -133,51 +143,54 @@ class ZincState : VexState() {
                 expr(stmtCtx.expr())
             }
 
-            is ZincParser.StmtIfContext -> {
+            is StmtIfContext -> {
                 semanticHub
                     .add(stmtCtx.IF(), SemanticTokenType.KEYWORD)
                     .add(stmtCtx.WHILE(), SemanticTokenType.KEYWORD)
                     .add(stmtCtx.FOR(), SemanticTokenType.KEYWORD)
 
                 expr(stmtCtx.expr())
-                stmtCtx.stmt().forEach { stmt(it) }
+                stmt(stmtCtx.stmt())
 
-
-                val elseCtx: ZincParser.ElseRuleContext? = stmtCtx.elseRule()
+                val elseCtx: ElseRuleContext? = stmtCtx.elseRule()
                 if (elseCtx != null) {
                     semanticHub
                         .add(elseCtx.ELSE(), SemanticTokenType.KEYWORD)
-                    stmtCtx.stmt().forEach { stmt(it) }
+                    stmt(elseCtx.stmt())
                 }
             }
 
-            is ZincParser.StmtReturnContext -> {
+            is StmtReturnContext -> {
                 semanticHub
                     .add(stmtCtx.RETURN(), SemanticTokenType.KEYWORD)
 
                 expr(stmtCtx.expr())
             }
 
-            else -> server?.log("stmt:${stmtCtx.javaClass.simpleName}")
+            else -> server?.log("$path |stmt:${stmtCtx.javaClass.simpleName}")
         }
     }
 
-    fun expr(exprsCtx: List<ZincParser.ExprContext>, opsCtx: List<TerminalNode?>) {
+    fun expr(exprsCtx: List<ExprContext>, opsCtx: List<TerminalNode?>) {
         for (exprCtx in exprsCtx) expr(exprCtx)
         for (opCtx in opsCtx) semanticHub.add(opCtx, SemanticTokenType.OPERATOR)
     }
 
-    fun expr(exprCtx: ZincParser.ExprContext?) {
+    fun expr(exprsCtx: List<ExprContext>) {
+        for (exprCtx in exprsCtx) expr(exprCtx)
+    }
+
+    fun expr(exprCtx: ExprContext?) {
         if (exprCtx == null) return
 
         when (exprCtx) {
-            is ZincParser.ExprEqContext -> expr(exprCtx.expr(), listOf(exprCtx.EQ_EQ(), exprCtx.NEQ()))
-            is ZincParser.ExprAddContext -> expr(exprCtx.expr(), listOf(exprCtx.PLUS(), exprCtx.MINUS()))
-            is ZincParser.ExprMulContext -> expr(exprCtx.expr(), listOf(exprCtx.MUL(), exprCtx.DIV()))
-            is ZincParser.ExprLtContext -> expr(exprCtx.expr(), listOf(exprCtx.LT(), exprCtx.LT_EQ(), exprCtx.GT(), exprCtx.GT_EQ()))
-            is ZincParser.ExprAndContext -> expr(exprCtx.expr(), listOf(exprCtx.AND_AND(), exprCtx.AND_AND()))
+            is ExprEqContext -> expr(exprCtx.expr(), listOf(exprCtx.EQ_EQ(), exprCtx.NEQ()))
+            is ExprAddContext -> expr(exprCtx.expr(), listOf(exprCtx.PLUS(), exprCtx.MINUS()))
+            is ExprMulContext -> expr(exprCtx.expr(), listOf(exprCtx.MUL(), exprCtx.DIV()))
+            is ExprLtContext -> expr(exprCtx.expr(), listOf(exprCtx.LT(), exprCtx.LT_EQ(), exprCtx.GT(), exprCtx.GT_EQ()))
+            is ExprAndContext -> expr(exprCtx.expr(), listOf(exprCtx.AND_AND(), exprCtx.AND_AND()))
 
-            is ZincParser.ExprLambdaContext -> {
+            is ExprLambdaContext -> {
                 semanticHub
                     .add(exprCtx.FUNCTION(), SemanticTokenType.KEYWORD)
                     .add(exprCtx.RETURNS(), SemanticTokenType.OPERATOR)
@@ -186,49 +199,49 @@ class ZincState : VexState() {
                 exprCtx.stmt().forEach { stmt(it) }
             }
 
-            is ZincParser.ExprNullContext -> {
+            is ExprNullContext -> {
                 semanticHub
                     .add(exprCtx.NULL(), SemanticTokenType.KEYWORD)
             }
 
-            is ZincParser.ExprStrContext -> {
+            is ExprStrContext -> {
                 semanticHub
                     .add(exprCtx.STRING(), SemanticTokenType.STRING)
             }
 
-            is ZincParser.ExprBoolContext -> {
+            is ExprBoolContext -> {
                 semanticHub
                     .add(exprCtx.TRUE(), SemanticTokenType.KEYWORD)
                     .add(exprCtx.FALSE(), SemanticTokenType.KEYWORD)
             }
 
-            is ZincParser.ExprIntContext -> {
+            is ExprIntContext -> {
                 semanticHub
                     .add(exprCtx.INTVAL(), SemanticTokenType.NUMBER)
                     .add(exprCtx.HEXVAL(), SemanticTokenType.NUMBER)
                     .add(exprCtx.RAWVAL(), SemanticTokenType.NUMBER)
             }
 
-            is ZincParser.ExprRealContext -> {
+            is ExprRealContext -> {
                 semanticHub.add(exprCtx.REALVAL(), SemanticTokenType.NUMBER)
             }
 
-            is ZincParser.ExprCallContext -> {
+            is ExprCallContext -> {
                 for (e in exprCtx.expr()) expr(e)
             }
 
-            is ZincParser.ExprVarContext -> {
+            is ExprVarContext -> {
                 semanticHub
                     .add(exprCtx.ID(), SemanticTokenType.VARIABLE)
             }
 
-            is ZincParser.ExprFunContext -> {
+            is ExprFunContext -> {
                 semanticHub
                     .add(exprCtx.FUNCTION(), SemanticTokenType.KEYWORD)
                     .add(exprCtx.ID(), SemanticTokenType.FUNCTION)
             }
 
-            is ZincParser.ExprUnContext -> {
+            is ExprUnContext -> {
                 semanticHub
                     .add(exprCtx.MINUS(), SemanticTokenType.OPERATOR)
                     .add(exprCtx.NOT(), SemanticTokenType.OPERATOR)
@@ -236,15 +249,12 @@ class ZincState : VexState() {
                 expr(exprCtx.expr())
             }
 
-            is ZincParser.ExprDotContext -> {
-                exprCtx.expr().forEach { expr(it) }
-            }
+            is ExprDotContext -> expr(exprCtx.expr())
+            is ExprArrContext -> expr(exprCtx.expr())
+            is ExprParenContext -> expr(exprCtx.expr())
 
-            is ZincParser.ExprArrContext -> {
-                exprCtx.expr().forEach { expr(it) }
-            }
 
-            else -> server?.log("expr:${exprCtx.javaClass.simpleName}")
+            else -> server?.log("$path | expr:${exprCtx.javaClass.simpleName}")
         }
     }
 }

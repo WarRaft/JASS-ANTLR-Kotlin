@@ -62,7 +62,5 @@ class WtsState : LanguageState() {
         for (c in tokenFactory.commentList) {
             semanticHub.add(c, SemanticTokenType.COMMENT)
         }
-
-        diagnostic.addAll(errorListener.diagnostics)
     }
 }

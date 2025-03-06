@@ -101,6 +101,10 @@ abstract class JassNodeBase() {
             }
 
             CODE -> when (op) {
+                EQ, NEQ -> when (b) {
+                    CODE, NULL -> type = BOOLEAN
+                }
+
                 SET -> when (b) {
                     CODE, NULL -> type = CODE
                 }

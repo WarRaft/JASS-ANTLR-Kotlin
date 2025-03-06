@@ -77,7 +77,5 @@ class JassState : LanguageState() {
             if (!tokenFactory.commentMap.containsKey(c.line)) continue
             semanticHub.add(c, SemanticTokenType.COMMENT)
         }
-
-        diagnostic.addAll(errorListener.diagnostics)
     }
 }

@@ -1,5 +1,6 @@
 package io.github.warraft.language._.state.utils
 
+import io.github.warraft.language._.state.LanguageState
 import io.github.warraft.lsp.data.Diagnostic
 import io.github.warraft.lsp.data.DiagnosticCode
 import io.github.warraft.lsp.data.DiagnosticSeverity
@@ -13,9 +14,7 @@ import org.antlr.v4.runtime.atn.ATNConfigSet
 import org.antlr.v4.runtime.dfa.DFA
 import java.util.BitSet
 
-class LanguageErrorListener() : BaseErrorListener() {
-    val diagnostics = mutableListOf<Diagnostic>()
-
+class LanguageErrorListener(val parent: LanguageState) : BaseErrorListener() {
     override fun syntaxError(
         recognizer: Recognizer<*, *>?,
         offendingSymbol: Any?,
@@ -24,15 +23,11 @@ class LanguageErrorListener() : BaseErrorListener() {
         msg: String?,
         e: RecognitionException?,
     ) {
-        val l = (line - 1).toUInt()
-        val ch = charPositionInLine.toUInt()
-        diagnostics.add(
-
+        val l = (line - 1)
+        val ch = charPositionInLine
+        parent.diagnostic.add(
             Diagnostic(
-                range = Range(
-                    Position(l, ch),
-                    Position(l, ch + 1u)
-                ),
+                range = Range.of(l, ch, l, ch + 1),
                 severity = DiagnosticSeverity.Error,
                 code = DiagnosticCode.SYNTAX,
                 message = msg ?: "Uknown error",
@@ -69,9 +64,5 @@ class LanguageErrorListener() : BaseErrorListener() {
         prediction: Int,
         configs: ATNConfigSet?,
     ) {
-    }
-
-    fun clear() {
-        diagnostics.clear()
     }
 }

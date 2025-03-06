@@ -53,7 +53,7 @@ abstract class LanguageState {
 
     lateinit var rootCtx: ParserRuleContext
 
-    val errorListener = LanguageErrorListener()
+    private val errorListener = LanguageErrorListener(this)
     val tokenFactory = LanguageTokenFactory()
     lateinit var tokenStream: CommonTokenStream
 
@@ -64,7 +64,6 @@ abstract class LanguageState {
         tokenTree.clear()
         semanticHub.clear()
 
-        errorListener.clear()
         tokenFactory.clear()
 
         lexer = lexer(stream).also {

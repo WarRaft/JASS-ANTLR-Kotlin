@@ -214,10 +214,6 @@ class JassFun(override val state: JassState) : JassNodeBase() {
                                     it.type = type.type
                                     it.documentSymbol?.detail = type.name
                                 }
-
-                                if (f.name == "BB") {
-                                    state.server?.log("t: ${type}")
-                                }
                             }
                         } else {
                             f.type = JassTypeName(JassTypeName.NOTHING)

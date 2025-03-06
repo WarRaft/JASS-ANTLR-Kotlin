@@ -13,17 +13,18 @@ class JassStateTest {
 
     @Test
     fun test1() {
-        val s = Json.encodeToString(
-            Message(
-                id = IntOrString.Ival(1),
-                result = Json.encodeToJsonElement(
-                    FullDocumentDiagnosticReport.serializer(), FullDocumentDiagnosticReport(
-                        items = emptyList(),
-                    )
-                )
+        JassState().apply {
+            parse(
+                CharStreams.fromString(
+                    """
+                globals1
+                """.trimIndent()
+                ),
+                emptyList(),
+                null,
             )
-        )
-        println(s)
+        }
+
     }
 
 
