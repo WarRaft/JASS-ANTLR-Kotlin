@@ -13,7 +13,7 @@ varname : ID;
 param : typename varname ;
 
 function :
-    (STATIC | CONSTANT)*
+    (STATIC|CONSTANT)*
     (NATIVE|FUNCTION|METHOD)
     ID
     LPAREN (param (COMMA param)*)? RPAREN
@@ -26,16 +26,18 @@ function :
 left
     : ID #leftId
     | ID left #leftType
+    | left COMMA left #leftComma
     | left LPAREN (expr (COMMA expr)*)? RPAREN #leftCall
-    | left LBRACK left? RBRACK #leftArr
+    | left LBRACK expr? RBRACK #leftArr
     | left DOT left #leftDot
     ;
 
 
 stmt
-    : (DEBUG| STATIC | CONSTANT)* left (EQ expr)? SEMI #stmtLeft
+    : left ((EQ|ADD_EQ|SUB_EQ|MUL_EQ|DIV_EQ) expr)? SEMI #stmtLeft
     | RETURN expr? SEMI #stmtReturn
     | (IF|WHILE|FOR) LPAREN expr RPAREN (stmt | (LBRACE stmt* RBRACE)) elseRule? #stmtIf
+    | (DEBUG|STATIC|CONSTANT)+ stmt #stmtMod
     ;
 
 elseRule : ELSE (stmt | (LBRACE stmt* RBRACE));
@@ -44,9 +46,9 @@ elseRule : ELSE (stmt | (LBRACE stmt* RBRACE));
 expr
     : expr DOT expr #exprDot
     | LPAREN expr RPAREN # exprParen // 1
-    | (MINUS|NOT) expr # exprUn // 2
+    | (SUB|NOT) expr # exprUn // 2
     | expr (MUL|DIV) expr # exprMul  // 3
-    | expr (MINUS|PLUS) expr # exprAdd // 4
+    | expr (SUB|ADD) expr # exprAdd // 4
     | expr (LT|LT_EQ|GT|GT_EQ) expr # exprLt
     | expr (EQ_EQ|NEQ) expr # exprEq
     | expr (AND_AND|OR_OR) expr # exprAnd
@@ -92,18 +94,23 @@ RETURNS : '->';
 NOT : '!';
 
 DOT : '.';
-
 COMMA : ',';
-EQ_EQ: '==';
-EQ : '=';
-NEQ : '!=';
-LT_EQ : '<=';
 
+EQ_EQ: '==';
+NEQ : '!=';
+EQ : '=';
+ADD_EQ : '+=';
+SUB_EQ : '-=';
+MUL_EQ : '*=';
+DIV_EQ : '/=';
+
+LT_EQ : '<=';
 LT : '<';
 GT_EQ: '>=';
 GT : '>';
-PLUS : '+';
-MINUS : '-';
+
+ADD : '+';
+SUB : '-';
 MUL : '*';
 DIV : '/';
 AND_AND : '&&';

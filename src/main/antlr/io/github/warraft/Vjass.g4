@@ -4,7 +4,7 @@ root : (library | rootItem)* EOF ;
 
 rootItem : nativeRule | globals | function | library;
 
-library : (LIBRARY|SCOPE) ID (INITIALIZER ID)? ((REQUIRES|NEEDS|USES) ID (COMMA ID)*)? rootItem* ENDLIBRARY;
+library : (LIBRARY|SCOPE) ID (INITIALIZER ID)? ((REQUIRES|NEEDS|USES) ID (COMMA ID)*)? rootItem* (ENDLIBRARY|ENDSCOPE);
 
 typename : ID;
 varname : ID;
@@ -24,18 +24,20 @@ function : (PUBLIC|PRIVATE)? CONSTANT? FUNCTION ID takes returnsRule stmt* ENDFU
 left
     : ID #leftId
     | ID left #leftType
+    | left COMMA left #leftComma
     | left LPAREN (expr (COMMA expr)*)? RPAREN #leftCall
-    | left LBRACK left? RBRACK #leftArr
+    | left LBRACK expr? RBRACK #leftArr
     | left DOT left #leftDot
     ;
 
 stmt
-    : (DEBUG| SET | CALL | CONSTANT)* left (EQ expr)? #stmtLeft
+    : (SET|CALL)* left ((EQ|ADD_EQ|SUB_EQ|MUL_EQ|DIV_EQ) expr)? #stmtLeft
     | RETURN expr? #stmtReturn
-    | STATIC? IF expr THEN stmt* elseif* elseRule? ENDIF #stmtIf
+    | IF expr THEN stmt* elseif* elseRule? ENDIF #stmtIf
     | LOOP stmt* ENDLOOP #stmtLoop
     | EXITWHEN expr #stmtExitWhen
-    | (PUBLIC|PRIVATE)? CONSTANT? LOCAL? typename ARRAY? varname brackExpr* (EQ expr)? #stmtVar
+    | LOCAL? typename ARRAY? varname brackExpr* (EQ expr)? #stmtVar
+    | (DEBUG|STATIC|CONSTANT|PUBLIC|PRIVATE)+ stmt #stmtMod
     ;
 
 brackExpr : LBRACK expr? RBRACK ;
@@ -46,9 +48,9 @@ elseRule : ELSE stmt*;
 expr
     : expr DOT expr #exprDot
     | LPAREN expr RPAREN # exprParen // 1
-    | (MINUS|NOT) expr # exprUn // 2
+    | (SUB|NOT) expr # exprUn // 2
     | expr (MUL|DIV) expr # exprMul  // 3
-    | expr (MINUS|PLUS) expr # exprAdd // 4
+    | expr (SUB|ADD) expr # exprAdd // 4
     | expr (LT|LT_EQ|GT|GT_EQ) expr # exprLt
     | expr (EQ_EQ|NEQ) expr # exprEq
     | expr (AND|OR) expr # exprAnd
@@ -81,6 +83,7 @@ ENDIF : 'endif';
 ENDLOOP : 'endloop';
 ENDGLOBALS : 'endglobals';
 ENDLIBRARY: 'endlibrary';
+ENDSCOPE: 'endscope';
 EXTENDS : 'extends';
 EXITWHEN : 'exitwhen';
 FALSE : 'false';
@@ -113,16 +116,22 @@ USES: 'uses';
 
 DOT : '.';
 COMMA : ',';
-EQ_EQ: '==';
-EQ : '=';
-NEQ : '!=';
-LT_EQ : '<=';
 
+EQ_EQ: '==';
+NEQ : '!=';
+EQ : '=';
+ADD_EQ : '+=';
+SUB_EQ : '-=';
+MUL_EQ : '*=';
+DIV_EQ : '/=';
+
+LT_EQ : '<=';
 LT : '<';
 GT_EQ: '>=';
 GT : '>';
-PLUS : '+';
-MINUS : '-';
+
+ADD : '+';
+SUB : '-';
 MUL : '*';
 DIV : '/';
 LPAREN : '(';

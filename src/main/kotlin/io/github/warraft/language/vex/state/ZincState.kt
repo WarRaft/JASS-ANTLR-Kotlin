@@ -34,7 +34,8 @@ class ZincState : VexState() {
                 is VisContext -> vis(ctx)
                 is StmtLeftContext -> leftStmt(ctx)
                 is FunctionContext -> function(ctx)
-                else -> server?.log("$path |root:${ctx.javaClass.simpleName}")
+                is StmtContext -> stmt(ctx)
+                else -> server?.log("$path | root:${ctx.javaClass.simpleName}")
             }
         }
     }
@@ -89,11 +90,8 @@ class ZincState : VexState() {
     }
 
     fun leftStmt(ctx: StmtLeftContext) {
-        semanticHub
-            .add(ctx.DEBUG(), SemanticTokenType.KEYWORD)
-            .add(ctx.STATIC(), SemanticTokenType.KEYWORD)
-            .add(ctx.CONSTANT(), SemanticTokenType.KEYWORD)
         left(ctx.left())
+        expr(ctx.expr())
     }
 
     fun left(list: List<LeftContext>) {
@@ -112,15 +110,21 @@ class ZincState : VexState() {
             }
 
             is LeftDotContext -> {
-                for (it in ctx.left()) left(it)
+                left(ctx.left())
             }
 
             is LeftCallContext -> {
                 left(ctx.left())
-                for (it in ctx.expr()) expr(it)
+                expr(ctx.expr())
             }
 
             is LeftArrContext -> {
+                expr(ctx.expr())
+                left(ctx.left())
+            }
+
+            is LeftCommaContext -> {
+                semanticHub.add(ctx.COMMA(), SemanticTokenType.VARIABLE)
                 left(ctx.left())
             }
 
@@ -130,29 +134,25 @@ class ZincState : VexState() {
 
     fun stmt(list: List<StmtContext>) = list.forEach { stmt(it) }
 
-    fun stmt(stmtCtx: StmtContext) {
-        when (stmtCtx) {
+    fun stmt(ctx: StmtContext) {
+        when (ctx) {
             is StmtLeftContext -> {
-                leftStmt(stmtCtx)
-                semanticHub
-                    .add(stmtCtx.DEBUG(), SemanticTokenType.VARIABLE)
-                    .add(stmtCtx.STATIC(), SemanticTokenType.VARIABLE)
-                    .add(stmtCtx.CONSTANT(), SemanticTokenType.VARIABLE)
-                    .add(stmtCtx.EQ(), SemanticTokenType.OPERATOR)
+                leftStmt(ctx)
+                semanticHub.add(ctx.EQ(), SemanticTokenType.OPERATOR)
 
-                expr(stmtCtx.expr())
+                expr(ctx.expr())
             }
 
             is StmtIfContext -> {
                 semanticHub
-                    .add(stmtCtx.IF(), SemanticTokenType.KEYWORD)
-                    .add(stmtCtx.WHILE(), SemanticTokenType.KEYWORD)
-                    .add(stmtCtx.FOR(), SemanticTokenType.KEYWORD)
+                    .add(ctx.IF(), SemanticTokenType.KEYWORD)
+                    .add(ctx.WHILE(), SemanticTokenType.KEYWORD)
+                    .add(ctx.FOR(), SemanticTokenType.KEYWORD)
 
-                expr(stmtCtx.expr())
-                stmt(stmtCtx.stmt())
+                expr(ctx.expr())
+                stmt(ctx.stmt())
 
-                val elseCtx: ElseRuleContext? = stmtCtx.elseRule()
+                val elseCtx: ElseRuleContext? = ctx.elseRule()
                 if (elseCtx != null) {
                     semanticHub
                         .add(elseCtx.ELSE(), SemanticTokenType.KEYWORD)
@@ -162,12 +162,20 @@ class ZincState : VexState() {
 
             is StmtReturnContext -> {
                 semanticHub
-                    .add(stmtCtx.RETURN(), SemanticTokenType.KEYWORD)
+                    .add(ctx.RETURN(), SemanticTokenType.KEYWORD)
 
-                expr(stmtCtx.expr())
+                expr(ctx.expr())
             }
 
-            else -> server?.log("$path |stmt:${stmtCtx.javaClass.simpleName}")
+            is StmtModContext -> {
+                semanticHub
+                    .add(ctx.DEBUG(), SemanticTokenType.KEYWORD)
+                    .add(ctx.STATIC(), SemanticTokenType.KEYWORD)
+                    .add(ctx.CONSTANT(), SemanticTokenType.KEYWORD)
+                stmt(ctx.stmt())
+            }
+
+            else -> server?.log("$path |stmt:${ctx.javaClass.simpleName}")
         }
     }
 
@@ -185,7 +193,7 @@ class ZincState : VexState() {
 
         when (exprCtx) {
             is ExprEqContext -> expr(exprCtx.expr(), listOf(exprCtx.EQ_EQ(), exprCtx.NEQ()))
-            is ExprAddContext -> expr(exprCtx.expr(), listOf(exprCtx.PLUS(), exprCtx.MINUS()))
+            is ExprAddContext -> expr(exprCtx.expr(), listOf(exprCtx.ADD(), exprCtx.SUB()))
             is ExprMulContext -> expr(exprCtx.expr(), listOf(exprCtx.MUL(), exprCtx.DIV()))
             is ExprLtContext -> expr(exprCtx.expr(), listOf(exprCtx.LT(), exprCtx.LT_EQ(), exprCtx.GT(), exprCtx.GT_EQ()))
             is ExprAndContext -> expr(exprCtx.expr(), listOf(exprCtx.AND_AND(), exprCtx.AND_AND()))
@@ -243,7 +251,7 @@ class ZincState : VexState() {
 
             is ExprUnContext -> {
                 semanticHub
-                    .add(exprCtx.MINUS(), SemanticTokenType.OPERATOR)
+                    .add(exprCtx.SUB(), SemanticTokenType.OPERATOR)
                     .add(exprCtx.NOT(), SemanticTokenType.OPERATOR)
 
                 expr(exprCtx.expr())

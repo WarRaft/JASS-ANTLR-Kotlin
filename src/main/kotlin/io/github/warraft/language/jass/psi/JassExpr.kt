@@ -124,7 +124,7 @@ class JassExpr(
                 is ExprUnContext -> JassExpr(
                     state = state,
                     op = when (true) {
-                        (ctx.MINUS() != null) -> UNSUB
+                        (ctx.SUB() != null) -> UNSUB
                         (ctx.NOT() != null) -> UNNOT
                         else -> null
                     },
@@ -183,7 +183,7 @@ class JassExpr(
                 )
 
                 is ExprMulContext -> expr(state, ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.MUL(), ctx.DIV()), function)
-                is ExprAddContext -> expr(state, ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.PLUS(), ctx.MINUS()), function)
+                is ExprAddContext -> expr(state, ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.ADD(), ctx.SUB()), function)
                 is ExprLtContext -> expr(state, ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.LT(), ctx.LT_EQ(), ctx.GT(), ctx.GT_EQ()), function)
                 is ExprEqContext -> expr(state, ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.EQ_EQ(), ctx.NEQ()), function)
                 is ExprAndContext -> expr(state, ctx, ctx.expr(0), ctx.expr(1), listOf(ctx.AND(), ctx.OR()), function)

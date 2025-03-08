@@ -22,7 +22,7 @@ public class JassLexer extends Lexer {
 		EXITWHEN=15, FALSE=16, FUNCTION=17, GLOBALS=18, IF=19, LOCAL=20, LOOP=21, 
 		NATIVE=22, NOT=23, NOTHING=24, NULL=25, OR=26, RETURNS=27, RETURN=28, 
 		SET=29, TAKES=30, THEN=31, TRUE=32, TYPE=33, COMMA=34, EQ_EQ=35, EQ=36, 
-		NEQ=37, LT_EQ=38, LT=39, GT_EQ=40, GT=41, PLUS=42, MINUS=43, MUL=44, DIV=45, 
+		NEQ=37, LT_EQ=38, LT=39, GT_EQ=40, GT=41, ADD=42, SUB=43, MUL=44, DIV=45, 
 		LPAREN=46, RPAREN=47, LBRACK=48, RBRACK=49, ID=50, INTVAL=51, HEXVAL=52, 
 		REALVAL=53, WS=54, NL=55, LINE_COMMENT=56;
 	public static String[] channelNames = {
@@ -40,7 +40,7 @@ public class JassLexer extends Lexer {
 			"ENDGLOBALS", "EXTENDS", "EXITWHEN", "FALSE", "FUNCTION", "GLOBALS", 
 			"IF", "LOCAL", "LOOP", "NATIVE", "NOT", "NOTHING", "NULL", "OR", "RETURNS", 
 			"RETURN", "SET", "TAKES", "THEN", "TRUE", "TYPE", "COMMA", "EQ_EQ", "EQ", 
-			"NEQ", "LT_EQ", "LT", "GT_EQ", "GT", "PLUS", "MINUS", "MUL", "DIV", "LPAREN", 
+			"NEQ", "LT_EQ", "LT", "GT_EQ", "GT", "ADD", "SUB", "MUL", "DIV", "LPAREN", 
 			"RPAREN", "LBRACK", "RBRACK", "ID", "HexDigit", "INTVAL", "HEXVAL", "REALVAL", 
 			"WS", "NL", "LINE_COMMENT"
 		};
@@ -66,7 +66,7 @@ public class JassLexer extends Lexer {
 			"EXITWHEN", "FALSE", "FUNCTION", "GLOBALS", "IF", "LOCAL", "LOOP", "NATIVE", 
 			"NOT", "NOTHING", "NULL", "OR", "RETURNS", "RETURN", "SET", "TAKES", 
 			"THEN", "TRUE", "TYPE", "COMMA", "EQ_EQ", "EQ", "NEQ", "LT_EQ", "LT", 
-			"GT_EQ", "GT", "PLUS", "MINUS", "MUL", "DIV", "LPAREN", "RPAREN", "LBRACK", 
+			"GT_EQ", "GT", "ADD", "SUB", "MUL", "DIV", "LPAREN", "RPAREN", "LBRACK", 
 			"RBRACK", "ID", "INTVAL", "HEXVAL", "REALVAL", "WS", "NL", "LINE_COMMENT"
 		};
 	}

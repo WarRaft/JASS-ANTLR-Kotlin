@@ -44,9 +44,9 @@ elseRule : ELSE stmt*;
 // === EXPRESSION
 expr
     : LPAREN expr RPAREN # exprParen // 1
-    | (MINUS|NOT) expr # exprUn // 2
+    | (SUB|NOT) expr # exprUn // 2
     | expr (MUL|DIV) expr # exprMul  // 3
-    | expr (MINUS|PLUS) expr # exprAdd // 4
+    | expr (SUB|ADD) expr # exprAdd // 4
     | expr (LT|LT_EQ|GT|GT_EQ) expr # exprLt
     | expr (EQ_EQ|NEQ) expr # exprEq
     | expr (AND|OR) expr # exprAnd
@@ -98,17 +98,19 @@ TAKES : 'takes';
 THEN : 'then';
 TRUE : 'true';
 TYPE : 'type';
+
 COMMA : ',';
+
 EQ_EQ: '==';
 EQ : '=';
 NEQ : '!=';
 LT_EQ : '<=';
-
 LT : '<';
 GT_EQ: '>=';
 GT : '>';
-PLUS : '+';
-MINUS : '-';
+
+ADD : '+';
+SUB : '-';
 MUL : '*';
 DIV : '/';
 LPAREN : '(';

@@ -22,7 +22,7 @@ public class JassParser extends Parser {
 		EXITWHEN=15, FALSE=16, FUNCTION=17, GLOBALS=18, IF=19, LOCAL=20, LOOP=21, 
 		NATIVE=22, NOT=23, NOTHING=24, NULL=25, OR=26, RETURNS=27, RETURN=28, 
 		SET=29, TAKES=30, THEN=31, TRUE=32, TYPE=33, COMMA=34, EQ_EQ=35, EQ=36, 
-		NEQ=37, LT_EQ=38, LT=39, GT_EQ=40, GT=41, PLUS=42, MINUS=43, MUL=44, DIV=45, 
+		NEQ=37, LT_EQ=38, LT=39, GT_EQ=40, GT=41, ADD=42, SUB=43, MUL=44, DIV=45, 
 		LPAREN=46, RPAREN=47, LBRACK=48, RBRACK=49, ID=50, INTVAL=51, HEXVAL=52, 
 		REALVAL=53, WS=54, NL=55, LINE_COMMENT=56;
 	public static final int
@@ -58,7 +58,7 @@ public class JassParser extends Parser {
 			"EXITWHEN", "FALSE", "FUNCTION", "GLOBALS", "IF", "LOCAL", "LOOP", "NATIVE", 
 			"NOT", "NOTHING", "NULL", "OR", "RETURNS", "RETURN", "SET", "TAKES", 
 			"THEN", "TRUE", "TYPE", "COMMA", "EQ_EQ", "EQ", "NEQ", "LT_EQ", "LT", 
-			"GT_EQ", "GT", "PLUS", "MINUS", "MUL", "DIV", "LPAREN", "RPAREN", "LBRACK", 
+			"GT_EQ", "GT", "ADD", "SUB", "MUL", "DIV", "LPAREN", "RPAREN", "LBRACK", 
 			"RBRACK", "ID", "INTVAL", "HEXVAL", "REALVAL", "WS", "NL", "LINE_COMMENT"
 		};
 	}
@@ -1275,7 +1275,7 @@ public class JassParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public TerminalNode MINUS() { return getToken(JassParser.MINUS, 0); }
+		public TerminalNode SUB() { return getToken(JassParser.SUB, 0); }
 		public TerminalNode NOT() { return getToken(JassParser.NOT, 0); }
 		public ExprUnContext(ExprContext ctx) { copyFrom(ctx); }
 	}
@@ -1377,8 +1377,8 @@ public class JassParser extends Parser {
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
-		public TerminalNode MINUS() { return getToken(JassParser.MINUS, 0); }
-		public TerminalNode PLUS() { return getToken(JassParser.PLUS, 0); }
+		public TerminalNode SUB() { return getToken(JassParser.SUB, 0); }
+		public TerminalNode ADD() { return getToken(JassParser.ADD, 0); }
 		public ExprAddContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	@SuppressWarnings("CheckReturnValue")
@@ -1445,7 +1445,7 @@ public class JassParser extends Parser {
 				_prevctx = _localctx;
 				setState(214);
 				_la = _input.LA(1);
-				if ( !(_la==NOT || _la==MINUS) ) {
+				if ( !(_la==NOT || _la==SUB) ) {
 				_errHandler.recoverInline(this);
 				}
 				else {
@@ -1641,7 +1641,7 @@ public class JassParser extends Parser {
 						if (!(precpred(_ctx, 13))) throw new FailedPredicateException(this, "precpred(_ctx, 13)");
 						setState(249);
 						_la = _input.LA(1);
-						if ( !(_la==PLUS || _la==MINUS) ) {
+						if ( !(_la==ADD || _la==SUB) ) {
 						_errHandler.recoverInline(this);
 						}
 						else {

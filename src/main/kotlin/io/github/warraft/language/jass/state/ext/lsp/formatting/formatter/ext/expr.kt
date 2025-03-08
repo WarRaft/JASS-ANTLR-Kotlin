@@ -46,7 +46,7 @@ fun JassFormatter.expr(ctx: ExprContext?) {
         is ExprUnContext -> {
             val exprCtx = ctx.expr()
 
-            ctx.MINUS()?.let {
+            ctx.SUB()?.let {
                 between(it, exprCtx, 0)
             }
             ctx.NOT()?.let {
@@ -60,7 +60,7 @@ fun JassFormatter.expr(ctx: ExprContext?) {
             between(ctx.FUNCTION(), ctx.ID(), 1)
         }
 
-        is ExprAddContext -> around(listOf(ctx.PLUS(), ctx.MINUS()), ctx.expr())
+        is ExprAddContext -> around(listOf(ctx.ADD(), ctx.SUB()), ctx.expr())
         is ExprMulContext -> around(listOf(ctx.MUL(), ctx.DIV()), ctx.expr())
         is ExprLtContext -> around(listOf(ctx.LT(), ctx.LT_EQ(), ctx.GT(), ctx.GT_EQ()), ctx.expr())
         is ExprEqContext -> around(listOf(ctx.EQ_EQ(), ctx.NEQ()), ctx.expr())
