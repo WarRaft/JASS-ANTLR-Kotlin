@@ -1,8 +1,7 @@
-@file:Suppress("DuplicatedCode")
-
 package io.github.warraft.lsp.ext
 
 import io.github.warraft.language._.state.LanguageState
+import io.github.warraft.language.`as`.state.AsState
 import io.github.warraft.language.jass.state.JassState
 import io.github.warraft.language.vex.state.VjassState
 import io.github.warraft.language.vex.state.ZincState
@@ -15,6 +14,7 @@ import kotlin.io.path.extension
 fun LanguageServer.stateGet(p: Path): LanguageState? {
     var state = stateMap[p]
     var lng = languageMap[p] ?: when (p.extension) {
+        "as" -> "angelscript"
         "j" -> "jass"
         "vj" -> "vjass"
         "zn" -> "zinc"
@@ -22,6 +22,7 @@ fun LanguageServer.stateGet(p: Path): LanguageState? {
         else -> null
     }
     when (lng) {
+        "angelscript" -> if (state !is AsState) state = AsState()
         "jass" -> if (state !is JassState) state = JassState()
         "vjass" -> if (state !is VjassState) state = VjassState()
         "zinc" -> if (state !is ZincState) state = ZincState()

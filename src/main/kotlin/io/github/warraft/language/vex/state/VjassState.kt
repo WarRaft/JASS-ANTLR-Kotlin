@@ -3,7 +3,6 @@ package io.github.warraft.language.vex.state
 import io.github.warraft.VjassLexer
 import io.github.warraft.VjassParser
 import io.github.warraft.VjassParser.*
-import io.github.warraft.ZincParser
 import io.github.warraft.language._.state.LanguageState
 import io.github.warraft.lsp.data.semantic.SemanticTokenType
 import org.antlr.v4.runtime.*
@@ -20,7 +19,7 @@ class VjassState : VexState() {
             for (item in it.children) {
                 when (item) {
                     is LibraryContext -> library(item)
-                    is RootItemContext -> rootItem(item)
+                    is RootItemContext -> root(item)
                 }
             }
         }
@@ -46,10 +45,10 @@ class VjassState : VexState() {
             .add(ctx.ENDLIBRARY(), SemanticTokenType.KEYWORD)
             .add(ctx.ENDSCOPE(), SemanticTokenType.KEYWORD)
 
-        for (item in ctx.rootItem()) rootItem(item)
+        for (item in ctx.rootItem()) root(item)
     }
 
-    fun rootItem(ctx: RootItemContext) {
+    fun root(ctx: RootItemContext) {
         for (item in ctx.children) {
             when (item) {
                 is GlobalsContext -> globals(item)

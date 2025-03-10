@@ -81,6 +81,8 @@ tasks.jar {
 }
 
 tasks.register<Jar>("jarAntlrLsp") {
+    dependsOn("generateGrammarSource")
+
     manifest {
         attributes["Main-Class"] = "MainKt"
     }

@@ -19,7 +19,7 @@ class ZincState : VexState() {
         super.parse(stream, states, version)
 
         rootCtx = (parser as ZincParser).root().also {
-            for (itemCtx in it.rootItem()) rootItems(itemCtx)
+            for (itemCtx in it.rootItem()) root(itemCtx)
         }
 
         for (c in tokenFactory.commentList) {
@@ -27,8 +27,8 @@ class ZincState : VexState() {
         }
     }
 
-    fun rootItems(itemCtx: RootItemContext) {
-        for (ctx in itemCtx.children) {
+    fun root(rootCtx: RootItemContext) {
+        for (ctx in rootCtx.children) {
             when (ctx) {
                 is LibContext -> lib(ctx)
                 is VisContext -> vis(ctx)
@@ -75,7 +75,7 @@ class ZincState : VexState() {
             .add(ctx.STRUCT(), SemanticTokenType.KEYWORD)
 
         for (rootCtx in ctx.rootItem()) {
-            rootItems(rootCtx)
+            root(rootCtx)
         }
     }
 
@@ -85,7 +85,7 @@ class ZincState : VexState() {
             .add(ctx.PRIVATE(), SemanticTokenType.KEYWORD)
 
         for (itemCtx in ctx.rootItem()) {
-            rootItems(itemCtx)
+            root(itemCtx)
         }
     }
 
