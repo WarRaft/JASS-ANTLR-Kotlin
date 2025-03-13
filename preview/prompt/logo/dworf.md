@@ -9,7 +9,7 @@ resolution
 
 # крепость на фоне
 
-Logo in the style of Warcraft dwarves, centered bold text 'Reforgerator' with metallic and stone-carved effects, glowing
+Logo in the style of Warcraft dwarves, centered bold text 'ImHexBin' with metallic and stone-carved effects, glowing
 blue and silver edges, placed on a dwarven emblem background, sturdy and majestic atmosphere, inspired by dwarven
 craftsmanship aesthetics, runic and traditional design, dark gray and silver color scheme with glowing blue accents,
 bold and angular typography, runic patterns, hammers, anvils, and mountain motifs integrated into the emblem, emblem
