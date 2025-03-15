@@ -15,3 +15,7 @@ voodoo aesthetics, tribal and natural design, dark brown and green color scheme 
 uneven typography, tribal patterns, feathers, bones, and tiki masks integrated into the emblem, emblem features a
 circular shape with jagged edges, textured with carved wood and glowing voodoo energy, logo seamlessly blended into the
 scene as if carved into a stone or hanging from a tree, high-quality, 4K resolution
+
+```
+Create a Warcraft troll-style logo with bold text "WTS" in jagged, tribal typography, glowing green and orange edges. Integrate it into a mystical jungle scene—carved into stone or hanging from a tree. Use a dark brown and green palette with glowing orange accents. Include tribal patterns, feathers, bones, and tiki masks. The circular emblem should have jagged edges, carved wood texture, and glowing voodoo energy. Add moss, vines, and glowing mushrooms for atmosphere. High-quality, 4K resolution.
+```
