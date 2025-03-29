@@ -2,6 +2,7 @@ package io.github.warraft.lsp.ext
 
 import io.github.warraft.language._.state.LanguageState
 import io.github.warraft.language.`as`.state.AsState
+import io.github.warraft.language.bni.state.BniState
 import io.github.warraft.language.jass.state.JassState
 import io.github.warraft.language.vex.state.VjassState
 import io.github.warraft.language.vex.state.ZincState
@@ -19,6 +20,7 @@ fun LanguageServer.stateGet(p: Path): LanguageState? {
         "vj" -> "vjass"
         "zn" -> "zinc"
         "wts" -> "wts"
+        "bni" -> "bni"
         else -> null
     }
     when (lng) {
@@ -27,6 +29,7 @@ fun LanguageServer.stateGet(p: Path): LanguageState? {
         "vjass" -> if (state !is VjassState) state = VjassState()
         "zinc" -> if (state !is ZincState) state = ZincState()
         "wts" -> if (state !is WtsState) state = WtsState()
+        "bni" -> if (state !is BniState) state = BniState()
     }
 
     if (state == null) return null

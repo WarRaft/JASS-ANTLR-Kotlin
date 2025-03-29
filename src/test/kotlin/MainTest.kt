@@ -1,4 +1,3 @@
-import io.github.warraft.lsp.LanguageServer
 import io.github.warraft.lsp.data.Message
 import kotlinx.serialization.json.Json
 import java.nio.file.Path
@@ -22,10 +21,8 @@ class MainTest {
     }
 
 
-
-
     @Test
-    fun json(){
+    fun json() {
         val json = Json {
             classDiscriminator = "AnalClassDiscriminator"
             ignoreUnknownKeys = true
@@ -39,7 +36,7 @@ class MainTest {
 
         val m = json.decodeFromString<Message>(c)
 
-println(m)
+        println(m)
     }
 
     @Test

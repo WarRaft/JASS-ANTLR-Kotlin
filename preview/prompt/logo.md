@@ -1,3 +1,9 @@
+# Blood Elven
+
+```
+/image A fantasy-style square logo in the WarCraft Blood Elf aesthetic featuring the exact text 'TESH' at the center. The text is highly detailed, with intricate engravings, golden and red gradients, and subtle magical glow effects, resembling elven craftsmanship. Surrounding the text is a richly ornamented arcane-inspired filigree with glowing green mana-infused accents. The central ornamentation is elaborate and refined. The entire image is enclosed within a sharp, clear rectangular border. The background is solid black to maximize contrast. The logo has a mystical, powerful feel, inspired by Blood Elf architecture and arcane heritage.
+```
+
 # Demon
 
 ```
@@ -8,12 +14,6 @@
 
 ```
 /image A square fantasy-style logo inspired by the WarCraft Night Elf aesthetic featuring the exact text 'LNI' at the center. The text is elegant and mystical, with flowing, crescent-shaped curves and glowing accents in shades of deep purple, silver, and teal. Surrounding the text is a detailed, nature-infused frame with elements like ancient elven carvings, crescent moons, enchanted leaves, and glowing wisps. The central ornamentation is intricate and ethereal, reflecting the mystical and druidic nature of the Night Elves, evoking their deep connection to the moon and the forest. The entire image is enclosed within a sharp, clear rectangular border. The background is solid black to enhance contrast, giving the logo a serene yet mysterious feel inspired by Night Elf culture and their ancient heritage.
-```
-
-# Blood Elven
-
-```
-/image A fantasy-style square logo in the WarCraft Blood Elf aesthetic featuring the exact text 'AngelScript' at the center. The text is highly detailed, with intricate engravings, golden and red gradients, and subtle magical glow effects, resembling elven craftsmanship. Surrounding the text is a richly ornamented arcane-inspired filigree with glowing green mana-infused accents. The central ornamentation is elaborate and refined. The entire image is enclosed within a sharp, clear rectangular border. The background is solid black to maximize contrast. The logo has a mystical, powerful feel, inspired by Blood Elf architecture and arcane heritage.
 ```
 
 # Naga
@@ -48,6 +48,11 @@
 
 ```
 /image A square fantasy-style logo inspired by the WarCraft Succubus aesthetic featuring the exact text 'jass2jass' at the center. The text is elegant and seductive, with flowing curves and sensual, glowing accents in shades of dark red, purple, and black. Surrounding the text is a detailed, demonic-inspired frame with elements like thorny vines, sharp wings, and arcane symbols. The central ornamentation is intricate and alluring, reflecting the mystical and fiery nature of Succubi, with designs that evoke both temptation and power. The entire image is enclosed within a sharp, clear rectangular border. The background is solid black to enhance contrast, giving the logo a dark, passionate, and powerful feel inspired by Succubi and their infernal heritage.
+```
+
+# Draenei
+```
+/image A square fantasy-style logo inspired by Warcraft Draenei aesthetic with the text 'Mars' at the center. The text is elegant and mystical, with smooth, curved lines and glowing accents in shades of violet, azure, and silver. The frame features crystalline structures, sacred runes, and ornate, otherworldly patterns reflecting Draenei craftsmanship. The design embodies the Draenei's advanced yet ancient civilization, with elements of light-infused magic and celestial energy. The image is enclosed in a sharp rectangular border, and the background is solid black to enhance contrast.
 ```
 
 # Seaman

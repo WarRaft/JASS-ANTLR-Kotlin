@@ -38,7 +38,6 @@ kotlin {
     jvmToolchain(21)
 }
 
-
 sourceSets {
     main {
         java {
@@ -99,7 +98,6 @@ tasks.register<Jar>("jarAntlrLsp") {
         }
     }
 }
-
 
 tasks.test {
     useJUnitPlatform()
