@@ -4,7 +4,7 @@ import io.github.warraft.WtsLexer
 import io.github.warraft.WtsParser
 import io.github.warraft.WtsParser.ItemContext
 import io.github.warraft.language._.state.LanguageState
-import io.github.warraft.lsp.data.semantic.SemanticTokenType
+import io.github.warraft.lsp.data.semantic.SemanticTokenType.*
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.Lexer
@@ -21,8 +21,8 @@ class WtsState : LanguageState() {
         val blockCtx: TerminalNode? = ctx.BLOCK()
 
         semanticHub
-            .add(stringCtx, SemanticTokenType.KEYWORD)
-            .add(numberCtx, SemanticTokenType.NUMBER)
+            .add(stringCtx, KEYWORD)
+            .add(numberCtx, NUMBER)
 
         if (numberCtx == null) return
         val blockText = blockCtx?.text ?: return
@@ -40,7 +40,7 @@ class WtsState : LanguageState() {
                 line = l - 1,
                 pos = pos,
                 len = len,
-                type = SemanticTokenType.STRING,
+                type = STRING,
             )
             //server?.log("$lines")
         }
@@ -60,7 +60,7 @@ class WtsState : LanguageState() {
         }
 
         for (c in tokenFactory.commentList) {
-            semanticHub.add(c, SemanticTokenType.COMMENT)
+            semanticHub.add(c, COMMENT)
         }
     }
 }

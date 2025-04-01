@@ -45,11 +45,11 @@ abstract class LanguageState {
 
     val tokenTree = TokenTree()
 
-    lateinit var lexer: Lexer
-    abstract fun lexer(stream: CharStream): Lexer
+    var lexer: Lexer? = null
+    abstract fun lexer(stream: CharStream): Lexer?
 
-    lateinit var parser: Parser
-    abstract fun parser(stream: CommonTokenStream): Parser
+    var parser: Parser? = null
+    abstract fun parser(stream: CommonTokenStream): Parser?
 
     lateinit var rootCtx: ParserRuleContext
 
@@ -66,18 +66,21 @@ abstract class LanguageState {
 
         tokenFactory.clear()
 
-        lexer = lexer(stream).also {
+        lexer = lexer(stream)?.also {
             it.tokenFactory = tokenFactory
             it.removeErrorListeners()
             it.addErrorListener(errorListener)
         }
 
-        tokenStream = CommonTokenStream(lexer)
+        if (lexer != null) {
+            tokenStream = CommonTokenStream(lexer)
 
-        parser = parser(tokenStream).also {
-            it.removeErrorListeners()
-            it.addErrorListener(errorListener)
+            parser = parser(tokenStream)?.also {
+                it.removeErrorListeners()
+                it.addErrorListener(errorListener)
+            }
         }
+
     }
 
     fun needParse(version: Int?): Boolean {

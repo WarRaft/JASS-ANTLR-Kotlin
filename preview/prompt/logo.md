@@ -31,7 +31,7 @@
 # Troll
 
 ```
-/image A square fantasy-style logo inspired by the WarCraft Troll aesthetic featuring the exact text "WTS" at the center. The text is bold and tribal, with jagged edges and vibrant colors such as turquoise, purple, and gold. Surrounding the text is a detailed, jungle-inspired frame with elements like wooden totems, vines, and sharp stone or bone accents. The central ornamentation is intricate, reflecting the wild and shamanistic nature of Troll culture, with patterns that evoke their connection to nature and spirits. The entire image is enclosed within a sharp, clear rectangular border. The background is solid black to enhance contrast, giving the logo a primal and mystical feel inspired by Trolls and their jungle heritage.
+/image A square fantasy-style logo inspired by the WarCraft Troll aesthetic featuring the exact text "BNI" at the center. The text is bold and tribal, with jagged edges and vibrant colors such as turquoise, purple, and gold. Surrounding the text is a detailed, jungle-inspired frame with elements like wooden totems, vines, and sharp stone or bone accents. The central ornamentation is intricate, reflecting the wild and shamanistic nature of Troll culture, with patterns that evoke their connection to nature and spirits. The entire image is enclosed within a sharp, clear rectangular border. The background is solid black to enhance contrast, giving the logo a primal and mystical feel inspired by Trolls and their jungle heritage.
 ```
 
 ```
@@ -47,7 +47,7 @@
 # Succubus
 
 ```
-/image A square fantasy-style logo inspired by the WarCraft Succubus aesthetic featuring the exact text 'jass2jass' at the center. The text is elegant and seductive, with flowing curves and sensual, glowing accents in shades of dark red, purple, and black. Surrounding the text is a detailed, demonic-inspired frame with elements like thorny vines, sharp wings, and arcane symbols. The central ornamentation is intricate and alluring, reflecting the mystical and fiery nature of Succubi, with designs that evoke both temptation and power. The entire image is enclosed within a sharp, clear rectangular border. The background is solid black to enhance contrast, giving the logo a dark, passionate, and powerful feel inspired by Succubi and their infernal heritage.
+/image A square fantasy-style logo inspired by the WarCraft Succubus aesthetic featuring the exact text 'BNI' at the center. The text is elegant and seductive, with flowing curves and sensual, glowing accents in shades of dark red, purple, and black. Surrounding the text is a detailed, demonic-inspired frame with elements like thorny vines, sharp wings, and arcane symbols. The central ornamentation is intricate and alluring, reflecting the mystical and fiery nature of Succubi, with designs that evoke both temptation and power. The entire image is enclosed within a sharp, clear rectangular border. The background is solid black to enhance contrast, giving the logo a dark, passionate, and powerful feel inspired by Succubi and their infernal heritage.
 ```
 
 # Draenei
