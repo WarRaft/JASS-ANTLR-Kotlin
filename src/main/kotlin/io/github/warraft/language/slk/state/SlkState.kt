@@ -1,7 +1,7 @@
 package io.github.warraft.language.slk.state
 
 import io.github.warraft.language._.state.LanguageState
-import io.github.warraft.lsp.data.semantic.SemanticTokenType
+import io.github.warraft.lsp.data.semantic.SemanticTokenType.*
 import org.antlr.v4.runtime.*
 import org.antlr.v4.runtime.misc.Interval
 
@@ -13,9 +13,9 @@ class SlkState : LanguageState() {
     override fun parser(stream: CommonTokenStream): Parser? = null
 
     private enum class Mode {
-
-        Val,
-
+        Record,
+        Value,
+        End
     }
 
     override fun parse(stream: CharStream, states: List<LanguageState>, version: Int?) {
@@ -34,83 +34,101 @@ class SlkState : LanguageState() {
             return stream.getText(Interval(index, index))
         }
 
-        var si = 0
-        var isEnd = false
+        var mode = Mode.Record
 
-        var recMode = true
-        var recName = ""
+        var si = 0
+
+        var rec = ""
+        var recHub = ""
         fun recCommit() {
-            if (!recMode) return
-            recMode = false
-            //println("🔥|$recName|")
-            semanticHub.add(line = line, pos = si, len = col - si, SemanticTokenType.NAMESPACE)
-            if (recName == "E") isEnd = true
+            if (mode != Mode.Record) return
+            rec = recHub
+            recHub = ""
+            semanticHub.add(line = line, pos = si, len = col - si, NAMESPACE)
+            if (rec == "E") mode = Mode.End
+            //println("Record:|$rec|")
         }
 
-        var fd = ""
-        var valBody = ""
-        var valMode = false
+        var fd: String? = ""
+        fun fdCommit() {
+            fd = nextSymbol()
+            semanticHub.add(line = line, pos = col - 1, len = 2, KEYWORD)
+        }
 
+        var valBody = ""
         fun valCommit() {
-            if (!valMode) return
-            println("🍒$recName|$fd|$valBody|")
+            if (mode != Mode.Value) return
+            println("Value:|$rec|$fd|$valBody|")
             fd = ""
             valBody = ""
-            valMode = false
-            semanticHub.add(line = line, pos = si, len = col - si + 1, SemanticTokenType.STRING)
-        }
-
-        fun nextLine() {
-            recCommit()
-            valCommit()
-            recMode = true
-            recName = ""
-            si = 0
-            col = -1
-            line++
+            semanticHub.add(line = line, pos = si + 1, len = col - si - 1, STRING)
         }
 
         while (true) {
-            if (isEnd) break
-            val ch = nextSymbol() ?: break
+            if (mode == Mode.End) break
+            val ch = nextSymbol()
+            if (ch == null) {
+                recCommit()
+                break
+            }
+
+            //println("🔥${ch.trim()} - ${mode.name}")
+
+            var endLine = false
 
             when (ch.codePointAt(0)) {
-                13 -> {
+                13 /* \r */ -> {
                     if (stream.LA(2) == 10) index++
-                    nextLine()
-                    continue
+                    endLine = true
                 }
 
-                10 -> {
-                    nextLine()
-                    continue
-                }
+                10 /* \n */ -> endLine = true
 
-                59 /*;*/ -> {
-                    recCommit()
+                59 /* ; */ -> {
+                    when (mode) {
+                        Mode.Record -> {
+                            recCommit()
+                            valCommit()
+                            fdCommit()
+                            si = col
+                            mode = Mode.Value
+                            continue
+                        }
 
-                    if (valMode) {
+                        Mode.Value -> {
+                            if (stream.LA(2) == 59) {
+                                index++
+                                col++
+                            } else {
+                                valCommit()
+                                fdCommit()
+                                si = col
+                                continue
+                            }
+                        }
 
-                    }
-
-
-                    if (valMode && stream.LA(2) == 59) {
-                        index++
-                        col++
-                    } else {
-                        valCommit()
-                        //semanticHub.add(line = line, pos = col - 1, len = 2, SemanticTokenType.KEYWORD)
-                        valMode = true
-                        si = col + 1
-                        continue
+                        Mode.End -> break
                     }
                 }
             }
-            if (col < 0) continue
-            if (recMode) recName += ch
-            if (valMode) valBody += ch
 
-            println("$ch - line: $line, col: $col, index: $index, ch: (${ch.codePointAt(0)}) ")
+            if (endLine) {
+                valCommit()
+                recCommit()
+                mode = Mode.Record
+                si = 0
+                col = -1
+                line++
+            }
+
+            if (col < 0) continue
+            when (mode) {
+                Mode.Record -> recHub += ch
+                Mode.Value -> valBody += ch
+                Mode.End -> break
+            }
+
+            //println("$ch - line: $line, col: $col, index: $index, ch: (${ch.codePointAt(0)}) ")
         }
     }
 }
