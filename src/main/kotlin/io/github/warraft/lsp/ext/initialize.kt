@@ -7,7 +7,8 @@ import io.github.warraft.lsp.data.*
 import io.github.warraft.lsp.data.CompletionOptions.CompletionItem
 
 private fun case(str: String): String = str.split("_")
-    .mapIndexed { index, s -> if (index == 0) s.lowercase() else s.lowercase().replaceFirstChar { it.uppercaseChar() } }.joinToString("")
+    .mapIndexed { index, s -> if (index == 0) s.lowercase() else s.lowercase().replaceFirstChar { it.uppercaseChar() } }
+    .joinToString("")
 
 fun LanguageServer.initialize(message: Message) {
     val params = message.params ?: return
@@ -40,6 +41,9 @@ fun LanguageServer.initialize(message: Message) {
                             ),
                             diagnosticProvider = DiagnosticOptions(),
                             renameProvider = RenameOptions(),
+                            inlayHintProvider = InlayHintOptions(
+                                resolveProvider = false
+                            ),
                             documentHighlightProvider = true,
                             hoverProvider = true,
                             foldingRangeProvider = true,

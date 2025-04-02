@@ -9,6 +9,7 @@ import io.github.warraft.lsp.data.DocumentHighlight
 import io.github.warraft.lsp.data.DocumentSymbol
 import io.github.warraft.lsp.data.FoldingRange
 import io.github.warraft.lsp.data.Hover
+import io.github.warraft.lsp.data.InlayHint
 import io.github.warraft.lsp.data.Location
 import io.github.warraft.lsp.data.LocationLink
 import io.github.warraft.lsp.data.Position
@@ -35,6 +36,7 @@ abstract class LanguageState {
     open fun definition(position: Position): List<LocationLink>? = null
     open fun references(position: Position): List<Location>? = null
     open fun formatting(): List<TextEdit>? = null
+
     open fun rename(params: RenameParams): WorkspaceEdit? = null
 
     val semanticHub = SemanticTokenHub()
@@ -42,6 +44,7 @@ abstract class LanguageState {
     val foldingRange = mutableListOf<FoldingRange>()
     val diagnostic = mutableListOf<Diagnostic>()
     val documentSymbol = mutableListOf<DocumentSymbol>()
+    val inlayHint = mutableListOf<InlayHint>()
 
     val tokenTree = TokenTree()
 
@@ -63,8 +66,8 @@ abstract class LanguageState {
         documentSymbol.clear()
         tokenTree.clear()
         semanticHub.clear()
-
         tokenFactory.clear()
+        inlayHint.clear()
 
         lexer = lexer(stream)?.also {
             it.tokenFactory = tokenFactory

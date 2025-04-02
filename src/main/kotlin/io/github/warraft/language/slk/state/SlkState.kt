@@ -1,6 +1,11 @@
 package io.github.warraft.language.slk.state
 
 import io.github.warraft.language._.state.LanguageState
+import io.github.warraft.lsp.data.InlayHint
+import io.github.warraft.lsp.data.InlayHintLabelPart
+import io.github.warraft.lsp.data.MarkupContent
+import io.github.warraft.lsp.data.MarkupKind
+import io.github.warraft.lsp.data.Position
 import io.github.warraft.lsp.data.semantic.SemanticTokenType.*
 import org.antlr.v4.runtime.*
 import org.antlr.v4.runtime.misc.Interval
@@ -29,6 +34,9 @@ class SlkState : LanguageState() {
         var line = 0
         var col = -1
         var index = -1
+
+        var x = 1
+        var y = 1
 
         fun nextSymbol(): String? {
             col++
@@ -68,6 +76,11 @@ class SlkState : LanguageState() {
             if (valHub.startsWith("\"") && valHub.endsWith("\"")) t = STRING
 
             //println("Value:|$rec|$fd|$valHub|")
+
+            if (rec != "B" && t == NUMBER) when (fd) {
+                "X" -> x = valHub.toIntOrNull() ?: 1
+                "Y" -> y = valHub.toIntOrNull() ?: 1
+            }
 
             semanticHub.add(line = line, pos = si + 1, len = col - si - 1, t)
             fd = ""
@@ -126,6 +139,23 @@ class SlkState : LanguageState() {
                 valCommit()
                 recCommit()
                 mode = Mode.Record
+
+                val xs = x.toString().padStart(3, '0')
+                val ys = y.toString().padStart(3, '0')
+
+                inlayHint.add(
+                    InlayHint(
+                        position = Position(line = line.toUInt(), character = 0u),
+                        label = listOf(InlayHintLabelPart(value = if (rec == "C") "$ys $xs" else "       ")),
+                        tooltip = MarkupContent(
+                            kind = MarkupKind.Markdown,
+                            value = """Y:**$ys**  
+                                |X:**$xs**""".trimMargin()
+                        ),
+                        paddingRight = true,
+                    )
+                )
+
                 si = 0
                 col = -1
                 line++

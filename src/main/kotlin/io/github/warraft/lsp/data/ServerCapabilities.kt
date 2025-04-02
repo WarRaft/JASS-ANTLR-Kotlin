@@ -19,6 +19,7 @@ data class ServerCapabilities(
     val documentFormattingProvider: Boolean? = null,
     val linkedEditingRangeProvider: Boolean? = null,
     val renameProvider: RenameOptions? = null,
+    val inlayHintProvider: InlayHintOptions? = null,
 ) {
     /*
 
@@ -152,18 +153,7 @@ data class ServerCapabilities(
 	 *
 	 * @since 3.17.0
 	 */
-	inlineValueProvider?: boolean | InlineValueOptions
-		 | InlineValueRegistrationOptions;
-
-	/**
-	 * The server provides inlay hints.
-	 *
-	 * @since 3.17.0
-	 */
-	inlayHintProvider?: boolean | InlayHintOptions
-		 | InlayHintRegistrationOptions;
-
-
+	inlineValueProvider?: boolean | InlineValueOptions | InlineValueRegistrationOptions;
 
 	/**
 	 * The server provides workspace symbol support.

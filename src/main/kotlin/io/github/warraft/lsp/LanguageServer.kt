@@ -44,9 +44,14 @@ class LanguageServer {
         )
     )
 
-    fun message(params: MessageLogParams, method: String) = request(json.encodeToJsonElement(MessageLogParams.serializer(), params), method)
-    fun log(msg: String, type: MessageLogType = MessageLogType.Log) = message(MessageLogParams(type = type, message = msg), MessageLogParams.LOG)
-    fun show(msg: String, type: MessageLogType = MessageLogType.Log) = message(MessageLogParams(type = type, message = msg), MessageLogParams.SHOW)
+    fun message(params: MessageLogParams, method: String) =
+        request(json.encodeToJsonElement(MessageLogParams.serializer(), params), method)
+
+    fun log(msg: String, type: MessageLogType = MessageLogType.Log) =
+        message(MessageLogParams(type = type, message = msg), MessageLogParams.LOG)
+
+    fun show(msg: String, type: MessageLogType = MessageLogType.Log) =
+        message(MessageLogParams(type = type, message = msg), MessageLogParams.SHOW)
 
     fun readLine(): String? {
         val buffer = StringBuilder()
@@ -116,6 +121,7 @@ class LanguageServer {
             "textDocument/references" -> references(message)
             "textDocument/formatting" -> formatting(message)
             "textDocument/rename" -> rename(message)
+            "textDocument/inlayHint" -> inlayHint(message)
 
             "initialized",
             "$/setTrace",
