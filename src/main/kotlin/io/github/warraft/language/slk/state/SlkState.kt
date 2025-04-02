@@ -7,10 +7,14 @@ import org.antlr.v4.runtime.misc.Interval
 
 // https://en.wikipedia.org/wiki/Symbolic_Link_(SYLK)
 // https://outflank.nl/upload/sylksum.txt
+// https://oss.sheetjs.com/notes/sylk/
+// https://git.sheetjs.com/sheetjs/sheetjs/src/commit/0e4eb976e1171cb21ff4c2ed24abb604f6276e47/xlsx.mjs#L8395
 
 class SlkState : LanguageState() {
     override fun lexer(stream: CharStream): Lexer? = null
     override fun parser(stream: CommonTokenStream): Parser? = null
+
+    private val numberRegex = Regex("""^(-?(?:\d+\.?\d*|\.\d+))$""")
 
     private enum class Mode {
         Record,
@@ -55,13 +59,19 @@ class SlkState : LanguageState() {
             semanticHub.add(line = line, pos = col - 1, len = 2, KEYWORD)
         }
 
-        var valBody = ""
+        var valHub = ""
         fun valCommit() {
             if (mode != Mode.Value) return
-            println("Value:|$rec|$fd|$valBody|")
+
+            var t = COMMENT
+            if (numberRegex.matches(valHub)) t = NUMBER
+            if (valHub.startsWith("\"") && valHub.endsWith("\"")) t = STRING
+
+            //println("Value:|$rec|$fd|$valHub|")
+
+            semanticHub.add(line = line, pos = si + 1, len = col - si - 1, t)
             fd = ""
-            valBody = ""
-            semanticHub.add(line = line, pos = si + 1, len = col - si - 1, STRING)
+            valHub = ""
         }
 
         while (true) {
@@ -124,7 +134,7 @@ class SlkState : LanguageState() {
             if (col < 0) continue
             when (mode) {
                 Mode.Record -> recHub += ch
-                Mode.Value -> valBody += ch
+                Mode.Value -> valHub += ch
                 Mode.End -> break
             }
 

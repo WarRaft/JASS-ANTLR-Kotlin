@@ -19,7 +19,5 @@ class SlkStateTest {
                 null
             )
         }
-
-
     }
 }
