@@ -35,8 +35,10 @@ class SlkState : LanguageState() {
         var col = -1
         var index = -1
 
-        var x = 1
-        var y = 1
+        var x = 0
+        var y = 0
+
+        val headMap = mutableMapOf<Int, String>()
 
         fun nextSymbol(): String? {
             col++
@@ -67,6 +69,7 @@ class SlkState : LanguageState() {
             semanticHub.add(line = line, pos = col - 1, len = 2, KEYWORD)
         }
 
+        var va = ""
         var valHub = ""
         fun valCommit() {
             if (mode != Mode.Value) return
@@ -84,6 +87,7 @@ class SlkState : LanguageState() {
 
             semanticHub.add(line = line, pos = si + 1, len = col - si - 1, t)
             fd = ""
+            va = valHub
             valHub = ""
         }
 
@@ -142,6 +146,21 @@ class SlkState : LanguageState() {
 
                 val xs = x.toString().padStart(3, '0')
                 val ys = y.toString().padStart(3, '0')
+
+                if (y == 1) {
+                    headMap[x] = va
+                } else if (rec == "C") {
+                    val v = headMap[x]
+                    if (v != null) {
+                        inlayHint.add(
+                            InlayHint(
+                                position = Position(line = line.toUInt(), character = col.toUInt()),
+                                label = listOf(InlayHintLabelPart(value = v)),
+                                paddingLeft = true,
+                            )
+                        )
+                    }
+                }
 
                 inlayHint.add(
                     InlayHint(
