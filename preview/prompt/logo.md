@@ -31,7 +31,7 @@
 # Troll
 
 ```
-/image A square fantasy-style logo inspired by the WarCraft Troll aesthetic featuring the exact text "BNI" at the center. The text is bold and tribal, with jagged edges and vibrant colors such as turquoise, purple, and gold. Surrounding the text is a detailed, jungle-inspired frame with elements like wooden totems, vines, and sharp stone or bone accents. The central ornamentation is intricate, reflecting the wild and shamanistic nature of Troll culture, with patterns that evoke their connection to nature and spirits. The entire image is enclosed within a sharp, clear rectangular border. The background is solid black to enhance contrast, giving the logo a primal and mystical feel inspired by Trolls and their jungle heritage.
+/image A square fantasy-style logo inspired by the WarCraft Troll aesthetic featuring the exact text "SLK" at the center. The text is bold and tribal, with jagged edges and vibrant colors such as turquoise, purple, and gold. Surrounding the text is a detailed, jungle-inspired frame with elements like wooden totems, vines, and sharp stone or bone accents. The central ornamentation is intricate, reflecting the wild and shamanistic nature of Troll culture, with patterns that evoke their connection to nature and spirits. The entire image is enclosed within a sharp, clear rectangular border. The background is solid black to enhance contrast, giving the logo a primal and mystical feel inspired by Trolls and their jungle heritage.
 ```
 
 ```
