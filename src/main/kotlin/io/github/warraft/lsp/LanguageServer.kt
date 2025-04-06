@@ -140,14 +140,40 @@ class LanguageServer {
         }
     }
 
+    @Volatile
     var exit = false
 
-    fun start() {
-        while (true) {
-            if (exit) {
+    @Volatile
+    var shutdown = false
+
+    private fun monitorParentProcess() {
+        ProcessHandle.current().parent().ifPresent { parent ->
+            Thread {
+                while (parent.isAlive) {
+                    Thread.sleep(1000)
+                }
                 exitProcess(0)
-                break
-            }
+            }.start()
+        }
+    }
+
+    fun start() {
+        monitorParentProcess()
+
+        Runtime.getRuntime().addShutdownHook(Thread {
+            shutdown = true
+        })
+
+        while (true) {
+            ProcessHandle.current().parent().ifPresentOrElse({ parent ->
+                if (!parent.isAlive) exitProcess(0)
+            }, {
+                exitProcess(0)
+            })
+
+            if (exit) exitProcess(0)
+            if (shutdown) break
+
             try {
                 loop()
             } catch (e: Exception) {

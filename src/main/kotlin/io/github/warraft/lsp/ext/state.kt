@@ -4,7 +4,7 @@ import io.github.warraft.language._.state.LanguageState
 import io.github.warraft.language.`as`.state.AsState
 import io.github.warraft.language.bni.state.BniState
 import io.github.warraft.language.jass.state.JassState
-import io.github.warraft.language.slk.state.SlkState
+import io.github.warraft.language.slk.SlkState
 import io.github.warraft.language.vex.state.VjassState
 import io.github.warraft.language.vex.state.ZincState
 import io.github.warraft.language.wts.state.WtsState

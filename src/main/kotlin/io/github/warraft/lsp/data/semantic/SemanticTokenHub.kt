@@ -1,5 +1,6 @@
 package io.github.warraft.lsp.data.semantic
 
+import io.github.warraft.language.slk.psi.SlkToken
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.TerminalNode
 
@@ -22,6 +23,21 @@ class SemanticTokenHub {
         )
         lines.getOrPut(t.line) { SemanticTokenLine(index = t.line) }.add(t)
         return this
+    }
+
+    fun add(
+        t: SlkToken?,
+        type: SemanticTokenType,
+        modifier: SemanticTokenModifier? = null,
+    ): SemanticTokenHub {
+        if (t == null) return this
+        return add(
+            line = t.range.start.line.toInt(),
+            pos = t.range.start.character.toInt(),
+            len = t.length,
+            type = type,
+            modifier = modifier
+        )
     }
 
     fun add(

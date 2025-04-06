@@ -1,6 +1,7 @@
 package io.github.warraft.language.slk.state
 
 import io.github.warraft.language._.state.LanguageState
+import io.github.warraft.language.slk.SlkState
 import org.antlr.v4.runtime.CharStreams
 import java.nio.file.Paths
 import kotlin.test.Test

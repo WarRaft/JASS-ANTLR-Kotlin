@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.TerminalNode
-import kotlin.contracts.contract
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#range
 
