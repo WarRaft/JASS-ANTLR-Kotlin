@@ -7,12 +7,15 @@ import io.github.warraft.lsp.data.MessageLogParams
 import io.github.warraft.lsp.data.MessageLogType
 import io.github.warraft.lsp.ext.*
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonPrimitive
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.nio.file.Path
 import kotlin.system.exitProcess
+import kotlin.text.substring
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#headerPart
 class LanguageServer {
@@ -122,6 +125,18 @@ class LanguageServer {
             "textDocument/formatting" -> formatting(message)
             "textDocument/rename" -> rename(message)
             "textDocument/inlayHint" -> inlayHint(message)
+
+            "jass/convert/as" -> {
+                val l = message.params
+                if (l is JsonArray) {
+                    val firstElement = l.firstOrNull()
+                    if (firstElement != null && firstElement is JsonPrimitive) {
+                        val str = firstElement.content
+                        send(json.encodeToString(Message(id = message.id, result = JsonPrimitive(str))))
+                    }
+                }
+                send(json.encodeToString(Message(id = message.id, result = JsonNull)))
+            }
 
             "initialized",
             "$/setTrace",
