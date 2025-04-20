@@ -5,7 +5,7 @@ root        : (section | entry | NEWLINE)* EOF;
 section     : '[' ID ']' NEWLINE;
 entry       : (ID WS*)? VALUE NEWLINE?;
 
-ID  : [a-zA-Z0-9_]+;
+ID  : [a-zA-Z0-9_ ]+;
 VALUE: '=' ~[\r\n]*;
 WS          : [ \t]+ -> skip;
 NEWLINE     : '\r'? '\n';

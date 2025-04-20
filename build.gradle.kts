@@ -18,8 +18,6 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tree-sitter:ktreesitter:0.24.1")
-
     // https://docs.gradle.org/current/userguide/antlr_plugin.html#sec:antlr_dependency_management
     // https://mvnrepository.com/artifact/org.antlr/antlr4-maven-plugin
     antlr("org.antlr:antlr4:4.13.2")
